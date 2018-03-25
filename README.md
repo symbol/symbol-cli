@@ -44,5 +44,5 @@ Copyright (c) 2018 NEM
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/nemtech/nem2-cli
-[docs]: https://nemtech.github.com/cli/overview.html
+[docs]: https://nemtech.github.io/cli/overview.html
 [issues]: https://github.com/nemtech/nem2-cli/issues
