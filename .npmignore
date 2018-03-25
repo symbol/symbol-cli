@@ -1,0 +1,10 @@
+src/
+test/
+node_modules/
+e2e/
+docs/
+coverage/
+.nyc_output/
+.idea/
+build/test
+licenses/

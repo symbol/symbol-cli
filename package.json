@@ -1,0 +1,51 @@
+{
+  "name": "nem2-cli",
+  "version": "0.9.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "npm run build",
+    "test": "mocha --ui bdd --recursive ./build/test",
+    "build": "rm -rf build/ && tsc"
+  },
+  "bin": {
+    "nem2-cli": "./bin/nem2-cli"
+  },
+  "contributors": [
+    {
+      "name": "Aleix",
+      "email": "aleix@nemeurope.eu"
+    },
+    {
+      "name": "Guillem",
+      "email": "guillem@nemeurope.eu"
+    }
+  ],
+  "bugs": "https://github.com/nemtech/nem2-cli/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nemtech/nem2-cli.git"
+  },
+  "license": "APACHE-2.0",
+  "dependencies": {
+    "@types/cli-spinner": "^0.2.0",
+    "@types/node": "^9.3.0",
+    "@types/readline-sync": "^1.4.3",
+    "chalk": "^2.3.0",
+    "cli-spinner": "^0.2.7",
+    "clime": "^0.5.9",
+    "nem2-sdk": "^0.9.1",
+    "path": "^0.12.7",
+    "readline-sync": "^1.4.9",
+    "rxjs": "^5.5.6"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.0.4",
+    "@types/mocha": "^2.2.44",
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1",
+    "ts-mockito": "^2.2.8",
+    "tslint": "^5.8.0",
+    "typescript": "^2.6.2"
+  }
+}
