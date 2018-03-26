@@ -1,5 +1,10 @@
 # nem2-cli
 
+[![npm version](https://badge.fury.io/js/nem2-cli.svg)](https://badge.fury.io/js/nem2-cli)
+[![Build Status](https://api.travis-ci.org/nemtech/nem2-cli.svg?branch=master)](https://travis-ci.org/nemtech/nem2-cli)
+[![Coverage Status](https://coveralls.io/repos/github/nemtech/nem2-cli/badge.svg?branch=travis-ci)](https://coveralls.io/github/nemtech/nem2-cli?branch=travis-ci)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 The nem2 Command Line Interface (CLI) is a unified tool to interact with the NEM2 Blockchain.
 
 This tool will enable you perform the most common and regular used actions in NEM2 (a.k.a Catapult)
