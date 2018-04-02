@@ -60,14 +60,14 @@ export class ProfileRepository {
     private getProfiles(): any {
         let accounts = {};
         try {
-            accounts = JSON.parse(fs.readFileSync(process.env.HOME + '/' + this.fileUrl, 'utf-8') as string);
+            accounts = JSON.parse(fs.readFileSync(require('os').homedir() + '/' + this.fileUrl, 'utf-8') as string);
         } catch (err) {
-            fs.writeFileSync(process.env.HOME + '/' + this.fileUrl, '{}', 'utf-8');
+            fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, '{}', 'utf-8');
         }
         return accounts;
     }
 
     private saveProfiles(profiles: JSON) {
-        fs.writeFileSync(process.env.HOME + '/' + this.fileUrl, JSON.stringify(profiles), 'utf-8');
+        fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, JSON.stringify(profiles), 'utf-8');
     }
 }
