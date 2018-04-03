@@ -24,5 +24,5 @@ export const OptionsResolver = (options: any,
                                 promptText: string,
                                 readlineDependency?: any) => {
     const readline = readlineDependency || readlineSync;
-    return options[key] || secondSource() || readline.question(promptText);
+    return options[key] !== undefined ? options[key] : (secondSource() || readline.question(promptText));
 };

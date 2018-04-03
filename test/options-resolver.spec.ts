@@ -25,6 +25,11 @@ describe('OptionsResolver', () => {
         expect(value).to.be.equal('nem');
     });
 
+    it('should return the value 0 if contains the commands option is passed', () => {
+        const value = OptionsResolver({name: 0}, 'name', () => undefined, 'Insert your name');
+        expect(value).to.be.equal(0);
+    });
+
     it('should return the value inserted via console if it is not in the command options object', () => {
         const promptText = 'Insert your name';
         const readlineSyncMock = {
