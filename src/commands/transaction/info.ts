@@ -43,17 +43,18 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
 
         const profile = this.getProfile(options);
 
         const transactionHttp = new TransactionHttp(profile.url);
+        const hash = OptionsResolver(options,
+            'hash',
+            () => undefined,
+            'Introduce the transaction hash: ');
 
-        transactionHttp.getTransaction(
-            OptionsResolver(options,
-                'hash',
-                () => undefined,
-                'Introduce the transaction hash: '))
+        this.spinner.start();
+
+        transactionHttp.getTransaction(hash)
             .subscribe((transaction) => {
                 this.spinner.stop(true);
 

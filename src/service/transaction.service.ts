@@ -40,8 +40,8 @@ export class TransactionService {
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
-            transactionFormatted += 'TransferTransaction: recipient:' + transaction.recipient.pretty();
-            transactionFormatted += transaction.message.payload.length > 0 ? ' message:\"' + transaction.message.payload + '\"' : '';
+            transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.pretty();
+            transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
                 transactionFormatted += ' Mosaics: ';
                 transaction.mosaics.map((mosaic) => {
@@ -52,39 +52,39 @@ export class TransactionService {
 
 
         } else if (transaction instanceof RegisterNamespaceTransaction) {
-            transactionFormatted += 'RegisterNamespaceTransaction: namespaceName:' + transaction.namespaceName;
+            transactionFormatted += 'RegisterNamespaceTransaction: NamespaceName:' + transaction.namespaceName;
 
             if (transaction.namespaceType === NamespaceType.RootNamespace && transaction.duration !== undefined) {
-                transactionFormatted += ' namespaceType:RootNamespace duration:' + transaction.duration.compact();
+                transactionFormatted += ' NamespaceType:RootNamespace Duration:' + transaction.duration.compact();
             } else if (transaction.parentId !== undefined) {
-                transactionFormatted += ' namespaceType:SubNamespace parentId:' + transaction.parentId.toHex();
+                transactionFormatted += ' NamespaceType:SubNamespace ParentId:' + transaction.parentId.toHex();
             }
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
-            'mosaicName:' + transaction.mosaicName +
-            ' duration:' + transaction.mosaicProperties.duration.compact() +
-            ' divisibility:' + transaction.mosaicProperties.divisibility +
-            ' supplyMutable:' + transaction.mosaicProperties.supplyMutable +
-            ' transferable:' + transaction.mosaicProperties.transferable +
-            ' levyMutable:' + transaction.mosaicProperties.levyMutable;
+            'MosaicName:' + transaction.mosaicName +
+            ' Duration:' + transaction.mosaicProperties.duration.compact() +
+            ' Divisibility:' + transaction.mosaicProperties.divisibility +
+            ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +
+            ' Transferable:' + transaction.mosaicProperties.transferable +
+            ' LevyMutable:' + transaction.mosaicProperties.levyMutable;
 
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
-            'mosaicId:' + transaction.mosaicId.toHex();
-            transactionFormatted += ' direction:' + (transaction.direction === MosaicSupplyType.Increase ?
+            'MosaicId:' + transaction.mosaicId.toHex();
+            transactionFormatted += ' Direction:' + (transaction.direction === MosaicSupplyType.Increase ?
                     'IncreaseSupply' : 'DecreaseSupply');
-            transactionFormatted += ' delta:' + transaction.delta.compact();
+            transactionFormatted += ' Delta:' + transaction.delta.compact();
 
         } else if (transaction instanceof ModifyMultisigAccountTransaction) {
             transactionFormatted += 'ModifyMultisigAccountTransaction:' +
-            ' minApprovalDelta:' + transaction.minApprovalDelta +
-            ' minRemovalDelta:' + transaction.minRemovalDelta;
+            ' MinApprovalDelta:' + transaction.minApprovalDelta +
+            ' MinRemovalDelta:' + transaction.minRemovalDelta;
 
             transaction.modifications.map((modification) => {
-                transactionFormatted += ' type:' +
+                transactionFormatted += ' Type:' +
                     (modification.type === MultisigCosignatoryModificationType.Add ? 'Add' : 'Remove');
-                transactionFormatted += ' cosignatoryPublicAccount:' + modification.cosignatoryPublicAccount.address.pretty();
+                transactionFormatted += ' CosignatoryPublicAccount:' + modification.cosignatoryPublicAccount.address.pretty();
             });
 
         } else if (transaction instanceof AggregateTransaction) {
@@ -95,12 +95,17 @@ export class TransactionService {
             }
 
             transaction.cosignatures.map((cosignature) => {
-                transactionFormatted += ' signer:' + cosignature.signer.address.pretty();
+                transactionFormatted += ' Signer:' + cosignature.signer.address.pretty();
             });
 
-            transaction.innerTransactions.map((innerTransaction) => {
-                transactionFormatted += ' ' + this.formatTransactionToFilter(innerTransaction) + ' |';
-            });
+            if (transaction.innerTransactions.length > 0) {
+                transactionFormatted += ' InnerTransactions: [';
+                transaction.innerTransactions.map((innerTransaction) => {
+                    transactionFormatted += ' ' + this.formatTransactionToFilter(innerTransaction) + '';
+                });
+                transactionFormatted += ' ]';
+
+            }
         } else if (transaction instanceof LockFundsTransaction) {
             transactionFormatted += 'LockFundsTransaction: ' +
                 'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
@@ -121,9 +126,9 @@ export class TransactionService {
                 ' Proof:' + transaction.proof;
         }
 
-        transactionFormatted += transaction.signer ? ' signer:' + transaction.signer.address.pretty() : '' +
-            ' deadline:' + transaction.deadline.value.toLocalDate().toString();
-
+        transactionFormatted += (transaction.signer ? ' Signer:' + transaction.signer.address.pretty() : '') +
+            ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +
+            (transaction.transactionInfo && transaction.transactionInfo.hash ? ' Hash:' + transaction.transactionInfo.hash : '');
         return transactionFormatted;
     }
 
