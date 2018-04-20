@@ -27,8 +27,9 @@ import {
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -117,18 +118,9 @@ export default class extends ProfileCommand {
                     'divisibility',
                     () => undefined,
                     'Introduce mosaic divisibility: '),
-                supplyMutable: options.supplymutable ? options.supplymutable : OptionsResolver(options,
-                        'supplymutable',
-                        () => undefined,
-                        'Mosaic supply mutable (Y): ') === 'Y',
-                transferable: options.transferable ? options.transferable : OptionsResolver(options,
-                        'transferable',
-                        () => undefined,
-                        'Mosaic transferable (Y): ') === 'Y',
-                levyMutable: options.levymutable ? options.levymutable : OptionsResolver(options,
-                        'levymutable',
-                        () => undefined,
-                        'Mosaic levy mutable (Y): ') === 'Y',
+                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN('Do you want mosaic to have supply mutable?'),
+                transferable: options.transferable ? options.transferable : readlineSync.keyInYN('Do you want mosaic to be transferable?'),
+                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN('Do you want mosaic to have levy mutable?'),
             }),
             profile.networkType,
         );

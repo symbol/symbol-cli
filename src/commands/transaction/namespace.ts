@@ -18,6 +18,7 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -73,11 +74,8 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce namespace name: ');
 
-        if (!options.rootnamespace && !options.subnamespace) {
-            options.rootnamespace = OptionsResolver(options,
-                'rootnamespace',
-                () => undefined,
-                'Namespace type is RootNamespace (R) or Subnamespace (S): ') === 'R';
+        if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
+            options.rootnamespace = true;
         }
 
         if (!options.rootnamespace) {
@@ -90,7 +88,7 @@ export default class extends ProfileCommand {
             options.duration = OptionsResolver(options,
                 'duration',
                 () => undefined,
-                'Introduce namespace rental Duration: ');
+                'Introduce namespace rental duration: ');
         }
 
         let registerNamespaceTransaction: RegisterNamespaceTransaction;
