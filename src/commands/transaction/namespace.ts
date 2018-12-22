@@ -18,7 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -67,28 +68,45 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        options.name = OptionsResolver(options,
+        options.name = await OptionsResolver(options,
             'name',
             () => undefined,
-            'Introduce namespace name: ');
+            'Introduce namespace name:',
+            prompt({
+                type: 'input',
+                validate: validator.namespace(),
+            }),
+        );
 
-        if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
-            options.rootnamespace = true;
+        if (!options.rootnamespace) {
+            options.rootnamespace = await prompt({
+                type: 'confirm',
+            }).question('Do you want to create a root namespace?');
         }
 
         if (!options.rootnamespace) {
             options.subnamespace = true;
-            options.parentname = OptionsResolver(options,
+            options.parentname = await OptionsResolver(options,
                 'parentname',
                 () => undefined,
-                'Introduce the Parent name: ');
+                'Introduce the Parent name: ',
+                prompt({
+                    type: 'input',
+                    validate: validator.namespace(),
+                }),
+            );
         } else {
-            options.duration = OptionsResolver(options,
+            options.duration = await OptionsResolver(options,
                 'duration',
                 () => undefined,
-                'Introduce namespace rental duration: ');
+                'Introduce namespace rental duration:',
+                prompt({
+                    type: 'input',
+                    validate: (input: number) => input > 0,
+                }),
+            );
         }
 
         let registerNamespaceTransaction: RegisterNamespaceTransaction;
