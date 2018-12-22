@@ -27,7 +27,8 @@ import {
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -95,32 +96,54 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
 
         const profile = this.getProfile(options);
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            OptionsResolver(options,
+            await OptionsResolver(options,
                 'mosaicname',
                 () => undefined,
-                'Introduce mosaic name: '),
-            OptionsResolver(options,
+                'Introduce mosaic name:',
+                prompt({
+                    type: 'input',
+                    validate: validator.mosaic(),
+                })),
+            await OptionsResolver(options,
                 'namespacename',
                 () => undefined,
-                'Introduce namespace name: '),
+                'Introduce namespace name:',
+                prompt({
+                    type: 'input',
+                    validate: validator.mosaic(),
+                })),
             MosaicProperties.create({
-                duration: UInt64.fromUint(OptionsResolver(options,
+                duration: UInt64.fromUint(await OptionsResolver(options,
                     'duration',
                     () => undefined,
-                    'Introduce rental duration: ')),
-                divisibility: OptionsResolver(options,
+                    'Introduce rental duration:',
+                    prompt({
+                        type: 'input',
+                        validate: (input: number) => input > 0,
+                    }))),
+                divisibility: await OptionsResolver(options,
                     'divisibility',
                     () => undefined,
-                    'Introduce mosaic divisibility: '),
-                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN('Do you want mosaic to have supply mutable?'),
-                transferable: options.transferable ? options.transferable : readlineSync.keyInYN('Do you want mosaic to be transferable?'),
-                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN('Do you want mosaic to have levy mutable?'),
+                    'Introduce mosaic divisibility:',
+                    prompt({
+                        type: 'input',
+                        validate: (input: number) => 0 <= input && input <= 6,
+                    })),
+                supplyMutable: options.supplymutable ?
+                    options.supplymutable :
+                    await prompt({type: 'confirm'}).question('Do you want mosaic to have supply mutable?'),
+                transferable: options.transferable ?
+                    options.transferable :
+                    await prompt({type: 'confirm'}).question('Do you want mosaic to be transferable?'),
+                levyMutable: options.levymutable ?
+                    options.levymutable :
+                    await prompt({type: 'confirm'}).question('Do you want mosaic to have levy mutable?'),
             }),
             profile.networkType,
         );
@@ -129,10 +152,14 @@ export default class extends ProfileCommand {
             Deadline.create(),
             mosaicDefinitionTransaction.mosaicId,
             MosaicSupplyType.Increase,
-            UInt64.fromUint(OptionsResolver(options,
+            UInt64.fromUint(await OptionsResolver(options,
                 'amount',
                 () => undefined,
-                'Introduce amount of tokens: ')),
+                'Introduce amount of tokens:',
+                prompt({
+                    type: 'input',
+                    validate: (input: number) => input > 0,
+                }))),
             profile.networkType,
         );
 
