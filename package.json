@@ -36,6 +36,7 @@
     "chalk": "^2.3.0",
     "cli-spinner": "^0.2.7",
     "clime": "^0.5.9",
+    "inquirer": "^6.2.1",
     "nem2-sdk": "^0.9.1",
     "path": "^0.12.7",
     "readline-sync": "^1.4.9",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
+    "@types/inquirer": "^0.0.43",
     "@types/mocha": "^2.2.44",
     "chai": "^4.1.2",
     "coveralls": "^3.0.0",
