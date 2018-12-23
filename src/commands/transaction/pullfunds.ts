@@ -34,6 +34,8 @@ import {
     XEM,
 } from 'nem2-sdk';
 import {AddressValidator} from '../../address.validator';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -92,17 +94,19 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start();
-
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
         let recipient: Address;
         try {
-            recipient = Address.createFromRawAddress(OptionsResolver(options,
+            recipient = Address.createFromRawAddress(await OptionsResolver(options,
                 'recipient',
                 () => undefined,
-                'Introduce funds holder address: '));
+                'Introduce funds holder address:',
+                prompt({
+                    type: 'input',
+                    validate: validator.address(),
+                })));
         } catch (err) {
             throw new ExpectedError('Introduce a valid address');
         }
@@ -112,20 +116,29 @@ export default class extends ProfileCommand {
 
         const accountHttp = new AccountHttp(profile.url);
 
+        this.spinner.start();
         accountHttp.getAccountInfo(recipient)
-            .subscribe((accountInfo) => {
+            .subscribe(async (accountInfo) => {
                 this.spinner.stop(true);
 
-                const message = PlainMessage.create(OptionsResolver(options,
+                const message = PlainMessage.create(await OptionsResolver(options,
                         'message',
                         () => undefined,
-                        'Introduce message to the funds holder: '));
+                        'Introduce message to the funds holder:',
+                        prompt({
+                            type: 'input',
+                            validate: (input: string) => true,
+                        })));
 
-                options.mosaic = OptionsResolver(options,
+                options.mosaic = await OptionsResolver(options,
                     'mosaic',
                     () => undefined,
                     'Introduce pull mosaic in the format namespaceName:mosaicName::absoluteAmount,' +
-                ' (Ex: 1 XEM, nem:xem::1000000): ');
+                    ' (Ex: 1 XEM, nem:xem::1000000):',
+                    prompt({
+                        type: 'input',
+                        validate: (input: string) => true,
+                    }));
 
                 const mosaics = [options.getMosaic()];
 
