@@ -16,8 +16,10 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option,} from 'clime';
-import {TransactionHttp,} from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {TransactionHttp} from 'nem2-sdk';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
@@ -42,15 +44,19 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
 
         const profile = this.getProfile(options);
 
         const transactionHttp = new TransactionHttp(profile.url);
-        const hash = OptionsResolver(options,
+        const hash = await OptionsResolver(options,
             'hash',
             () => undefined,
-            'Introduce the transaction hash: ');
+            'Introduce the transaction hash:',
+            prompt({
+                type: 'input',
+                validate: validator.transactionHash(),
+            }));
 
         this.spinner.start();
 
