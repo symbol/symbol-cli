@@ -25,6 +25,8 @@ import {
     TransactionHttp,
 } from 'nem2-sdk';
 import {Observable} from 'rxjs/Observable';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {Profile} from '../../model/profile';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
@@ -47,16 +49,20 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
 
-        const hash = OptionsResolver(options,
+        const hash = await OptionsResolver(options,
             'hash',
             () => undefined,
-            'Introduce aggregate bonded transaction hash to be signed: ');
+            'Introduce aggregate bonded transaction hash to be signed:',
+            prompt({
+                type: 'input',
+                validate: validator.transactionHash(),
+            }));
 
         this.spinner.start();
 
@@ -84,7 +90,7 @@ export default class extends ProfileCommand {
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
                             this.spinner.stop(true);
-                            console.log(chalk.green('Transaction cosigned and announced correctly'))
+                            console.log(chalk.green('Transaction cosigned and announced correctly'));
                         }, (err) => {
                             this.spinner.stop(true);
 
