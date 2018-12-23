@@ -19,6 +19,8 @@ import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, Deadline, Mosaic, MosaicId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
 import {AddressValidator} from '../../address.validator';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -85,16 +87,22 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
         let recipient: Address;
         try {
             recipient = Address.createFromRawAddress(
-                OptionsResolver(options,
+                await OptionsResolver(options,
                     'recipient',
                     () => undefined,
-                    'Introduce the recipient address: '));
+                    'Introduce the recipient address:',
+                    prompt({
+                        type: 'input',
+                        validate: validator.address(),
+                    }),
+                ),
+            );
         } catch (err) {
             throw new ExpectedError('Introduce a valid address');
         }
@@ -105,21 +113,32 @@ export default class extends ProfileCommand {
 
         let mosaics: Mosaic[] = [];
 
-        options.mosaics = OptionsResolver(options,
+        options.mosaics = await OptionsResolver(options,
             'mosaics',
             () => undefined,
             'Introduce the mosaics in the format namespaceName:mosaicName::absoluteAmount,' +
-            ' add multiple mosaics splitting them with a comma:\n> ');
+            ' add multiple mosaics splitting them with a comma:\n>',
+            prompt({
+                type: 'input',
+                validate: validator.transferSchema(),
+            }),
+        );
 
         if (options.mosaics) {
             mosaics = options.getMosaics();
         }
 
         const message = PlainMessage.create(
-            OptionsResolver(options,
+            await OptionsResolver(options,
                 'message',
                 () => undefined,
-                'Introduce the message: '));
+                'Introduce the message:',
+                prompt({
+                    type: 'input',
+                    validate: validator.message(),
+                }),
+            ),
+        );
 
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics, message, profile.networkType);
 
