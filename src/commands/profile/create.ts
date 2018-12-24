@@ -18,7 +18,8 @@
 import chalk from 'chalk';
 import {Command, command, ExpectedError, metadata, option, Options, ValidationContext, Validator} from 'clime';
 import {Account, NetworkHttp, NetworkType} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
@@ -93,28 +94,45 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const networkType = options.getNetwork(OptionsResolver(options,
+    async execute(options: CommandOptions) {
+        const networkType = options.getNetwork(await OptionsResolver(options,
             'network',
             () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET):',
+            prompt({
+                type: 'list',
+                choices: ['MIJIN_TEST', 'MIJIN', 'MAIN_NET', 'TEST_NET'],
+            }),
+        ));
 
         let account: Account;
         try {
             account = Account.createFromPrivateKey(
-                OptionsResolver(options,
+                await OptionsResolver(options,
                     'privatekey',
                     () => undefined,
-                    'Introduce your private key: '),
+                    'Introduce your private key:',
+                    prompt({
+                      type: 'input',
+                      validate: validator.key(),
+                    }),
+                ),
                 networkType);
         } catch (err) {
             throw new ExpectedError('Introduce a valid private key');
         }
 
-        const url = OptionsResolver(options,
+        const url = await OptionsResolver(options,
             'url',
             () => undefined,
-            'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
+            'Introduce NEM 2 Node URL. (Example: http://localhost:3000):',
+            prompt({
+                type: 'input',
+                filter: (input: string) => input.trim(),
+                default: 'http://localhost:3000',
+                validate: validator.url(),
+            }),
+        );
 
         const networkHttp = new NetworkHttp(url);
 
@@ -122,7 +140,8 @@ export default class extends Command {
         if (options.profile) {
             profileName = options.profile;
         } else {
-            const tmp = readlineSync.question('Insert profile name (blank means default and it could overwrite the previous profile): ');
+            const tmp = await prompt({type: 'input'})
+                .question('Insert profile name (blank means default and it could overwrite the previous profile):');
             if (tmp === '') {
                 profileName = 'default';
             } else {
