@@ -16,10 +16,12 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option,} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceService,} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {NamespaceHttp, NamespaceId, NamespaceService} from 'nem2-sdk';
+import prompt from '../../inquirerHelper';
+import * as validator from '../../inquirerHelper/validator';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -45,21 +47,31 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start();
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
         if (!options.uint) {
-        options.name = OptionsResolver(options,
-            'name',
-            () => undefined,
-            'Introduce the namespace name: ');
+            options.name = await OptionsResolver(options,
+                'name',
+                () => undefined,
+                'Introduce the namespace name:',
+                prompt({
+                    type: 'input',
+                    validate: (input) => input.length === 0 || validator.namespace()(input),
+                }),
+            );
         }
         if (options.name === '') {
-            options.uint = OptionsResolver(options,
+            options.uint = await OptionsResolver(options,
                 'uint',
                 () => undefined,
-                'Introduce the namepsace id in uint64 format. [number, number]: ');
+                'Introduce the namepsace id in uint64 format. [number, number]:',
+                prompt({
+                    type: 'input',
+                    filter: (input: string) => input.trim().replace(/\s+/g, ' '),
+                    validate: validator.uint64(),
+                }),
+            );
         }
 
         let namespaceId: NamespaceId;
@@ -73,6 +85,8 @@ export default class extends ProfileCommand {
 
         const namespaceHttp = new NamespaceHttp(profile.url);
         const namespaceService = new NamespaceService(namespaceHttp);
+
+        this.spinner.start();
         namespaceService.namespace(namespaceId)
             .subscribe((namespace) => {
                 this.spinner.stop(true);
