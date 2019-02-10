@@ -28,7 +28,7 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Configure an account',
+    description: 'Display a list of account',
 })
 
 export default class extends Command {
