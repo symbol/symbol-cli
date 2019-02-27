@@ -27,11 +27,11 @@ import {
     LockFundsTransaction,
     Mosaic,
     MosaicId,
+    NetworkCurrencyMosaic,
     PlainMessage,
     TransactionHttp,
     TransferTransaction,
     UInt64,
-    XEM,
 } from 'nem2-sdk';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
@@ -141,7 +141,7 @@ export default class extends ProfileCommand {
 
                 const lockFundsTransaction = LockFundsTransaction.create(
                     Deadline.create(),
-                    XEM.createRelative(10),
+                    NetworkCurrencyMosaic.createRelative(10),
                     UInt64.fromUint(1000),
                     signedTransaction,
                     profile.networkType,

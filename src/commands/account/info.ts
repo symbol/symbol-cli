@@ -17,7 +17,17 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, Mosaic, MosaicAmountView, MosaicHttp, MosaicService, NamespaceHttp,} from 'nem2-sdk';
+import {
+    AccountHttp,
+    AccountInfo,
+    Address,
+    Mosaic,
+    MosaicAmountView,
+    MosaicHttp,
+    MosaicService,
+    NamespaceHttp,
+} from 'nem2-sdk';
+import {map, mergeMap} from 'rxjs/operators';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
@@ -65,10 +75,13 @@ export default class extends ProfileCommand {
             new NamespaceHttp(profile.url),
         );
         accountHttp.getAccountInfo(address)
-            .flatMap((accountInfo: AccountInfo) => mosaicService.mosaicsAmountViewFromAddress(address)
-                .map((mosaics: MosaicAmountView[]) => {
-                return {mosaics, info: accountInfo};
-            }))
+            .pipe(
+                mergeMap((accountInfo: AccountInfo) => mosaicService.mosaicsAmountViewFromAddress(address)
+                    .pipe(
+                        map((mosaics: MosaicAmountView[]) => {
+                            return {mosaics, info: accountInfo};
+                        }))),
+            )
             .subscribe((accountData: any) => {
                 const accountInfo = accountData.info;
                 this.spinner.stop(true);

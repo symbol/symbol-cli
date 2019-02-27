@@ -118,9 +118,12 @@ export default class extends ProfileCommand {
                     'divisibility',
                     () => undefined,
                     'Introduce mosaic divisibility: '),
-                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN('Do you want mosaic to have supply mutable?'),
-                transferable: options.transferable ? options.transferable : readlineSync.keyInYN('Do you want mosaic to be transferable?'),
-                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN('Do you want mosaic to have levy mutable?'),
+                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN(
+                    'Do you want mosaic to have supply mutable?'),
+                transferable: options.transferable ? options.transferable : readlineSync.keyInYN(
+                    'Do you want mosaic to be transferable?'),
+                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN(
+                    'Do you want mosaic to have levy mutable?'),
             }),
             profile.networkType,
         );

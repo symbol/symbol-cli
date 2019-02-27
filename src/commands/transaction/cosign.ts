@@ -20,14 +20,17 @@ import {command, metadata, option} from 'clime';
 import {
     AccountHttp,
     AggregateTransaction,
-    CosignatureTransaction, MultisigAccountInfo,
-    PublicAccount, QueryParams,
+    CosignatureTransaction,
+    MultisigAccountInfo,
+    PublicAccount,
+    QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
-import {Observable} from 'rxjs/Observable';
+import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {Observable} from "rxjs";
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -61,12 +64,14 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         this.getGraphAccounts(profile)
-            .flatMap((_) => _)
-            .flatMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(100)))
-            .flatMap((_) => _)
-            .filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-            _.transactionInfo.hash === hash) // Filter transaction
-            .toArray()
+            .pipe(
+                mergeMap((_) => _),
+                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(100))),
+                mergeMap((_) => _),
+                filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
+                    _.transactionInfo.hash === hash), // Filter transaction
+                toArray(),
+            )
             .subscribe((transactions: AggregateTransaction[]) => {
                 if (!transactions.length) {
                     this.spinner.stop(true);
@@ -84,7 +89,7 @@ export default class extends ProfileCommand {
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
                             this.spinner.stop(true);
-                            console.log(chalk.green('Transaction cosigned and announced correctly'))
+                            console.log(chalk.green('Transaction cosigned and announced correctly'));
                         }, (err) => {
                             this.spinner.stop(true);
 
@@ -104,15 +109,17 @@ export default class extends ProfileCommand {
 
     private getGraphAccounts(profile: Profile): Observable<PublicAccount[]> {
         return new AccountHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
-            .map((_) => {
-                let publicAccounts: PublicAccount[] = [];
-                _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
-                    if (key <= 0) {
-                        publicAccounts = publicAccounts.concat(value.map((_) => _.account));
-                    }
-                });
-                return publicAccounts;
-            })
-            .catch((_) => Observable.of([profile.account.publicAccount]));
+            .pipe(
+                map((_) => {
+                    let publicAccounts: PublicAccount[] = [];
+                    _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
+                        if (key <= 0) {
+                            publicAccounts = publicAccounts.concat(
+                                value.map((cosignatory) => cosignatory.account));
+                        }
+                    });
+                    return publicAccounts;
+                }),
+                catchError((ignored) => [profile.account.publicAccount]));
     }
 }
