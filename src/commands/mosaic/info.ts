@@ -16,18 +16,12 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option,} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService, NamespaceHttp,} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {AccountHttp, MosaicHttp, MosaicId, MosaicService, NamespaceHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'n',
-        description: 'Mosaic Id in string format',
-    })
-    name: string;
-
     @option({
         flag: 'u',
         description: 'Mosaic id in uint64 format. [number, number]',
@@ -48,14 +42,7 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
         if (!options.uint) {
-            options.name = OptionsResolver(options,
-                'name',
-                () => undefined,
-                'Introduce the mosaic name: ');
-        }
-        if (options.name === '') {
             options.uint = OptionsResolver(options,
                 'uint',
                 () => undefined,
@@ -63,9 +50,7 @@ export default class extends ProfileCommand {
         }
 
         let mosaicId: MosaicId;
-        if (options.name) {
-            mosaicId = new MosaicId(options.name);
-        } else if (options.uint) {
+        if (options.uint) {
             mosaicId = new MosaicId(JSON.parse(options.uint));
         } else {
             throw new ExpectedError('You need to introduce at least one');
@@ -85,8 +70,7 @@ export default class extends ProfileCommand {
                 } else {
                     const mosaicView = mosaicViews[0];
                     let text = '';
-                    text += chalk.green('Mosaic:\t') + chalk.bold(mosaicView.fullName()) + '\n';
-                    text += '-'.repeat('Mosaic:\t'.length + mosaicView.fullName().length) + '\n\n';
+                    text += chalk.green('Mosaic\t');
                     text += 'hexadecimal:\t' + mosaicId.toHex() + '\n';
                     text += 'uint:\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
                     text += 'divisibility:\t' + mosaicView.mosaicInfo.divisibility + '\n';
@@ -97,9 +81,6 @@ export default class extends ProfileCommand {
                     text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
                     text += 'owner:\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
                     text += 'supply:\t\t' + mosaicView.mosaicInfo.supply.compact() + '\n';
-                    text += 'namespaceId hex: ' + mosaicView.mosaicInfo.namespaceId.toHex() + '\n';
-                    text += 'namespaceId uint: [ ' + mosaicView.mosaicInfo.namespaceId.id.lower + ', ' +
-                        '' + mosaicView.mosaicInfo.namespaceId.id.higher + ' ]\n\n';
                     console.log(text);
                 }
 

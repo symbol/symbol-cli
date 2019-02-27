@@ -62,7 +62,7 @@ export class TransactionService {
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
-            'MosaicName:' + transaction.mosaicName +
+            'MosaicName:' + transaction.mosaicId.toHex() +
             ' Duration:' + transaction.mosaicProperties.duration.compact() +
             ' Divisibility:' + transaction.mosaicProperties.divisibility +
             ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +

@@ -30,7 +30,7 @@ import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -120,6 +120,6 @@ export default class extends ProfileCommand {
                     });
                     return publicAccounts;
                 }),
-                catchError((ignored) => [profile.account.publicAccount]));
+                catchError((ignored) => of([profile.account.publicAccount])));
     }
 }
