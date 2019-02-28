@@ -60,7 +60,7 @@ export class CommandOptions extends ProfileOptions {
         mosaicsData.forEach((mosaicData) => {
             const mosaicParts = mosaicData.split('::');
             let mosaicId;
-            if (mosaicParts[0][0] === '@') {
+            if (mosaicParts[0].charAt(0) === '@') {
                 mosaicId = new NamespaceId(mosaicParts[0].substring(1));
             } else {
                 mosaicId = new MosaicId(mosaicParts[0]);
@@ -79,9 +79,9 @@ export class CommandOptions extends ProfileOptions {
                 if (isNaN(+mosaicParts[1])) {
                     throw new ExpectedError('');
                 }
-                let mosaicId;
-                if (mosaicParts[0][0] === '@') {
-                    mosaicId = new MosaicId(mosaicParts[0].substring(1));
+                let mosaicId
+                if (mosaicParts[0].charAt(0) === '@') {
+                    mosaicId = new NamespaceId(mosaicParts[0].substring(1));
                 } else {
                     const mosaicIdUint64 = UInt64.fromHex(mosaicParts[0]);
                     mosaicId = new MosaicId([mosaicIdUint64.lower, mosaicIdUint64.higher]);

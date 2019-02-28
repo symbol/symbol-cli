@@ -46,7 +46,7 @@ export class MosaicValidator implements Validator<string> {
                 throw new ExpectedError('');
             }
             let mosaicId;
-            if (mosaicParts[0][0] === '@') {
+            if (mosaicParts[0].charAt(0) === '@') {
                 mosaicId = new NamespaceId(mosaicParts[0].substring(1));
             } else {
                 mosaicId = new MosaicId(mosaicParts[0]);
@@ -84,7 +84,7 @@ export class CommandOptions extends ProfileOptions {
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
         let mosaicId;
-        if (mosaicParts[0][0] === '@') {
+        if (mosaicParts[0].charAt(0) === '@') {
             mosaicId = new NamespaceId(mosaicParts[0].substring(1));
         } else {
             mosaicId = new MosaicId(mosaicParts[0]);
@@ -137,7 +137,7 @@ export default class extends ProfileCommand {
                 options.mosaic = OptionsResolver(options,
                     'mosaic',
                     () => undefined,
-                    'Introduce pull mosaic in the format (mosaicId(hex)|@aliasName)::absoluteAmount');
+                    'Introduce pull mosaic in the format (mosaicId(hex)|@aliasName)::absoluteAmount:');
 
                 const mosaics = [options.getMosaic()];
 
