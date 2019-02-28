@@ -49,7 +49,7 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'c',
-        description: 'Mosaic you want to get in the format (mosaicId(hex)|?aliasName)::absoluteAmount',
+        description: 'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
     })
     mosaics: string;
 
@@ -60,7 +60,7 @@ export class CommandOptions extends ProfileOptions {
         mosaicsData.forEach((mosaicData) => {
             const mosaicParts = mosaicData.split('::');
             let mosaicId;
-            if (mosaicParts[0][0] === '?') {
+            if (mosaicParts[0][0] === '@') {
                 mosaicId = new NamespaceId(mosaicParts[0].substring(1));
             } else {
                 mosaicId = new MosaicId(mosaicParts[0]);
@@ -80,7 +80,7 @@ export class CommandOptions extends ProfileOptions {
                     throw new ExpectedError('');
                 }
                 let mosaicId;
-                if (mosaicParts[0][0] === '?') {
+                if (mosaicParts[0][0] === '@') {
                     mosaicId = new MosaicId(mosaicParts[0].substring(1));
                 } else {
                     const mosaicIdUint64 = UInt64.fromHex(mosaicParts[0]);
@@ -89,8 +89,8 @@ export class CommandOptions extends ProfileOptions {
                 const mosaic = new Mosaic(mosaicId,
                     UInt64.fromUint(+mosaicParts[1]));
             } catch (err) {
-                throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|?aliasName)::absoluteAmount,' +
-                    ' (Ex: sending 1 cat.currency, ?cat.currency::1000000)');
+                throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                    ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
             }
         });
     }
@@ -131,8 +131,8 @@ export default class extends ProfileCommand {
             'mosaics',
             () => undefined,
 
-            'Mosaic you want to get in the format (mosaicId(hex)|?aliasName)::absoluteAmount,' +
-            ' (Ex: sending 1 cat.currency, ?cat.currency::1000000). Add multiple mosaics with commas:\n> ');
+            'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+            ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas:\n> ');
 
         if (options.mosaics) {
             mosaics = options.getMosaics();

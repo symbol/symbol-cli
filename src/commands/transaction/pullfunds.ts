@@ -46,7 +46,7 @@ export class MosaicValidator implements Validator<string> {
                 throw new ExpectedError('');
             }
             let mosaicId;
-            if (mosaicParts[0][0] === '?') {
+            if (mosaicParts[0][0] === '@') {
                 mosaicId = new NamespaceId(mosaicParts[0].substring(1));
             } else {
                 mosaicId = new MosaicId(mosaicParts[0]);
@@ -54,8 +54,8 @@ export class MosaicValidator implements Validator<string> {
             const mosaic = new Mosaic(mosaicId,
                 UInt64.fromUint(+mosaicParts[1]));
         } catch (err) {
-            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|?aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, ?cat.currency::1000000)');
+            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
         }
     }
 }
@@ -76,7 +76,7 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'x',
-        description: 'Mosaic you want to get should be in the format (mosaicId(hex)|?aliasName)::absoluteAmount',
+        description: 'Mosaic you want to get should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
         validator: new MosaicValidator(),
     })
     mosaic: string;
@@ -84,7 +84,7 @@ export class CommandOptions extends ProfileOptions {
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
         let mosaicId;
-        if (mosaicParts[0][0] === '?') {
+        if (mosaicParts[0][0] === '@') {
             mosaicId = new NamespaceId(mosaicParts[0].substring(1));
         } else {
             mosaicId = new MosaicId(mosaicParts[0]);
@@ -137,8 +137,7 @@ export default class extends ProfileCommand {
                 options.mosaic = OptionsResolver(options,
                     'mosaic',
                     () => undefined,
-                    'Introduce pull mosaic in the format namespaceName:mosaicName::absoluteAmount,' +
-                ' (Ex: 1 XEM, nem:xem::1000000): ');
+                    'Introduce pull mosaic in the format (mosaicId(hex)|@aliasName)::absoluteAmount');
 
                 const mosaics = [options.getMosaic()];
 
