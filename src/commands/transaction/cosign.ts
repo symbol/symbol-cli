@@ -26,11 +26,11 @@ import {
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
+import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {Observable, of} from "rxjs";
 
 export class CommandOptions extends ProfileOptions {
     @option({

@@ -27,6 +27,7 @@ import {
     LockFundsTransaction,
     Mosaic,
     MosaicId,
+    NamespaceId,
     NetworkCurrencyMosaic,
     PlainMessage,
     TransactionHttp,
@@ -44,11 +45,17 @@ export class MosaicValidator implements Validator<string> {
             if (isNaN(+mosaicParts[1])) {
                 throw new ExpectedError('');
             }
-            const mosaic = new Mosaic(new MosaicId(mosaicParts[0]),
+            let mosaicId;
+            if (mosaicParts[0][0] === '?') {
+                mosaicId = new NamespaceId(mosaicParts[0].substring(1));
+            } else {
+                mosaicId = new MosaicId(mosaicParts[0]);
+            }
+            const mosaic = new Mosaic(mosaicId,
                 UInt64.fromUint(+mosaicParts[1]));
         } catch (err) {
-            throw new ExpectedError('mosaic should be in format namespaceName:mosaicName::absoluteAmount' +
-                'ex: sending 1 XEM, nem:xem::1000000');
+            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|?aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, ?cat.currency::1000000)');
         }
     }
 }
@@ -69,14 +76,21 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'x',
-        description: 'Mosaic you want to get in the format namespaceName:mosaicName::absoluteAmount',
+        description: 'Mosaic you want to get should be in the format (mosaicId(hex)|?aliasName)::absoluteAmount,' +
+            ' (Ex: sending 1 cat.currency, ?cat.currency::1000000)',
         validator: new MosaicValidator(),
     })
     mosaic: string;
 
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
-        return new Mosaic(new MosaicId(mosaicParts[0]),
+        let mosaicId;
+        if (mosaicParts[0][0] === '?') {
+            mosaicId = new NamespaceId(mosaicParts[0].substring(1));
+        } else {
+            mosaicId = new MosaicId(mosaicParts[0]);
+        }
+        return new Mosaic(mosaicId,
             UInt64.fromUint(+mosaicParts[1]));
     }
 }
