@@ -116,7 +116,7 @@ export default class extends ProfileCommand {
                 'Introduce namespace name:',
                 prompt({
                     type: 'input',
-                    validate: validator.mosaic(),
+                    validate: validator.namespace(),
                 })),
             MosaicProperties.create({
                 duration: UInt64.fromUint(await OptionsResolver(options,
