@@ -28,7 +28,7 @@
     "type": "git",
     "url": "https://github.com/nemtech/nem2-cli.git"
   },
-  "license": "APACHE-2.0",
+  "license": "Apache-2.0",
   "dependencies": {
     "@types/cli-spinner": "^0.2.0",
     "@types/node": "^9.3.0",
