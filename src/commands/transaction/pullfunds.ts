@@ -76,8 +76,7 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'x',
-        description: 'Mosaic you want to get should be in the format (mosaicId(hex)|?aliasName)::absoluteAmount,' +
-            ' (Ex: sending 1 cat.currency, ?cat.currency::1000000)',
+        description: 'Mosaic you want to get should be in the format (mosaicId(hex)|?aliasName)::absoluteAmount',
         validator: new MosaicValidator(),
     })
     mosaic: string;

@@ -92,8 +92,8 @@ export default class extends ProfileCommand {
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            nonce.nonce,
-            MosaicId.createFromNonce(nonce, profile.account.publicAccount).id,
+            nonce,
+            MosaicId.createFromNonce(nonce, profile.account.publicAccount),
             MosaicProperties.create({
                 duration: UInt64.fromUint(OptionsResolver(options,
                     'duration',
