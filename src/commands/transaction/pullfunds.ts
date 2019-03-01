@@ -157,9 +157,14 @@ export default class extends ProfileCommand {
 
                 const signedTransaction = profile.account.sign(aggregateTx);
 
+                const currencyMosaic = new Mosaic (new MosaicId( OptionsResolver(options,
+                    'currency',
+                    () => undefined,
+                    'The network native currency mosaicId in hexadecimal')), UInt64.fromUint(10000000));
+
                 const lockFundsTransaction = LockFundsTransaction.create(
                     Deadline.create(),
-                    new Mosaic( new MosaicId(options.currency), UInt64.fromUint(10000000)),
+                    currencyMosaic,
                     UInt64.fromUint(1000),
                     signedTransaction,
                     profile.networkType,
