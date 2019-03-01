@@ -28,7 +28,6 @@ import {
     Mosaic,
     MosaicId,
     NamespaceId,
-    NetworkCurrencyMosaic,
     PlainMessage,
     TransactionHttp,
     TransferTransaction,
@@ -80,6 +79,13 @@ export class CommandOptions extends ProfileOptions {
         validator: new MosaicValidator(),
     })
     mosaic: string;
+
+    @option({
+        flag: 'c',
+        description: 'The network native currency mosaicId in hexadecimal',
+        validator: new MosaicValidator(),
+    })
+    currency: string;
 
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
@@ -153,7 +159,7 @@ export default class extends ProfileCommand {
 
                 const lockFundsTransaction = LockFundsTransaction.create(
                     Deadline.create(),
-                    NetworkCurrencyMosaic.createRelative(10),
+                    new Mosaic( new MosaicId(options.currency), UInt64.fromUint(10000000)),
                     UInt64.fromUint(1000),
                     signedTransaction,
                     profile.networkType,
