@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService, NamespaceHttp, UInt64,} from 'nem2-sdk';
+import {AccountHttp, MosaicHttp, MosaicId, MosaicService} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -67,7 +67,6 @@ export default class extends ProfileCommand {
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),
             new MosaicHttp(profile.url),
-            new NamespaceHttp(profile.url),
         );
 
         mosaicService.mosaicsView([mosaicId])
@@ -84,7 +83,6 @@ export default class extends ProfileCommand {
                     text += 'divisibility:\t' + mosaicView.mosaicInfo.divisibility + '\n';
                     text += 'transferable:\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
                     text += 'supply mutable:\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
-                    text += 'active:\t\t' + mosaicView.mosaicInfo.active + '\n';
                     text += 'block height:\t' + mosaicView.mosaicInfo.height.compact() + '\n';
                     text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
                     text += 'owner:\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';

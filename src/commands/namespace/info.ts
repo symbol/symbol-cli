@@ -16,8 +16,8 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option,} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceService,} from 'nem2-sdk';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {NamespaceHttp, NamespaceId, NamespaceService} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {OptionsResolver} from '../../options-resolver';
 

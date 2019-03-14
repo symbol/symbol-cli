@@ -16,6 +16,7 @@
  *
  */
 import {
+    Address,
     AggregateTransaction,
     LockFundsTransaction,
     ModifyMultisigAccountTransaction,
@@ -40,7 +41,11 @@ export class TransactionService {
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
-            transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.pretty();
+            if (transaction.recipient instanceof Address) {
+                transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.pretty();
+            } else {
+                transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.fullName;
+            }
             transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
                 transactionFormatted += ' Mosaics: ';

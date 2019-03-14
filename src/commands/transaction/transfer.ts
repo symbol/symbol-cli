@@ -17,17 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {
-    Address,
-    Deadline,
-    Mosaic,
-    MosaicId,
-    NamespaceId,
-    PlainMessage,
-    TransactionHttp,
-    TransferTransaction,
-    UInt64
-} from 'nem2-sdk';
+import {Address, Deadline, Mosaic, MosaicId, NamespaceId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
