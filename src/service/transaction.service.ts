@@ -43,12 +43,12 @@ export class TransactionService {
         if (transaction instanceof TransferTransaction) {
             if (transaction.recipient instanceof Address) {
                 transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.pretty();
-            } else {
-                transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.fullName;
+            } else { // Todo: The SDK always return addresses (unresolved or not). Display the difference.
+                transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.toHex();
             }
             transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
-                transactionFormatted += ' Mosaics: ';
+                transactionFormatted += ' Mosaics: '; // Todo: The SDK always return mosaicIds (unresolved or not). Display the difference.
                 transaction.mosaics.map((mosaic) => {
                     transactionFormatted += mosaic.id.toHex() + ':' + mosaic.amount.compact() + ',';
                 });

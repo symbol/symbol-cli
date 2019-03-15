@@ -27,7 +27,6 @@ import {
     LockFundsTransaction,
     Mosaic,
     MosaicId,
-    NamespaceId,
     PlainMessage,
     TransactionHttp,
     TransferTransaction,
@@ -36,6 +35,7 @@ import {
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AliasService} from '../../service/alias.service';
 
 export class MosaicValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -44,13 +44,7 @@ export class MosaicValidator implements Validator<string> {
             if (isNaN(+mosaicParts[1])) {
                 throw new ExpectedError('');
             }
-            let mosaicId;
-            if (mosaicParts[0].charAt(0) === '@') {
-                mosaicId = new NamespaceId(mosaicParts[0].substring(1));
-            } else {
-                mosaicId = new MosaicId(mosaicParts[0]);
-            }
-            const mosaic = new Mosaic(mosaicId,
+            const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                 UInt64.fromUint(+mosaicParts[1]));
         } catch (err) {
             throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
@@ -89,13 +83,7 @@ export class CommandOptions extends ProfileOptions {
 
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
-        let mosaicId;
-        if (mosaicParts[0].charAt(0) === '@') {
-            mosaicId = new NamespaceId(mosaicParts[0].substring(1));
-        } else {
-            mosaicId = new MosaicId(mosaicParts[0]);
-        }
-        return new Mosaic(mosaicId,
+        return new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
             UInt64.fromUint(+mosaicParts[1]));
     }
 }
