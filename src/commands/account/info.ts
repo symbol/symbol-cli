@@ -17,8 +17,8 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, Mosaic, MosaicAmountView, MosaicHttp, MosaicService,} from 'nem2-sdk';
-import {map, mergeMap} from 'rxjs/operators';
+import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService,} from 'nem2-sdk';
+import {map, mergeMap, toArray} from 'rxjs/operators';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
@@ -68,6 +68,8 @@ export default class extends ProfileCommand {
             .pipe(
                 mergeMap((accountInfo: AccountInfo) => mosaicService.mosaicsAmountViewFromAddress(address)
                     .pipe(
+                        mergeMap((_) => _),
+                        toArray(),
                         map((mosaics: MosaicAmountView[]) => {
                             return {mosaics, info: accountInfo};
                         }))),
@@ -84,17 +86,10 @@ export default class extends ProfileCommand {
                 text += 'at height:\t' + accountInfo.publicKeyHeight.compact() + '\n\n';
                 text += 'Importance:\t' + accountInfo.importance.compact() + '\n';
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
-                if (accountData.mosaics.length !== 0) { // TODO: remove when api bug fixed
-                    text += 'Mosaics' + '\n';
-                    accountData.mosaics.map((mosaic: MosaicAmountView) => {
-                        text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
-                    });
-                } else  if (accountInfo.mosaics.length !== 0) {
-                    text += 'Mosaics' + '\n';
-                    accountInfo.mosaics.map((mosaic: Mosaic) => {
-                        text += mosaic.id.toHex() + ':\t' + mosaic.amount.compact().toFixed(2) + '\n';
-                    });
-                }
+                text += 'Mosaics' + '\n';
+                accountData.mosaics.map((mosaic: MosaicAmountView) => {
+                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
+                });
                 console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
