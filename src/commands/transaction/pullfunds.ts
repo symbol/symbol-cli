@@ -148,7 +148,7 @@ export default class extends ProfileCommand {
                 const currencyMosaic = new Mosaic (new MosaicId( OptionsResolver(options,
                     'currency',
                     () => undefined,
-                    'The network native currency mosaicId in hexadecimal')), UInt64.fromUint(10000000));
+                    'The network native currency mosaicId in hexadecimal:')), UInt64.fromUint(10000000));
 
                 const lockFundsTransaction = LockFundsTransaction.create(
                     Deadline.create(),
