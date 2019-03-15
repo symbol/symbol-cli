@@ -42,10 +42,11 @@ export class TransactionService {
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
+            transactionFormatted += 'TransferTransaction: Recipient:';
             if (transaction.recipient instanceof Address) {
-                transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.pretty();
+                transactionFormatted += transaction.recipient.pretty();
             } else {
-                transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.toHex();
+                transactionFormatted += transaction.recipient.toHex();
             }
             transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
