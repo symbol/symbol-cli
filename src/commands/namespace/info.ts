@@ -36,7 +36,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Fetch Mosaic info',
+    description: 'Fetch Namespace info',
 })
 export default class extends ProfileCommand {
 
