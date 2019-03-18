@@ -21,6 +21,8 @@ import {
     AggregateTransaction,
     Deadline,
     MosaicDefinitionTransaction,
+    MosaicId,
+    MosaicNonce,
     MosaicProperties,
     MosaicSupplyChangeTransaction,
     MosaicSupplyType,
@@ -32,18 +34,6 @@ import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'm',
-        description: 'Mosaic name',
-    })
-    mosaicname: string;
-
-    @option({
-        flag: 'n',
-        description: 'Parent namespace name',
-    })
-    namespacename: string;
-
     @option({
         flag: 'a',
         description: 'Amount of tokens',
@@ -98,17 +88,12 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
 
         const profile = this.getProfile(options);
+        const nonce = MosaicNonce.createRandom();
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
-            OptionsResolver(options,
-                'mosaicname',
-                () => undefined,
-                'Introduce mosaic name: '),
-            OptionsResolver(options,
-                'namespacename',
-                () => undefined,
-                'Introduce namespace name: '),
+            nonce,
+            MosaicId.createFromNonce(nonce, profile.account.publicAccount),
             MosaicProperties.create({
                 duration: UInt64.fromUint(OptionsResolver(options,
                     'duration',
@@ -118,9 +103,12 @@ export default class extends ProfileCommand {
                     'divisibility',
                     () => undefined,
                     'Introduce mosaic divisibility: '),
-                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN('Do you want mosaic to have supply mutable?'),
-                transferable: options.transferable ? options.transferable : readlineSync.keyInYN('Do you want mosaic to be transferable?'),
-                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN('Do you want mosaic to have levy mutable?'),
+                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN(
+                    'Do you want mosaic to have supply mutable?'),
+                transferable: options.transferable ? options.transferable : readlineSync.keyInYN(
+                    'Do you want mosaic to be transferable?'),
+                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN(
+                    'Do you want mosaic to have levy mutable?'),
             }),
             profile.networkType,
         );
@@ -153,6 +141,9 @@ export default class extends ProfileCommand {
             console.log(chalk.green('Transaction announced correctly'));
             console.log('Hash:   ', signedTransaction.hash);
             console.log('Signer: ', signedTransaction.signer);
+            console.log(chalk.green('Your mosaic id is:'));
+            console.log('Hex: ', mosaicDefinitionTransaction.mosaicId.toHex());
+            console.log('Uint64: [', mosaicDefinitionTransaction.mosaicId.id.lower, mosaicDefinitionTransaction.mosaicId.id.higher + ']');
         }, (err) => {
             this.spinner.stop(true);
             let text = '';

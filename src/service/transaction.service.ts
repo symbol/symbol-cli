@@ -16,10 +16,12 @@
  *
  */
 import {
+    Address,
     AggregateTransaction,
     LockFundsTransaction,
     ModifyMultisigAccountTransaction,
     MosaicDefinitionTransaction,
+    MosaicId,
     MosaicSupplyChangeTransaction,
     MosaicSupplyType,
     MultisigCosignatoryModificationType,
@@ -40,17 +42,25 @@ export class TransactionService {
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
-            transactionFormatted += 'TransferTransaction: Recipient:' + transaction.recipient.pretty();
+            transactionFormatted += 'TransferTransaction: Recipient:';
+            if (transaction.recipient instanceof Address) {
+                transactionFormatted += transaction.recipient.pretty();
+            } else {
+                transactionFormatted += transaction.recipient.toHex();
+            }
             transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
                 transactionFormatted += ' Mosaics: ';
                 transaction.mosaics.map((mosaic) => {
-                    transactionFormatted += mosaic.id.toHex() + ':' + mosaic.amount.compact() + ',';
+                    if (mosaic.id instanceof MosaicId) {
+                        transactionFormatted += 'MosaicId:';
+                    } else {
+                        transactionFormatted += 'NamespaceId:';
+                    }
+                    transactionFormatted += mosaic.id.toHex() + '::' + mosaic.amount.compact() + ',';
                 });
                 transactionFormatted = transactionFormatted.substr(0, transactionFormatted.length - 1);
             }
-
-
         } else if (transaction instanceof RegisterNamespaceTransaction) {
             transactionFormatted += 'RegisterNamespaceTransaction: NamespaceName:' + transaction.namespaceName;
 
@@ -62,24 +72,24 @@ export class TransactionService {
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
-            'MosaicName:' + transaction.mosaicName +
-            ' Duration:' + transaction.mosaicProperties.duration.compact() +
-            ' Divisibility:' + transaction.mosaicProperties.divisibility +
-            ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +
-            ' Transferable:' + transaction.mosaicProperties.transferable +
-            ' LevyMutable:' + transaction.mosaicProperties.levyMutable;
+                'MosaicName:' + transaction.mosaicId.toHex() +
+                ' Duration:' + transaction.mosaicProperties.duration.compact() +
+                ' Divisibility:' + transaction.mosaicProperties.divisibility +
+                ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +
+                ' Transferable:' + transaction.mosaicProperties.transferable +
+                ' LevyMutable:' + transaction.mosaicProperties.levyMutable;
 
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
-            'MosaicId:' + transaction.mosaicId.toHex();
+                'MosaicId:' + transaction.mosaicId.toHex();
             transactionFormatted += ' Direction:' + (transaction.direction === MosaicSupplyType.Increase ?
-                    'IncreaseSupply' : 'DecreaseSupply');
+                'IncreaseSupply' : 'DecreaseSupply');
             transactionFormatted += ' Delta:' + transaction.delta.compact();
 
         } else if (transaction instanceof ModifyMultisigAccountTransaction) {
             transactionFormatted += 'ModifyMultisigAccountTransaction:' +
-            ' MinApprovalDelta:' + transaction.minApprovalDelta +
-            ' MinRemovalDelta:' + transaction.minRemovalDelta;
+                ' MinApprovalDelta:' + transaction.minApprovalDelta +
+                ' MinRemovalDelta:' + transaction.minRemovalDelta;
 
             transaction.modifications.map((modification) => {
                 transactionFormatted += ' Type:' +

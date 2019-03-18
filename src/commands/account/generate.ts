@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {Command, command, ExpectedError, metadata, option, Options, ValidationContext, Validator,} from 'clime';
-import {Account, NetworkHttp, NetworkType,} from 'nem2-sdk';
+import {Account, NetworkHttp, NetworkType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';

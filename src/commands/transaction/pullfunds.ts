@@ -31,11 +31,11 @@ import {
     TransactionHttp,
     TransferTransaction,
     UInt64,
-    XEM,
 } from 'nem2-sdk';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AliasService} from '../../service/alias.service';
 
 export class MosaicValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -44,11 +44,11 @@ export class MosaicValidator implements Validator<string> {
             if (isNaN(+mosaicParts[1])) {
                 throw new ExpectedError('');
             }
-            const mosaic = new Mosaic(new MosaicId(mosaicParts[0]),
+            const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                 UInt64.fromUint(+mosaicParts[1]));
         } catch (err) {
-            throw new ExpectedError('mosaic should be in format namespaceName:mosaicName::absoluteAmount' +
-                'ex: sending 1 XEM, nem:xem::1000000');
+            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
         }
     }
 }
@@ -69,14 +69,21 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'x',
-        description: 'Mosaic you want to get in the format namespaceName:mosaicName::absoluteAmount',
+        description: 'Mosaic you want to get should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
         validator: new MosaicValidator(),
     })
     mosaic: string;
 
+    @option({
+        flag: 'c',
+        description: 'The network native currency mosaicId in hexadecimal',
+        validator: new MosaicValidator(),
+    })
+    currency: string;
+
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
-        return new Mosaic(new MosaicId(mosaicParts[0]),
+        return new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
             UInt64.fromUint(+mosaicParts[1]));
     }
 }
@@ -124,8 +131,7 @@ export default class extends ProfileCommand {
                 options.mosaic = OptionsResolver(options,
                     'mosaic',
                     () => undefined,
-                    'Introduce pull mosaic in the format namespaceName:mosaicName::absoluteAmount,' +
-                ' (Ex: 1 XEM, nem:xem::1000000): ');
+                    'Introduce pull mosaic in the format (mosaicId(hex)|@aliasName)::absoluteAmount:');
 
                 const mosaics = [options.getMosaic()];
 
@@ -139,9 +145,14 @@ export default class extends ProfileCommand {
 
                 const signedTransaction = profile.account.sign(aggregateTx);
 
+                const currencyMosaic = new Mosaic (new MosaicId( OptionsResolver(options,
+                    'currency',
+                    () => undefined,
+                    'The network native currency mosaicId in hexadecimal:')), UInt64.fromUint(10000000));
+
                 const lockFundsTransaction = LockFundsTransaction.create(
                     Deadline.create(),
-                    XEM.createRelative(10),
+                    currencyMosaic,
                     UInt64.fromUint(1000),
                     signedTransaction,
                     profile.networkType,

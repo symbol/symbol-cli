@@ -16,17 +16,17 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option,} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService, NamespaceHttp,} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {AccountHttp, MosaicHttp, MosaicId, MosaicService} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'n',
-        description: 'Mosaic Id in string format',
+        flag: 'h',
+        description: 'Mosaic Id in hexadecimal format',
     })
-    name: string;
+    hex: string;
 
     @option({
         flag: 'u',
@@ -48,33 +48,25 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        if (!options.uint) {
-            options.name = OptionsResolver(options,
-                'name',
+        if (!options.hex && !options.uint) {
+            options.hex = OptionsResolver(options,
+                'hex',
                 () => undefined,
-                'Introduce the mosaic name: ');
-        }
-        if (options.name === '') {
-            options.uint = OptionsResolver(options,
-                'uint',
-                () => undefined,
-                'Introduce the mosaic id in uint64 format. [number, number]: ');
+                'Introduce the mosaic id in hexadecimal format: ');
         }
 
         let mosaicId: MosaicId;
-        if (options.name) {
-            mosaicId = new MosaicId(options.name);
+        if (options.hex) {
+            mosaicId = new MosaicId(options.hex);
         } else if (options.uint) {
             mosaicId = new MosaicId(JSON.parse(options.uint));
         } else {
-            throw new ExpectedError('You need to introduce at least one');
+            throw new ExpectedError('You need to introduce a mosaicId');
         }
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),
             new MosaicHttp(profile.url),
-            new NamespaceHttp(profile.url),
         );
 
         mosaicService.mosaicsView([mosaicId])
@@ -85,21 +77,16 @@ export default class extends ProfileCommand {
                 } else {
                     const mosaicView = mosaicViews[0];
                     let text = '';
-                    text += chalk.green('Mosaic:\t') + chalk.bold(mosaicView.fullName()) + '\n';
-                    text += '-'.repeat('Mosaic:\t'.length + mosaicView.fullName().length) + '\n\n';
-                    text += 'hexadecimal:\t' + mosaicId.toHex() + '\n';
-                    text += 'uint:\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
+                    text += chalk.green('Mosaic:\t');
+                    text += 'Hex:\t' + mosaicId.toHex() + '\n';
+                    text += 'Uint64:\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
                     text += 'divisibility:\t' + mosaicView.mosaicInfo.divisibility + '\n';
                     text += 'transferable:\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
                     text += 'supply mutable:\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
-                    text += 'active:\t\t' + mosaicView.mosaicInfo.active + '\n';
                     text += 'block height:\t' + mosaicView.mosaicInfo.height.compact() + '\n';
                     text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
                     text += 'owner:\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
                     text += 'supply:\t\t' + mosaicView.mosaicInfo.supply.compact() + '\n';
-                    text += 'namespaceId hex: ' + mosaicView.mosaicInfo.namespaceId.toHex() + '\n';
-                    text += 'namespaceId uint: [ ' + mosaicView.mosaicInfo.namespaceId.id.lower + ', ' +
-                        '' + mosaicView.mosaicInfo.namespaceId.id.higher + ' ]\n\n';
                     console.log(text);
                 }
 

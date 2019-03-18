@@ -17,15 +17,16 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, Deadline, Mosaic, MosaicId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
+import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AliasService} from '../../service/alias.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'r',
-        description: 'Recipient',
+        description: 'Recipient (address or @alias)',
         validator: new AddressValidator(),
     })
     recipient: string;
@@ -39,8 +40,7 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'c',
-        description: 'Mosaic you want to get in the format namespaceName:mosaicName::absoluteAmount,' +
-        ' add multiple mosaics splitting them with a comma',
+        description: 'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
     })
     mosaics: string;
 
@@ -50,7 +50,7 @@ export class CommandOptions extends ProfileOptions {
         const mosaicsData = this.mosaics.split(',');
         mosaicsData.forEach((mosaicData) => {
             const mosaicParts = mosaicData.split('::');
-            mosaics.push(new Mosaic(new MosaicId(mosaicParts[0]),
+            mosaics.push(new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                 UInt64.fromUint(+mosaicParts[1])));
         });
         return mosaics;
@@ -64,11 +64,11 @@ export class CommandOptions extends ProfileOptions {
                 if (isNaN(+mosaicParts[1])) {
                     throw new ExpectedError('');
                 }
-                new Mosaic(new MosaicId(mosaicParts[0]),
+                const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                     UInt64.fromUint(+mosaicParts[1]));
             } catch (err) {
-                throw new ExpectedError('Introduce mosaics in a valid format namespaceName:mosaicName::absoluteAmount' +
-                    ' (Ex: sending 1 XEM, nem:xem::1000000)');
+                throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                    ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
             }
         });
     }
@@ -88,29 +88,21 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        let recipient: Address;
-        try {
-            recipient = Address.createFromRawAddress(
-                OptionsResolver(options,
-                    'recipient',
-                    () => undefined,
-                    'Introduce the recipient address: '));
-        } catch (err) {
-            throw new ExpectedError('Introduce a valid address');
-        }
-
-        if (recipient.networkType !== profile.networkType) {
+        let recipient: Address | NamespaceId;
+        recipient =  AliasService.getRecipient(OptionsResolver(options,
+            'recipient',
+            () => undefined,
+            'Introduce the recipient address: '));
+        if (recipient instanceof Address && recipient.networkType !== profile.networkType) {
             throw new ExpectedError('recipient network doesn\'t match network option');
         }
 
         let mosaics: Mosaic[] = [];
-
         options.mosaics = OptionsResolver(options,
             'mosaics',
             () => undefined,
-            'Introduce the mosaics in the format namespaceName:mosaicName::absoluteAmount,' +
-            ' add multiple mosaics splitting them with a comma:\n> ');
-
+            'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+            ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas:\n> ');
         if (options.mosaics) {
             mosaics = options.getMosaics();
         }
