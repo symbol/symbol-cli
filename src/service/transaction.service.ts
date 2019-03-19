@@ -17,9 +17,12 @@
  */
 import {
     Address,
+    AddressAliasTransaction,
     AggregateTransaction,
+    AliasActionType,
     LockFundsTransaction,
     ModifyMultisigAccountTransaction,
+    MosaicAliasTransaction,
     MosaicDefinitionTransaction,
     MosaicId,
     MosaicSupplyChangeTransaction,
@@ -134,6 +137,16 @@ export class TransactionService {
                 'HashType:' + (transaction.hashType === 0 ? 'SHA3_512' : ' unknown') +
                 ' Secret:' + transaction.secret +
                 ' Proof:' + transaction.proof;
+        } else if (transaction instanceof MosaicAliasTransaction) {
+            transactionFormatted += 'MosaicAliasTransaction: ' +
+                'AliasAction:' + AliasActionType[transaction.actionType] +
+                ' MosaicId:' + transaction.mosaicId.toHex() +
+                ' NamespaceId:' + transaction.namespaceId.toHex();
+        } else if (transaction instanceof AddressAliasTransaction) {
+            transactionFormatted += 'MosaicAliasTransaction: ' +
+                'AliasAction:' + AliasActionType[transaction.actionType] +
+                ' Address:' + transaction.address.plain() +
+                ' NamespaceId:' + transaction.namespaceId.toHex();
         }
 
         transactionFormatted += (transaction.signer ? ' Signer:' + transaction.signer.address.pretty() : '') +
