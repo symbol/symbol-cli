@@ -143,7 +143,7 @@ export class TransactionService {
                 ' MosaicId:' + transaction.mosaicId.toHex() +
                 ' NamespaceId:' + transaction.namespaceId.toHex();
         } else if (transaction instanceof AddressAliasTransaction) {
-            transactionFormatted += 'MosaicAliasTransaction: ' +
+            transactionFormatted += 'AddressAliasTransaction: ' +
                 'AliasAction:' + AliasActionType[transaction.actionType] +
                 ' Address:' + transaction.address.plain() +
                 ' NamespaceId:' + transaction.namespaceId.toHex();
