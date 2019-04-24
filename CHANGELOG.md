@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.1] - 24-Apr-2019
+
+### Added
+- ``transaction mosaicalias`` command enables assigning namespaces to mosaics.
+- ``transaction addressalias`` command enables assigning namespaces to addresses.
+
 ## [0.11.0] - 18-Mar-2019
 
 ### Changed
