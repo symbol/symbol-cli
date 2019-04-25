@@ -4,9 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.11.1] - 24-Apr-2019
+## [0.11.2] - 25-Apr-2019
 
 ### Added
+- ``transaction mosaic`` accepts creating eternal mosaics.
 - ``transaction mosaicalias`` command enables assigning namespaces to mosaics.
 - ``transaction addressalias`` command enables assigning namespaces to addresses.
 

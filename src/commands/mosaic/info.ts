@@ -84,7 +84,9 @@ export default class extends ProfileCommand {
                     text += 'transferable:\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
                     text += 'supply mutable:\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
                     text += 'block height:\t' + mosaicView.mosaicInfo.height.compact() + '\n';
-                    text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
+                    if (mosaicView.mosaicInfo.duration) {
+                        text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
+                    }
                     text += 'owner:\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
                     text += 'supply:\t\t' + mosaicView.mosaicInfo.supply.compact() + '\n';
                     console.log(text);

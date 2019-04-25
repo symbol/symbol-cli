@@ -75,13 +75,14 @@ export class TransactionService {
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
-                'MosaicName:' + transaction.mosaicId.toHex() +
-                ' Duration:' + transaction.mosaicProperties.duration.compact() +
-                ' Divisibility:' + transaction.mosaicProperties.divisibility +
+                'MosaicName:' + transaction.mosaicId.toHex();
+            if (transaction.mosaicProperties.duration) {
+                transactionFormatted += ' Duration:' + transaction.mosaicProperties.duration.compact();
+            }
+            transactionFormatted += ' Divisibility:' + transaction.mosaicProperties.divisibility +
                 ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +
                 ' Transferable:' + transaction.mosaicProperties.transferable +
                 ' LevyMutable:' + transaction.mosaicProperties.levyMutable;
-
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
