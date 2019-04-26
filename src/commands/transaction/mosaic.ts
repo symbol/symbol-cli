@@ -72,6 +72,14 @@ export class CommandOptions extends ProfileOptions {
         description: 'Mosaic duration in amount of blocks',
     })
     duration: number;
+
+    @option({
+        flag: 'e',
+        description: 'eternal',
+        toggle: true,
+    })
+    eternal: any;
+
 }
 
 @command({
@@ -89,16 +97,21 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
         const nonce = MosaicNonce.createRandom();
-
+        let blocksDuration;
+        if (!options.eternal) {
+            if (!readlineSync.keyInYN('Do you want an eternal mosaic?')) {
+                blocksDuration = UInt64.fromUint( OptionsResolver(options,
+                    'duration',
+                    () => undefined,
+                    'Introduce the duration in blocks: '));
+            }
+        }
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
             MosaicId.createFromNonce(nonce, profile.account.publicAccount),
             MosaicProperties.create({
-                duration: UInt64.fromUint(OptionsResolver(options,
-                    'duration',
-                    () => undefined,
-                    'Introduce rental duration: ')),
+                duration: blocksDuration,
                 divisibility: OptionsResolver(options,
                     'divisibility',
                     () => undefined,
