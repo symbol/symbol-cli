@@ -28,7 +28,7 @@ export class CommandOptions extends ProfileOptions {
     publickey: string;
     @option({
         flag: 'a',
-        description: '< 0 (add)| 1 (delete)>',
+        description: '< 0 (Link)| 1 (Unlink)>',
     })
     action: number;
 
