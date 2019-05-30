@@ -19,6 +19,7 @@ import {command, ExpectedError, metadata, option} from 'clime';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {OptionsResolver} from "../../options-resolver";
 import {Address} from "nem2-sdk";
+import {MonitorAddressOptions} from "../../monitor.transaction.command";
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -37,15 +38,14 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: ProfileOptions) {
-
-        const address  = OptionsResolver(options,
-            'address',
-            () => undefined,
-            'Introduce the  a hexadecimal address : ');
+    execute(options: MonitorAddressOptions) {
         try {
-            const addressRst = Address.createFromRawAddress(address);
-            console.log(addressRst);
+            const address = Address.createFromRawAddress(
+                OptionsResolver(options,
+                    'address',
+                    () => undefined,
+                    'Introduce the address: '));
+            console.log(address);
         } catch (err) {
             throw new ExpectedError('introduce a valid address');
         }

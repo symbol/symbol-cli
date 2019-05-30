@@ -35,6 +35,10 @@ export const subcommands = [
         brief: 'Fetch blockchain information',
     },
     {
+        name: 'converter',
+        brief: 'converter tools',
+    },
+    {
         name: 'mosaic',
         brief: 'Fetch mosaic information',
     },
