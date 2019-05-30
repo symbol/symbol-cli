@@ -51,7 +51,11 @@ export class TransactionService {
             } else {
                 transactionFormatted += transaction.recipient.toHex();
             }
-            transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
+            try {
+                transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
+            }catch (e) {
+                transactionFormatted += '';
+            }
             if (transaction.mosaics.length > 0) {
                 transactionFormatted += ' Mosaics: ';
                 transaction.mosaics.map((mosaic) => {
