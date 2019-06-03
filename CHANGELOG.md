@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.11.3] - 03-Jun-2019
+
+### Fixed
+- Static nem2-sdk & library version.
+
 ## [0.11.2] - 25-Apr-2019
 
 ### Added
