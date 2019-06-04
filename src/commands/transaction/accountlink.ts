@@ -32,14 +32,9 @@ export class CommandOptions extends ProfileOptions {
     })
     action: number;
 
-    validateAction(value: number): 0|1 {
-        if (value === 0) {
-            return 0;
-        } else if (value === 1) {
-            return 1;
-        } else {
-            throw new ExpectedError('Introduce a valid action value');
-        }
+    validateAction(value: number) {
+        if([0,1].some(x =>(x === value))) return value;
+        throw new ExpectedError('Introduce a valid action value');
     }
 }
 
