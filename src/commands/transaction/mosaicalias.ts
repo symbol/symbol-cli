@@ -95,7 +95,7 @@ export default class extends ProfileCommand {
             profile.networkType,
         );
 
-        const signedTransaction = profile.account.sign(mosaicAliasTransaction);
+        const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 

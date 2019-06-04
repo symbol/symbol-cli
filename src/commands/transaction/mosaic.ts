@@ -120,8 +120,6 @@ export default class extends ProfileCommand {
                     'Do you want mosaic to have supply mutable?'),
                 transferable: options.transferable ? options.transferable : readlineSync.keyInYN(
                     'Do you want mosaic to be transferable?'),
-                levyMutable: options.levymutable ? options.levymutable : readlineSync.keyInYN(
-                    'Do you want mosaic to have levy mutable?'),
             }),
             profile.networkType,
         );
@@ -146,7 +144,7 @@ export default class extends ProfileCommand {
             profile.networkType,
             [],
         );
-        const signedTransaction = profile.account.sign(aggregateTransaction);
+        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 

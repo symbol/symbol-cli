@@ -143,7 +143,7 @@ export default class extends ProfileCommand {
                     [requestFundsTx.toAggregate(profile.account.publicAccount), fundsTx.toAggregate(accountInfo.publicAccount)],
                     profile.networkType, []);
 
-                const signedTransaction = profile.account.sign(aggregateTx);
+                const signedTransaction = profile.account.sign(aggregateTx, profile.networkGenerationHash);
 
                 const currencyMosaic = new Mosaic (new MosaicId( OptionsResolver(options,
                     'currency',
@@ -158,7 +158,7 @@ export default class extends ProfileCommand {
                     profile.networkType,
                 );
 
-                const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction);
+                const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction,  profile.networkGenerationHash);
 
                 const transactionHttp = new TransactionHttp(profile.url);
                 const listener = new Listener(profile.url);
