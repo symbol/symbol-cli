@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {BlockchainHttp} from 'nem2-sdk';
+import {ChainHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 @command({
@@ -35,8 +35,8 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        const blockchainHttp = new BlockchainHttp(profile.url);
-        blockchainHttp.getBlockchainHeight().subscribe((height) => {
+        const chainHttp = new ChainHttp(profile.url);
+        chainHttp.getBlockchainHeight().subscribe((height) => {
             this.spinner.stop(true);
             console.log(height.compact());
         }, (err) => {

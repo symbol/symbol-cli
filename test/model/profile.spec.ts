@@ -27,6 +27,7 @@ describe('Profile', () => {
             NetworkType.MIJIN_TEST,
             'url',
             'default',
+            'test',
         );
         expect(profile['name']).to.be.equal('default');
     });

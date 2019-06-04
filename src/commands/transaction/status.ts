@@ -56,9 +56,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 console.log('group: ' + transaction.group);
                 console.log('status: ' + transaction.status);
-                console.log('hash: < ' + transaction.hash +' >');
+                console.log('hash: < ' + transaction.hash + ' >');
                 console.log('deadline: ' + transaction.deadline.value);
-                if(transaction.height.compact() > 0 ){
+                if(transaction.height.compact() > 0 ) {
                     console.log('height: ' + transaction.height.compact());
                 }
             }, (err) => {

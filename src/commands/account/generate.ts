@@ -46,6 +46,12 @@ export class CommandOptions extends Options {
     url: string;
 
     @option({
+        flag: 'g',
+        description: '(Optional) When saving profile, provide the network generation hash',
+    })
+    generationHash: string;
+
+    @option({
         description: '(Optional) When saving profile you can add profile name, if not will be stored as default',
     })
     profile: string;
@@ -106,11 +112,18 @@ export default class extends Command {
                 () => undefined,
                 'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ').trim();
 
+            const networkGenerationHash = OptionsResolver(options,
+                'generationhash',
+                () => undefined,
+                'Introduce the network generation hash.');
+
             let profile: string;
             if (options.profile) {
                 profile = options.profile;
             } else {
-                const tmp = readlineSync.question('Insert profile name (blank means default and it could overwrite the previous profile): ');
+                const tmp = readlineSync
+                    .question('Insert profile name ' +
+                        '(blank means default and it could overwrite the previous profile): ');
                 if (tmp === '') {
                     profile = 'default';
                 } else {
@@ -124,7 +137,7 @@ export default class extends Command {
                     console.log('Network provided and node network don\'t match');
                 } else {
                     this.profileService.createNewProfile(
-                        account, url, profile);
+                        account, url, profile, networkGenerationHash.trim());
                     text += chalk.green('\nStored ' + profile + ' profile');
                     console.log(text);
                 }

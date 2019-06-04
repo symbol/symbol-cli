@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {BlockchainHttp} from 'nem2-sdk';
+import {ChainHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 @command({
@@ -35,8 +35,8 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        const blockchainHttp = new BlockchainHttp(profile.url);
-        blockchainHttp.getBlockchainScore().subscribe((score) => {
+        const chainHttp = new ChainHttp(profile.url);
+        chainHttp.getBlockchainScore().subscribe((score) => {
             this.spinner.stop(true);
 
             console.log('Low score: ' + score.scoreLow.compact());

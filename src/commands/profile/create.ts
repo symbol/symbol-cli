@@ -61,6 +61,12 @@ export class CommandOptions extends Options {
     url: string;
 
     @option({
+        flag: 'g',
+        description: 'Network generation hash',
+    })
+    generationHash: string;
+
+    @option({
         description: '(Optional) profile name, if not private key will be stored as default',
     })
     profile: string;
@@ -116,6 +122,11 @@ export default class extends Command {
             () => undefined,
             'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
 
+        const networkGenerationHash = OptionsResolver(options,
+            'generationhash',
+            () => undefined,
+            'Introduce the network generation hash.');
+
         const networkHttp = new NetworkHttp(url);
 
         let profileName: string;
@@ -137,7 +148,8 @@ export default class extends Command {
             } else {
                 const profile = this.profileService.createNewProfile(account,
                     url as string,
-                    profileName);
+                    profileName,
+                    networkGenerationHash.trim());
                 console.log(chalk.green('\nProfile stored correctly\n') + profile.toString());
             }
         }, (err) => {
