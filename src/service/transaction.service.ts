@@ -142,6 +142,7 @@ export class TransactionService {
         } else if (transaction instanceof SecretProofTransaction) {
             transactionFormatted += 'SecretProofTransaction: ' +
                 'HashType:' + transaction.hashType +
+                ' Recipient:' + transaction.recipient.pretty() +
                 ' Secret:' + transaction.secret +
                 ' Proof:' + transaction.proof;
         } else if (transaction instanceof MosaicAliasTransaction) {
