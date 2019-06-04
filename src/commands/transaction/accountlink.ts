@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,12 @@ import {ProfileCommand, ProfileOptions} from '../../profile.command';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
-        description: '<remoteaccountkey>',
+        description: 'The public key of the remote account',
     })
     publickey: string;
     @option({
         flag: 'a',
-        description: '< 0 (Link)| 1 (Unlink)>',
+        description: 'Alias action (0: Add, 1: Remove)',
     })
     action: number;
 
