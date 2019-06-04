@@ -30,6 +30,11 @@ Get started and learn more about nem2-cli, check the [official documentation][do
 
 The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
+- [0.12.0](CHANGELOG.md#0120-04-Jun-2019) - **Dragon compatible**
+- [0.11.3](CHANGELOG.md#0113-03-Jun-2019) - **Cow compatible** 
+- [0.9.3](CHANGELOG.md#093---3-apr-2018) - **Alpaca compatible** 
+
+
 ## Contributing
 
 This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. You can find [nem2-cli on GitHub][self];

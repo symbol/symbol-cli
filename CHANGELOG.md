@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.12.0] - 04-Jun-2019
+
+### Added
+
+- ``transaction status`` command.
+- ``transation.service`` formats AccountLink and AccountProperty transactions.
+ 
+### Changed
+
+- Profile uses the network generation hash to sign transactions.
+
 ## [0.11.3] - 03-Jun-2019
 
 ### Fixed
@@ -30,5 +41,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 - Initial code release.
 
+[0.11.3]: https://github.com/nemtech/nem2-cli/compare/v0.11.2...v0.11.3
+[0.11.2]: https://github.com/nemtech/nem2-cli/compare/v0.11.0...v0.11.2
 [0.11.0]: https://github.com/nemtech/nem2-cli/compare/v0.9.3...v0.11.0
 [0.9.3]: https://github.com/nemtech/nem2-cli/releases/v0.9.3
