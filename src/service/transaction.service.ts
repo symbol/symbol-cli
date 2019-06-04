@@ -51,10 +51,11 @@ export class TransactionService {
             } else {
                 transactionFormatted += transaction.recipient.toHex();
             }
-            try {
-                transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
-            }catch (e) {
-                transactionFormatted += '';
+            transactionFormatted += '';
+            if (transaction.message.payload != undefined){
+                if(transaction.message.payload.length > 0){
+                    transactionFormatted +=' Message:\"' + transaction.message.payload + '\"';
+                }
             }
             if (transaction.mosaics.length > 0) {
                 transactionFormatted += ' Mosaics: ';
