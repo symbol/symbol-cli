@@ -29,7 +29,7 @@ export class Profile {
 
     toString(): string {
         return this.name + '-> \n\tNetwork:\t' + NetworkType[this.networkType] +
-        ' \n\tUrl:\t\t' + this.url + ' \n\tNetworkGenerationHash:\t' + this.networkGenerationHash +
+        ' \n\tUrl:\t\t' + this.url + ' \n\tGenerationHash:\t' + this.networkGenerationHash +
             ' \n\tAddress:\t' + this.account.address.plain() + ' \n\tPublicKey:\t' + this.account.publicKey +
             ' \n\tPrivateKey:\t' + this.account.privateKey + '\n';
     }

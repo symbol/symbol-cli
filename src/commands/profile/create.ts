@@ -17,8 +17,9 @@
  */
 import chalk from 'chalk';
 import {Command, command, ExpectedError, metadata, option, Options, ValidationContext, Validator} from 'clime';
-import {Account, NetworkHttp, NetworkType} from 'nem2-sdk';
+import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {forkJoin} from 'rxjs';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
@@ -59,12 +60,6 @@ export class CommandOptions extends Options {
         description: 'NEM2 Node URL. Example: http://localhost:3000',
     })
     url: string;
-
-    @option({
-        flag: 'g',
-        description: 'Network generation hash',
-    })
-    generationHash: string;
 
     @option({
         description: '(Optional) profile name, if not private key will be stored as default',
@@ -122,13 +117,6 @@ export default class extends Command {
             () => undefined,
             'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
 
-        const networkGenerationHash = OptionsResolver(options,
-            'generationhash',
-            () => undefined,
-            'Introduce the network generation hash.');
-
-        const networkHttp = new NetworkHttp(url);
-
         let profileName: string;
         if (options.profile) {
             profileName = options.profile;
@@ -142,22 +130,26 @@ export default class extends Command {
         }
         profileName.trim();
 
-        networkHttp.getNetworkType().subscribe((res) => {
-            if (res !== networkType) {
-                console.log('Network provided and node network don\'t match');
-            } else {
-                const profile = this.profileService.createNewProfile(account,
-                    url as string,
-                    profileName,
-                    networkGenerationHash.trim());
-                console.log(chalk.green('\nProfile stored correctly\n') + profile.toString());
-            }
-        }, (err) => {
-            let error = '';
-            error += chalk.red('Error');
-            error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
-            console.log(error);
-        });
+        const networkHttp = new NetworkHttp(url);
+        const blockHttp = new BlockHttp(url);
+
+        forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
+            .subscribe((res) => {
+                if (res[0] !== networkType) {
+                    console.log('Network provided and node network don\'t match');
+                } else {
+                    const profile = this.profileService.createNewProfile(account,
+                        url as string,
+                        profileName,
+                        res[1].generationHash);
+                    console.log(chalk.green('\nProfile stored correctly\n') + profile.toString());
+                }
+            }, (err) => {
+                let error = '';
+                error += chalk.red('Error');
+                error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
+                console.log(error);
+            });
     }
 
 }

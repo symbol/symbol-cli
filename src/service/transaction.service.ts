@@ -135,13 +135,13 @@ export class TransactionService {
             transactionFormatted += 'SecretLockTransaction: ' +
                 'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
                 ' Duration:' + transaction.duration.compact() +
-                ' HashType:' + (transaction.hashType === 0 ? 'SHA3_512' : ' unknown') +
+                ' HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
                 ' Recipient:' + transaction.recipient.pretty();
 
         } else if (transaction instanceof SecretProofTransaction) {
             transactionFormatted += 'SecretProofTransaction: ' +
-                'HashType:' + (transaction.hashType === 0 ? 'SHA3_512' : ' unknown') +
+                'HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
                 ' Proof:' + transaction.proof;
         } else if (transaction instanceof MosaicAliasTransaction) {
@@ -156,7 +156,7 @@ export class TransactionService {
                 ' NamespaceId:' + transaction.namespaceId.toHex();
         } else if (transaction instanceof AccountLinkTransaction) {
             transactionFormatted += 'AccountLinkTransaction: ' +
-                'AliasAction:' + LinkAction[transaction.linkAction] +
+                'LinkAction:' + LinkAction[transaction.linkAction] +
                 ' RemoteAccountKey: ' + transaction.remoteAccountKey;
         } else if (transaction instanceof ModifyAccountPropertyAddressTransaction) {
             transactionFormatted += 'AccountPropertyAddressTransaction: ' +
@@ -191,5 +191,4 @@ export class TransactionService {
             (transaction.transactionInfo && transaction.transactionInfo.hash ? ' Hash:' + transaction.transactionInfo.hash : '');
         return transactionFormatted;
     }
-
 }
