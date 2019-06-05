@@ -16,9 +16,10 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, ExpectedError, metadata, option, Options, ValidationContext, Validator,} from 'clime';
-import {Account, NetworkHttp, NetworkType} from 'nem2-sdk';
+import {Command, command, ExpectedError, metadata, option, Options, ValidationContext, Validator} from 'clime';
+import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {forkJoin} from 'rxjs';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
@@ -110,7 +111,9 @@ export default class extends Command {
             if (options.profile) {
                 profile = options.profile;
             } else {
-                const tmp = readlineSync.question('Insert profile name (blank means default and it could overwrite the previous profile): ');
+                const tmp = readlineSync
+                    .question('Insert profile name ' +
+                        '(blank means default and it could overwrite the previous profile): ');
                 if (tmp === '') {
                     profile = 'default';
                 } else {
@@ -118,22 +121,28 @@ export default class extends Command {
                 }
             }
             profile = profile.trim();
+
             const networkHttp = new NetworkHttp(url);
-            networkHttp.getNetworkType().subscribe((res) => {
-                if (res !== networkType) {
-                    console.log('Network provided and node network don\'t match');
-                } else {
-                    this.profileService.createNewProfile(
-                        account, url, profile);
-                    text += chalk.green('\nStored ' + profile + ' profile');
-                    console.log(text);
-                }
-            }, (err) => {
-                let error = '';
-                error += chalk.red('Error');
-                error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
-                console.log(error);
-            });
+            const blockHttp = new BlockHttp(url);
+
+            forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
+                .subscribe((res) => {
+                    if (res[0] !== networkType) {
+                        console.log('Network provided and node network don\'t match');
+                    } else {
+                        this.profileService.createNewProfile(account,
+                            url as string,
+                            profile,
+                            res[1].generationHash);
+                        text += chalk.green('\nStored ' + profile + ' profile');
+                        console.log(text);
+                    }
+                }, (err) => {
+                    let error = '';
+                    error += chalk.red('Error');
+                    error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
+                    console.log(error);
+                });
         } else {
             console.log(text);
         }

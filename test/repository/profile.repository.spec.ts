@@ -41,8 +41,9 @@ describe('ProfileRepository', () => {
         const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
             NetworkType.MIJIN_TEST);
         const url = 'http://localhost:3000';
+        const networkGenerationHash = 'test';
         const profileRepository = new ProfileRepository(repositoryFileUrl);
-        const savedProfile = profileRepository.save(account, url, 'default');
+        const savedProfile = profileRepository.save(account, url, 'default', networkGenerationHash);
         expect(savedProfile.account).to.be.equal(account);
     });
 
@@ -51,7 +52,8 @@ describe('ProfileRepository', () => {
             NetworkType.MIJIN_TEST);
         const url = 'http://localhost:3000';
         const profileRepository = new ProfileRepository(repositoryFileUrl);
-        profileRepository.save(account, url, 'default');
+        const networkGenerationHash = 'test';
+        profileRepository.save(account, url, 'default', networkGenerationHash);
         const savedProfile = profileRepository.find('default');
         expect(savedProfile).to.not.be.equal(undefined);
         if (savedProfile instanceof Profile) {
@@ -61,6 +63,7 @@ describe('ProfileRepository', () => {
             expect(savedProfile.url).to.be.equal(url);
             expect(savedProfile.name).to.be.equal('default');
             expect(savedProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+            expect(savedProfile.networkGenerationHash).to.be.equal('test');
         }
     });
 
@@ -77,8 +80,9 @@ describe('ProfileRepository', () => {
             NetworkType.MIJIN_TEST);
         const url2 = 'http://localhost:3000';
         const profileRepository = new ProfileRepository(repositoryFileUrl);
-        profileRepository.save(account, url, 'default');
-        profileRepository.save(account2, url2, 'default');
+        const networkGenerationHash = 'test';
+        profileRepository.save(account, url, 'default', networkGenerationHash);
+        profileRepository.save(account2, url2, 'default', networkGenerationHash);
         const savedProfile = profileRepository.find('default');
         expect(savedProfile).to.not.be.equal(undefined);
         if (savedProfile instanceof Profile) {
@@ -88,6 +92,7 @@ describe('ProfileRepository', () => {
             expect(savedProfile.url).to.be.equal(url2);
             expect(savedProfile.name).to.be.equal('default');
             expect(savedProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+            expect(savedProfile.networkGenerationHash).to.be.equal('test');
         }
     });
 

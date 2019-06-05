@@ -34,18 +34,20 @@ describe('Configure service', () => {
         const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
             NetworkType.MIJIN_TEST);
         const url = 'http://localhost:1234';
-        const profile = new Profile(account, NetworkType.MIJIN_TEST, url, 'default');
+        const networkGenerationHash = 'test';
+        const profile = new Profile(account, NetworkType.MIJIN_TEST, url, 'default', networkGenerationHash);
 
         const mockProfileRepository = mock(ProfileRepository);
-        when(mockProfileRepository.save(account, url, 'default'))
+        when(mockProfileRepository.save(account, url, 'default', networkGenerationHash))
             .thenReturn(profile);
 
         const profileService = new ProfileService(instance(mockProfileRepository));
-        const createdProfile = profileService.createNewProfile(account, url, 'default');
+        const createdProfile = profileService.createNewProfile(account, url, 'default', networkGenerationHash);
         expect(createdProfile.account).to.be.equal(account);
         expect(createdProfile.url).to.be.equal(url);
         expect(createdProfile.name).to.be.equal('default');
         expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+        expect(createdProfile.networkGenerationHash).to.be.equal('test');
     });
 
     it('should find account account with name', () => {
@@ -53,7 +55,8 @@ describe('Configure service', () => {
             NetworkType.MIJIN_TEST);
         const url = 'http://localhost:1234';
 
-        const profile = new Profile(account, NetworkType.MIJIN_TEST, url, 'default');
+        const networkGenerationHash = 'test';
+        const profile = new Profile(account, NetworkType.MIJIN_TEST, url, 'default', networkGenerationHash);
         const mockProfileRepository = mock(ProfileRepository);
         when(mockProfileRepository.find('default'))
             .thenReturn(profile);
@@ -65,6 +68,7 @@ describe('Configure service', () => {
             expect(createdProfile.url).to.be.equal(url);
             expect(createdProfile.name).to.be.equal('default');
             expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+            expect(createdProfile.networkGenerationHash).to.be.equal(networkGenerationHash);
         }
     });
 

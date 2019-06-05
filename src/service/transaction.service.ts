@@ -16,11 +16,16 @@
  *
  */
 import {
+    AccountLinkTransaction,
     Address,
     AddressAliasTransaction,
     AggregateTransaction,
     AliasActionType,
+    LinkAction,
     LockFundsTransaction,
+    ModifyAccountPropertyAddressTransaction,
+    ModifyAccountPropertyEntityTypeTransaction,
+    ModifyAccountPropertyMosaicTransaction,
     ModifyMultisigAccountTransaction,
     MosaicAliasTransaction,
     MosaicDefinitionTransaction,
@@ -29,6 +34,8 @@ import {
     MosaicSupplyType,
     MultisigCosignatoryModificationType,
     NamespaceType,
+    PropertyModificationType,
+    PropertyType,
     RegisterNamespaceTransaction,
     SecretLockTransaction,
     SecretProofTransaction,
@@ -81,8 +88,7 @@ export class TransactionService {
             }
             transactionFormatted += ' Divisibility:' + transaction.mosaicProperties.divisibility +
                 ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +
-                ' Transferable:' + transaction.mosaicProperties.transferable +
-                ' LevyMutable:' + transaction.mosaicProperties.levyMutable;
+                ' Transferable:' + transaction.mosaicProperties.transferable;
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
@@ -129,13 +135,14 @@ export class TransactionService {
             transactionFormatted += 'SecretLockTransaction: ' +
                 'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
                 ' Duration:' + transaction.duration.compact() +
-                ' HashType:' + (transaction.hashType === 0 ? 'SHA3_512' : ' unknown') +
+                ' HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
                 ' Recipient:' + transaction.recipient.pretty();
 
         } else if (transaction instanceof SecretProofTransaction) {
             transactionFormatted += 'SecretProofTransaction: ' +
-                'HashType:' + (transaction.hashType === 0 ? 'SHA3_512' : ' unknown') +
+                'HashType:' + transaction.hashType +
+                ' Recipient:' + transaction.recipient.pretty() +
                 ' Secret:' + transaction.secret +
                 ' Proof:' + transaction.proof;
         } else if (transaction instanceof MosaicAliasTransaction) {
@@ -148,12 +155,41 @@ export class TransactionService {
                 'AliasAction:' + AliasActionType[transaction.actionType] +
                 ' Address:' + transaction.address.plain() +
                 ' NamespaceId:' + transaction.namespaceId.toHex();
+        } else if (transaction instanceof AccountLinkTransaction) {
+            transactionFormatted += 'AccountLinkTransaction: ' +
+                'LinkAction:' + LinkAction[transaction.linkAction] +
+                ' RemoteAccountKey: ' + transaction.remoteAccountKey;
+        } else if (transaction instanceof ModifyAccountPropertyAddressTransaction) {
+            transactionFormatted += 'AccountPropertyAddressTransaction: ' +
+                'PropertyType:' + PropertyType[transaction.propertyType] +
+                ' Modifications: ';
+            transaction.modifications.map((modification) => {
+                transactionFormatted += ' [ModificationType:' + PropertyModificationType[modification.modificationType];
+                transactionFormatted += ' Value: ' + modification.value;
+                transactionFormatted += ' ]';
+            });
+        } else if (transaction instanceof ModifyAccountPropertyMosaicTransaction) {
+            transactionFormatted += 'AccountPropertyMosaicTransaction: ' +
+                'PropertyType:' + PropertyType[transaction.propertyType] +
+                ' Modifications: ';
+            transaction.modifications.map((modification) => {
+                transactionFormatted += ' [ModificationType:' + PropertyModificationType[modification.modificationType];
+                transactionFormatted += ' Value: ' + modification.value;
+                transactionFormatted += ' ]';
+            });
+        } else if (transaction instanceof ModifyAccountPropertyEntityTypeTransaction) {
+            transactionFormatted += 'AccountPropertyEntityTypeTransaction: ' +
+                'PropertyType:' + PropertyType[transaction.propertyType] +
+                ' Modifications: ';
+            transaction.modifications.map((modification) => {
+                transactionFormatted += ' [ModificationType:' + PropertyModificationType[modification.modificationType];
+                transactionFormatted += ' Value: ' + modification.value;
+                transactionFormatted += ' ]';
+            });
         }
-
         transactionFormatted += (transaction.signer ? ' Signer:' + transaction.signer.address.pretty() : '') +
             ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +
             (transaction.transactionInfo && transaction.transactionInfo.hash ? ' Hash:' + transaction.transactionInfo.hash : '');
         return transactionFormatted;
     }
-
 }
