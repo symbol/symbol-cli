@@ -52,7 +52,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         options.validateAction(options.action);
         const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), options.publickey, options.action, profile.networkType);
-        const signedTransaction = profile.account.sign(accountLinkTransaction);
+        const signedTransaction = profile.account.sign(accountLinkTransaction, profile.generationHash);
         const transactionHttp = new TransactionHttp(profile.url);
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
