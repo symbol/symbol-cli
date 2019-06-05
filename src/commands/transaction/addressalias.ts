@@ -76,8 +76,6 @@ export default class extends ProfileCommand {
                 'recipient',
                 () => undefined,
                 'Introduce the address: '));
-
-            console.log(address);
         } catch (err) {
             throw new ExpectedError('Introduce a valid address');
         }
@@ -103,11 +101,9 @@ export default class extends ProfileCommand {
             address,
             profile.networkType,
         );
-
-        const signedTransaction = profile.account.sign(addressAliasTransaction);
+        const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
-
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
             console.log('Hash:   ', signedTransaction.hash);

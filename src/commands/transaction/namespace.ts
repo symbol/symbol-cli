@@ -100,7 +100,7 @@ export default class extends ProfileCommand {
                 options.name, options.parentname, profile.networkType);
         }
 
-        const signedTransaction = profile.account.sign(registerNamespaceTransaction);
+        const signedTransaction = profile.account.sign(registerNamespaceTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 

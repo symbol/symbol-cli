@@ -115,7 +115,7 @@ export default class extends ProfileCommand {
 
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics, message, profile.networkType);
 
-        const signedTransaction = profile.account.sign(transferTransaction);
+        const signedTransaction = profile.account.sign(transferTransaction,  profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 
