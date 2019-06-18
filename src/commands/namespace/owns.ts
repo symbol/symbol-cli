@@ -16,13 +16,39 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {NamespaceHttp, NamespaceService} from 'nem2-sdk';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {Address, Mosaic, NamespaceHttp, NamespaceService, UInt64} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressValidator} from "../../address.validator";
+import {OptionsResolver} from "../../options-resolver";
+
+export class CommandOptions extends ProfileOptions {
+    @option({
+        flag: 'o',
+        description: '(Optional) (0: load default profile address, 1: input address)',
+    })
+    option: number;
+
+    @option({
+        flag: 'a',
+        description: 'Address',
+        validator: new AddressValidator(),
+    })
+    address: string;
+
+    optionValidator(str: string) {
+        const value = parseInt(str);
+        if ([0, 1].some(x => (x === value))) {
+            return value;
+        }
+        throw new ExpectedError('Introduce a valid option value');
+    }
+}
 
 @command({
     description: 'Get owned namespaces',
 })
+
 export default class extends ProfileCommand {
 
     constructor() {
@@ -30,10 +56,27 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: ProfileOptions) {
+    execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        let address: Address;
+        const optioned: number = options.optionValidator(
+            OptionsResolver(options,
+                'option',
+                () => undefined,
+                'Introduce alias action (0: load default profile address, 1: input address): ')
+        );
+        address = profile.account.address;
+        if( optioned === 1){
+            try {
+                address = Address.createFromRawAddress(OptionsResolver(options,
+                    'address',
+                    () => undefined,
+                    'Introduce the address: '));
+            } catch (err) {
+                throw new ExpectedError('Introduce a valid address');
+            }
+        }
         const namespaceHttp = new NamespaceHttp(profile.url);
-        const address = profile.account.address;
         const namespaceService = new NamespaceService(namespaceHttp);
         namespaceHttp.getNamespacesFromAccount(address)
             .subscribe((namespacesInfo) => {
