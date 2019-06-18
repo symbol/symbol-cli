@@ -17,17 +17,12 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, Mosaic, NamespaceHttp, NamespaceService, UInt64} from 'nem2-sdk';
+import {Address, NamespaceHttp, NamespaceService} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from "../../address.validator";
 import {OptionsResolver} from "../../options-resolver";
 
 export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'o',
-        description: '(Optional) (0: load default profile address, 1: input address)',
-    })
-    option: number;
 
     @option({
         flag: 'a',
@@ -35,14 +30,6 @@ export class CommandOptions extends ProfileOptions {
         validator: new AddressValidator(),
     })
     address: string;
-
-    optionValidator(str: string) {
-        const value = parseInt(str);
-        if ([0, 1].some(x => (x === value))) {
-            return value;
-        }
-        throw new ExpectedError('Introduce a valid option value');
-    }
 }
 
 @command({
@@ -59,22 +46,15 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         let address: Address;
-        const optioned: number = options.optionValidator(
-            OptionsResolver(options,
-                'option',
-                () => undefined,
-                'Introduce alias action (0: load default profile address, 1: input address): ')
-        );
-        address = profile.account.address;
-        if( optioned === 1){
-            try {
-                address = Address.createFromRawAddress(OptionsResolver(options,
+        try {
+            address = Address.createFromRawAddress(
+                OptionsResolver(options,
                     'address',
-                    () => undefined,
+                    () => this.getProfile(options).account.address.plain(),
                     'Introduce the address: '));
-            } catch (err) {
-                throw new ExpectedError('Introduce a valid address');
-            }
+        } catch (err) {
+            console.log(options);
+            throw new ExpectedError('Introduce a valid address');
         }
         const namespaceHttp = new NamespaceHttp(profile.url);
         const namespaceService = new NamespaceService(namespaceHttp);
