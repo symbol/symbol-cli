@@ -58,8 +58,10 @@ export default class extends ProfileCommand {
                 text += 'group:\t' + transaction.group + '\n';
                 text += 'status:\t' + transaction.status + '\n';
                 text += 'hash:\t<' + transaction.hash + '>' + '\n';
-                text += 'deadline:\t' + transaction.deadline.value + '\n';
-                if (transaction.height.compact() > 0 ) {
+                if (transaction.deadline) {
+                    text += 'deadline:\t' + transaction.deadline.value + '\n';
+                }
+                if (transaction.height && transaction.height.compact() > 0 ) {
                     text += 'height:\t' + transaction.height.compact() + '\n';
                 }
                 console.log(text);
