@@ -18,9 +18,10 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk';
+import {mergeMap, toArray} from 'rxjs/operators';
+import {AddressValidator} from '../../address.validator';
+import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from "../../address.validator";
-import {OptionsResolver} from "../../options-resolver";
 
 export class CommandOptions extends ProfileOptions {
 
@@ -57,45 +58,49 @@ export default class extends ProfileCommand {
             throw new ExpectedError('Introduce a valid address');
         }
         const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceService = new NamespaceService(namespaceHttp);
         this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)
-            .subscribe((namespacesListInfo: NamespaceInfo[]) => {
+            .pipe(
+                mergeMap((_) => _),
+                mergeMap((namespaceInfo: NamespaceInfo) =>  namespaceService.namespace(namespaceInfo.id)),
+                toArray(),
+            )
+            .subscribe((namespaces) => {
                 this.spinner.stop(true);
-                if (namespacesListInfo.length === 0) {
-                    console.log('The address' + address.plain() + 'does not own any namespaces');
-                } else {
-                    let text = '';
-                    namespacesListInfo.map((namespaceInfo: NamespaceInfo) => {
-                        if(namespaceInfo != null){
-                            const rst =  namespaceInfo.id.fullName == null ? '' : namespaceInfo.id.fullName;
-                            text += chalk.green('Namespace: ') + chalk.bold(rst) + '\n';
-                            text += '-'.repeat('Namespace: '.length + rst.length) + '\n\n';
-                            text += 'hexadecimal:\t' + namespaceInfo.id.toHex() + '\n';
-                            text += 'uint:\t\t[ ' + namespaceInfo.id.id.lower + ', ' + namespaceInfo.id.id.higher + ' ]\n';
 
-                            if(namespaceInfo.hasAlias()) {
-                                text += 'alias:\t ' + namespaceInfo.alias + '\n';
-                            }
-                            if (namespaceInfo.isRoot()) {
-                                text += 'type:\t\tRoot namespace \n';
-                            } else {
-                                text += 'type:\t\tSub namespace \n';
-                            }
-                            text += 'owner:\t\t' + namespaceInfo.owner.address.pretty() + '\n';
-                            text += 'startHeight:\t' + namespaceInfo.startHeight.compact() + '\n';
-                            text += 'endHeight:\t' + namespaceInfo.endHeight.compact() + '\n\n';
-
-                            if (namespaceInfo.isSubnamespace()) {
-                                text += chalk.green('Parent Id: ') + chalk.bold(rst) + '\n';
-                                text += '-'.repeat('Parent Id: '.length + rst.length) + '\n\n';
-                                text += 'hexadecimal:\t' + namespaceInfo.parentNamespaceId().toHex() + '\n';
-                                text += 'uint:\t\t[ ' + namespaceInfo.parentNamespaceId().id.lower + ', ' +
-                                    '' + namespaceInfo.parentNamespaceId().id.higher + ' ]\n\n';
-                            }
-                            console.log(text);
-                        }
-                    });
+                if (namespaces.length === 0) {
+                    console.log('The address ' + address.plain() + ' does not own any namespaces');
                 }
+
+                namespaces.map((namespace) => {
+
+                    let text = '';
+                    text += chalk.green('Namespace: ') + chalk.bold(namespace.name) + '\n';
+                    text += '-'.repeat('Namespace: '.length + namespace.name.length) + '\n\n';
+                    text += 'hexadecimal:\t' + namespace.id.toHex() + '\n';
+                    text += 'uint:\t\t[ ' + namespace.id.id.lower + ', ' + namespace.id.id.higher + ' ]\n';
+
+                    if (namespace.isRoot()) {
+                        text += 'type:\t\tRoot namespace \n';
+                    } else {
+                        text += 'type:\t\tSub namespace \n';
+                    }
+
+                    text += 'owner:\t\t' + namespace.owner.address.pretty() + '\n';
+                    text += 'startHeight:\t' + namespace.startHeight.compact() + '\n';
+                    text += 'endHeight:\t' + namespace.endHeight.compact() + '\n\n';
+
+                    if (namespace.isSubnamespace()) {
+                        text += 'Parent Id:' + '\n';
+                        text += 'hexadecimal:\t' + namespace.parentNamespaceId().toHex() + '\n';
+                        text += 'uint:\t\t[ ' + namespace.parentNamespaceId().id.lower + ', ' +
+                            '' + namespace.parentNamespaceId().id.higher + ' ]\n\n';
+                    }
+
+                    console.log(text);
+                });
+
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
