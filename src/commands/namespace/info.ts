@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {NamespaceHttp, NamespaceId, NamespaceService} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -93,8 +93,7 @@ export default class extends ProfileCommand {
                 text += 'endHeight:\t' + namespace.endHeight.compact() + '\n\n';
 
                 if (namespace.isSubnamespace()) {
-                    text += chalk.green('Parent Id: ') + chalk.bold(namespace.name) + '\n';
-                    text += '-'.repeat('Parent Id: '.length + namespace.name.length) + '\n\n';
+                    text += 'Parent Id:' + '\n';
                     text += 'hexadecimal:\t' + namespace.parentNamespaceId().toHex() + '\n';
                     text += 'uint:\t\t[ ' + namespace.parentNamespaceId().id.lower + ', ' +
                         '' + namespace.parentNamespaceId().id.higher + ' ]\n\n';
