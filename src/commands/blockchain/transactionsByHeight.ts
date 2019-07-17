@@ -17,9 +17,10 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {BlockHttp, QueryParams} from 'nem2-sdk';
+import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {TransactionService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -30,9 +31,21 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 's',
-        description: 'Page size between 10 and 100, otherwise 10',
+        description: 'Page size between 10 and 100, defaults to 10',
     })
     pageSize: number;
+
+    @option({
+        flag: 'i',
+        description: 'Id after which we want objects to be returned, defaults to empty',
+    })
+    id: string | undefined;
+
+    @option({
+        flag: 'o',
+        description: 'Order of transactions. DESC. Newer to older. ASC. Older to newer. Defaults to DESC',
+    })
+    order: string;
 }
 
 @command({
@@ -53,43 +66,51 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the block height: ');
         if (height < 1) {
-            throw new ExpectedError('Block height introduce error');
+            throw new ExpectedError('The block height cannot be smaller than 1');
         }
 
         let pageSize: number;
         pageSize =  OptionsResolver(options,
             'pageSize',
             () => undefined,
-            'Introduce the Gets transactions pageSize(PageSize between 10 and 100, otherwise 10): ');
+            'Enter the page size (must be between 10 and 100, defaults to 10): ');
         if (!pageSize || pageSize < 10) {
             pageSize = 10;
         } else if (pageSize > 100) {
-            pageSize = 10;
+            pageSize = 100;
+        }
+
+        let id: string | undefined;
+        id =  OptionsResolver(options,
+            'id',
+            () => undefined,
+            'Id after which we want objects to be returned. (defaults to empty): ');
+
+        let order: string;
+        order =  OptionsResolver(options,
+            'order',
+            () => undefined,
+            'Order of transactions. DESC. Newer to older. ASC. Older to newer. (defaults to DESC): ');
+        if (order !== 'ASC') {
+            order = 'DESC';
         }
 
         this.spinner.start();
         const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
 
-        blockHttp.getBlockTransactions(height, new QueryParams(pageSize)).subscribe((transacitons: any) => {
+        blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
+            .subscribe((transactions: any) => {
             this.spinner.stop(true);
             let txt = `\n`;
-            if (transacitons.length > 0) {
-                transacitons.map((transaction: any, index: number) => {
-                    txt += '(' + (index + 1) + ')' + '. \n\t';
-                    for (let i in transaction) {
-                        if (typeof transaction[i] === 'object') {
-                            txt += i + ':' + JSON.stringify(transaction[i]) + '\n\t';
-                        } else if (typeof transaction[i] !== 'function') {
-                            txt += i + ':' + transaction[i] + '\n\t';
-                        }
-                    }
-                    txt += '\n';
+            if (transactions.length > 0) {
+                transactions.map((transaction: any, index: number) => {
+                    txt += '(' + (index + 1) + ')' + '.';
+                    txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
                 });
             } else {
                 txt = '[]';
             }
-
             console.log(txt);
         }, (err) => {
             this.spinner.stop(true);
