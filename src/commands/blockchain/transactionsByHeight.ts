@@ -101,22 +101,22 @@ export default class extends ProfileCommand {
 
         blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
-            this.spinner.stop(true);
-            let txt = `\n`;
-            if (transactions.length > 0) {
-                transactions.map((transaction: any, index: number) => {
-                    txt += '(' + (index + 1) + ')' + '.';
-                    txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
-                });
-            } else {
-                txt = '[]';
-            }
-            console.log(txt);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+                this.spinner.stop(true);
+                let txt = `\n`;
+                if (transactions.length > 0) {
+                    transactions.map((transaction: any, index: number) => {
+                        txt += '(' + (index + 1) + ')' + '.';
+                        txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
+                    });
+                } else {
+                    txt = '[]';
+                }
+                console.log(txt);
+            }, (err) => {
+                this.spinner.stop(true);
+                let text = '';
+                text += chalk.red('Error');
+                console.log(text, err.response !== undefined ? err.response.text : err);
+            });
     }
 }
