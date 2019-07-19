@@ -56,4 +56,8 @@ export const subcommands = [
         name: 'profile',
         brief: 'Profile management',
     },
+    {
+        name: 'converter',
+        brief: 'Converter tool',
+    },
 ];
