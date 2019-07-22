@@ -107,7 +107,7 @@ export default class extends ProfileCommand {
         }
 
         let message: string;
-        message = OptionsResolver(options,
+        message = options.recipient ? (options.message || '') : OptionsResolver(options,
             'message',
             () => undefined,
             'Introduce the message: ');
