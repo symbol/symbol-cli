@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,14 @@ import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'a',
-        description: 'Address address',
+        flag: 'd',
+        description: 'Decoded address',
     })
-    address: string;
-
-    validateAddress(value: string) {
-        if (RawAddress.constants.sizes.addressEncoded !== value.length) {
-            throw new ExpectedError(`${value} does not represent a valid base32 address`);
-        }
-        return value;
-    }
+    decodeAddress: string;
 }
 
 @command({
-    description: 'Converts a base32 address to a hex address',
+    description: 'Converts a decoded address to a encoded address',
 })
 
 export default class extends ProfileCommand {
@@ -48,26 +41,23 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        let address: string;
-        address =  OptionsResolver(options,
-            'address',
+        let decodeAddress: string;
+        decodeAddress =  OptionsResolver(options,
+            'decodeAddress',
             () => undefined,
-            'Introduce the base32 address: ');
-        if (address) {
-            address = options.validateAddress(address);
-        }
+            'Introduce the decoded address: ');
 
         this.spinner.start();
-        let hexAddress: string;
+        let encodeAddress: string;
         try {
-            hexAddress = Convert.uint8ToHex(RawAddress.stringToAddress(address));
+            encodeAddress = RawAddress.addressToString(Convert.hexToUint8(decodeAddress));
             this.spinner.stop(true);
-            console.log(hexAddress);
+            console.log(encodeAddress);
         } catch (e) {
             this.spinner.stop(true);
             let text = '';
             text += chalk.red('Error');
-            console.log(text, 'The conversion failed and a valid base32 address may have been entered');
+            console.log(text, 'Conversion failed, please enter a valid decoded address');
         }
     }
 }

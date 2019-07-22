@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,20 +20,15 @@ import {command, ExpectedError, metadata, option} from 'clime';
 import {UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {UInt64Validate} from '../../uint.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'u',
         description: 'UInt64 uint64Array',
+        validator: new UInt64Validate(),
     })
     uint64ToString: string;
-
-    validateUInt64(uintArray: number[]) {
-        if (uintArray.length !== 2 || uintArray[0] < 0 || uintArray[1] < 0) {
-            throw new ExpectedError('UInt64 must be an array of two uint numbers');
-        }
-        return uintArray;
-    }
 }
 
 @command({
@@ -54,9 +49,6 @@ export default class extends ProfileCommand {
             'uint64ToString',
             () => undefined,
             'Introduce the UInt64 Array: '));
-        if (uint64) {
-            uint64 = options.validateUInt64(uint64);
-        }
 
         this.spinner.start();
         let uintNumber: number;

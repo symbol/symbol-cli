@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {UInt64} from 'nem2-sdk';
+import {RawUInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
@@ -30,7 +30,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Converts a hexadecimal id to a uint64 object id',
+    description: 'Converts a hexadecimal id to a uint64 id',
 })
 
 export default class extends ProfileCommand {
@@ -48,11 +48,11 @@ export default class extends ProfileCommand {
             'Introduce the hexadecimal: ');
 
         this.spinner.start();
-        let uInt: UInt64;
+        let uInt64Array: number[];
         try {
-            uInt = UInt64.fromHex(hex);
+            uInt64Array = RawUInt64.fromHex(hex);
             this.spinner.stop(true);
-            console.log(uInt);
+            console.log(uInt64Array);
         } catch (e) {
             this.spinner.stop(true);
             let text = '';

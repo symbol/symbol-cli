@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,19 +18,21 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Convert, RawAddress} from 'nem2-sdk';
+import {EncodeAddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'h',
-        description: 'hex address',
+        flag: 'e',
+        description: 'Encoded address',
+        validator: new EncodeAddressValidator(),
     })
-    hexAddress: string;
+    encodeAddress: string;
 }
 
 @command({
-    description: 'Converts a hex address to a base32 address',
+    description: 'Converts a encoded address to a decoded address',
 })
 
 export default class extends ProfileCommand {
@@ -41,23 +43,23 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        let hexAddress: string;
-        hexAddress =  OptionsResolver(options,
-            'hexAddress',
+        let encodeAddress: string;
+        encodeAddress =  OptionsResolver(options,
+            'encodeAddress',
             () => undefined,
-            'Introduce the hex address: ');
+            'Introduce the encoded address: ');
 
         this.spinner.start();
-        let address: string;
+        let decodeAddress: string;
         try {
-            address = RawAddress.addressToString(Convert.hexToUint8(hexAddress));
+            decodeAddress = Convert.uint8ToHex(RawAddress.stringToAddress(encodeAddress));
             this.spinner.stop(true);
-            console.log(address);
+            console.log(decodeAddress);
         } catch (e) {
             this.spinner.stop(true);
             let text = '';
             text += chalk.red('Error');
-            console.log(text, 'Conversion failed, please enter a valid hex address');
+            console.log(text, 'The conversion failed and a valid encoded address may have been entered');
         }
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
+import {Address, RawAddress} from 'nem2-sdk';
 
 export class AddressValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -24,6 +24,14 @@ export class AddressValidator implements Validator<string> {
             const address = Address.createFromRawAddress(value);
         } catch (err) {
             throw new ExpectedError('introduce a valid address');
+        }
+    }
+}
+
+export class EncodeAddressValidator implements Validator<string> {
+    validate(value: string, context: ValidationContext): void {
+        if (RawAddress.constants.sizes.addressEncoded !== value.length) {
+            throw new ExpectedError(`${value} does not represent a valid encoded address`);
         }
     }
 }
