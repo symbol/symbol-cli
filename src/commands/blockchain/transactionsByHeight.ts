@@ -18,6 +18,7 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
+import {HeightValidator} from '../../block.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
@@ -26,6 +27,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height',
+        validator: new HeightValidator(),
     })
     height: number;
 
@@ -65,32 +67,20 @@ export default class extends ProfileCommand {
             'height',
             () => undefined,
             'Introduce the block height: ');
-        if (height < 1) {
-            throw new ExpectedError('The block height cannot be smaller than 1');
-        }
 
         let pageSize: number;
-        pageSize =  OptionsResolver(options,
-            'pageSize',
-            () => undefined,
-            'Enter the page size (must be between 10 and 100, defaults to 10): ');
-        if (!pageSize || pageSize < 10) {
+        pageSize = options.pageSize || 10;
+        if (pageSize < 10) {
             pageSize = 10;
         } else if (pageSize > 100) {
             pageSize = 100;
         }
 
-        let id: string | undefined;
-        id =  OptionsResolver(options,
-            'id',
-            () => undefined,
-            'Id after which we want objects to be returned. (defaults to empty): ');
+        let id: string ;
+        id =  options.id || '';
 
         let order: string;
-        order =  OptionsResolver(options,
-            'order',
-            () => undefined,
-            'Order of transactions. DESC. Newer to older. ASC. Older to newer. (defaults to DESC): ');
+        order = options.order;
         if (order !== 'ASC') {
             order = 'DESC';
         }
