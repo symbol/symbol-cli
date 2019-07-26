@@ -16,6 +16,7 @@
  *
  */
 
+const pkg = require('../../../package.json');
 export const description = `
                       ____            _ _
  _ __   ___ _ __ ___ |___ \\       ___| (_)
@@ -23,6 +24,7 @@ export const description = `
 | | | |  __/ | | | | |/ __/_____| (__| | |
 |_| |_|\\___|_| |_| |_|_____|     \\___|_|_|
 
+                                   v${pkg.version}
 `;
 
 export const subcommands = [

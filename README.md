@@ -9,26 +9,35 @@ The nem2 Command Line Interface (CLI) is a unified tool to interact with the NEM
 
 This tool will enable you perform the most common and regular used actions in NEM2 (a.k.a Catapult)
 
-## Installation
+## Important Notes
 
-The nem2-cli is distributed using the node package manager npm.
+- [0.13.0](CHANGELOG.md#0130-05-Juk-2019) - **Elephant Network Compatibility (catapult-server@0.5.0.1)**
+- [0.12.0](CHANGELOG.md#0120-04-Jun-2019) - **Dragon Network Compatibility (catapult-server@0.4.0.1)**
+- [0.11.3](CHANGELOG.md#0113-03-Jun-2019) - **Cow Network Compatibility (catapult-server@0.3.0.2)**
+- [0.9.3](CHANGELOG.md#093---3-apr-2018) - **_Alpaca_ / _Bison_ Network Compatibility (catapult-server@0.1 & 0.2)** 
 
-`npm install nem2-cli -g`
+The release notes for the nem2-cli can be found [here](CHANGELOG.md).
+
+## Requirements
 
 The nem2-cli works on NodeJS versions:
 
 - 8.9.X
 - 9.X.X
 
+## Installation
+
+The nem2-cli is distributed using the node package manager npm.
+
+`npm install nem2-cli -g`
+
 :warning: nem2-cli does not encrypt the profiles yet. Use it just on test environments.
 
-## Documentation and Getting Started
+## Usage
 
-Get started and learn more about nem2-cli, check the [official documentation][docs]
+Surf the [NEM Developer Center][docs] to get started into NEM development. You will find self-paced guides and useful code snippets using the nem2-cli.
 
-## CLI Releases
-
-The release notes for the nem2-cli can be found [here](CHANGELOG.md).
+To get the full list of available commands, check the [CLI reference][docs].
 
 ## Contributing
 

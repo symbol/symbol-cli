@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,8 @@ export class ProfileRepository {
                 Account.createFromPrivateKey(profiles[name].privateKey, profiles[name].networkType),
                 profiles[name].networkType,
                 profiles[name].url,
-                name);
+                name,
+                profiles[name].networkGenerationHash);
         }
         throw new Error(`${name} not found`);
     }
@@ -45,16 +46,17 @@ export class ProfileRepository {
                 Account.createFromPrivateKey(profiles[name].privateKey, profiles[name].networkType),
                 profiles[name].networkType,
                 profiles[name].url,
-                name));
+                name,
+                profiles[name].networkGenerationHash));
         }
         return list;
     }
 
-    public save(account: Account, url: string, name: string): Profile {
+    public save(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
-        profiles[name] = {privateKey: account.privateKey, networkType: account.address.networkType, url};
+        profiles[name] = {privateKey: account.privateKey, networkType: account.address.networkType, url, networkGenerationHash};
         this.saveProfiles(profiles);
-        return new Profile(account, account.address.networkType, url, name);
+        return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
     }
 
     private getProfiles(): any {

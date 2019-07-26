@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2019 NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,8 +26,8 @@ export class ProfileService {
         this.profileRepository = profileRepository;
     }
 
-    createNewProfile(account: Account, url: string, name: string): Profile {
-        return this.profileRepository.save(account, url, name);
+    createNewProfile(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
+        return this.profileRepository.save(account, url, name, networkGenerationHash);
     }
 
     findProfileNamed(name: string): Profile {
