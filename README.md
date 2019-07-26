@@ -54,7 +54,8 @@ Please, use the following available resources to get help:
 
 ## License
 
-Copyright (c) 2018 NEM
+Copyright 2018-present NEM
+
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/nemtech/nem2-cli

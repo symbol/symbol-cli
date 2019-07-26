@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {BlockchainHttp} from 'nem2-sdk';
+import {DiagnosticHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 @command({
-    description: 'Blockchain storage',
+    description: 'Returns the version of the running rest component',
 })
 export default class extends ProfileCommand {
 
@@ -35,18 +35,18 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        const blockchainHttp = new BlockchainHttp(profile.url);
-        blockchainHttp.getDiagnosticStorage().subscribe((storage) => {
-            this.spinner.stop(true);
+        const diagnosticHttp = new DiagnosticHttp(profile.url);
 
-            console.log('numBlocks: ' + storage.numBlocks);
-            console.log('numTransactions: ' + storage.numTransactions);
-            console.log('numAccounts: ' + storage.numAccounts);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        diagnosticHttp.getServerInfo()
+            .subscribe((serverInfo) => {
+                this.spinner.stop(true);
+                console.log('restVersion: ' + serverInfo.restVersion);
+                console.log('sdkVersion: ' + serverInfo.sdkVersion);
+            }, (err) => {
+                this.spinner.stop(true);
+                let text = '';
+                text += chalk.red('Error');
+                console.log(text, err.response !== undefined ? err.response.text : err);
+            });
     }
 }
