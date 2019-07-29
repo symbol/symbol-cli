@@ -18,10 +18,12 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
-import {AddressValidator} from '../../address.validator';
+import {isNumber} from 'util';
+import {AddressValidator} from '../../validator/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
+import {MaxfeeValidator} from '../../validator/maxfee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -46,6 +48,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'f',
         description: 'max_fee',
+        validator: new MaxfeeValidator(),
     })
     maxFee: number;
 
@@ -122,9 +125,6 @@ export default class extends ProfileCommand {
             'maxFee',
             () => undefined,
             'maxFee: ');
-        if (isNaN(options.maxFee) || options.maxFee < 0 ){
-            throw new ExpectedError('maxFee must be greater than or equal to 0');
-        }
 
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
             PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxFee));

@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk';
 import {mergeMap, toArray} from 'rxjs/operators';
-import {AddressValidator} from '../../address.validator';
+import {AddressValidator} from '../../validator/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 

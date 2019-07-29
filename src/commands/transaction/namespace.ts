@@ -21,6 +21,7 @@ import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'n
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MaxfeeValidator} from '../../validator/maxfee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -58,6 +59,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'f',
         description: 'max_fee',
+        validator: new MaxfeeValidator(),
     })
     maxFee: number;
 }
@@ -100,9 +102,6 @@ export default class extends ProfileCommand {
             'maxFee',
             () => undefined,
             'maxFee: ');
-        if (isNaN(options.maxFee) || options.maxFee < 0 ){
-            throw new ExpectedError('maxFee must be greater than or equal to 0');
-        }
 
         let registerNamespaceTransaction: RegisterNamespaceTransaction;
         if (options.rootnamespace) {

@@ -23,10 +23,12 @@ import {
     NamespaceId,
     TransactionHttp, UInt64,
 } from 'nem2-sdk';
-import { AddressValidator } from '../../address.validator';
+import { AddressValidator } from '../../validator/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import { AliasService } from '../../service/alias.service';
+import {MaxfeeValidator} from '../../validator/maxfee.validator';
+import {NetworkValidator} from '../account/generate';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -51,6 +53,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'f',
         description: 'max_fee',
+        validator: new MaxfeeValidator(),
     })
     maxFee: number;
 
@@ -102,9 +105,6 @@ export default class extends ProfileCommand {
             'maxFee',
             () => undefined,
             'maxFee: ');
-        if (isNaN(options.maxFee) || options.maxFee < 0 ){
-            throw new ExpectedError('maxFee must be greater than or equal to 0');
-        }
 
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),

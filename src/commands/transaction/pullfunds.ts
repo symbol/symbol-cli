@@ -32,10 +32,11 @@ import {
     TransferTransaction,
     UInt64,
 } from 'nem2-sdk';
-import {AddressValidator} from '../../address.validator';
+import {AddressValidator} from '../../validator/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
+import {MaxfeeValidator} from '../../validator/maxfee.validator';
 
 export class MosaicValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -84,6 +85,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'f',
         description: 'max_fee',
+        validator: new MaxfeeValidator(),
     })
     maxFee: number;
 
@@ -145,10 +147,6 @@ export default class extends ProfileCommand {
                     'maxFee',
                     () => undefined,
                     'maxFee: ');
-                if (isNaN(options.maxFee) || options.maxFee < 0 ){
-                    throw new ExpectedError('maxFee must be greater than or equal to 0');
-                }
-
                 const requestFundsTx = TransferTransaction.create(Deadline.create(), recipient, [], message, profile.networkType);
                 const fundsTx = TransferTransaction.create(Deadline.create(),
                     profile.account.address, mosaics, EmptyMessage, profile.networkType);
