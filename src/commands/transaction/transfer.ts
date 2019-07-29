@@ -43,6 +43,12 @@ export class CommandOptions extends ProfileOptions {
     })
     mosaics: string;
 
+    @option({
+        flag: 'f',
+        description: 'max_fee',
+    })
+    maxFee: number;
+
     getMosaics(): Mosaic[] {
         this.validateMosaics(this.mosaics);
         const mosaics: Mosaic[] = [];
@@ -112,8 +118,16 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the message: ');
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'maxFee: ');
+        if (isNaN(parseInt(options.maxFee.toString())) || options.maxFee < 0 ){
+            throw new ExpectedError('maxFee must be greater than 0');
+        }
+
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
-            PlainMessage.create(message), profile.networkType);
+            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxFee));
 
         const signedTransaction = profile.account.sign(transferTransaction,  profile.networkGenerationHash);
 

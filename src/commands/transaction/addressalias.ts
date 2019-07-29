@@ -21,7 +21,7 @@ import {
     AddressAliasTransaction,
     Deadline,
     NamespaceId,
-    TransactionHttp,
+    TransactionHttp, UInt64,
 } from 'nem2-sdk';
 import { AddressValidator } from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
@@ -47,6 +47,13 @@ export class CommandOptions extends ProfileOptions {
         description: 'Namespace name',
     })
     namespace: string;
+
+    @option({
+        flag: 'f',
+        description: 'max_fee',
+    })
+    maxFee: number;
+
 }
 
 @command({
@@ -91,6 +98,14 @@ export default class extends ProfileCommand {
             throw new ExpectedError('You need to introduce namespace id.');
         }
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'maxFee: ');
+        if (isNaN(parseInt(options.maxFee.toString())) || options.maxFee < 0 ){
+            throw new ExpectedError('maxFee must be greater than 0');
+        }
+
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             OptionsResolver(options,
@@ -100,6 +115,7 @@ export default class extends ProfileCommand {
             namespaceId,
             address,
             profile.networkType,
+            UInt64.fromUint(options.maxFee),
         );
         const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
 

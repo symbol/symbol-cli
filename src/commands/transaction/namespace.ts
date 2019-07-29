@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
@@ -54,6 +54,12 @@ export class CommandOptions extends ProfileOptions {
         description: 'Parent namespace name (use it with --subnamespace)',
     })
     parentname: string;
+
+    @option({
+        flag: 'f',
+        description: 'max_fee',
+    })
+    maxFee: number;
 }
 
 @command({
@@ -90,14 +96,21 @@ export default class extends ProfileCommand {
                 () => undefined,
                 'Introduce namespace rental duration: ');
         }
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'maxFee: ');
+        if (isNaN(parseInt(options.maxFee.toString())) || options.maxFee < 0 ){
+            throw new ExpectedError('maxFee must be greater than 0');
+        }
 
         let registerNamespaceTransaction: RegisterNamespaceTransaction;
         if (options.rootnamespace) {
             registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromUint(options.duration), profile.networkType);
+                options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxFee));
         } else {
             registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentname, profile.networkType);
+                options.name, options.parentname, profile.networkType, UInt64.fromUint(options.maxFee));
         }
 
         const signedTransaction = profile.account.sign(registerNamespaceTransaction, profile.networkGenerationHash);

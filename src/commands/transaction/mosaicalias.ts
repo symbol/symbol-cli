@@ -21,7 +21,7 @@ import {
     MosaicAliasTransaction,
     MosaicId,
     NamespaceId,
-    TransactionHttp,
+    TransactionHttp, UInt64,
 } from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
@@ -44,6 +44,12 @@ export class CommandOptions extends ProfileOptions {
         description: 'Namespace name',
     })
     namespace: string;
+
+    @option({
+        flag: 'f',
+        description: 'max_fee',
+    })
+    maxFee: number;
 }
 
 @command({
@@ -70,6 +76,14 @@ export default class extends ProfileCommand {
                 () => undefined,
                 'Introduce mosaic in hexadecimal format: ');
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'maxFee: ');
+        if (isNaN(parseInt(options.maxFee.toString())) || options.maxFee < 0 ){
+            throw new ExpectedError('maxFee must be greater than 0');
+        }
+
         let mosaicId: MosaicId;
         if (options.mosaic) {
             mosaicId = new MosaicId(options.mosaic);
@@ -93,6 +107,7 @@ export default class extends ProfileCommand {
             namespaceId,
             mosaicId,
             profile.networkType,
+            UInt64.fromUint(options.maxFee),
         );
 
         const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);

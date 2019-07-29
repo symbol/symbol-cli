@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {
     AggregateTransaction,
     Deadline,
@@ -80,6 +80,12 @@ export class CommandOptions extends ProfileOptions {
     })
     eternal: any;
 
+    @option({
+        flag: 'f',
+        description: 'max_fee',
+    })
+    maxFee: number;
+
 }
 
 @command({
@@ -106,6 +112,15 @@ export default class extends ProfileCommand {
                     'Introduce the duration in blocks: '));
             }
         }
+
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'maxFee: ');
+        if (isNaN(parseInt(options.maxFee.toString())) || options.maxFee < 0 ){
+            throw new ExpectedError('maxFee must be greater than 0');
+        }
+
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
@@ -143,6 +158,7 @@ export default class extends ProfileCommand {
             ],
             profile.networkType,
             [],
+            UInt64.fromUint(options.maxFee),
         );
         const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
 
