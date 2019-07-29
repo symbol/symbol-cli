@@ -18,10 +18,10 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
-import {HeightValidator} from '../../block.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
+import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -41,7 +41,7 @@ export class CommandOptions extends ProfileOptions {
         flag: 'i',
         description: 'Id after which we want objects to be returned, defaults to empty',
     })
-    id: string | undefined;
+    id: string;
 
     @option({
         flag: 'o',
@@ -68,8 +68,7 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the block height: ');
 
-        let pageSize: number;
-        pageSize = options.pageSize || 10;
+        let pageSize = options.pageSize || 10;
         if (pageSize < 10) {
             pageSize = 10;
         } else if (pageSize > 100) {
@@ -79,8 +78,7 @@ export default class extends ProfileCommand {
         let id: string ;
         id =  options.id || '';
 
-        let order: string;
-        order = options.order;
+        let order = options.order;
         if (order !== 'ASC') {
             order = 'DESC';
         }
@@ -92,10 +90,10 @@ export default class extends ProfileCommand {
         blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
                 this.spinner.stop(true);
-                let txt = `\n`;
+                let txt = '\n';
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
-                        txt += '(' + (index + 1) + ')' + '.';
+                        txt += `(${index + 1}).`;
                         txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {
