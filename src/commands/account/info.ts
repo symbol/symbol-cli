@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
+import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicId, MosaicInfo, MosaicService, UInt64} from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
@@ -60,9 +60,10 @@ export default class extends ProfileCommand {
         }
 
         const accountHttp = new AccountHttp(profile.url);
+        const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(
             accountHttp,
-            new MosaicHttp(profile.url),
+            mosaicHttp,
         );
         accountHttp.getAccountInfo(address)
             .pipe(
@@ -76,8 +77,9 @@ export default class extends ProfileCommand {
             )
             .subscribe((accountData: any) => {
                 const accountInfo = accountData.info;
-                this.spinner.stop(true);
                 let text = '';
+                const mosaicsId: any[] = [];
+                const mosaicsHexId: any[] = [];
                 text += chalk.green('Account:\t') + chalk.bold(address.pretty()) + '\n';
                 text += '-'.repeat('Account:\t'.length + address.pretty().length) + '\n\n';
                 text += 'Address:\t' + accountInfo.address.pretty() + '\n';
@@ -87,10 +89,29 @@ export default class extends ProfileCommand {
                 text += 'Importance:\t' + accountInfo.importance.compact() + '\n';
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
-                accountData.mosaics.map((mosaic: MosaicAmountView) => {
+                accountData.mosaics.map((mosaic: MosaicAmountView, index: any) => {
                     text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
+                    text += 'expiration height:\t' + '{height' + index + '}' + '\n\n';
+                    mosaicsId.push(new MosaicId(mosaic.fullName()));
+                    mosaicsHexId.push(mosaic.fullName());
                 });
-                console.log(text);
+                mosaicHttp.getMosaics(mosaicsId)
+                    .subscribe((data) => {
+                        this.spinner.stop(true);
+                        data.map((mosaicInfo: MosaicInfo) => {
+                            // @ts-ignore
+                            const duration = mosaicInfo.duration.compact();
+                            let expiration: string;
+                            if (duration === 0) {
+                                expiration = 'Never';
+                            } else {
+                                const expirationHeight = mosaicInfo.height.compact();
+                                expiration = (expirationHeight + duration).toString();
+                            }
+                            text = text.replace('{height' + mosaicsHexId.indexOf(mosaicInfo.mosaicId.toHex()) + '}', expiration);
+                        });
+                        console.log(text);
+                    });
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
