@@ -145,8 +145,8 @@ export default class extends ProfileCommand {
                     'maxFee',
                     () => undefined,
                     'maxFee: ');
-                if (isNaN(parseInt(options.maxFee.toString())) || options.maxFee < 0 ){
-                    throw new ExpectedError('maxFee must be greater than 0');
+                if (isNaN(options.maxFee) || options.maxFee < 0 ){
+                    throw new ExpectedError('maxFee must be greater than or equal to 0');
                 }
 
                 const requestFundsTx = TransferTransaction.create(Deadline.create(), recipient, [], message, profile.networkType);
