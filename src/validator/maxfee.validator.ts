@@ -1,10 +1,9 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 
-export class MaxfeeValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        const  tag = /^\d+$/;
-        if (!tag.test(value)) {
-            throw new ExpectedError('maxFee must be greater than or equal to 0');
+export class MaxFeeValidator implements Validator<number> {
+    validate(value: number, context: ValidationContext): void {
+        if (!/^\d+$/.test(value.toString())) {
+            throw new ExpectedError('maxFee should be greater than or equal to 0');
         }
     }
 }

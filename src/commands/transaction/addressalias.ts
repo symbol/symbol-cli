@@ -26,9 +26,8 @@ import {
 import { AddressValidator } from '../../validator/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import { AliasService } from '../../service/alias.service';
-import {MaxfeeValidator} from '../../validator/maxfee.validator';
-import {NetworkValidator} from '../account/generate';
+import {MaxFeeValidator} from '../../validator/maxfee.validator';
+
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -52,8 +51,8 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'f',
-        description: 'max_fee',
-        validator: new MaxfeeValidator(),
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
     })
     maxFee: number;
 
@@ -104,7 +103,7 @@ export default class extends ProfileCommand {
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'maxFee: ');
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
