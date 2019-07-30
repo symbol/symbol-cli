@@ -32,11 +32,11 @@ import {
     TransferTransaction,
     UInt64,
 } from 'nem2-sdk';
-import {AddressValidator} from '../../validator/address.validator';
+import {AddressValidator} from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
-import {MaxFeeValidator} from '../../validator/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxfee.validator';
 
 export class MosaicValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {

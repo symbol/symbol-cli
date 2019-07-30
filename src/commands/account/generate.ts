@@ -16,21 +16,15 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, ExpectedError, metadata, option, Options, ValidationContext, Validator} from 'clime';
+import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
 import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {forkJoin} from 'rxjs';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
+import {NetworkValidator} from '../../validators/network.validator';
 
-export class NetworkValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        if (!(value === 'MIJIN' || value === 'MIJIN_TEST' || value === 'MAIN_NET' || value === 'TEST_NET')) {
-            throw new ExpectedError('it should be a valid network type');
-        }
-    }
-}
 
 export class CommandOptions extends Options {
     @option({

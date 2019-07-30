@@ -21,7 +21,7 @@ import {Address} from 'nem2-sdk';
 export class AddressValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
         try {
-            const address = Address.createFromRawAddress(value);
+            Address.createFromRawAddress(value);
         } catch (err) {
             throw new ExpectedError('introduce a valid address');
         }

@@ -32,7 +32,7 @@ import {
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validator/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxfee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({

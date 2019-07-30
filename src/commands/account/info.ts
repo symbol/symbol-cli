@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
-import {AddressValidator} from '../../validator/address.validator';
+import {AddressValidator} from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 

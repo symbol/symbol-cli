@@ -23,10 +23,10 @@ import {
     NamespaceId,
     TransactionHttp, UInt64,
 } from 'nem2-sdk';
-import { AddressValidator } from '../../validator/address.validator';
+import { AddressValidator } from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validator/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxfee.validator';
 
 
 export class CommandOptions extends ProfileOptions {

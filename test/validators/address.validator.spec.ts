@@ -16,15 +16,15 @@
  *
  */
 import {expect} from 'chai';
-import {MaxFeeValidator} from '../../src/validator/maxfee.validator';
+import {AddressValidator} from '../../src/validators/address.validator';
 
-describe('Maximum fee validator', () => {
+describe('address validator', () => {
 
-    it('Maximum fee should be greater than or equal to 0 ', () => {
+    it('address validator', () => {
 
-        const maxFee  = 123 ;
-        expect(new MaxFeeValidator().validate(maxFee,
-            { name: 'maxFee', source: maxFee.toString()})).to.be.equal(undefined);
+        const address  = 'SCKGDA-CNNOP2-DH3Z7D-HQB2VA-HYDLVX-DUAOIY-ELQF' ;
+        expect(new AddressValidator().validate(address,
+            { name: 'address', source: address})).to.be.equal(undefined);
     });
 
 });
