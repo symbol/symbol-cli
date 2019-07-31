@@ -21,7 +21,6 @@ import {AddressValidator} from '../../src/validators/address.validator';
 describe('address validator', () => {
 
     it('address validator', () => {
-
         const address  = 'SCKGDA-CNNOP2-DH3Z7D-HQB2VA-HYDLVX-DUAOIY-ELQF' ;
         expect(new AddressValidator().validate(address,
             { name: 'address', source: address})).to.be.equal(undefined);

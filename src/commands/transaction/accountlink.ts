@@ -17,9 +17,10 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, TransactionHttp} from 'nem2-sdk';
+import {AccountLinkTransaction, Deadline, TransactionHttp, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MaxFeeValidator} from '../../validators/maxfee.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -35,6 +36,13 @@ export class CommandOptions extends ProfileOptions {
         description: 'Alias action (0: Add, 1: Remove)',
     })
     action: number;
+
+    @option({
+        flag: 'f',
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
+    })
+    maxFee: number;
 }
 
 @command({
@@ -59,11 +67,17 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce alias action (0: Add, 1: Remove): ');
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             options.publickey,
             options.action,
             profile.networkType,
+            UInt64.fromUint(options.maxFee),
         );
 
         const signedTransaction = profile.account.sign(accountLinkTransaction,
