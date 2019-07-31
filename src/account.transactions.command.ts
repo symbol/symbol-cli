@@ -15,18 +15,12 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, option, ValidationContext, Validator} from 'clime';
+import {option} from 'clime';
 import {QueryParams} from 'nem2-sdk';
 import {TransactionService} from './service/transaction.service';
 import {ProfileCommand, ProfileOptions} from './profile.command';
+import {PublicKeyValidator} from './validators/publicKey.validator';
 
-export class PublicKeyValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
-            throw new ExpectedError('public key should be a 64 characters hexadecimal string');
-        }
-    }
-}
 
 export abstract class AccountTransactionsCommand extends ProfileCommand {
     public readonly transactionService: TransactionService;
