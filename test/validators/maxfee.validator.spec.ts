@@ -20,11 +20,21 @@ import {MaxFeeValidator} from '../../src/validators/maxfee.validator';
 
 describe('Maximum fee validator', () => {
 
-    it('Maximum fee should be greater than or equal to 0 ', () => {
-
+    it('Valid maximum fee', () => {
         const maxFee  = 123 ;
-        expect(new MaxFeeValidator().validate(maxFee,
-            { name: 'maxFee', source: maxFee.toString()})).to.be.equal(undefined);
+        expect(new MaxFeeValidator().validate(maxFee, { name: 'maxFee', source: maxFee.toString()}))
+            .to.be.equal(undefined);
     });
 
+    it('Invalid maximum fee (negative)', () => {
+        const maxFee  = -1 ;
+        expect(() => new MaxFeeValidator().validate(maxFee, { name: 'maxFee', source: maxFee.toString()}))
+            .to.throw('maxFee should be greater than or equal to 0');
+    });
+
+    it('Invalid maximum fee (decimal)', () => {
+        const maxFee  = 0.33 ;
+        expect(() => new MaxFeeValidator().validate(maxFee, { name: 'maxFee', source: maxFee.toString()}))
+            .to.throw('maxFee should be greater than or equal to 0');
+    });
 });
