@@ -17,8 +17,8 @@
  */
 import {ExpectedError, option, ValidationContext, Validator} from 'clime';
 import {QueryParams} from 'nem2-sdk';
-import {TransactionService} from './service/transaction.service';
 import {ProfileCommand, ProfileOptions} from './profile.command';
+import {TransactionService} from './service/transaction.service';
 
 export class PublicKeyValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
