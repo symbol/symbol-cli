@@ -18,9 +18,9 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {AccountLinkTransaction, Deadline, TransactionHttp} from 'nem2-sdk';
-import {PublicKeyValidator} from '../../account.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
