@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.0] - 05-Jul-2019
+
+### Added
+
+- ``namespace owned`` command.
+
+### Changed
+
+- ``nem2-sdk`` dependency to 0.13.0
+
+## [0.12.1] - 05-Jun-2019
+
+### Changed
+
+- ``nem2-sdk`` dependency to 0.12.1
+
 ## [0.12.0] - 04-Jun-2019
 
 ### Added
@@ -38,9 +54,12 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - ``transaction pullfunds`` command requires to pass the currency mosaic id.
 
 ## [0.9.3] - 3-Apr-2018
+
 ### Added
 - Initial code release.
 
+[0.13.0]: https://github.com/nemtech/nem2-cli/compare/v0.12.0...v0.13.0
+[0.12.0]: https://github.com/nemtech/nem2-cli/compare/v0.11.3...v0.12.0
 [0.11.3]: https://github.com/nemtech/nem2-cli/compare/v0.11.2...v0.11.3
 [0.11.2]: https://github.com/nemtech/nem2-cli/compare/v0.11.0...v0.11.2
 [0.11.0]: https://github.com/nemtech/nem2-cli/compare/v0.9.3...v0.11.0

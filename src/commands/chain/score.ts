@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2019 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ import {ChainHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 @command({
-    description: 'Blockchain height',
+    description: 'Gets the current score of the chain',
 })
 export default class extends ProfileCommand {
 
@@ -36,9 +36,11 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         const chainHttp = new ChainHttp(profile.url);
-        chainHttp.getBlockchainHeight().subscribe((height) => {
+        chainHttp.getBlockchainScore().subscribe((score) => {
             this.spinner.stop(true);
-            console.log(height.compact());
+
+            console.log('Low score: ' + score.scoreLow.compact());
+            console.log('High score: ' + score.scoreHigh.compact());
         }, (err) => {
             this.spinner.stop(true);
             let text = '';

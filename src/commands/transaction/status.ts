@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,14 +53,18 @@ export default class extends ProfileCommand {
 
         transactionHttp.getTransactionStatus(hash)
             .subscribe((transaction) => {
+                let text = '';
                 this.spinner.stop(true);
-                console.log('group: ' + transaction.group);
-                console.log('status: ' + transaction.status);
-                console.log('hash: < ' + transaction.hash + ' >');
-                console.log('deadline: ' + transaction.deadline.value);
-                if(transaction.height.compact() > 0 ) {
-                    console.log('height: ' + transaction.height.compact());
+                text += 'group:\t' + transaction.group + '\n';
+                text += 'status:\t' + transaction.status + '\n';
+                text += 'hash:\t<' + transaction.hash + '>' + '\n';
+                if (transaction.deadline) {
+                    text += 'deadline:\t' + transaction.deadline.value + '\n';
                 }
+                if (transaction.height && transaction.height.compact() > 0 ) {
+                    text += 'height:\t' + transaction.height.compact() + '\n';
+                }
+                console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

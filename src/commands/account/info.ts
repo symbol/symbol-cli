@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService,} from 'nem2-sdk';
+import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';

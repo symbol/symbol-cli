@@ -17,11 +17,11 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {Listener} from 'nem2-sdk';
+import {DiagnosticHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 @command({
-    description: 'Monitor new blocks',
+    description: 'Returns the version of the running rest component',
 })
 export default class extends ProfileCommand {
 
@@ -31,26 +31,22 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: ProfileOptions) {
+        this.spinner.start();
+
         const profile = this.getProfile(options);
 
-        const listener = new Listener(profile.url);
+        const diagnosticHttp = new DiagnosticHttp(profile.url);
 
-        console.log(`Using ${profile.url}`);
-
-        listener.open().then(() => {
-            listener.newBlock().subscribe((block) => {
-                console.log('\n');
-                console.log(block);
+        diagnosticHttp.getServerInfo()
+            .subscribe((serverInfo) => {
+                this.spinner.stop(true);
+                console.log('restVersion: ' + serverInfo.restVersion);
+                console.log('sdkVersion: ' + serverInfo.sdkVersion);
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
-        }, (err) => {
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
     }
 }
