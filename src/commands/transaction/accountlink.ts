@@ -16,26 +16,25 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {AccountLinkTransaction, Deadline, TransactionHttp} from 'nem2-sdk';
+import {PublicKeyValidator} from '../../account.transactions.command';
+import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
         description: 'The public key of the remote account',
+        validator: new PublicKeyValidator(),
     })
-    publickey: string;
+    publicKey: string;
+
     @option({
         flag: 'a',
         description: 'Alias action (0: Add, 1: Remove)',
     })
     action: number;
-
-    validateAction(value: number) {
-        if([0,1].some(x =>(x === value))) return value;
-        throw new ExpectedError('Introduce a valid action value');
-    }
 }
 
 @command({
@@ -46,14 +45,27 @@ export default class extends ProfileCommand {
     constructor() {
         super();
     }
-
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        options.validateAction(options.action);
-        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(), options.publickey, options.action, profile.networkType);
-        const signedTransaction = profile.account.sign(accountLinkTransaction, profile.generationHash);
+
+        options.publicKey = OptionsResolver(options,
+            'publicKey',
+            () => undefined,
+            'Introduce the public key of the remote account : ');
+
+        options.action = OptionsResolver(options,
+            'action',
+            () => undefined,
+            'Introduce Introduce alias action (0: Add, 1: Remove): : ');
+
+        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(),
+                options.publicKey, options.action, profile.networkType);
+
+        const signedTransaction = profile.account.sign(accountLinkTransaction,
+            profile.networkGenerationHash);
         const transactionHttp = new TransactionHttp(profile.url);
+
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
             console.log('Hash:   ', signedTransaction.hash);

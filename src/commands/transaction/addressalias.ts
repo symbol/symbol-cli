@@ -26,7 +26,6 @@ import {
 import { AddressValidator } from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import { AliasService } from '../../service/alias.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({

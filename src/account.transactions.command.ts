@@ -43,14 +43,14 @@ export class AccountTransactionsOptions extends ProfileOptions {
         description: 'Account public key',
         validator: new PublicKeyValidator(),
     })
-    publickey: string;
+    publicKey: string;
 
     @option({
         flag: 'n',
         description: '(optional) Number of transactions',
         default: 10,
     })
-    numtransactions: number;
+    numTransactions: number;
 
     @option({
         flag: 'i',
@@ -60,8 +60,8 @@ export class AccountTransactionsOptions extends ProfileOptions {
 
     getQueryParams(): QueryParams {
         if (this.id === undefined) {
-            return new QueryParams(this.numtransactions);
+            return new QueryParams(this.numTransactions);
         }
-        return new QueryParams(this.numtransactions, this.id);
+        return new QueryParams(this.numTransactions, this.id);
     }
 }
