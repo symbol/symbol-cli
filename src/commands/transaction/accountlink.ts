@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2019 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ import {ProfileCommand, ProfileOptions} from '../../profile.command';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
-        description: 'The public key of the remote account',
+        description: 'Public key of the remote account',
         validator: new PublicKeyValidator(),
     })
     publicKey: string;
@@ -38,7 +38,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Create a link account transaction ',
+    description: 'Delegate the account importance to a proxy account',
 })
 export default class extends ProfileCommand {
 
@@ -52,15 +52,19 @@ export default class extends ProfileCommand {
         options.publicKey = OptionsResolver(options,
             'publicKey',
             () => undefined,
-            'Introduce the public key of the remote account : ');
+            'Introduce the public key of the remote account: ');
 
         options.action = OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce Introduce alias action (0: Add, 1: Remove): : ');
+            'Introduce alias action (0: Add, 1: Remove): ');
 
-        const accountLinkTransaction = AccountLinkTransaction.create(Deadline.create(),
-                options.publicKey, options.action, profile.networkType);
+        const accountLinkTransaction = AccountLinkTransaction.create(
+            Deadline.create(),
+            options.publicKey,
+            options.action,
+            profile.networkType,
+        );
 
         const signedTransaction = profile.account.sign(accountLinkTransaction,
             profile.networkGenerationHash);
