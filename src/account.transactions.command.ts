@@ -17,8 +17,8 @@
  */
 import {ExpectedError, option, ValidationContext, Validator} from 'clime';
 import {QueryParams} from 'nem2-sdk';
-import {TransactionService} from './service/transaction.service';
 import {ProfileCommand, ProfileOptions} from './profile.command';
+import {TransactionService} from './service/transaction.service';
 
 export class PublicKeyValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -43,14 +43,14 @@ export class AccountTransactionsOptions extends ProfileOptions {
         description: 'Account public key',
         validator: new PublicKeyValidator(),
     })
-    publicKey: string;
+    publickey: string;
 
     @option({
         flag: 'n',
         description: '(optional) Number of transactions',
         default: 10,
     })
-    numTransactions: number;
+    numtransactions: number;
 
     @option({
         flag: 'i',
@@ -60,8 +60,8 @@ export class AccountTransactionsOptions extends ProfileOptions {
 
     getQueryParams(): QueryParams {
         if (this.id === undefined) {
-            return new QueryParams(this.numTransactions);
+            return new QueryParams(this.numtransactions);
         }
-        return new QueryParams(this.numTransactions, this.id);
+        return new QueryParams(this.numtransactions, this.id);
     }
 }

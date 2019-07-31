@@ -28,7 +28,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Public key of the remote account',
         validator: new PublicKeyValidator(),
     })
-    publicKey: string;
+    publickey: string;
 
     @option({
         flag: 'a',
@@ -49,8 +49,8 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        options.publicKey = OptionsResolver(options,
-            'publicKey',
+        options.publickey = OptionsResolver(options,
+            'publickey',
             () => undefined,
             'Introduce the public key of the remote account: ');
 
@@ -61,7 +61,7 @@ export default class extends ProfileCommand {
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
-            options.publicKey,
+            options.publickey,
             options.action,
             profile.networkType,
         );
