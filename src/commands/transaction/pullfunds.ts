@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option, ValidationContext, Validator} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {
     AccountHttp,
     Address,
@@ -37,22 +37,8 @@ import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
 import {MaxFeeValidator} from '../../validators/maxfee.validator';
+import {MosaicValidator} from '../../validators/mosaic.validator';
 
-export class MosaicValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        const mosaicParts = value.split('::');
-        try {
-            if (isNaN(+mosaicParts[1])) {
-                throw new ExpectedError('');
-            }
-            const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1]));
-        } catch (err) {
-            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-        }
-    }
-}
 
 export class CommandOptions extends ProfileOptions {
     @option({
