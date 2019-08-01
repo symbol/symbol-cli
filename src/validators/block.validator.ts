@@ -19,7 +19,7 @@ import {ExpectedError, ValidationContext, Validator} from 'clime';
 
 export class HeightValidator implements Validator<number> {
     validate(value: number, context: ValidationContext): void {
-        if (value < 1) {
+        if (!/^([1-9][0-9]*)$/.test(value.toString())) {
             throw new ExpectedError('The block height cannot be smaller than 1');
         }
     }
