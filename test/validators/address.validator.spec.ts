@@ -18,13 +18,30 @@
 import {expect} from 'chai';
 import {AddressValidator} from '../../src/validators/address.validator';
 
-describe('address validator', () => {
+describe('address validator ', () => {
 
-    it('address validator', () => {
-
-        const address  = 'SCKGDA-CNNOP2-DH3Z7D-HQB2VA-HYDLVX-DUAOIY-ELQF' ;
-        expect(new AddressValidator().validate(address,
-            { name: 'address', source: address})).to.be.equal(undefined);
+    it('Invalid valid address (uppercase)', () => {
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
+        expect(new AddressValidator().validate(address, {name: 'address', source: address}))
+            .to.be.equal(undefined);
     });
 
+    it('Invalid valid address (lowercase)', () => {
+        const address = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
+        expect(new AddressValidator().validate(address, {name: 'address', source: address}))
+            .to.be.equal(undefined);
+    });
+
+    it('Invalid valid address (line)', () => {
+        const address = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
+        expect(new AddressValidator().validate(address, {name: 'address', source: address}))
+            .to.be.equal(undefined);
+    });
+
+    it('Invalid address is not valid in length', () => {
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        expect(() => {
+            new AddressValidator().validate(address, {name: 'address', source: address});
+        }).to.throws('introduce a valid address');
+    });
 });

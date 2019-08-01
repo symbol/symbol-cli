@@ -20,11 +20,22 @@ import {MosaicValidator} from '../../src/validators/mosaic.validator';
 
 describe('mosaic  validator', () => {
 
-    it('mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount', () => {
-
-        const mosaic  = '@cat.currency::1000000' ;
-        expect(new MosaicValidator().validate(mosaic,
-            { name: 'mosaic', source: mosaic})).to.be.equal(undefined);
+    it('Invalid valid mosaic (@aliasName)', () => {
+        const mosaic = '@cat.currency::1000000';
+        expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
+            .to.be.equal(undefined);
     });
 
+    it('Invalid valid mosaic (mosaicId)', () => {
+        const mosaic = '85BBEA6CC462B244::1000000';
+        expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
+            .to.be.equal(undefined);
+    });
+
+    it('Invalid mosaic is not valid', () => {
+        const mosaic = 'cat.currencxy::1000000';
+        expect(() => {
+            new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});
+        }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, (Ex: sending 1 cat.currency, @cat.currency::1000000)');
+    });
 });
