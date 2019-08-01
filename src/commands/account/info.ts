@@ -78,8 +78,6 @@ export default class extends ProfileCommand {
             .subscribe((accountData: any) => {
                 const accountInfo = accountData.info;
                 let text = '';
-                const mosaicsId: any[] = [];
-                const mosaicsHexId: any[] = [];
                 text += chalk.green('Account:\t') + chalk.bold(address.pretty()) + '\n';
                 text += '-'.repeat('Account:\t'.length + address.pretty().length) + '\n\n';
                 text += 'Address:\t' + accountInfo.address.pretty() + '\n';
@@ -90,28 +88,19 @@ export default class extends ProfileCommand {
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
                 accountData.mosaics.map((mosaic: MosaicAmountView, index: any) => {
+                    const duration = mosaic.mosaicInfo['properties'].duration.compact();
+                    let expiration: string;
+                    if (duration === 0) {
+                        expiration = 'Never';
+                    } else {
+                        const createHeight = mosaic.mosaicInfo.height.compact();
+                        expiration = (createHeight + duration).toString();
+                    }
                     text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
-                    text += 'expiration height:\t' + '{height' + index + '}' + '\n\n';
-                    mosaicsId.push(new MosaicId(mosaic.fullName()));
-                    mosaicsHexId.push(mosaic.fullName());
+                    text += 'expiration height:\t' + expiration + '\n\n';
                 });
-                mosaicHttp.getMosaics(mosaicsId)
-                    .subscribe((data) => {
-                        this.spinner.stop(true);
-                        data.map((mosaicInfo: MosaicInfo) => {
-                            // @ts-ignore
-                            const duration = mosaicInfo.duration.compact();
-                            let expiration: string;
-                            if (duration === 0) {
-                                expiration = 'Never';
-                            } else {
-                                const expirationHeight = mosaicInfo.height.compact();
-                                expiration = (expirationHeight + duration).toString();
-                            }
-                            text = text.replace('{height' + mosaicsHexId.indexOf(mosaicInfo.mosaicId.toHex()) + '}', expiration);
-                        });
-                        console.log(text);
-                    });
+                this.spinner.stop(true);
+                console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
