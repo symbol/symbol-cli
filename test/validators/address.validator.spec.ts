@@ -39,9 +39,10 @@ describe('address validator', () => {
     });
 
     it('Invalid address is not valid ()', () => {
-        const address = 'SCKGDA-CNNOP2-DH3Z7D-HQB2VA-HYDLVX-DUAOIY-ELQF';
-        expect(new AddressValidator().validate(address,
-            {name: 'address', source: address})).to.be.equal(undefined);
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        expect(() => {
+            new AddressValidator().validate(address, {name: 'address', source: address});
+        }).to.throws('introduce a valid address');
     });
 
 });
