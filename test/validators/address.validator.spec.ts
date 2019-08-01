@@ -38,11 +38,10 @@ describe('address validator', () => {
             .to.be.equal(undefined);
     });
 
-    it('address validator', () => {
-
-        const address  = 'SCKGDA-CNNOP2-DH3Z7D-HQB2VA-HYDLVX-DUAOIY-ELQF' ;
+    it('Invalid address is not valid ()', () => {
+        const address = 'SCKGDA-CNNOP2-DH3Z7D-HQB2VA-HYDLVX-DUAOIY-ELQF';
         expect(new AddressValidator().validate(address,
-            { name: 'address', source: address})).to.be.equal(undefined);
+            {name: 'address', source: address})).to.be.equal(undefined);
     });
 
 });
