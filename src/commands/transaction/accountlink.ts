@@ -42,7 +42,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Maximum fee',
         validator: new MaxFeeValidator(),
     })
-    maxFee: number;
+    maxfee: number;
 }
 
 @command({
@@ -67,8 +67,8 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce alias action (0: Add, 1: Remove): ');
 
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
+        options.maxfee = OptionsResolver(options,
+            'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
@@ -77,7 +77,7 @@ export default class extends ProfileCommand {
             options.publickey,
             options.action,
             profile.networkType,
-            UInt64.fromUint(options.maxFee),
+            UInt64.fromUint(options.maxfee),
         );
 
         const signedTransaction = profile.account.sign(accountLinkTransaction,

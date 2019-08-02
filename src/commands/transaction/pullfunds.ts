@@ -130,7 +130,7 @@ export default class extends ProfileCommand {
                 const mosaics = [options.getMosaic()];
 
                 options.maxFee = OptionsResolver(options,
-                    'maxFee',
+                    'maxfee',
                     () => undefined,
                     'Introduce the maximum fee you want to spend to announce the transaction: ');
                 const requestFundsTx = TransferTransaction.create(Deadline.create(), recipient, [], message, profile.networkType);

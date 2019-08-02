@@ -22,21 +22,21 @@ describe('Maximum fee validator', () => {
 
     it('Valid maximum fee', () => {
         const maxFee = 123;
-        expect(new MaxFeeValidator().validate(maxFee, {name: 'maxFee', source: maxFee.toString()}))
+        expect(new MaxFeeValidator().validate(maxFee, {name: 'maxfee', source: maxFee.toString()}))
             .to.be.equal(undefined);
     });
 
     it('Valid maximum fee (negative)', () => {
         const maxFee = -1;
         expect(() => {
-            new MaxFeeValidator().validate(maxFee, {name: 'maxFee', source: maxFee.toString()});
-        }).to.throws('maxFee should be positive integer or equal to 0');
+            new MaxFeeValidator().validate(maxFee, {name: 'maxfee', source: maxFee.toString()});
+        }).to.throws('maxfee should be positive integer or equal to 0');
     });
 
     it('Invalid maximum fee(decimal)', () => {
         const maxFee = 0.33;
         expect(() => {
-            new MaxFeeValidator().validate(maxFee, {name: 'maxFee', source: maxFee.toString()});
-        }).to.throws('maxFee should be positive integer or equal to 0');
+            new MaxFeeValidator().validate(maxFee, {name: 'maxfee', source: maxFee.toString()});
+        }).to.throws('maxfee should be positive integer or equal to 0');
     });
 });

@@ -20,7 +20,7 @@ import {ExpectedError, ValidationContext, Validator} from 'clime';
 export class MaxFeeValidator implements Validator<number> {
     validate(value: number, context: ValidationContext): void {
         if (!(Number.isInteger(value) && value >= 0)) {
-            throw new ExpectedError('maxFee should be positive integer or equal to 0');
+            throw new ExpectedError('maxfee should be positive integer or equal to 0');
         }
     }
 }

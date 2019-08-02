@@ -53,7 +53,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Maximum fee',
         validator: new MaxFeeValidator(),
     })
-    maxFee: number;
+    maxfee: number;
 
 }
 
@@ -99,8 +99,8 @@ export default class extends ProfileCommand {
             throw new ExpectedError('You need to introduce namespace id.');
         }
 
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
+        options.maxfee = OptionsResolver(options,
+            'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
@@ -113,7 +113,7 @@ export default class extends ProfileCommand {
             namespaceId,
             address,
             profile.networkType,
-            UInt64.fromUint(options.maxFee),
+            UInt64.fromUint(options.maxfee),
         );
         const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
 

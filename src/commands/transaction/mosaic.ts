@@ -116,7 +116,7 @@ export default class extends ProfileCommand {
         }
 
         options.maxFee = OptionsResolver(options,
-            'maxFee',
+            'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 

@@ -79,7 +79,7 @@ export default class extends ProfileCommand {
                 'Introduce mosaic in hexadecimal format: ');
 
         options.maxFee = OptionsResolver(options,
-            'maxFee',
+            'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
