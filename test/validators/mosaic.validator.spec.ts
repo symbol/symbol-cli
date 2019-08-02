@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {MosaicValidator} from '../../src/validators/mosaic.validator';
+import {MosaicsValidator, MosaicValidator} from '../../src/validators/mosaic.validator';
 
 describe('mosaic  validator', () => {
 
@@ -32,10 +32,43 @@ describe('mosaic  validator', () => {
             .to.be.equal(undefined);
     });
 
-    it('Invalid mosaic ', () => {
+    it('Invalid mosaic', () => {
         const mosaic = 'cat.currencxy::1000000';
         expect(() => {
             new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});
+        }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
+            '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
+    });
+
+    it('Invalid format', () => {
+        const mosaic = 'cat.currencxy:1000000';
+        expect(() => {
+            new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});
+        }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
+            '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
+    });
+});
+
+describe('mosaics  validator', () => {
+
+    it('Valid mosaics (@aliasName)', () => {
+        const mosaics = '@cat.currency::1000000,85BBEA6CC462B244::1000000';
+        expect(new MosaicsValidator().validate(mosaics, {name: 'mosaics', source: mosaics}))
+            .to.be.equal(undefined);
+    });
+
+    it('Invalid mosaic', () => {
+        const mosaics = 'cat.currency::1000000,85BBEA6CC462B244::1000000';
+        expect(() => {
+            new MosaicValidator().validate(mosaics, {name: 'mosaics', source: mosaics});
+        }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
+            '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
+    });
+
+    it('Invalid format', () => {
+        const mosaics = 'cat.currency::100000085BBEA6CC462B244::1000000';
+        expect(() => {
+            new MosaicValidator().validate(mosaics, {name: 'mosaics', source: mosaics});
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
             '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
     });

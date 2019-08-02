@@ -34,7 +34,7 @@ import {
 } from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AliasService} from '../../service/alias.service';
+import {MosaicService} from '../../service/mosaic.service';
 import {AddressValidator} from '../../validators/address.validator';
 import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
@@ -76,7 +76,7 @@ export class CommandOptions extends ProfileOptions {
 
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
-        return new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
+        return new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
             UInt64.fromUint(+mosaicParts[1]));
     }
 }
