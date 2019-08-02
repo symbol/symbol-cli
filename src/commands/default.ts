@@ -34,6 +34,10 @@ export const subcommands = [
         brief: 'Get account related information',
     },
     {
+        name: 'block',
+        brief: 'Get block related information',
+    },
+    {
         name: 'chain',
         brief: 'Get chain related information',
     },
