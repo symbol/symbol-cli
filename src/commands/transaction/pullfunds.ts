@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option, ValidationContext, Validator} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {
     AccountHttp,
     Address,
@@ -32,26 +32,12 @@ import {
     TransferTransaction,
     UInt64,
 } from 'nem2-sdk';
-import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AliasService} from '../../service/alias.service';
-
-export class MosaicValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        const mosaicParts = value.split('::');
-        try {
-            if (isNaN(+mosaicParts[1])) {
-                throw new ExpectedError('');
-            }
-            const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1]));
-        } catch (err) {
-            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-        }
-    }
-}
+import {MosaicService} from '../../service/mosaic.service';
+import {AddressValidator} from '../../validators/address.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
+import {MosaicValidator} from '../../validators/mosaic.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -81,9 +67,16 @@ export class CommandOptions extends ProfileOptions {
     })
     currency: string;
 
+    @option({
+        flag: 'f',
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
+    })
+    maxfee: number;
+
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
-        return new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
+        return new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
             UInt64.fromUint(+mosaicParts[1]));
     }
 }
@@ -104,15 +97,11 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        let recipient: Address;
-        try {
-            recipient = Address.createFromRawAddress(OptionsResolver(options,
-                'recipient',
-                () => undefined,
-                'Introduce funds holder address: '));
-        } catch (err) {
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const recipient: Address = Address.createFromRawAddress(OptionsResolver(options,
+            'recipient',
+            () => undefined,
+            'Introduce funds holder address: '));
+
         if (recipient.networkType !== profile.networkType) {
             throw new ExpectedError('recipient network doesn\'t match network option');
         }
@@ -124,9 +113,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
 
                 const message = PlainMessage.create(OptionsResolver(options,
-                        'message',
-                        () => undefined,
-                        'Introduce message to the funds holder: '));
+                    'message',
+                    () => undefined,
+                    'Introduce message to the funds holder: '));
 
                 options.mosaic = OptionsResolver(options,
                     'mosaic',
@@ -135,6 +124,10 @@ export default class extends ProfileCommand {
 
                 const mosaics = [options.getMosaic()];
 
+                options.maxfee = OptionsResolver(options,
+                    'maxfee',
+                    () => undefined,
+                    'Introduce the maximum fee you want to spend to announce the transaction: ');
                 const requestFundsTx = TransferTransaction.create(Deadline.create(), recipient, [], message, profile.networkType);
                 const fundsTx = TransferTransaction.create(Deadline.create(),
                     profile.account.address, mosaics, EmptyMessage, profile.networkType);
@@ -145,7 +138,7 @@ export default class extends ProfileCommand {
 
                 const signedTransaction = profile.account.sign(aggregateTx, profile.networkGenerationHash);
 
-                const currencyMosaic = new Mosaic (new MosaicId( OptionsResolver(options,
+                const currencyMosaic = new Mosaic(new MosaicId(OptionsResolver(options,
                     'currency',
                     () => undefined,
                     'The network native currency mosaicId in hexadecimal:')), UInt64.fromUint(10000000));
@@ -156,9 +149,10 @@ export default class extends ProfileCommand {
                     UInt64.fromUint(1000),
                     signedTransaction,
                     profile.networkType,
+                    UInt64.fromUint(options.maxfee),
                 );
 
-                const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction,  profile.networkGenerationHash);
+                const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction, profile.networkGenerationHash);
 
                 const transactionHttp = new TransactionHttp(profile.url);
                 const listener = new Listener(profile.url);

@@ -16,12 +16,12 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk';
 import {mergeMap, toArray} from 'rxjs/operators';
-import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
 
@@ -46,24 +46,18 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        let address: Address;
-        try {
-            address = Address.createFromRawAddress(
-                OptionsResolver(options,
-                    'address',
-                    () => this.getProfile(options).account.address.plain(),
-                    'Introduce the address: '));
-        } catch (err) {
-            console.log(options);
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const address: Address = Address.createFromRawAddress(
+            OptionsResolver(options,
+                'address',
+                () => this.getProfile(options).account.address.plain(),
+                'Introduce the address: '));
         const namespaceHttp = new NamespaceHttp(profile.url);
         const namespaceService = new NamespaceService(namespaceHttp);
         this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((namespaceInfo: NamespaceInfo) =>  namespaceService.namespace(namespaceInfo.id)),
+                mergeMap((namespaceInfo: NamespaceInfo) => namespaceService.namespace(namespaceInfo.id)),
                 toArray(),
             )
             .subscribe((namespaces) => {

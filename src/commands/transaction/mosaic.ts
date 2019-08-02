@@ -32,6 +32,7 @@ import {
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -80,6 +81,13 @@ export class CommandOptions extends ProfileOptions {
     })
     eternal: any;
 
+    @option({
+        flag: 'f',
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
+    })
+    maxfee: number;
+
 }
 
 @command({
@@ -106,6 +114,12 @@ export default class extends ProfileCommand {
                     'Introduce the duration in blocks: '));
             }
         }
+
+        options.maxfee = OptionsResolver(options,
+            'maxfee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
@@ -143,6 +157,7 @@ export default class extends ProfileCommand {
             ],
             profile.networkType,
             [],
+            UInt64.fromUint(options.maxfee),
         );
         const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
 

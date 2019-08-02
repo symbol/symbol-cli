@@ -16,6 +16,7 @@
  *
  */
 
+// tslint:disable-next-line:no-var-requires
 const pkg = require('../../../package.json');
 export const description = `
                       ____            _ _
@@ -31,6 +32,10 @@ export const subcommands = [
     {
         name: 'account',
         brief: 'Get account related information',
+    },
+    {
+        name: 'block',
+        brief: 'Get block related information',
     },
     {
         name: 'chain',
