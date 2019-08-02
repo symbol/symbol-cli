@@ -37,21 +37,21 @@ export class CommandOptions extends ProfileOptions {
     })
     pageSize: number;
 
-    @option({
-        flag: 'i',
-        description: 'Id after which we want objects to be returned, defaults to empty',
-    })
-    id: string;
+@option({
+    flag: 'i',
+    description: 'Id after which we want objects to be returned, defaults to empty',
+})
+id: string;
 
-    @option({
-        flag: 'o',
-        description: 'Order of transactions. DESC. Newer to older. ASC. Older to newer. Defaults to DESC',
-    })
-    order: string;
+@option({
+    flag: 'o',
+    description: 'Order of transactions. DESC. Newer to older. ASC. Older to newer. Defaults to DESC',
+})
+order: string;
 }
 
 @command({
-    description: 'Gets transactions for a given block height',
+    description: 'Get transactions for a given block height',
 })
 
 export default class extends ProfileCommand {
@@ -93,7 +93,7 @@ export default class extends ProfileCommand {
                 let txt = '\n';
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
-                        txt += `(${index + 1}).`;
+                        txt += '(${index + 1}). ';
                         txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {

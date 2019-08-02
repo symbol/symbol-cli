@@ -20,20 +20,20 @@ import {HeightValidator} from '../../src/validators/block.validator';
 
 describe('block height validator', () => {
 
-    it('Invalid valid height', () => {
+    it('Valid height', () => {
         const height = 1;
         expect(new HeightValidator().validate(height, {name: 'height', source: height.toString()}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid height is not valid (0)', () => {
+    it('Invalid height (0)', () => {
         const height = 0;
         expect(() => {
             new HeightValidator().validate(height, {name: 'height', source: height.toString()});
         }).to.throws('The block height must be a positive integer');
     });
 
-    it('Invalid height is not valid (negative)', () => {
+    it('Invalid height (negative)', () => {
         const height = -1;
         expect(() => {
             new HeightValidator().validate(height, {name: 'height', source: height.toString()});
