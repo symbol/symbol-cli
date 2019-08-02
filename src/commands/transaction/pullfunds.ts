@@ -72,7 +72,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Maximum fee',
         validator: new MaxFeeValidator(),
     })
-    maxFee: number;
+    maxfee: number;
 
     getMosaic(): Mosaic {
         const mosaicParts = this.mosaic.split('::');
@@ -124,7 +124,7 @@ export default class extends ProfileCommand {
 
                 const mosaics = [options.getMosaic()];
 
-                options.maxFee = OptionsResolver(options,
+                options.maxfee = OptionsResolver(options,
                     'maxfee',
                     () => undefined,
                     'Introduce the maximum fee you want to spend to announce the transaction: ');
@@ -149,7 +149,7 @@ export default class extends ProfileCommand {
                     UInt64.fromUint(1000),
                     signedTransaction,
                     profile.networkType,
-                    UInt64.fromUint(options.maxFee)
+                    UInt64.fromUint(options.maxfee),
                 );
 
                 const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction, profile.networkGenerationHash);
