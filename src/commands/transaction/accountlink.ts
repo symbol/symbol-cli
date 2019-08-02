@@ -1,4 +1,5 @@
 /*
+ *
  * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,88 +16,58 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
-import {
-    Deadline,
-    MosaicAliasTransaction,
-    MosaicId,
-    NamespaceId,
-    TransactionHttp,
-} from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {AccountLinkTransaction, Deadline, TransactionHttp} from 'nem2-sdk';
+import {PublicKeyValidator} from '../../account.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
+        flag: 'p',
+        description: 'Public key of the remote account',
+        validator: new PublicKeyValidator(),
+    })
+    publickey: string;
+
+    @option({
         flag: 'a',
-        description: 'Alias action (0: Link, 1: Unlink)',
+        description: 'Alias action (0: Add, 1: Remove)',
     })
     action: number;
-
-    @option({
-        flag: 'm',
-        description: 'Mosaic Id in in hexadecimal format',
-    })
-    mosaic: string;
-
-    @option({
-        flag: 'n',
-        description: 'Namespace name',
-    })
-    namespace: string;
 }
 
 @command({
-    description: 'Set an alias to a mosaic',
+    description: 'Delegate the account importance to a proxy account',
 })
-
 export default class extends ProfileCommand {
 
     constructor() {
         super();
     }
-
     @metadata
     execute(options: CommandOptions) {
-
         const profile = this.getProfile(options);
 
-        options.namespace = OptionsResolver(options,
-            'namespace',
+        options.publickey = OptionsResolver(options,
+            'publickey',
             () => undefined,
-            'Introduce namespace name: ');
-        options.mosaic = OptionsResolver(options,
-                'mosaic',
-                () => undefined,
-                'Introduce mosaic in hexadecimal format: ');
+            'Introduce the public key of the remote account: ');
 
-        let mosaicId: MosaicId;
-        if (options.mosaic) {
-            mosaicId = new MosaicId(options.mosaic);
-        } else {
-            throw new ExpectedError('You need to introduce mosaic id.');
-        }
+        options.action = OptionsResolver(options,
+            'action',
+            () => undefined,
+            'Introduce alias action (0: Add, 1: Remove): ');
 
-        let namespaceId: NamespaceId;
-        if (options.namespace) {
-            namespaceId = new NamespaceId(options.namespace);
-        } else {
-            throw new ExpectedError('You need to introduce namespace id.');
-        }
-
-        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+        const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
-            OptionsResolver(options,
-                'action',
-                () => undefined,
-                'Introduce alias action (0: Link, 1: Unlink): '),
-            namespaceId,
-            mosaicId,
+            options.publickey,
+            options.action,
             profile.networkType,
         );
 
-        const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
-
+        const signedTransaction = profile.account.sign(accountLinkTransaction,
+            profile.networkGenerationHash);
         const transactionHttp = new TransactionHttp(profile.url);
 
         transactionHttp.announce(signedTransaction).subscribe(() => {

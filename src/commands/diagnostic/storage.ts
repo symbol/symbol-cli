@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,11 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {ChainHttp} from 'nem2-sdk';
+import {DiagnosticHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 @command({
-    description: 'Blockchain score',
+    description: 'Returns diagnostic information about the node storage',
 })
 export default class extends ProfileCommand {
 
@@ -35,17 +35,19 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        const chainHttp = new ChainHttp(profile.url);
-        chainHttp.getBlockchainScore().subscribe((score) => {
-            this.spinner.stop(true);
+        const diagnosticHttp = new DiagnosticHttp(profile.url);
 
-            console.log('Low score: ' + score.scoreLow.compact());
-            console.log('High score: ' + score.scoreHigh.compact());
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        diagnosticHttp.getDiagnosticStorage()
+            .subscribe((storage) => {
+                this.spinner.stop(true);
+                console.log('numBlocks: ' + storage.numBlocks);
+                console.log('numTransactions: ' + storage.numTransactions);
+                console.log('numAccounts: ' + storage.numAccounts);
+            }, (err) => {
+                this.spinner.stop(true);
+                let text = '';
+                text += chalk.red('Error');
+                console.log(text, err.response !== undefined ? err.response.text : err);
+            });
     }
 }

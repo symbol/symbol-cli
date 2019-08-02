@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import {
 import { AddressValidator } from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import { AliasService } from '../../service/alias.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
