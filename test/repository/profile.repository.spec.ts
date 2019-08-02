@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,15 @@ import {Profile} from '../../src/model/profile';
 import {ProfileRepository} from '../../src/respository/profile.repository';
 
 describe('ProfileRepository', () => {
+
     let repositoryFileUrl: string;
+
+    const removeAccountsFile = () => {
+        if (fs.existsSync(process.env.HOME + '/' + repositoryFileUrl)) {
+            fs.unlinkSync(process.env.HOME + '/' + repositoryFileUrl);
+        }
+    };
+
     before(() => {
         removeAccountsFile();
         repositoryFileUrl = '.nem2rctest.json';
@@ -95,10 +103,4 @@ describe('ProfileRepository', () => {
             expect(savedProfile.networkGenerationHash).to.be.equal('test');
         }
     });
-
-    const removeAccountsFile = () => {
-        if (fs.existsSync(process.env.HOME + '/' + repositoryFileUrl)) {
-            fs.unlinkSync(process.env.HOME + '/' + repositoryFileUrl);
-        }
-    };
 });

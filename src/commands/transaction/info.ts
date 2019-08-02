@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option,} from 'clime';
-import {TransactionHttp,} from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {TransactionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';

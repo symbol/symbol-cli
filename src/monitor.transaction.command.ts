@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
  */
 import {option} from 'clime';
 import {Address} from 'nem2-sdk';
-import {AddressValidator} from './address.validator';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
+import {AddressValidator} from './validators/address.validator';
 
 export abstract class MonitorAddressCommand extends ProfileCommand {
     public readonly transactionService: TransactionService;

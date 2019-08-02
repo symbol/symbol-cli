@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,12 +21,12 @@ import {
     AddressAliasTransaction,
     Deadline,
     NamespaceId,
-    TransactionHttp,
+    TransactionHttp, UInt64,
 } from 'nem2-sdk';
-import { AddressValidator } from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import { AliasService } from '../../service/alias.service';
+import {AddressValidator} from '../../validators/address.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -47,6 +47,14 @@ export class CommandOptions extends ProfileOptions {
         description: 'Namespace name',
     })
     namespace: string;
+
+    @option({
+        flag: 'f',
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
+    })
+    maxfee: number;
+
 }
 
 @command({
@@ -69,16 +77,10 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce namespace name: ');
 
-        let address: Address;
-
-        try {
-            address = Address.createFromRawAddress(OptionsResolver(options,
-                'recipient',
-                () => undefined,
-                'Introduce the address: '));
-        } catch (err) {
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const address: Address = Address.createFromRawAddress(OptionsResolver(options,
+            'recipient',
+            () => undefined,
+            'Introduce the address: '));
 
         if (address instanceof Address && address.networkType !== profile.networkType) {
             throw new ExpectedError('address network doesn\'t match network option');
@@ -91,6 +93,11 @@ export default class extends ProfileCommand {
             throw new ExpectedError('You need to introduce namespace id.');
         }
 
+        options.maxfee = OptionsResolver(options,
+            'maxfee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             OptionsResolver(options,
@@ -100,6 +107,7 @@ export default class extends ProfileCommand {
             namespaceId,
             address,
             profile.networkType,
+            UInt64.fromUint(options.maxfee),
         );
         const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
 

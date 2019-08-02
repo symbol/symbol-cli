@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'n
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -54,6 +55,13 @@ export class CommandOptions extends ProfileOptions {
         description: 'Parent namespace name (use it with --subnamespace)',
     })
     parentname: string;
+
+    @option({
+        flag: 'f',
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
+    })
+    maxfee: number;
 }
 
 @command({
@@ -90,14 +98,18 @@ export default class extends ProfileCommand {
                 () => undefined,
                 'Introduce namespace rental duration: ');
         }
+        options.maxfee = OptionsResolver(options,
+            'maxfee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         let registerNamespaceTransaction: RegisterNamespaceTransaction;
         if (options.rootnamespace) {
             registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromUint(options.duration), profile.networkType);
+                options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxfee));
         } else {
             registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentname, profile.networkType);
+                options.name, options.parentname, profile.networkType, UInt64.fromUint(options.maxfee));
         }
 
         const signedTransaction = profile.account.sign(registerNamespaceTransaction, profile.networkGenerationHash);

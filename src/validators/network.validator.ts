@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
 
-export class AddressValidator implements Validator<string> {
+export class NetworkValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
-        try {
-            const address = Address.createFromRawAddress(value);
-        } catch (err) {
-            throw new ExpectedError('introduce a valid address');
+        if (!(value === 'MIJIN' || value === 'MIJIN_TEST' || value === 'MAIN_NET' || value === 'TEST_NET')) {
+            throw new ExpectedError('it should be a valid network type');
         }
     }
 }

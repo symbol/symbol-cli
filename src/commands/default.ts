@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  *
  */
 
+// tslint:disable-next-line:no-var-requires
 const pkg = require('../../../package.json');
 export const description = `
                       ____            _ _
@@ -30,23 +31,31 @@ export const description = `
 export const subcommands = [
     {
         name: 'account',
-        brief: 'Fetch account information',
+        brief: 'Get account related information',
     },
     {
-        name: 'blockchain',
-        brief: 'Fetch blockchain information',
+        name: 'block',
+        brief: 'Get block related information',
+    },
+    {
+        name: 'chain',
+        brief: 'Get chain related information',
+    },
+    {
+        name: 'diagnostic',
+        brief: 'Get node diagnostics reports',
     },
     {
         name: 'mosaic',
-        brief: 'Fetch mosaic information',
+        brief: 'Get mosaic related information',
     },
     {
         name: 'namespace',
-        brief: 'Fetch namespace information',
+        brief: 'Get namespace related information',
     },
     {
         name: 'transaction',
-        brief: 'Send transactions',
+        brief: 'Announce transactions',
     },
     {
         name: 'monitor',
@@ -54,6 +63,6 @@ export const subcommands = [
     },
     {
         name: 'profile',
-        brief: 'Profile management',
+        brief: 'Manage profiles',
     },
 ];

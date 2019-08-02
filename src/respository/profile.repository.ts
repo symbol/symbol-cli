@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2019 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,12 +42,14 @@ export class ProfileRepository {
         const profiles = this.getProfiles();
         const list: Profile[] = [];
         for (const name in profiles) {
-            list.push(new Profile(
-                Account.createFromPrivateKey(profiles[name].privateKey, profiles[name].networkType),
-                profiles[name].networkType,
-                profiles[name].url,
-                name,
-                profiles[name].networkGenerationHash));
+            if (profiles.hasOwnProperty(name)) {
+                list.push(new Profile(
+                    Account.createFromPrivateKey(profiles[name].privateKey, profiles[name].networkType),
+                    profiles[name].networkType,
+                    profiles[name].url,
+                    name,
+                    profiles[name].networkGenerationHash));
+            }
         }
         return list;
     }
