@@ -17,9 +17,9 @@
  */
 
 import {ExpectedError} from 'clime';
-import {Address, MosaicId, NamespaceId} from 'nem2-sdk';
+import {Address, Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 
-export class AliasService {
+export class MosaicService {
 
     public static ALIAS_TAG = '@';
 
@@ -29,7 +29,7 @@ export class AliasService {
 
     static getRecipient(rawRecipient: string): Address | NamespaceId {
         let recipient: Address | NamespaceId;
-        if (rawRecipient.charAt(0) === AliasService.ALIAS_TAG) {
+        if (rawRecipient.charAt(0) === MosaicService.ALIAS_TAG) {
             recipient =  new NamespaceId(rawRecipient.substring(1));
         } else  {
             try {
@@ -43,11 +43,29 @@ export class AliasService {
 
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
         let mosaicId: MosaicId | NamespaceId;
-        if (rawMosaicId.charAt(0) === AliasService.ALIAS_TAG) {
+        if (rawMosaicId.charAt(0) === MosaicService.ALIAS_TAG) {
             mosaicId = new NamespaceId(rawMosaicId.substring(1));
         } else {
             mosaicId = new MosaicId(rawMosaicId);
         }
         return mosaicId;
+    }
+
+    static validate(value: string) {
+        const mosaicParts = value.split('::');
+        let valid = true;
+        try {
+            if (isNaN(+mosaicParts[1])) {
+                valid = false;
+            }
+            const ignored = new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
+                UInt64.fromUint(+mosaicParts[1]));
+        } catch (err) {
+            valid = false;
+        }
+        if (!valid) {
+            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
+        }
     }
 }

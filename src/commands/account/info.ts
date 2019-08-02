@@ -19,9 +19,9 @@ import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
-import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -47,17 +47,11 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        let address: Address;
-        try {
-            address = Address.createFromRawAddress(
-                OptionsResolver(options,
-                                'address',
-                                () => this.getProfile(options).account.address.plain(),
-                                'Introduce the address: '));
-        } catch (err) {
-            console.log(options);
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const address: Address = Address.createFromRawAddress(
+            OptionsResolver(options,
+                'address',
+                () => this.getProfile(options).account.address.plain(),
+                'Introduce the address: '));
 
         const accountHttp = new AccountHttp(profile.url);
         const mosaicService = new MosaicService(
