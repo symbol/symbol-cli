@@ -16,6 +16,7 @@
  *
  */
 
+// tslint:disable-next-line:no-var-requires
 const pkg = require('../../../package.json');
 export const description = `
                       ____            _ _

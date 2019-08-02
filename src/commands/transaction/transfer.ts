@@ -18,10 +18,12 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
-import {AddressValidator} from '../../address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AliasService} from '../../service/alias.service';
+import {MosaicService} from '../../service/mosaic.service';
+import {AddressValidator} from '../../validators/address.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
+import {MosaicsValidator} from '../../validators/mosaic.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -39,37 +41,27 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'c',
-        description: 'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
+        description: 'Mosaic you want to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
+        validator: new MosaicsValidator(),
     })
     mosaics: string;
 
+    @option({
+        flag: 'f',
+        description: 'Maximum fee',
+        validator: new MaxFeeValidator(),
+    })
+    maxfee: number;
+
     getMosaics(): Mosaic[] {
-        this.validateMosaics(this.mosaics);
         const mosaics: Mosaic[] = [];
         const mosaicsData = this.mosaics.split(',');
         mosaicsData.forEach((mosaicData) => {
             const mosaicParts = mosaicData.split('::');
-            mosaics.push(new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
+            mosaics.push(new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
                 UInt64.fromUint(+mosaicParts[1])));
         });
         return mosaics;
-    }
-
-    validateMosaics(value: string) {
-        const mosaics = value.split(',');
-        mosaics.forEach((mosaicData) => {
-            const mosaicParts = mosaicData.split('::');
-            try {
-                if (isNaN(+mosaicParts[1])) {
-                    throw new ExpectedError('');
-                }
-                const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
-                    UInt64.fromUint(+mosaicParts[1]));
-            } catch (err) {
-                throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                    ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-            }
-        });
     }
 }
 
@@ -87,8 +79,7 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        let recipient: Address | NamespaceId;
-        recipient =  AliasService.getRecipient(OptionsResolver(options,
+        const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
             'recipient',
             () => undefined,
             'Introduce the recipient address: '));
@@ -100,7 +91,7 @@ export default class extends ProfileCommand {
         options.mosaics = OptionsResolver(options,
             'mosaics',
             () => undefined,
-            'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+            'Mosaics you want to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
             ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas:\n> ');
         if (options.mosaics) {
             mosaics = options.getMosaics();
@@ -112,10 +103,15 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the message: ');
 
-        const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
-            PlainMessage.create(message), profile.networkType);
+        options.maxfee = OptionsResolver(options,
+            'maxfee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const signedTransaction = profile.account.sign(transferTransaction,  profile.networkGenerationHash);
+        const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
+            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxfee));
+
+        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 
