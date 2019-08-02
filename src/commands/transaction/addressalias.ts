@@ -25,7 +25,7 @@ import {
 } from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import { AddressValidator } from '../../validators/address.validator';
+import {AddressValidator} from '../../validators/address.validator';
 import {MaxFeeValidator} from '../../validators/maxfee.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -77,16 +77,10 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce namespace name: ');
 
-        let address: Address;
-
-        try {
-            address = Address.createFromRawAddress(OptionsResolver(options,
-                'recipient',
-                () => undefined,
-                'Introduce the address: '));
-        } catch (err) {
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const address: Address = Address.createFromRawAddress(OptionsResolver(options,
+            'recipient',
+            () => undefined,
+            'Introduce the address: '));
 
         if (address instanceof Address && address.networkType !== profile.networkType) {
             throw new ExpectedError('address network doesn\'t match network option');

@@ -86,17 +86,12 @@ export default class extends Command {
             () => undefined,
             'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
-        let account: Account;
-        try {
-            account = Account.createFromPrivateKey(
-                OptionsResolver(options,
-                    'privatekey',
-                    () => undefined,
-                    'Introduce your private key: '),
-                networkType);
-        } catch (err) {
-            throw new ExpectedError('Introduce a valid private key');
-        }
+        const account: Account = Account.createFromPrivateKey(
+            OptionsResolver(options,
+                'privatekey',
+                () => undefined,
+                'Introduce your private key: '),
+            networkType);
 
         const url = OptionsResolver(options,
             'url',

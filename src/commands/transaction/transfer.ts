@@ -23,6 +23,7 @@ import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
 import {MaxFeeValidator} from '../../validators/maxfee.validator';
+import {MosaicValidator} from '../../validators/mosaic.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -41,6 +42,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'c',
         description: 'Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
+        validator: new MosaicValidator(),
     })
     mosaics: string;
 
@@ -72,7 +74,7 @@ export class CommandOptions extends ProfileOptions {
                     throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
                         ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
                 }
-                const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
+                new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                     UInt64.fromUint(+mosaicParts[1]));
             } catch (err) {
                 throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
@@ -96,8 +98,7 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        let recipient: Address | NamespaceId;
-        recipient =  AliasService.getRecipient(OptionsResolver(options,
+        const recipient: Address | NamespaceId = AliasService.getRecipient(OptionsResolver(options,
             'recipient',
             () => undefined,
             'Introduce the recipient address: '));
@@ -129,7 +130,7 @@ export default class extends ProfileCommand {
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
             PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxFee));
 
-        const signedTransaction = profile.account.sign(transferTransaction,  profile.networkGenerationHash);
+        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 

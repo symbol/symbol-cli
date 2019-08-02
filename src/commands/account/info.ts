@@ -47,17 +47,11 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        let address: Address;
-        try {
-            address = Address.createFromRawAddress(
-                OptionsResolver(options,
-                                'address',
-                                () => this.getProfile(options).account.address.plain(),
-                                'Introduce the address: '));
-        } catch (err) {
-            console.log(options);
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const address: Address = Address.createFromRawAddress(
+            OptionsResolver(options,
+                'address',
+                () => this.getProfile(options).account.address.plain(),
+                'Introduce the address: '));
 
         const accountHttp = new AccountHttp(profile.url);
         const mosaicService = new MosaicService(

@@ -39,7 +39,6 @@ import {AliasService} from '../../service/alias.service';
 import {MaxFeeValidator} from '../../validators/maxfee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
 
-
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'r',
@@ -98,15 +97,11 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
 
-        let recipient: Address;
-        try {
-            recipient = Address.createFromRawAddress(OptionsResolver(options,
-                'recipient',
-                () => undefined,
-                'Introduce funds holder address: '));
-        } catch (err) {
-            throw new ExpectedError('Introduce a valid address');
-        }
+        const recipient: Address = Address.createFromRawAddress(OptionsResolver(options,
+            'recipient',
+            () => undefined,
+            'Introduce funds holder address: '));
+
         if (recipient.networkType !== profile.networkType) {
             throw new ExpectedError('recipient network doesn\'t match network option');
         }
@@ -118,9 +113,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
 
                 const message = PlainMessage.create(OptionsResolver(options,
-                        'message',
-                        () => undefined,
-                        'Introduce message to the funds holder: '));
+                    'message',
+                    () => undefined,
+                    'Introduce message to the funds holder: '));
 
                 options.mosaic = OptionsResolver(options,
                     'mosaic',
@@ -143,7 +138,7 @@ export default class extends ProfileCommand {
 
                 const signedTransaction = profile.account.sign(aggregateTx, profile.networkGenerationHash);
 
-                const currencyMosaic = new Mosaic (new MosaicId( OptionsResolver(options,
+                const currencyMosaic = new Mosaic(new MosaicId(OptionsResolver(options,
                     'currency',
                     () => undefined,
                     'The network native currency mosaicId in hexadecimal:')), UInt64.fromUint(10000000));
@@ -157,7 +152,7 @@ export default class extends ProfileCommand {
                     UInt64.fromUint(options.maxFee)
                 );
 
-                const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction,  profile.networkGenerationHash);
+                const lockFundsSignedTransaction = profile.account.sign(lockFundsTransaction, profile.networkGenerationHash);
 
                 const transactionHttp = new TransactionHttp(profile.url);
                 const listener = new Listener(profile.url);
