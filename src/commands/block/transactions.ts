@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
