@@ -26,14 +26,14 @@ describe('Maximum fee validator', () => {
             .to.be.equal(undefined);
     });
 
-    it('Valid maximum fee (negative)', () => {
+    it('Invalid maximum fee (negative)', () => {
         const maxfee = -1;
         expect(() => {
             new MaxFeeValidator().validate(maxfee, {name: 'maxfee', source: maxfee.toString()});
         }).to.throws('maxfee should be positive integer or equal to 0');
     });
 
-    it('Invalid maximum fee(decimal)', () => {
+    it('Invalid maximum fee (decimal)', () => {
         const maxfee = 0.33;
         expect(() => {
             new MaxFeeValidator().validate(maxfee, {name: 'maxfee', source: maxfee.toString()});

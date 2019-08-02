@@ -26,16 +26,17 @@ describe('mosaic  validator', () => {
             .to.be.equal(undefined);
     });
 
-    it('Valid mosaic (mosaicId)', () => {
+    it('Valid mosaic (hex)', () => {
         const mosaic = '85BBEA6CC462B244::1000000';
         expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid mosaic', () => {
+    it('Invalid mosaic ', () => {
         const mosaic = 'cat.currencxy::1000000';
         expect(() => {
             new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});
-        }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, (Ex: sending 1 cat.currency, @cat.currency::1000000)');
+        }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
+            '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
     });
 });

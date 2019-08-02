@@ -18,10 +18,10 @@
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
-import {AddressValidator} from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
+import {AddressValidator} from '../../validators/address.validator';
 import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
 
@@ -54,7 +54,6 @@ export class CommandOptions extends ProfileOptions {
     maxfee: number;
 
     getMosaics(): Mosaic[] {
-        this.validateMosaics(this.mosaics);
         const mosaics: Mosaic[] = [];
         const mosaicsData = this.mosaics.split(',');
         mosaicsData.forEach((mosaicData) => {
@@ -63,24 +62,6 @@ export class CommandOptions extends ProfileOptions {
                 UInt64.fromUint(+mosaicParts[1])));
         });
         return mosaics;
-    }
-
-    validateMosaics(value: string) {
-        const mosaics = value.split(',');
-        mosaics.forEach((mosaicData) => {
-            const mosaicParts = mosaicData.split('::');
-            try {
-                if (isNaN(+mosaicParts[1])) {
-                    throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                        ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-                }
-                new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
-                    UInt64.fromUint(+mosaicParts[1]));
-            } catch (err) {
-                throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                    ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-            }
-        });
     }
 }
 

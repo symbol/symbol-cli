@@ -25,7 +25,6 @@ import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
 
-
 export class CommandOptions extends Options {
     @option({
         flag: 's',

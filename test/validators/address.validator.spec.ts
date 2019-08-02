@@ -32,7 +32,7 @@ describe('address validator', () => {
             .to.be.equal(undefined);
     });
 
-    it('Valid address (line)', () => {
+    it('Valid address (dash)', () => {
         const address = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
         expect(new AddressValidator().validate(address, {name: 'address', source: address}))
             .to.be.equal(undefined);

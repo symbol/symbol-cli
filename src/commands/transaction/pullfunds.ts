@@ -32,10 +32,10 @@ import {
     TransferTransaction,
     UInt64,
 } from 'nem2-sdk';
-import {AddressValidator} from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
+import {AddressValidator} from '../../validators/address.validator';
 import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
 

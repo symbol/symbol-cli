@@ -27,7 +27,7 @@ export class MosaicValidator implements Validator<string> {
                 throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
                     ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
             }
-            new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
+            const ignored = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                 UInt64.fromUint(+mosaicParts[1]));
         } catch (err) {
             throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
