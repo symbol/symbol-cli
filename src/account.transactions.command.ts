@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@
  */
 import {ExpectedError, option, ValidationContext, Validator} from 'clime';
 import {QueryParams} from 'nem2-sdk';
-import {TransactionService} from './service/transaction.service';
 import {ProfileCommand, ProfileOptions} from './profile.command';
+import {TransactionService} from './service/transaction.service';
 
 export class PublicKeyValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Transaction message',
-        default: '',
     })
     message: string;
 
@@ -107,13 +106,14 @@ export default class extends ProfileCommand {
             mosaics = options.getMosaics();
         }
 
-        const message = PlainMessage.create(
-            OptionsResolver(options,
-                'message',
-                () => undefined,
-                'Introduce the message: '));
+        let message: string;
+        message = options.recipient ? (options.message || '') : OptionsResolver(options,
+            'message',
+            () => undefined,
+            'Introduce the message: ');
 
-        const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics, message, profile.networkType);
+        const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
+            PlainMessage.create(message), profile.networkType);
 
         const signedTransaction = profile.account.sign(transferTransaction,  profile.networkGenerationHash);
 

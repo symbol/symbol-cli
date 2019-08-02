@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Cosign an announce aggregate bonded transaction',
+    description: 'Cosign an aggregate bonded transaction',
 })
 export default class extends ProfileCommand {
 
