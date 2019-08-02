@@ -16,27 +16,27 @@
  *
  */
 import {expect} from 'chai';
-import {MaxFeeValidator} from '../../src/validators/maxfee.validator';
+import {MaxFeeValidator} from '../../src/validators/maxFee.validator';
 
 describe('Maximum fee validator', () => {
 
     it('Valid maximum fee', () => {
-        const maxFee = 123;
-        expect(new MaxFeeValidator().validate(maxFee, {name: 'maxfee', source: maxFee.toString()}))
+        const maxfee = 123;
+        expect(new MaxFeeValidator().validate(maxfee, {name: 'maxfee', source: maxfee.toString()}))
             .to.be.equal(undefined);
     });
 
     it('Valid maximum fee (negative)', () => {
-        const maxFee = -1;
+        const maxfee = -1;
         expect(() => {
-            new MaxFeeValidator().validate(maxFee, {name: 'maxfee', source: maxFee.toString()});
+            new MaxFeeValidator().validate(maxfee, {name: 'maxfee', source: maxfee.toString()});
         }).to.throws('maxfee should be positive integer or equal to 0');
     });
 
     it('Invalid maximum fee(decimal)', () => {
-        const maxFee = 0.33;
+        const maxfee = 0.33;
         expect(() => {
-            new MaxFeeValidator().validate(maxFee, {name: 'maxfee', source: maxFee.toString()});
+            new MaxFeeValidator().validate(maxfee, {name: 'maxfee', source: maxfee.toString()});
         }).to.throws('maxfee should be positive integer or equal to 0');
     });
 });

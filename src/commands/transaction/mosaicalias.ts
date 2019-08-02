@@ -25,7 +25,7 @@ import {
 } from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validators/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -51,7 +51,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Maximum fee',
         validator: new MaxFeeValidator(),
     })
-    maxFee: number;
+    maxfee: number;
 }
 
 @command({
@@ -78,7 +78,7 @@ export default class extends ProfileCommand {
                 () => undefined,
                 'Introduce mosaic in hexadecimal format: ');
 
-        options.maxFee = OptionsResolver(options,
+        options.maxfee = OptionsResolver(options,
             'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
@@ -106,7 +106,7 @@ export default class extends ProfileCommand {
             namespaceId,
             mosaicId,
             profile.networkType,
-            UInt64.fromUint(options.maxFee),
+            UInt64.fromUint(options.maxfee),
         );
 
         const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);

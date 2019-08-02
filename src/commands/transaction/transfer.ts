@@ -22,7 +22,7 @@ import {AddressValidator} from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
-import {MaxFeeValidator} from '../../validators/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -51,7 +51,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Maximum fee',
         validator: new MaxFeeValidator(),
     })
-    maxFee: number;
+    maxfee: number;
 
     getMosaics(): Mosaic[] {
         this.validateMosaics(this.mosaics);
@@ -122,13 +122,13 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the message: ');
 
-        options.maxFee = OptionsResolver(options,
+        options.maxfee = OptionsResolver(options,
             'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
-            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxFee));
+            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxfee));
 
         const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
 

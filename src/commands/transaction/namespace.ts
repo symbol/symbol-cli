@@ -21,7 +21,7 @@ import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'n
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validators/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -61,7 +61,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Maximum fee',
         validator: new MaxFeeValidator(),
     })
-    maxFee: number;
+    maxfee: number;
 }
 
 @command({
@@ -98,7 +98,7 @@ export default class extends ProfileCommand {
                 () => undefined,
                 'Introduce namespace rental duration: ');
         }
-        options.maxFee = OptionsResolver(options,
+        options.maxfee = OptionsResolver(options,
             'maxfee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
@@ -106,10 +106,10 @@ export default class extends ProfileCommand {
         let registerNamespaceTransaction: RegisterNamespaceTransaction;
         if (options.rootnamespace) {
             registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxFee));
+                options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxfee));
         } else {
             registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentname, profile.networkType, UInt64.fromUint(options.maxFee));
+                options.name, options.parentname, profile.networkType, UInt64.fromUint(options.maxfee));
         }
 
         const signedTransaction = profile.account.sign(registerNamespaceTransaction, profile.networkGenerationHash);

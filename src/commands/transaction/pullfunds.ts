@@ -36,7 +36,7 @@ import {AddressValidator} from '../../validators/address.validator';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AliasService} from '../../service/alias.service';
-import {MaxFeeValidator} from '../../validators/maxfee.validator';
+import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
 
 export class CommandOptions extends ProfileOptions {
