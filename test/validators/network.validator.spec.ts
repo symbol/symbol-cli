@@ -20,13 +20,13 @@ import {NetworkValidator} from '../../src/validators/network.validator';
 
 describe('network type validator', () => {
 
-    it('Invalid valid network type', () => {
+    it('Valid network type', () => {
         const networkType = 'MIJIN_TEST';
         expect(new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType}))
             .to.be.equal(undefined);
     });
 
-    it(' Invalid network type is not valid', () => {
+    it('Invalid network type', () => {
         const networkType = 'TEST';
         expect(() => {
             new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType});

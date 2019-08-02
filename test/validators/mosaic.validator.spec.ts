@@ -20,19 +20,19 @@ import {MosaicValidator} from '../../src/validators/mosaic.validator';
 
 describe('mosaic  validator', () => {
 
-    it('Invalid valid mosaic (@aliasName)', () => {
+    it('Valid mosaic (@aliasName)', () => {
         const mosaic = '@cat.currency::1000000';
         expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid valid mosaic (mosaicId)', () => {
+    it('Valid mosaic (mosaicId)', () => {
         const mosaic = '85BBEA6CC462B244::1000000';
         expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid mosaic is not valid', () => {
+    it('Invalid mosaic', () => {
         const mosaic = 'cat.currencxy::1000000';
         expect(() => {
             new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});

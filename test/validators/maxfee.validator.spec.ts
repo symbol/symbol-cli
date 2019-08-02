@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,23 +20,23 @@ import {MaxFeeValidator} from '../../src/validators/maxfee.validator';
 
 describe('Maximum fee validator', () => {
 
-    it('Invalid valid maximum fee', () => {
+    it('Valid maximum fee', () => {
         const maxFee = 123;
         expect(new MaxFeeValidator().validate(maxFee, {name: 'maxFee', source: maxFee.toString()}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid maximum fee (negative)', () => {
+    it('Valid maximum fee (negative)', () => {
         const maxFee = -1;
         expect(() => {
             new MaxFeeValidator().validate(maxFee, {name: 'maxFee', source: maxFee.toString()});
-        }).to.throws('maxFee should be greater than or equal to 0');
+        }).to.throws('maxFee should be positive integer or equal to 0');
     });
 
     it('Invalid maximum fee(decimal)', () => {
         const maxFee = 0.33;
         expect(() => {
             new MaxFeeValidator().validate(maxFee, {name: 'maxFee', source: maxFee.toString()});
-        }).to.throws('maxFee should be greater than or equal to 0');
+        }).to.throws('maxFee should be positive integer or equal to 0');
     });
 });

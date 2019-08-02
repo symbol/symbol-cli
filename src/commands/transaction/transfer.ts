@@ -69,7 +69,8 @@ export class CommandOptions extends ProfileOptions {
             const mosaicParts = mosaicData.split('::');
             try {
                 if (isNaN(+mosaicParts[1])) {
-                    throw new ExpectedError('');
+                    throw new ExpectedError('Mosaic you want to get in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                        ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
                 }
                 const mosaic = new Mosaic(AliasService.getMosaicId(mosaicParts[0]),
                     UInt64.fromUint(+mosaicParts[1]));

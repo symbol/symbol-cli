@@ -20,19 +20,19 @@ import {PublicKeyValidator} from '../../src/validators/publicKey.validator';
 
 describe('public key validator', () => {
 
-    it('Invalid valid public key (uppercase)', () => {
+    it('Valid public key (uppercase)', () => {
         const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C347';
         expect(new PublicKeyValidator().validate(publicKey, {name: 'publicKey', source: publicKey}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid valid public key (lowercase)', () => {
+    it('Valid public key (lowercase)', () => {
         const publicKey = '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347';
         expect(new PublicKeyValidator().validate(publicKey, {name: 'publicKey', source: publicKey}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid public key is not valid in length', () => {
+    it('Invalid public key (length)', () => {
         const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34';
         expect(() => {
             new PublicKeyValidator().validate(publicKey, {name: 'publicKey', source: publicKey});
