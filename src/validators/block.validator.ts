@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2019 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@ import {ExpectedError, ValidationContext, Validator} from 'clime';
 
 export class HeightValidator implements Validator<number> {
     validate(value: number, context: ValidationContext): void {
-        if (!/^([1-9][0-9]*)$/.test(value.toString())) {
-            throw new ExpectedError('The block height cannot be smaller than 1');
+        if (!(Number.isInteger(value) && value > 0)) {
+            throw new ExpectedError('The block height must be a positive integer');
         }
     }
 }

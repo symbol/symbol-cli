@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018 NEM
+ * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,20 +30,20 @@ describe('block height validator', () => {
         const height = 0;
         expect(() => {
             new HeightValidator().validate(height, {name: 'height', source: height.toString()});
-        }).to.throws('The block height cannot be smaller than 1');
+        }).to.throws('The block height must be a positive integer');
     });
 
     it('Invalid height is not valid (negative)', () => {
         const height = -1;
         expect(() => {
             new HeightValidator().validate(height, {name: 'height', source: height.toString()});
-        }).to.throws('The block height cannot be smaller than 1');
+        }).to.throws('The block height must be a positive integer');
     });
 
     it('Invalid height is not valid (decimal)', () => {
         const height = 1.3;
         expect(() => {
             new HeightValidator().validate(height, {name: 'height', source: height.toString()});
-        }).to.throws('The block height cannot be smaller than 1');
+        }).to.throws('The block height must be a positive integer');
     });
 });
