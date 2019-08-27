@@ -16,8 +16,16 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {
+    AccountHttp,
+    AccountInfo,
+    Address,
+    MosaicAmountView,
+    MosaicHttp,
+    MosaicService,
+    UInt64,
+} from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
@@ -82,7 +90,8 @@ export default class extends ProfileCommand {
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
                 accountData.mosaics.map((mosaic: MosaicAmountView) => {
-                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
+                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '(relative)' + '\t'
+                    + mosaic.amount.compact() + '(absolute)' + '\n';
                 });
                 console.log(text);
             }, (err) => {
