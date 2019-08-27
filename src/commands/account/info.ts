@@ -24,7 +24,6 @@ import {
     MosaicAmountView,
     MosaicHttp,
     MosaicService,
-    UInt64,
 } from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
