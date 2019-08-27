@@ -25,7 +25,7 @@ import {
     MosaicHttp,
     MosaicService,
     MultisigAccountInfo,
-    PublicAccount
+    PublicAccount,
 } from 'nem2-sdk';
 import {map, mergeMap, multicast, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
