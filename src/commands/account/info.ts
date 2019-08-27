@@ -17,8 +17,17 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
-import {map, mergeMap, toArray} from 'rxjs/operators';
+import {
+    AccountHttp,
+    AccountInfo,
+    Address,
+    MosaicAmountView,
+    MosaicHttp,
+    MosaicService,
+    MultisigAccountInfo,
+    PublicAccount
+} from 'nem2-sdk';
+import {map, mergeMap, multicast, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
@@ -90,6 +99,26 @@ export default class extends ProfileCommand {
                 let text = '';
                 text += chalk.red('Error');
                 console.log(text, err.response !== undefined ? err.response.text : err);
+            });
+
+        accountHttp.getMultisigAccountInfo(address)
+            .subscribe((multisigAccountInfo: MultisigAccountInfo) => {
+                let text = '';
+                text += 'MinApproval:\t' + multisigAccountInfo.minApproval + '\n';
+                text += 'MinRemoval:\t' + multisigAccountInfo.minRemoval + '\n\n';
+                text += 'cosignatories' + '\n';
+                multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
+                    text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
+                    text += 'Address:\t' + publicAccount.address + '\n\n';
+                });
+                text += 'multisigAccounts' + '\n';
+                multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
+                    text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
+                    text += 'Address:\t' + publicAccount.address + '\n\n';
+                });
+                console.log(text);
+            }, (err) => {
+                this.spinner.stop(true);
             });
     }
 }
