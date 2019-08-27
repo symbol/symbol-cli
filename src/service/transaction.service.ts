@@ -23,9 +23,6 @@ import {
     AliasActionType,
     LinkAction,
     LockFundsTransaction,
-    ModifyAccountPropertyAddressTransaction,
-    ModifyAccountPropertyEntityTypeTransaction,
-    ModifyAccountPropertyMosaicTransaction,
     ModifyMultisigAccountTransaction,
     MosaicAliasTransaction,
     MosaicDefinitionTransaction,
@@ -34,13 +31,16 @@ import {
     MosaicSupplyType,
     MultisigCosignatoryModificationType,
     NamespaceType,
-    PropertyModificationType,
-    PropertyType,
     RegisterNamespaceTransaction,
     SecretLockTransaction,
     SecretProofTransaction,
     Transaction,
     TransferTransaction,
+    AccountAddressRestrictionModificationTransaction,
+    RestrictionType,
+    RestrictionModificationType,
+    AccountMosaicRestrictionModificationTransaction,
+    AccountOperationRestrictionModificationTransaction,
 } from 'nem2-sdk';
 
 export class TransactionService {
@@ -159,33 +159,30 @@ export class TransactionService {
             transactionFormatted += 'AccountLinkTransaction: ' +
                 'LinkAction:' + LinkAction[transaction.linkAction] +
                 ' RemoteAccountKey: ' + transaction.remoteAccountKey;
-        } else if (transaction instanceof ModifyAccountPropertyAddressTransaction) {
-            transactionFormatted += 'AccountPropertyAddressTransaction: ' +
-                'PropertyType:' + PropertyType[transaction.propertyType] +
-                ' Modifications: ';
-            transaction.modifications.map((modification) => {
-                transactionFormatted += ' [ModificationType:' + PropertyModificationType[modification.modificationType];
-                transactionFormatted += ' Value: ' + modification.value;
-                transactionFormatted += ' ]';
-            });
-        } else if (transaction instanceof ModifyAccountPropertyMosaicTransaction) {
-            transactionFormatted += 'AccountPropertyMosaicTransaction: ' +
-                'PropertyType:' + PropertyType[transaction.propertyType] +
-                ' Modifications: ';
-            transaction.modifications.map((modification) => {
-                transactionFormatted += ' [ModificationType:' + PropertyModificationType[modification.modificationType];
-                transactionFormatted += ' Value: ' + modification.value;
-                transactionFormatted += ' ]';
-            });
-        } else if (transaction instanceof ModifyAccountPropertyEntityTypeTransaction) {
-            transactionFormatted += 'AccountPropertyEntityTypeTransaction: ' +
-                'PropertyType:' + PropertyType[transaction.propertyType] +
-                ' Modifications: ';
-            transaction.modifications.map((modification) => {
-                transactionFormatted += ' [ModificationType:' + PropertyModificationType[modification.modificationType];
-                transactionFormatted += ' Value: ' + modification.value;
-                transactionFormatted += ' ]';
-            });
+        } else if (transaction instanceof AccountAddressRestrictionModificationTransaction) {
+            transactionFormatted += 'AccountAddressRestrictionModificationTransaction:' +
+                ' RestrictionType:' + RestrictionType[transaction.restrictionType] +
+                transaction.modifications.map((modification) => {
+                    transactionFormatted += ' modificationType:' +
+                        (modification.modificationType === RestrictionModificationType.Add ? 'Add' : 'Remove');
+                    transactionFormatted += 'value:' + modification.value;
+                });
+        } else if (transaction instanceof AccountMosaicRestrictionModificationTransaction) {
+            transactionFormatted += 'AccountMosaicRestrictionModificationTransaction:' +
+                ' RestrictionType:' + RestrictionType[transaction.restrictionType] +
+                transaction.modifications.map((modification) => {
+                    transactionFormatted += ' modificationType:' +
+                        (modification.modificationType === RestrictionModificationType.Add ? 'Add' : 'Remove');
+                    transactionFormatted += 'value:' + modification.value;
+                });
+        } else if (transaction instanceof AccountOperationRestrictionModificationTransaction) {
+            transactionFormatted += 'AccountOperationRestrictionModificationTransaction:' +
+                ' RestrictionType:' + RestrictionType[transaction.restrictionType] +
+                transaction.modifications.map((modification) => {
+                    transactionFormatted += ' modificationType:' +
+                        (modification.modificationType === RestrictionModificationType.Add ? 'Add' : 'Remove');
+                    transactionFormatted += 'value:' + modification.value;
+                });
         }
         transactionFormatted += (transaction.signer ? ' Signer:' + transaction.signer.address.pretty() : '') +
             ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +

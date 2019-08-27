@@ -8,3 +8,5 @@ coverage/
 .idea/
 build/test
 licenses/
+.vscode/
+
