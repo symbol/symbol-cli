@@ -16,7 +16,10 @@
  *
  */
 import {
+    AccountAddressRestrictionModificationTransaction,
     AccountLinkTransaction,
+    AccountMosaicRestrictionModificationTransaction,
+    AccountOperationRestrictionModificationTransaction,
     Address,
     AddressAliasTransaction,
     AggregateTransaction,
@@ -32,15 +35,12 @@ import {
     MultisigCosignatoryModificationType,
     NamespaceType,
     RegisterNamespaceTransaction,
+    RestrictionModificationType,
+    RestrictionType,
     SecretLockTransaction,
     SecretProofTransaction,
     Transaction,
     TransferTransaction,
-    AccountAddressRestrictionModificationTransaction,
-    RestrictionType,
-    RestrictionModificationType,
-    AccountMosaicRestrictionModificationTransaction,
-    AccountOperationRestrictionModificationTransaction,
 } from 'nem2-sdk';
 
 export class TransactionService {
