@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {
     AccountHttp,
     AccountInfo,
@@ -27,7 +27,7 @@ import {
     MultisigAccountInfo,
     PublicAccount,
 } from 'nem2-sdk';
-import {map, mergeMap, multicast, toArray} from 'rxjs/operators';
+import {map, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
