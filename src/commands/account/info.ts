@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService} from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
@@ -82,6 +82,12 @@ export default class extends ProfileCommand {
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
                 accountData.mosaics.map((mosaic: MosaicAmountView) => {
+                    const duration = mosaic.mosaicInfo.duration ? mosaic.mosaicInfo.duration.compact() : 0;
+                    const effectiveHeight = duration + mosaic.mosaicInfo.height.compact() === mosaic.mosaicInfo.height.compact()
+                        ? 'forever' : duration + mosaic.mosaicInfo.height.compact();
+                    if (mosaic.mosaicInfo.owner.address.plain() === address.plain()) {
+                        text += 'Effective height:[' + effectiveHeight + '] \t';
+                    }
                     text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
                 });
                 console.log(text);
