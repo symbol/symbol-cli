@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
     AccountHttp,
     AccountInfo,
@@ -24,12 +24,14 @@ import {
     MosaicAmountView,
     MosaicHttp,
     MosaicService,
+    MultisigAccountInfo,
+    PublicAccount
 } from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
-
+  
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
@@ -72,7 +74,7 @@ export default class extends ProfileCommand {
                         mergeMap((_) => _),
                         toArray(),
                         map((mosaics: MosaicAmountView[]) => {
-                            return {mosaics, info: accountInfo};
+                            return { mosaics, info: accountInfo };
                         }))),
             )
             .subscribe((accountData: any) => {
@@ -92,6 +94,32 @@ export default class extends ProfileCommand {
                     text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '(relative)' + '\t'
                     + mosaic.amount.compact() + '(absolute)' + '\n';
                 });
+                console.log(text);
+            }, (err) => {
+                this.spinner.stop(true);
+                let text = '';
+                text += chalk.red('Error');
+                console.log(text, err.response !== undefined ? err.response.text : err);
+            });
+
+        accountHttp.getMultisigAccountInfo(address)
+            .subscribe((multisigAccountInfo: MultisigAccountInfo) => {
+                this.spinner.stop(true);
+                let text = '';
+                text += chalk.green('cosignatories:\t') + '\n';
+                text += '-'.repeat('cosignatories:\t'.length) + '\n\n';
+                multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
+                    text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
+                    text += 'Address:\t' + publicAccount.address.plain() + '\n\n';
+                });
+                text += chalk.green('multisigAccounts:\t') + '\n';
+                text += '-'.repeat('multisigAccounts:\t'.length) + '\n\n';
+                multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
+                    text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
+                    text += 'Address:\t' + publicAccount.address.plain() + '\n\n';
+                });
+                text += 'MinApproval:\t' + multisigAccountInfo.minApproval + '\n';
+                text += 'MinRemoval:\t' + multisigAccountInfo.minRemoval + '\n\n';
                 console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
