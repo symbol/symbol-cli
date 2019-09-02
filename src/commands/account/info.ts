@@ -25,13 +25,13 @@ import {
     MosaicHttp,
     MosaicService,
     MultisigAccountInfo,
-    PublicAccount
+    PublicAccount,
 } from 'nem2-sdk';
 import {map, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
-  
+
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
