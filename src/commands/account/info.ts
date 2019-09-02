@@ -122,6 +122,9 @@ export default class extends ProfileCommand {
                 console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
+                let text = '';
+                text += chalk.red('Error');
+                console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
 }
