@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
     AccountHttp,
     AccountInfo,
@@ -27,10 +27,10 @@ import {
     MultisigAccountInfo,
     PublicAccount,
 } from 'nem2-sdk';
-import {map, mergeMap, toArray} from 'rxjs/operators';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
+import { map, mergeMap, toArray } from 'rxjs/operators';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import { AddressValidator } from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -74,7 +74,7 @@ export default class extends ProfileCommand {
                         mergeMap((_) => _),
                         toArray(),
                         map((mosaics: MosaicAmountView[]) => {
-                            return {mosaics, info: accountInfo};
+                            return { mosaics, info: accountInfo };
                         }))),
             )
             .subscribe((accountData: any) => {
@@ -103,19 +103,22 @@ export default class extends ProfileCommand {
 
         accountHttp.getMultisigAccountInfo(address)
             .subscribe((multisigAccountInfo: MultisigAccountInfo) => {
+                this.spinner.stop(true);
                 let text = '';
-                text += 'MinApproval:\t' + multisigAccountInfo.minApproval + '\n';
-                text += 'MinRemoval:\t' + multisigAccountInfo.minRemoval + '\n\n';
-                text += 'cosignatories' + '\n';
+                text += chalk.green('cosignatories:\t') + '\n';
+                text += '-'.repeat('cosignatories:\t'.length) + '\n\n';
                 multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
                     text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
-                    text += 'Address:\t' + publicAccount.address + '\n\n';
+                    text += 'Address:\t' + publicAccount.address.plain() + '\n\n';
                 });
-                text += 'multisigAccounts' + '\n';
+                text += chalk.green('multisigAccounts:\t') + '\n';
+                text += '-'.repeat('multisigAccounts:\t'.length) + '\n\n';
                 multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
                     text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
-                    text += 'Address:\t' + publicAccount.address + '\n\n';
+                    text += 'Address:\t' + publicAccount.address.plain() + '\n\n';
                 });
+                text += 'MinApproval:\t' + multisigAccountInfo.minApproval + '\n';
+                text += 'MinRemoval:\t' + multisigAccountInfo.minRemoval + '\n\n';
                 console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
