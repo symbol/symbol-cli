@@ -27,10 +27,10 @@ import {
     MultisigAccountInfo,
     PublicAccount,
 } from 'nem2-sdk';
-import { map, mergeMap, toArray } from 'rxjs/operators';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { AddressValidator } from '../../validators/address.validator';
+import {map, mergeMap, toArray} from 'rxjs/operators';
+import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -99,7 +99,8 @@ export default class extends ProfileCommand {
                         const createHeight = mosaic.mosaicInfo.height.compact();
                         expiration = (createHeight + duration).toString();
                     }
-                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
+                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '(relative)' + '\t'
+                    + mosaic.amount.compact() + '(absolute)' + '\n';
                     text += 'expiration height:\t' + expiration + '\n\n';
                 });
                 this.spinner.stop(true);
