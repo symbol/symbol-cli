@@ -21,6 +21,9 @@ import {BlockHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {HeightValidator} from '../../validators/block.validator';
+import { Receipt } from '../../model/receipt';
+import { ReceiptService } from '../../service/receipt.service';
+
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
@@ -57,13 +60,15 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let txt = '\n';
                 if (statement.transactionStatements[0]) {
-                    txt += 'version:\t' + statement.transactionStatements[0].receipts[0].version + '\n';
-                    txt += 'type:\t' + statement.transactionStatements[0].receipts[0].type + '\n';
-                    txt += 'amount:\t' + statement.transactionStatements[0].receipts[0].amount.compact() + '\n';
-                    txt += 'address:\t' + statement.transactionStatements[0].receipts[0].account.address.pretty() + '\n';
-                    txt += 'publicKey:\t' + statement.transactionStatements[0].receipts[0].account.publicKey + '\n';
-                    txt += 'mosaicId:\t[ ' + statement.transactionStatements[0].receipts[0].mosaicId.id.lower + ', '
-                        + statement.transactionStatements[0].receipts[0].mosaicId.id.higher + ' ]\n\n';
+                    let receiptItem = statement.transactionStatements[0].receipts[0];
+                    let receipt = new Receipt(receiptItem.type, 
+                                            receiptItem.version, 
+                                            receiptItem.amount.compact(), 
+                                            receiptItem.account.address.pretty(), 
+                                            receiptItem.account.publicKey, 
+                                            receiptItem.mosaicId.id);
+
+                    txt += new ReceiptService().formatReceiptToFilter(receipt);
                 } else {
                     txt = '[]';
                 }
