@@ -1,5 +1,5 @@
 
-import { Receipt } from '../model/receipt';
+import { ReceiptModel } from '../model/receipt';
 
 export class ReceiptService {
     constructor() {
@@ -8,11 +8,11 @@ export class ReceiptService {
 
     /**
      * @description The logic of formatting Receipt info
-     * @param receipt 
+     * @param receipt
      * @returns {string}
      */
-    public formatReceiptToFilter(receipt: Receipt): string {
-        let txt: string = '';
+    public formatReceiptToFilter(receipt: ReceiptModel): string {
+        let txt = '';
         txt += 'version:\t' + receipt.version + '\n';
         txt += 'type:\t\t' + receipt.type + '\n';
         txt += 'amount:\t\t' + receipt.amount + '\n';

@@ -18,11 +18,11 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {BlockHttp} from 'nem2-sdk';
+import {ReceiptModel} from '../../model/receipt';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {ReceiptService} from '../../service/receipt.service';
 import {HeightValidator} from '../../validators/block.validator';
-import { Receipt } from '../../model/receipt';
-import { ReceiptService } from '../../service/receipt.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -60,12 +60,12 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let txt = '\n';
                 if (statement.transactionStatements[0]) {
-                    let receiptItem = statement.transactionStatements[0].receipts[0];
-                    let receipt = new Receipt(receiptItem.type, 
-                                            receiptItem.version, 
-                                            receiptItem.amount.compact(), 
-                                            receiptItem.account.address.pretty(), 
-                                            receiptItem.account.publicKey, 
+                    const receiptItem = statement.transactionStatements[0].receipts[0];
+                    const receipt = new ReceiptModel(receiptItem.type,
+                                            receiptItem.version,
+                                            receiptItem.amount.compact(),
+                                            receiptItem.account.address.pretty(),
+                                            receiptItem.account.publicKey,
                                             receiptItem.mosaicId.id);
 
                     txt += new ReceiptService().formatReceiptToFilter(receipt);

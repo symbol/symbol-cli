@@ -1,9 +1,9 @@
-import { Address, Id } from 'nem2-sdk';
+import { Address, Id, Receipt, ReceiptType, ReceiptVersion} from 'nem2-sdk';
 
 /**
  * An abstract transaction class that serves as the base class of all receipts.
  */
-export class Receipt {
+export class ReceiptModel extends Receipt {
     /**
      * @constructor
      * @param type
@@ -16,11 +16,11 @@ export class Receipt {
     constructor(/**
                  * The receipt type.
                  */
-                public readonly type: number,
+                public readonly type: ReceiptType,
                 /**
                  * The receipt version number.
-                 */ 
-                public readonly version: number,
+                 */
+                public readonly version: ReceiptVersion,
                 /**
                  * The amount number.
                  */
@@ -37,5 +37,6 @@ export class Receipt {
                  * The mosaic id info.(including higer part and lower part)
                  */
                 public readonly mosaicId: Id) {
+                    super(version, type);
     }
 }
