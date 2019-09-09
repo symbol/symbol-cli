@@ -27,10 +27,10 @@ import {
     MultisigAccountInfo,
     PublicAccount,
 } from 'nem2-sdk';
-import { map, mergeMap, toArray } from 'rxjs/operators';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { AddressValidator } from '../../validators/address.validator';
+import {map, mergeMap, toArray} from 'rxjs/operators';
+import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -91,7 +91,8 @@ export default class extends ProfileCommand {
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
                 accountData.mosaics.map((mosaic: MosaicAmountView) => {
-                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '\n';
+                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '(relative)' + '\t'
+                    + mosaic.amount.compact() + '(absolute)' + '\n';
                 });
                 console.log(text);
             }, (err) => {
