@@ -17,8 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp} from 'nem2-sdk';
-import {ReceiptModel} from '../../model/receipt';
+import {BlockHttp, Convert} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {ReceiptService} from '../../service/receipt.service';
@@ -58,20 +57,7 @@ export default class extends ProfileCommand {
         blockHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
-                let txt = '\n';
-                if (statement.transactionStatements[0]) {
-                    const receiptItem = statement.transactionStatements[0].receipts[0];
-                    const receipt = new ReceiptModel(receiptItem.type,
-                                            receiptItem.version,
-                                            receiptItem.amount.compact(),
-                                            receiptItem.account.address.pretty(),
-                                            receiptItem.account.publicKey,
-                                            receiptItem.mosaicId.id);
-
-                    txt += new ReceiptService().formatReceiptToFilter(receipt);
-                } else {
-                    txt = '[]';
-                }
+                const txt = new ReceiptService().formatReceiptToFilter(statement);
                 console.log(txt);
             }, (err) => {
                 this.spinner.stop(true);
