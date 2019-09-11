@@ -90,7 +90,7 @@ export default class extends ProfileCommand {
                 text += 'Importance:\t' + accountInfo.importance.compact() + '\n';
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
-                accountData.mosaics.map((mosaic: MosaicAmountView, index: any) => {
+                accountData.mosaics.map((mosaic: MosaicAmountView) => {
                     const duration = mosaic.mosaicInfo['properties'].duration.compact();
                     let expiration: string;
                     if (duration === 0) {
