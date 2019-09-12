@@ -31,7 +31,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: ProfileOptions) {
-        const profile = this.getProfile(options);
+        const profile = this.getCurProfile();
 
         const listener = new Listener(profile.url);
 

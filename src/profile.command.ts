@@ -43,6 +43,24 @@ export abstract class ProfileCommand extends Command {
                 ' --network network --url http://localhost:3000');
         }
     }
+
+    public setCurProfile(options: ProfileOptions): Profile {
+        const profileName = options.profile;
+        try {
+            return this.profileService.changeCurProfile(profileName);
+        } catch (err) {
+            throw new ExpectedError(options.profile ? 'Set current profile fail' :
+            'Illegal profile name : ' + options.profile);
+        }
+    }
+
+    public getCurProfile(): Profile {
+        try {
+            return this.profileService.getCurProfile();
+        } catch (err) {
+            throw new ExpectedError('Get current profile fail');
+        }
+    }
 }
 
 export class ProfileOptions extends Options {

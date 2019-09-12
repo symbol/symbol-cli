@@ -103,7 +103,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        const profile = this.getProfile(options);
+        const profile = this.getCurProfile();
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.eternal) {

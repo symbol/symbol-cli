@@ -33,12 +33,12 @@ export default class extends AccountTransactionsCommand {
     @metadata
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const profile = this.getCurProfile();
 
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,
                 'publickey',
-                () => this.getProfile(options).account.publicKey,
+                () => profile.account.publicKey,
                 'Introduce the public key: '), profile.account.address.networkType);
 
         const accountHttp = new AccountHttp(profile.url);

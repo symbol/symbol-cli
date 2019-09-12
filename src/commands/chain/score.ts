@@ -33,7 +33,7 @@ export default class extends ProfileCommand {
     execute(options: ProfileOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const profile = this.getCurProfile();
 
         const chainHttp = new ChainHttp(profile.url);
         chainHttp.getBlockchainScore().subscribe((score) => {

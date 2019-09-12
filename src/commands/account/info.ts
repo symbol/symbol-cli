@@ -45,12 +45,12 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const profile = this.getCurProfile();
 
         const address: Address = Address.createFromRawAddress(
             OptionsResolver(options,
                 'address',
-                () => this.getProfile(options).account.address.plain(),
+                () => profile.account.address.plain(),
                 'Introduce the address: '));
 
         const accountHttp = new AccountHttp(profile.url);

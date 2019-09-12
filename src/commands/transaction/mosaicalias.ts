@@ -67,7 +67,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        const profile = this.getProfile(options);
+        const profile = this.getCurProfile();
 
         options.namespace = OptionsResolver(options,
             'namespace',

@@ -61,6 +61,35 @@ export class ProfileRepository {
         return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
     }
 
+    public changeCurProfile(name: string): Profile {
+        const profiles = this.getProfiles();
+        let curProfile;
+        if (!Object.keys(profiles).includes(name)) {
+            name = 'default';
+        }
+        for (const item in profiles) {
+            if (item !== name) {
+                profiles[item].current = '0';
+            } else {
+                profiles[item].current = '1';
+                curProfile = profiles[item];
+            }
+        }
+        this.saveProfiles(profiles);
+        return curProfile;
+    }
+
+    public getCurProfile(): Profile {
+        const profiles = this.getProfiles();
+        let curProfile;
+        for (const item in profiles) {
+            if ('1' === profiles[item].current) {
+                curProfile = profiles[item];
+            }
+        }
+        return curProfile;
+    }
+
     private getProfiles(): any {
         let accounts = {};
         try {
