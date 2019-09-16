@@ -72,7 +72,8 @@ export class ProfileRepository {
                 profiles[item].current = '0';
             } else {
                 profiles[item].current = '1';
-                curProfile = profiles[item];
+                curProfile = JSON.parse(JSON.stringify(profiles[item]));
+                curProfile.name = item;
             }
         }
         this.saveProfiles(profiles);
@@ -84,7 +85,8 @@ export class ProfileRepository {
         let curProfile;
         for (const item in profiles) {
             if ('1' === profiles[item].current) {
-                curProfile = profiles[item];
+                curProfile = JSON.parse(JSON.stringify(profiles[item]));
+                curProfile.name = item;
             }
         }
         return curProfile;
