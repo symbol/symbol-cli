@@ -88,7 +88,9 @@ export default class extends ProfileCommand {
                         text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
                     }
                     text += 'owner:\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
-                    text += 'supply:\t\t' + mosaicView.mosaicInfo.supply.compact() + '\n';
+                    text += 'absolute:\t' + mosaicView.mosaicInfo.supply.compact() + '\n';
+                    text += 'relative:\t' + (mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact()
+                     : mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)) + '\n';
                     console.log(text);
                 }
 
