@@ -20,21 +20,19 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
         const profile = this.getCurProfile();
-        console.log(`\ndefault profile name: ${profile.name}`);
 
         if (undefined === options.profile || '' === options.profile) {
+            console.log(`default profile name: ${profile.name}`);
             options.profile = OptionsResolver(options,
                 'profile',
                 () => undefined,
                 'Set default profile name(blank means do nothing): ');
-
-            if (undefined !== options.profile && '' !== options.profile) {
-                const curProfile = this.setCurProfile(options);
-                console.log('Default profile name changed into [' + curProfile.name + '] successfully');
-            }
         }
-        this.spinner.stop();
+
+        if (undefined !== options.profile && '' !== options.profile) {
+            const curProfile = this.setCurProfile(options);
+            console.log('Default profile changed into [' + curProfile.name + '] successfully');
+        }
     }
 }
