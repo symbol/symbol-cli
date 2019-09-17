@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp, Convert} from 'nem2-sdk';
+import {BlockHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {ReceiptService} from '../../service/receipt.service';
@@ -35,7 +35,6 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Get the receipts triggered for a given block height',
 })
-
 export default class extends ProfileCommand {
 
     constructor() {
@@ -57,7 +56,14 @@ export default class extends ProfileCommand {
         blockHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
-                const txt = new ReceiptService().formatReceiptToFilter(statement);
+                let txt = '';
+                const receiptService = new ReceiptService();
+                txt += receiptService.formatTransactionStatements(statement);
+                txt += receiptService.formatAddressResolutionStatements(statement);
+                txt += receiptService.formatMosaicResolutionStatements(statement);
+                if ('' === txt) {
+                    txt = '[]';
+                }
                 console.log(txt);
             }, (err) => {
                 this.spinner.stop(true);

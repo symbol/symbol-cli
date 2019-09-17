@@ -5,6 +5,9 @@ import {
     BalanceChangeReceipt,
     BalanceTransferReceipt,
     InflationReceipt,
+    ResolutionEntry,
+    ResolutionStatement,
+    TransactionStatement,
 } from 'nem2-sdk';
 
 export class ReceiptService {
@@ -13,118 +16,115 @@ export class ReceiptService {
     }
 
     /**
-     * @description The logic of formatting Receipt info
-     * @param receipt
+     * @description The logic of formatting transactionStatements
+     * @param statement
      * @returns {string}
      */
-    public formatReceiptToFilter(statement: any): string {
+    public formatTransactionStatements(statement: any): string {
         let txt = '';
-
-        // render transactionStatements
         txt += chalk.green('transactionStatements:\t') + '\n';
         txt += '-'.repeat('transactionStatements:\t'.length) + '\n\n';
-        for (let transactionIdx = 0; transactionIdx < statement.transactionStatements.length; transactionIdx++) {
-            txt += 'hight:\t\t' + statement.transactionStatements[transactionIdx].height + '\n';
-            for (let receiptIdx = 0; receiptIdx < statement.transactionStatements[transactionIdx].receipts.length; receiptIdx++) {
-                txt += '<index: ' + transactionIdx + '-' + receiptIdx + '>\t';
-                const receiptItem = statement.transactionStatements[0].receipts[0];
-                const typeFlag = parseInt(String(receiptItem.type), 10).toString(16).charAt(0);
+        statement.transactionStatements.map((transaction: TransactionStatement, transactionIndex: number) => {
+            txt += 'height:\t\t' + transaction.height + '\n';
+            transaction.receipts.map((receipt: any, receiptIndex: number) => {
+                txt += '<index: ' + transactionIndex + '-' + receiptIndex + '>\t';
+                const typeFlag = parseInt(String(receipt.type), 10).toString(16).charAt(0);
                 if ('1' === typeFlag) {
-                    const receiptOBJ = new BalanceTransferReceipt(
-                        receiptItem.account,
-                        receiptItem.account.address,
-                        receiptItem.mosaicId,
-                        receiptItem.amount,
-                        receiptItem.version,
-                        receiptItem.type);
-                    txt += 'version:\t' + receiptOBJ.version + '\n';
-                    txt += '\t\ttype:\t\t' + receiptOBJ.type + '\n';
-                    txt += '\t\tamount:\t\t' + receiptOBJ.amount.compact() + '\n';
-                    txt += '\t\taddress:\t' + receiptOBJ.sender.address.pretty() + '\n';
-                    txt += '\t\tpublicKey:\t' + receiptOBJ.sender.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receiptOBJ.mosaicId.id.lower + ', '
-                        + receiptOBJ.mosaicId.id.higher + ' ]\n\n';
+                    const balanceTransferReceipt = new BalanceTransferReceipt(
+                        receipt.account,
+                        receipt.account.address,
+                        receipt.mosaicId,
+                        receipt.amount,
+                        receipt.version,
+                        receipt.type);
+                    txt += 'version:\t' + balanceTransferReceipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + balanceTransferReceipt.type + '\n';
+                    txt += '\t\tamount:\t\t' + balanceTransferReceipt.amount.compact() + '\n';
+                    txt += '\t\taddress:\t' + balanceTransferReceipt.sender.address.pretty() + '\n';
+                    txt += '\t\tpublicKey:\t' + balanceTransferReceipt.sender.publicKey + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + balanceTransferReceipt.mosaicId.id.lower + ', '
+                        + balanceTransferReceipt.mosaicId.id.higher + ' ]\n\n';
                 } else if ('2' === typeFlag || '3' === typeFlag) {
-                    const receiptOBJ = new BalanceChangeReceipt(
-                        receiptItem.account,
-                        receiptItem.mosaicId,
-                        receiptItem.amount,
-                        receiptItem.version,
-                        receiptItem.type);
-                    txt += 'version:\t' + receiptOBJ.version + '\n';
-                    txt += '\t\ttype:\t\t' + receiptOBJ.type + '\n';
-                    txt += '\t\tamount:\t\t' + receiptOBJ.amount.compact() + '\n';
-                    txt += '\t\taddress:\t' + receiptOBJ.account.address.pretty() + '\n';
-                    txt += '\t\tpublicKey:\t' + receiptOBJ.account.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receiptOBJ.mosaicId.id.lower + ', '
-                        + receiptOBJ.mosaicId.id.higher + ' ]\n\n';
+                    const balanceChangeReceipt = new BalanceChangeReceipt(
+                        receipt.account,
+                        receipt.mosaicId,
+                        receipt.amount,
+                        receipt.version,
+                        receipt.type);
+                    txt += 'version:\t' + balanceChangeReceipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + balanceChangeReceipt.type + '\n';
+                    txt += '\t\tamount:\t\t' + balanceChangeReceipt.amount.compact() + '\n';
+                    txt += '\t\taddress:\t' + balanceChangeReceipt.account.address.pretty() + '\n';
+                    txt += '\t\tpublicKey:\t' + balanceChangeReceipt.account.publicKey + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + balanceChangeReceipt.mosaicId.id.lower + ', '
+                        + balanceChangeReceipt.mosaicId.id.higher + ' ]\n\n';
                 } else if ('4' === typeFlag) {
-                    const receiptOBJ = new ArtifactExpiryReceipt(
-                        receiptItem.mosaicId,
-                        receiptItem.version,
-                        receiptItem.type);
-                    txt += 'version:\t' + receiptOBJ.version + '\n';
-                    txt += '\t\ttype:\t\t' + receiptOBJ.type + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receiptOBJ.artifactId.id.lower + ', '
-                        + receiptOBJ.artifactId.id.higher + ' ]\n\n';
+                    const artifactExpiryReceipt = new ArtifactExpiryReceipt(
+                        receipt.mosaicId,
+                        receipt.version,
+                        receipt.type);
+                    txt += 'version:\t' + artifactExpiryReceipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + artifactExpiryReceipt.type + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + artifactExpiryReceipt.artifactId.id.lower + ', '
+                        + artifactExpiryReceipt.artifactId.id.higher + ' ]\n\n';
                 } else if ('5' === typeFlag) {
-                    const receiptOBJ = new InflationReceipt(
-                        receiptItem.mosaicId,
-                        receiptItem.amount,
-                        receiptItem.version,
-                        receiptItem.type);
-                    txt += 'version:\t' + receiptOBJ.version + '\n';
-                    txt += '\t\ttype:\t\t' + receiptOBJ.type + '\n';
-                    txt += '\t\tamount:\t\t' + receiptOBJ.amount.compact() + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receiptOBJ.mosaicId.id.lower + ', '
-                        + receiptOBJ.mosaicId.id.higher + ' ]\n\n';
+                    const inflationReceipt = new InflationReceipt(
+                        receipt.mosaicId,
+                        receipt.amount,
+                        receipt.version,
+                        receipt.type);
+                    txt += 'version:\t' + inflationReceipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + inflationReceipt.type + '\n';
+                    txt += '\t\tamount:\t\t' + inflationReceipt.amount.compact() + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + inflationReceipt.mosaicId.id.lower + ', '
+                        + inflationReceipt.mosaicId.id.higher + ' ]\n\n';
                 }
-            }
-        }
+            });
+        });
+        return txt;
+    }
 
-        // render addressResolutionStatements
+    /**
+     * @description The logic of formatting addressResolutionStatements
+     * @param statement
+     * @returns {string}
+     */
+    public formatAddressResolutionStatements(statement: any): string {
+        let txt = '';
         txt += chalk.green('addressResolutionStatements:\t') + '\n';
         txt += '-'.repeat('addressResolutionStatements:\t'.length) + '\n\n';
-        for (let addressIdx = 0; addressIdx < statement.addressResolutionStatements.length; addressIdx++) {
-            txt += 'hight:\t\t' + statement.addressResolutionStatements[addressIdx].height + '\n';
-            txt += 'unresolved:\t' + statement.addressResolutionStatements[addressIdx].unresolved + '\n\n';
-            for (let entryIdx = 0; entryIdx < statement.addressResolutionStatements[addressIdx].resolutionEntries.length; entryIdx++) {
-                txt += '<index:' + addressIdx + '-' + entryIdx + '>\t';
-                txt += 'resolved:\t\t'
-                    + statement.addressResolutionStatements[addressIdx].resolutionEntries[entryIdx].resolved
-                    + '\n';
-                txt += '\t\tprimaryId:\t\t'
-                    + statement.addressResolutionStatements[addressIdx].resolutionEntries[entryIdx].source.primaryId
-                    + '\n';
-                txt += '\t\tsecondaryId:\t\t'
-                    + statement.addressResolutionStatements[addressIdx].resolutionEntries[entryIdx].source.secondaryId
-                    + '\n\n';
-            }
-        }
+        statement.addressResolutionStatements.map((addressResolution: ResolutionStatement, addressResolutionIndex: number) => {
+            txt += 'height:\t\t' + addressResolution.height + '\n';
+            txt += 'unresolved:\t' + addressResolution.unresolved + '\n\n';
+            addressResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
+                txt += '<index:' + addressResolutionIndex + '-' + resolutionEntryIndex + '>\t';
+                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n';
+                txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n';
+                txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n';
+            });
+        });
+        return txt;
+    }
 
-        // render mosaicResolutionStatements
+    /**
+     * @description The logic of formatting mosaicResolutionStatements
+     * @param statement
+     * @return {string}
+     */
+    public formatMosaicResolutionStatements(statement: any): string {
+        let txt = '';
         txt += chalk.green('mosaicResolutionStatements:\t') + '\n';
         txt += '-'.repeat('mosaicResolutionStatements:\t'.length) + '\n\n';
-        for (let mosaicIdx = 0; mosaicIdx < statement.mosaicResolutionStatements.length; mosaicIdx++) {
-            txt += 'hight:\t\t' + statement.mosaicResolutionStatements[mosaicIdx].height + '\n';
-            txt += 'unresolved:\t' + statement.mosaicResolutionStatements[mosaicIdx].unresolved + '\n\n';
-            for (let entryIdx = 0; entryIdx < statement.mosaicResolutionStatements[mosaicIdx].resolutionEntries.length; entryIdx++) {
-                txt += '<index:' + mosaicIdx + '-' + entryIdx + '>\t';
-                txt += 'resolved:\t\t'
-                    + statement.mosaicResolutionStatements[mosaicIdx].resolutionEntries[entryIdx].resolved
-                    + '\n';
-                txt += '\t\tprimaryId:\t\t'
-                    + statement.mosaicResolutionStatements[mosaicIdx].resolutionEntries[entryIdx].source.primaryId
-                    + '\n';
-                txt += '\t\tsecondaryId:\t\t'
-                    + statement.mosaicResolutionStatements[mosaicIdx].resolutionEntries[entryIdx].source.secondaryId
-                    + '\n\n';
-            }
-        }
-
-        if ('' === txt) {
-            txt = '[]';
-        }
+        statement.mosaicResolutionStatements.map((mosaicResolution: ResolutionStatement, mosaicResolutionIndex: number) => {
+            txt += 'height:\t\t' + mosaicResolution.height + '\n';
+            txt += 'unresolved:\t' + mosaicResolution.unresolved + '\n\n';
+            mosaicResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
+                txt += '<index:' + mosaicResolutionIndex + '-' + resolutionEntryIndex + '>\t';
+                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n';
+                txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n';
+                txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n';
+            });
+        });
         return txt;
     }
 }
