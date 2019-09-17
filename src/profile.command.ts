@@ -32,33 +32,26 @@ export abstract class ProfileCommand extends Command {
         this.spinner.setSpinnerString('|/-\\');
     }
 
-    public getProfile(options: ProfileOptions): Profile {
-        const profileName = options.profile ? options.profile :
-            (process.env.NEM2_PROFILE !== undefined ? process.env.NEM2_PROFILE : 'default') as string;
+    public getProfile(): Profile {
         try {
-            return this.profileService.findProfileNamed(profileName);
+            return this.profileService.getCurrentProfile();
         } catch (err) {
-            throw new ExpectedError(options.profile ? ('No profile found with name: ' + options.profile) :
-                'To start using the nem2-cli create a default profile using: nem2-cli profile create --privatekey your_private_key' +
-                ' --network network --url http://localhost:3000');
+            throw new ExpectedError('Get current profile fail.\n' +
+            'Using \'nem2-cli profile list\' to check whether the profile exist, ' +
+            'if not, using \'nem2-cli profile create\' to create a profile.');
         }
     }
 
-    public setCurProfile(options: ProfileOptions): Profile {
+    public setCurrentProfile(options: ProfileOptions): Profile {
         const profileName = options.profile;
         try {
-            return this.profileService.changeCurProfile(profileName);
+            return this.profileService.changeCurrentProfile(profileName);
         } catch (err) {
-            throw new ExpectedError(options.profile ? 'Set current profile fail' :
-            'Illegal profile name : ' + options.profile);
-        }
-    }
-
-    public getCurProfile(): Profile {
-        try {
-            return this.profileService.getCurProfile();
-        } catch (err) {
-            throw new ExpectedError('Get current profile fail');
+            throw new ExpectedError(options.profile ?
+                'Set default profile fail.\n' +
+                'Using \'nem2-cli profile list\' to check whether the profile exist, ' +
+                'if not, using \'nem2-cli profile create\' to create a profile.' :
+                'Can\'t set the profile [' + options.profile + '] as the default profile.');
         }
     }
 }

@@ -33,7 +33,7 @@ export default class extends ProfileCommand {
     execute(options: ProfileOptions) {
         this.spinner.start();
 
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
 
         const diagnosticHttp = new DiagnosticHttp(profile.url);
 

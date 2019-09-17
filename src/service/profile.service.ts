@@ -38,12 +38,12 @@ export class ProfileService {
         return this.profileRepository.all();
     }
 
-    changeCurProfile(name: string): Profile {
-        return this.profileRepository.changeCurProfile(name);
+    changeCurrentProfile(name: string): Profile {
+        return this.profileRepository.changeCurrentProfile(name);
     }
 
-    getCurProfile(): Profile {
-        return this.profileRepository.getCurProfile();
+    getCurrentProfile(): Profile {
+        return this.profileRepository.getCurrentProfile();
     }
 
 }

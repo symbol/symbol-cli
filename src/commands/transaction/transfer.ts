@@ -77,7 +77,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
 
         const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
             'recipient',

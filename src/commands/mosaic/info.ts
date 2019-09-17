@@ -47,7 +47,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
         if (!options.hex && !options.uint) {
             options.hex = OptionsResolver(options,
                 'hex',

@@ -34,7 +34,7 @@ export default class extends AccountTransactionsCommand {
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
 
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
 
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,

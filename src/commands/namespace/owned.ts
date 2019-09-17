@@ -45,7 +45,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
         const address: Address = Address.createFromRawAddress(
             OptionsResolver(options,
                 'address',

@@ -51,7 +51,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
 
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);

@@ -61,9 +61,9 @@ export class ProfileRepository {
         return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
     }
 
-    public changeCurProfile(name: string): Profile {
+    public changeCurrentProfile(name: string): Profile {
         const profiles = this.getProfiles();
-        let curProfile;
+        let currentProfile;
         if (!Object.keys(profiles).includes(name)) {
             name = 'default';
         }
@@ -72,24 +72,24 @@ export class ProfileRepository {
                 profiles[item].current = '0';
             } else {
                 profiles[item].current = '1';
-                curProfile = JSON.parse(JSON.stringify(profiles[item]));
-                curProfile.name = item;
+                currentProfile = JSON.parse(JSON.stringify(profiles[item]));
+                currentProfile.name = item;
             }
         }
         this.saveProfiles(profiles);
-        return curProfile;
+        return currentProfile;
     }
 
-    public getCurProfile(): Profile {
+    public getCurrentProfile(): Profile {
         const profiles = this.getProfiles();
-        let curProfile;
+        let currentProfile;
         for (const item in profiles) {
             if ('1' === profiles[item].current) {
-                curProfile = JSON.parse(JSON.stringify(profiles[item]));
-                curProfile.name = item;
+                currentProfile = JSON.parse(JSON.stringify(profiles[item]));
+                currentProfile.name = item;
             }
         }
-        return curProfile;
+        return currentProfile;
     }
 
     private getProfiles(): any {

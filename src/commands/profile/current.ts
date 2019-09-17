@@ -11,7 +11,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Default profile name',
+    description: 'Get/Set default profile name',
 })
 export default class extends ProfileCommand {
     constructor() {
@@ -20,7 +20,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
 
         if (undefined === options.profile || '' === options.profile) {
             console.log(`default profile name: ${profile.name}`);
@@ -31,8 +31,8 @@ export default class extends ProfileCommand {
         }
 
         if (undefined !== options.profile && '' !== options.profile) {
-            const curProfile = this.setCurProfile(options);
-            console.log('Default profile changed into [' + curProfile.name + '] successfully');
+            const currentProfile = this.setCurrentProfile(options);
+            console.log('Default profile changed into [' + currentProfile.name + '] successfully');
         }
     }
 }

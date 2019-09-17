@@ -127,7 +127,7 @@ export default class extends Command {
                             url as string,
                             profile,
                             res[1].generationHash);
-                        this.profileService.changeCurProfile(profile);
+                        this.profileService.changeCurrentProfile(profile);
                         text += chalk.green('\nStored ' + profile + ' profile');
                         console.log(text);
                     }

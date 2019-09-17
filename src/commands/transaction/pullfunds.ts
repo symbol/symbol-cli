@@ -95,7 +95,7 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
 
-        const profile = this.getCurProfile();
+        const profile = this.getProfile();
 
         const recipient: Address = Address.createFromRawAddress(OptionsResolver(options,
             'recipient',
