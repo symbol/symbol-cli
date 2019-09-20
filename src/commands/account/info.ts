@@ -63,9 +63,10 @@ export default class extends ProfileCommand {
                 'Introduce the address: '));
 
         const accountHttp = new AccountHttp(profile.url);
+        const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(
             accountHttp,
-            new MosaicHttp(profile.url),
+            mosaicHttp,
         );
         accountHttp.getAccountInfo(address)
             .pipe(
@@ -79,7 +80,6 @@ export default class extends ProfileCommand {
             )
             .subscribe((accountData: any) => {
                 const accountInfo = accountData.info;
-                this.spinner.stop(true);
                 let text = '';
                 text += chalk.green('Account:\t') + chalk.bold(address.pretty()) + '\n';
                 text += '-'.repeat('Account:\t'.length + address.pretty().length) + '\n\n';
@@ -91,9 +91,19 @@ export default class extends ProfileCommand {
                 text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
                 text += 'Mosaics' + '\n';
                 accountData.mosaics.map((mosaic: MosaicAmountView) => {
+                    const duration = mosaic.mosaicInfo['properties'].duration.compact();
+                    let expiration: string;
+                    if (duration === 0) {
+                        expiration = 'Never';
+                    } else {
+                        const createHeight = mosaic.mosaicInfo.height.compact();
+                        expiration = (createHeight + duration).toString();
+                    }
                     text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '(relative)' + '\t'
                     + mosaic.amount.compact() + '(absolute)' + '\n';
+                    text += 'expiration height:\t' + expiration + '\n\n';
                 });
+                this.spinner.stop(true);
                 console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
