@@ -16,10 +16,10 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import { command, ExpectedError, metadata, option } from 'clime';
+import { AccountHttp, MosaicHttp, MosaicId, MosaicService } from 'nem2-sdk';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -77,18 +77,30 @@ export default class extends ProfileCommand {
                 } else {
                     const mosaicView = mosaicViews[0];
                     let text = '';
-                    text += chalk.green('Mosaic:\t');
-                    text += 'Hex:\t' + mosaicId.toHex() + '\n';
-                    text += 'Uint64:\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
-                    text += 'divisibility:\t' + mosaicView.mosaicInfo.divisibility + '\n';
-                    text += 'transferable:\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
-                    text += 'supply mutable:\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
-                    text += 'block height:\t' + mosaicView.mosaicInfo.height.compact() + '\n';
+                    let expiration: string;
+                    text += chalk.green('Mosaic:\t\n');
+                    text += 'Hex:\t\t\t' + mosaicId.toHex() + '\n';
+                    text += 'Uint64:\t\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
+                    text += 'divisibility:\t\t' + mosaicView.mosaicInfo.divisibility + '\n';
+                    text += 'transferable:\t\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
+                    text += 'supply mutable:\t\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
+                    text += 'block height:\t\t' + mosaicView.mosaicInfo.height.compact() + '\n';
                     if (mosaicView.mosaicInfo.duration) {
-                        text += 'duration:\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
+                        text += 'duration:\t\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
+                        if (0 === mosaicView.mosaicInfo.duration.compact()) {
+                            expiration = 'Never';
+                        } else {
+                            const mosaicHeight = mosaicView.mosaicInfo.height.compact();
+                            expiration = (mosaicHeight + mosaicView.mosaicInfo.duration.compact()).toString();
+                        }
+                        text += 'expiration height:\t' + expiration + '\n';
                     }
-                    text += 'owner:\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
-                    text += 'supply:\t\t' + mosaicView.mosaicInfo.supply.compact() + '\n';
+                    text += 'owner:\t\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
+                    text += 'supply:\t\t\t' + mosaicView.mosaicInfo.supply.compact()
+                        + '(absolute)\t\t'
+                        + (mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact()
+                            : mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility))
+                        + '(relative)\n';
                     console.log(text);
                 }
 
