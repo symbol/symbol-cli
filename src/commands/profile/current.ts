@@ -24,6 +24,7 @@ export default class extends ProfileCommand {
 
         if (undefined === options.profile || '' === options.profile) {
             console.log('default profile name: ' + profile.name);
+            
             options.profile = OptionsResolver(options,
                 'profile',
                 () => undefined,
