@@ -28,12 +28,6 @@ export class CommandOptions extends ProfileOptions {
     restrictionType: string;
 
     @option({
-        flag: 'd',
-        description: '(Optional) incoming/outgoing (blank means incoming)',
-    })
-    restrictionDirection: string;
-
-    @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove)',
     })
@@ -89,10 +83,6 @@ export default class extends ProfileCommand {
                 'Fill in the transaction Type (' + transactionType + '): ');
         }
 
-        if (undefined === options.restrictionDirection) {
-            options.restrictionDirection = 'incoming';
-        }
-
         let modificationAction;
         if ('1' === options.modificationAction) {
             modificationAction = PropertyModificationType.Add;
@@ -136,11 +126,21 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options);
         const entityRestriction = AccountPropertyModification.createForEntityType(modificationAction, transactionEntity);
-        // const transaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
-        //     Deadline.create(),
-        //     this.propertyType,
-        //     [entityRestriction],
-        //     this.profile.networkType);
+        const transaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+            Deadline.create(),
+            restrictionType,
+            [entityRestriction],
+            profile.networkType,
+            UInt64.fromUint(options.maxfee));
+
+        const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+        const transactionHttp = new TransactionHttp(profile.url);
+        transactionHttp
+                .announce(signedTransaction)
+                .subscribe(
+                    (x) => console.log(x),
+                    (err) => console.error(err));
 
     }
 }
