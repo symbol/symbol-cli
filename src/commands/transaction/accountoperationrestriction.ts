@@ -1,0 +1,146 @@
+import {command, metadata, option} from 'clime';
+import {
+    Account,
+    AccountPropertyModification,
+    AccountPropertyTransaction,
+    Deadline,
+    MosaicId,
+    PropertyModificationType,
+    PropertyType,
+    TransactionHttp,
+    TransactionType,
+    UInt64,
+} from 'nem2-sdk';
+import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
+
+export class CommandOptions extends ProfileOptions {
+    @option({
+        flag: 'p',
+        description: '(Optional) Select between your profiles, by providing a profile (blank means default profile)',
+    })
+    profile: string;
+
+    @option({
+        flag: 't',
+        description: 'restriction type (allow / block)',
+    })
+    restrictionType: string;
+
+    @option({
+        flag: 'd',
+        description: '(Optional) incoming/outgoing (blank means incoming)',
+    })
+    restrictionDirection: string;
+
+    @option({
+        flag: 'a',
+        description: 'Modification action. (1: Add, 0: Remove)',
+    })
+    modificationAction: string;
+
+    @option({
+        flag: 'v',
+        description: 'Transaction Type (TRANSFER, REGISTER_NAMESPACE, ADDRESS_ALIAS, MOSAIC_ALIAS, ' +
+        'MOSAIC_DEFINITION, MOSAIC_SUPPLY_CHANGE, MODIFY_MULTISIG_ACCOUNT, AGGREGATE_COMPLETE, AGGREGATE_BONDED, LOCK, SECRET_LOCK, ' +
+        'SECRET_PROOF, MODIFY_ACCOUNT_PROPERTY_ADDRESS, MODIFY_ACCOUNT_PROPERTY_MOSAIC, MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, LINK_ACCOUNT)',
+    })
+    value: string;
+
+    @option({
+        flag: 'f',
+        description: '(Optional) Maximum fee',
+    })
+    maxfee: number;
+}
+
+@command({
+    description: 'Allow or block outgoing transactions by transaction type.',
+})
+export default class extends ProfileCommand {
+    constructor() {
+        super();
+    }
+
+    @metadata
+    execute(options: CommandOptions) {
+        const transactionType = ['TRANSFER', 'REGISTER_NAMESPACE', 'ADDRESS_ALIAS', 'MOSAIC_ALIAS', 'MOSAIC_DEFINITION',
+        'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
+        'SECRET_PROOF', 'MODIFY_ACCOUNT_PROPERTY_ADDRESS', 'MODIFY_ACCOUNT_PROPERTY_MOSAIC', 'MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE',
+        'LINK_ACCOUNT'];
+        if (undefined === options.restrictionType || !['allow', 'block'].includes(options.restrictionType)) {
+            options.restrictionType = OptionsResolver(options,
+                'restrictionType',
+                () => undefined,
+                'Fill in the restriction type (allow / block): ');
+        }
+
+        if (undefined === options.modificationAction || !['1', '0'].includes(options.modificationAction)) {
+            options.modificationAction = OptionsResolver(options,
+                'modificationAction',
+                () => undefined,
+                'Fill in the modification action (1: Add, 0: Remove): ');
+        }
+
+        if (undefined === options.value || !transactionType.includes(options.value)) {
+            options.value = OptionsResolver(options,
+                'value',
+                () => undefined,
+                'Fill in the transaction Type (' + transactionType + '): ');
+        }
+
+        if (undefined === options.restrictionDirection) {
+            options.restrictionDirection = 'incoming';
+        }
+
+        let modificationAction;
+        if ('1' === options.modificationAction) {
+            modificationAction = PropertyModificationType.Add;
+        } else if ('0' === options.modificationAction) {
+            modificationAction = PropertyModificationType.Remove;
+        } else {
+            console.log('Wrong modificationAction. ModificationAction must be one of 1 or 0');
+            return;
+        }
+
+        let restrictionType;
+        if ('allow' === options.restrictionType.toLowerCase()) {
+            restrictionType = PropertyType.AllowAddress;
+        } else if ('block' === options.restrictionType.toLowerCase()) {
+            restrictionType = PropertyType.BlockAddress;
+        } else {
+            console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
+            return;
+        }
+
+        let transactionEntity;
+        switch (options.value.toUpperCase()) {
+            case 'TRANSFER': transactionEntity = TransactionType.TRANSFER; break;
+            case 'REGISTER_NAMESPACE': transactionEntity = TransactionType.REGISTER_NAMESPACE; break;
+            case 'ADDRESS_ALIAS': transactionEntity = TransactionType.ADDRESS_ALIAS; break;
+            case 'MOSAIC_ALIAS': transactionEntity = TransactionType.MOSAIC_ALIAS; break;
+            case 'MOSAIC_DEFINITION': transactionEntity = TransactionType.MOSAIC_DEFINITION; break;
+            case 'MOSAIC_SUPPLY_CHANGE': transactionEntity= TransactionType.MOSAIC_SUPPLY_CHANGE; break;
+            case 'MODIFY_MULTISIG_ACCOUNT': transactionEntity = TransactionType.MODIFY_MULTISIG_ACCOUNT; break;
+            case 'AGGREGATE_COMPLETE': transactionEntity = TransactionType.AGGREGATE_COMPLETE; break;
+            case 'AGGREGATE_BONDED': transactionEntity = TransactionType.AGGREGATE_BONDED; break;
+            case 'LOCK': transactionEntity = TransactionType.LOCK; break;
+            case 'SECRET_LOCK': transactionEntity = TransactionType.SECRET_LOCK; break;
+            case 'SECRET_PROOF': transactionEntity = TransactionType.SECRET_PROOF; break;
+            case 'MODIFY_ACCOUNT_PROPERTY_ADDRESS': transactionEntity = TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS; break;
+            case 'MODIFY_ACCOUNT_PROPERTY_MOSAIC': transactionEntity = TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC; break;
+            case 'MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE': transactionEntity = TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE; break;
+            case 'LINK_ACCOUNT': transactionEntity = TransactionType.LINK_ACCOUNT; break;
+            default: return console.log('Wrong transaction type. Transaction type must be one of ' + transactionType);
+        }
+
+        const profile = this.getProfile(options);
+        const entityRestriction = AccountPropertyModification.createForEntityType(modificationAction, transactionEntity);
+        // const transaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+        //     Deadline.create(),
+        //     this.propertyType,
+        //     [entityRestriction],
+        //     this.profile.networkType);
+
+    }
+}
