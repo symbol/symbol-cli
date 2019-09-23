@@ -21,11 +21,11 @@ import {
     AggregateTransaction,
     Deadline,
     MosaicDefinitionTransaction,
+    MosaicFlags,
     MosaicId,
     MosaicNonce,
-    MosaicProperties,
+    MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
-    MosaicSupplyType,
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
@@ -120,28 +120,30 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
+        if (undefined === options.divisibility) {
+            options.divisibility = OptionsResolver(options,
+                'divisibility',
+                () => undefined,
+                'Introduce mosaic divisibility: ');
+        }
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
             MosaicId.createFromNonce(nonce, profile.account.publicAccount),
-            MosaicProperties.create({
-                duration: blocksDuration,
-                divisibility: OptionsResolver(options,
-                    'divisibility',
-                    () => undefined,
-                    'Introduce mosaic divisibility: '),
-                supplyMutable: options.supplymutable ? options.supplymutable : readlineSync.keyInYN(
+            MosaicFlags.create(
+                options.supplymutable ? options.supplymutable : readlineSync.keyInYN(
                     'Do you want mosaic to have supply mutable?'),
-                transferable: options.transferable ? options.transferable : readlineSync.keyInYN(
-                    'Do you want mosaic to be transferable?'),
-            }),
+                    options.transferable ? options.transferable : readlineSync.keyInYN(
+                        'Do you want mosaic to be transferable?')),
+            options.divisibility,
+            blocksDuration ? blocksDuration : UInt64.fromUint(0),
             profile.networkType,
         );
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicDefinitionTransaction.mosaicId,
-            MosaicSupplyType.Increase,
+            MosaicSupplyChangeAction.Increase,
             UInt64.fromUint(OptionsResolver(options,
                 'amount',
                 () => undefined,
@@ -166,7 +168,7 @@ export default class extends ProfileCommand {
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
             console.log('Hash:   ', signedTransaction.hash);
-            console.log('Signer: ', signedTransaction.signer);
+            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
             console.log(chalk.green('Your mosaic id is:'));
             console.log('Hex: ', mosaicDefinitionTransaction.mosaicId.toHex());
             console.log('Uint64: [', mosaicDefinitionTransaction.mosaicId.id.lower, mosaicDefinitionTransaction.mosaicId.id.higher + ']');
