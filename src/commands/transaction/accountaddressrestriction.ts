@@ -1,4 +1,4 @@
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
     Account,
     AccountRestrictionModification,
@@ -10,8 +10,8 @@ import {
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -115,9 +115,9 @@ export default class extends ProfileCommand {
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         const transactionHttp = new TransactionHttp(profile.url);
         transactionHttp
-                .announce(signedTransaction)
-                .subscribe(
-                    (x) => console.log(x),
-                    (err) => console.error(err));
+            .announce(signedTransaction)
+            .subscribe(
+                (x) => console.log(x),
+                (err) => console.error(err));
     }
 }

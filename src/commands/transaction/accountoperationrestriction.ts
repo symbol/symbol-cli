@@ -1,4 +1,4 @@
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
     Account,
     AccountRestrictionModification,
@@ -10,8 +10,8 @@ import {
     TransactionType,
     UInt64,
 } from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -35,8 +35,9 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'v',
         description: 'Transaction Type (TRANSFER, REGISTER_NAMESPACE, ADDRESS_ALIAS, MOSAIC_ALIAS, ' +
-        'MOSAIC_DEFINITION, MOSAIC_SUPPLY_CHANGE, MODIFY_MULTISIG_ACCOUNT, AGGREGATE_COMPLETE, AGGREGATE_BONDED, LOCK, SECRET_LOCK, ' +
-        'SECRET_PROOF, MODIFY_ACCOUNT_PROPERTY_ADDRESS, MODIFY_ACCOUNT_PROPERTY_MOSAIC, MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, LINK_ACCOUNT)',
+            'MOSAIC_DEFINITION, MOSAIC_SUPPLY_CHANGE, MODIFY_MULTISIG_ACCOUNT, AGGREGATE_COMPLETE, AGGREGATE_BONDED, LOCK, SECRET_LOCK, ' +
+            'SECRET_PROOF, MODIFY_ACCOUNT_PROPERTY_ADDRESS, MODIFY_ACCOUNT_PROPERTY_MOSAIC,' +
+            ' MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE, LINK_ACCOUNT)',
     })
     value: string;
 
@@ -58,9 +59,9 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         const transactionType = ['TRANSFER', 'REGISTER_NAMESPACE', 'ADDRESS_ALIAS', 'MOSAIC_ALIAS', 'MOSAIC_DEFINITION',
-        'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
-        'SECRET_PROOF', 'MODIFY_ACCOUNT_RESTRICTION_ADDRESS', 'MODIFY_ACCOUNT_RESTRICTION_MOSAIC', 'MODIFY_ACCOUNT_RESTRICTION_OPERATION',
-        'LINK_ACCOUNT', 'MOSAIC_ADDRESS_RESTRICTION', 'MOSAIC_GLOBAL_RESTRICTION'];
+            'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
+            'SECRET_PROOF', 'MODIFY_ACCOUNT_RESTRICTION_ADDRESS', 'MODIFY_ACCOUNT_RESTRICTION_MOSAIC',
+            'MODIFY_ACCOUNT_RESTRICTION_OPERATION', 'LINK_ACCOUNT', 'MOSAIC_ADDRESS_RESTRICTION', 'MOSAIC_GLOBAL_RESTRICTION'];
         if (!['allow', 'block'].includes(options.restrictionType)) {
             options.restrictionType = OptionsResolver(options,
                 'restrictionType',
@@ -109,7 +110,7 @@ export default class extends ProfileCommand {
             case 'ADDRESS_ALIAS': transactionEntity = TransactionType.ADDRESS_ALIAS; break;
             case 'MOSAIC_ALIAS': transactionEntity = TransactionType.MOSAIC_ALIAS; break;
             case 'MOSAIC_DEFINITION': transactionEntity = TransactionType.MOSAIC_DEFINITION; break;
-            case 'MOSAIC_SUPPLY_CHANGE': transactionEntity= TransactionType.MOSAIC_SUPPLY_CHANGE; break;
+            case 'MOSAIC_SUPPLY_CHANGE': transactionEntity = TransactionType.MOSAIC_SUPPLY_CHANGE; break;
             case 'MODIFY_MULTISIG_ACCOUNT': transactionEntity = TransactionType.MODIFY_MULTISIG_ACCOUNT; break;
             case 'AGGREGATE_COMPLETE': transactionEntity = TransactionType.AGGREGATE_COMPLETE; break;
             case 'AGGREGATE_BONDED': transactionEntity = TransactionType.AGGREGATE_BONDED; break;
@@ -138,10 +139,10 @@ export default class extends ProfileCommand {
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         const transactionHttp = new TransactionHttp(profile.url);
         transactionHttp
-                .announce(signedTransaction)
-                .subscribe(
-                    (x) => console.log(x),
-                    (err) => console.error(err));
+            .announce(signedTransaction)
+            .subscribe(
+                (x) => console.log(x),
+                (err) => console.error(err));
 
     }
 }
