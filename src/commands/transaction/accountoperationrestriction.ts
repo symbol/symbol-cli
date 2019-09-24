@@ -1,11 +1,11 @@
 import {command, metadata, option} from 'clime';
 import {
     Account,
-    AccountPropertyModification,
-    AccountPropertyTransaction,
+    AccountRestrictionModification,
+    AccountRestrictionTransaction,
     Deadline,
-    PropertyModificationType,
-    PropertyType,
+    RestrictionModificationType,
+    RestrictionType,
     TransactionHttp,
     TransactionType,
     UInt64,
@@ -59,8 +59,8 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const transactionType = ['TRANSFER', 'REGISTER_NAMESPACE', 'ADDRESS_ALIAS', 'MOSAIC_ALIAS', 'MOSAIC_DEFINITION',
         'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
-        'SECRET_PROOF', 'MODIFY_ACCOUNT_PROPERTY_ADDRESS', 'MODIFY_ACCOUNT_PROPERTY_MOSAIC', 'MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE',
-        'LINK_ACCOUNT'];
+        'SECRET_PROOF', 'MODIFY_ACCOUNT_RESTRICTION_ADDRESS', 'MODIFY_ACCOUNT_RESTRICTION_MOSAIC', 'MODIFY_ACCOUNT_RESTRICTION_OPERATION',
+        'LINK_ACCOUNT', 'MOSAIC_ADDRESS_RESTRICTION', 'MOSAIC_GLOBAL_RESTRICTION'];
         if (!['allow', 'block'].includes(options.restrictionType)) {
             options.restrictionType = OptionsResolver(options,
                 'restrictionType',
@@ -84,9 +84,9 @@ export default class extends ProfileCommand {
 
         let modificationAction;
         if ('1' === options.modificationAction) {
-            modificationAction = PropertyModificationType.Add;
+            modificationAction = RestrictionModificationType.Add;
         } else if ('0' === options.modificationAction) {
-            modificationAction = PropertyModificationType.Remove;
+            modificationAction = RestrictionModificationType.Remove;
         } else {
             console.log('Wrong modificationAction. ModificationAction must be one of 1 or 0');
             return;
@@ -94,9 +94,9 @@ export default class extends ProfileCommand {
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.AllowTransaction;
+            restrictionType = RestrictionType.AllowTransaction;
         } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.BlockTransaction;
+            restrictionType = RestrictionType.BlockTransaction;
         } else {
             console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
             return;
@@ -116,16 +116,18 @@ export default class extends ProfileCommand {
             case 'LOCK': transactionEntity = TransactionType.LOCK; break;
             case 'SECRET_LOCK': transactionEntity = TransactionType.SECRET_LOCK; break;
             case 'SECRET_PROOF': transactionEntity = TransactionType.SECRET_PROOF; break;
-            case 'MODIFY_ACCOUNT_PROPERTY_ADDRESS': transactionEntity = TransactionType.MODIFY_ACCOUNT_PROPERTY_ADDRESS; break;
-            case 'MODIFY_ACCOUNT_PROPERTY_MOSAIC': transactionEntity = TransactionType.MODIFY_ACCOUNT_PROPERTY_MOSAIC; break;
-            case 'MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE': transactionEntity = TransactionType.MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE; break;
+            case 'MODIFY_ACCOUNT_RESTRICTION_ADDRESS': transactionEntity = TransactionType.MODIFY_ACCOUNT_RESTRICTION_ADDRESS; break;
+            case 'MODIFY_ACCOUNT_RESTRICTION_MOSAIC': transactionEntity = TransactionType.MODIFY_ACCOUNT_RESTRICTION_MOSAIC; break;
+            case 'MODIFY_ACCOUNT_RESTRICTION_OPERATION': transactionEntity = TransactionType.MODIFY_ACCOUNT_RESTRICTION_OPERATION; break;
             case 'LINK_ACCOUNT': transactionEntity = TransactionType.LINK_ACCOUNT; break;
+            case 'MOSAIC_ADDRESS_RESTRICTION': transactionEntity = TransactionType.MOSAIC_ADDRESS_RESTRICTION; break;
+            case 'MOSAIC_GLOBAL_RESTRICTION': transactionEntity = TransactionType.MOSAIC_GLOBAL_RESTRICTION; break;
             default: return console.log('Wrong transaction type. Transaction type must be one of ' + transactionType);
         }
 
         const profile = this.getProfile(options);
-        const entityRestriction = AccountPropertyModification.createForEntityType(modificationAction, transactionEntity);
-        const transaction = AccountPropertyTransaction.createEntityTypePropertyModificationTransaction(
+        const entityRestriction = AccountRestrictionModification.createForOperation(modificationAction, transactionEntity);
+        const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
             restrictionType,
             [entityRestriction],

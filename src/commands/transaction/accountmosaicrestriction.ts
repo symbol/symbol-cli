@@ -1,12 +1,12 @@
 import {command, metadata, option} from 'clime';
 import {
     Account,
-    AccountPropertyModification,
-    AccountPropertyTransaction,
+    AccountRestrictionModification,
+    AccountRestrictionTransaction,
     Deadline,
     MosaicId,
-    PropertyModificationType,
-    PropertyType,
+    RestrictionModificationType,
+    RestrictionType,
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
@@ -76,9 +76,9 @@ export default class extends ProfileCommand {
 
         let modificationAction;
         if ('1' === options.modificationAction) {
-            modificationAction = PropertyModificationType.Add;
+            modificationAction = RestrictionModificationType.Add;
         } else if ('0' === options.modificationAction) {
-            modificationAction = PropertyModificationType.Remove;
+            modificationAction = RestrictionModificationType.Remove;
         } else {
             console.log('Wrong modificationAction. ModificationAction must be one of 1 or 0');
             return;
@@ -86,9 +86,9 @@ export default class extends ProfileCommand {
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.AllowMosaic;
+            restrictionType = RestrictionType.AllowMosaic;
         } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.BlockMosaic;
+            restrictionType = RestrictionType.BlockMosaic;
         } else {
             console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
             return;
@@ -97,8 +97,8 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const mosaic = new MosaicId(options.value);
 
-        const mosaicRestriction = AccountPropertyModification.createForMosaic(modificationAction, mosaic);
-        const transaction = AccountPropertyTransaction.createMosaicPropertyModificationTransaction(
+        const mosaicRestriction = AccountRestrictionModification.createForMosaic(modificationAction, mosaic);
+        const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             restrictionType,
             [mosaicRestriction],

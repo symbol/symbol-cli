@@ -1,12 +1,12 @@
 import {command, metadata, option} from 'clime';
 import {
     Account,
-    AccountPropertyModification,
-    AccountPropertyTransaction,
+    AccountRestrictionModification,
+    AccountRestrictionTransaction,
     Address,
     Deadline,
-    PropertyModificationType,
-    PropertyType,
+    RestrictionModificationType,
+    RestrictionType,
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
@@ -82,9 +82,9 @@ export default class extends ProfileCommand {
 
         let modificationAction;
         if ('1' === options.modificationAction) {
-            modificationAction = PropertyModificationType.Add;
+            modificationAction = RestrictionModificationType.Add;
         } else if ('0' === options.modificationAction) {
-            modificationAction = PropertyModificationType.Remove;
+            modificationAction = RestrictionModificationType.Remove;
         } else {
             console.log('Wrong modificationAction. ModificationAction must be one of 1 or 0');
             return;
@@ -92,9 +92,9 @@ export default class extends ProfileCommand {
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.AllowAddress;
+            restrictionType = RestrictionType.AllowAddress;
         } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.BlockAddress;
+            restrictionType = RestrictionType.BlockAddress;
         } else {
             console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
             return;
@@ -103,8 +103,8 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const address = Address.createFromRawAddress(options.value);
 
-        const addressRestriction = AccountPropertyModification.createForAddress(modificationAction, address);
-        const transaction = AccountPropertyTransaction.createAddressPropertyModificationTransaction(
+        const addressRestriction = AccountRestrictionModification.createForAddress(modificationAction, address);
+        const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             restrictionType,
             [addressRestriction],
