@@ -55,26 +55,24 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        if (undefined === options.restrictionType || !['allow', 'block'].includes(options.restrictionType)) {
+        if (!['allow', 'block'].includes(options.restrictionType)) {
             options.restrictionType = OptionsResolver(options,
                 'restrictionType',
                 () => undefined,
                 'Fill in the restriction type (allow / block): ');
         }
 
-        if (undefined === options.modificationAction || !['1', '0'].includes(options.modificationAction)) {
+        if (!['1', '0'].includes(options.modificationAction)) {
             options.modificationAction = OptionsResolver(options,
                 'modificationAction',
                 () => undefined,
                 'Fill in the modification action (1: Add, 0: Remove): ');
         }
 
-        if (undefined === options.value) {
-            options.value = OptionsResolver(options,
-                'value',
-                () => undefined,
-                'Fill in the Address: ');
-        }
+        options.value = OptionsResolver(options,
+            'value',
+            () => undefined,
+            'Fill in the Address: ');
 
         let modificationAction;
         if ('1' === options.modificationAction) {
@@ -88,9 +86,9 @@ export default class extends ProfileCommand {
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.AllowAddress;
+            restrictionType = PropertyType.AllowMosaic;
         } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.BlockAddress;
+            restrictionType = PropertyType.BlockMosaic;
         } else {
             console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
             return;

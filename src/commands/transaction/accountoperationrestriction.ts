@@ -4,7 +4,6 @@ import {
     AccountPropertyModification,
     AccountPropertyTransaction,
     Deadline,
-    MosaicId,
     PropertyModificationType,
     PropertyType,
     TransactionHttp,
@@ -62,21 +61,21 @@ export default class extends ProfileCommand {
         'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
         'SECRET_PROOF', 'MODIFY_ACCOUNT_PROPERTY_ADDRESS', 'MODIFY_ACCOUNT_PROPERTY_MOSAIC', 'MODIFY_ACCOUNT_PROPERTY_ENTITY_TYPE',
         'LINK_ACCOUNT'];
-        if (undefined === options.restrictionType || !['allow', 'block'].includes(options.restrictionType)) {
+        if (!['allow', 'block'].includes(options.restrictionType)) {
             options.restrictionType = OptionsResolver(options,
                 'restrictionType',
                 () => undefined,
                 'Fill in the restriction type (allow / block): ');
         }
 
-        if (undefined === options.modificationAction || !['1', '0'].includes(options.modificationAction)) {
+        if (!['1', '0'].includes(options.modificationAction)) {
             options.modificationAction = OptionsResolver(options,
                 'modificationAction',
                 () => undefined,
                 'Fill in the modification action (1: Add, 0: Remove): ');
         }
 
-        if (undefined === options.value || !transactionType.includes(options.value)) {
+        if (!transactionType.includes(options.value)) {
             options.value = OptionsResolver(options,
                 'value',
                 () => undefined,
@@ -95,9 +94,9 @@ export default class extends ProfileCommand {
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.AllowAddress;
+            restrictionType = PropertyType.AllowTransaction;
         } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = PropertyType.BlockAddress;
+            restrictionType = PropertyType.BlockTransaction;
         } else {
             console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
             return;
