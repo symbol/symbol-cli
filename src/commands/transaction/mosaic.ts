@@ -56,11 +56,11 @@ export class CommandOptions extends ProfileOptions {
     supplymutable: any;
 
     @option({
-        flag: 'l',
-        description: 'Mosaic levy mutable',
+        flag: 'r',
+        description: 'Mosaic restrictable',
         toggle: true,
     })
-    levymutable: any;
+    restrictable: any;
 
     @option({
         flag: 'd',
@@ -75,11 +75,11 @@ export class CommandOptions extends ProfileOptions {
     duration: number;
 
     @option({
-        flag: 'e',
-        description: 'eternal',
+        flag: 'n',
+        description: 'Mosaic non-expiring.',
         toggle: true,
     })
-    eternal: any;
+    nonexpiring: any;
 
     @option({
         flag: 'f',
@@ -106,8 +106,8 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
-        if (!options.eternal) {
-            if (!readlineSync.keyInYN('Do you want an eternal mosaic?')) {
+        if (!options.nonexpiring) {
+            if (!readlineSync.keyInYN('Do you want an non-expiring mosaic?')) {
                 blocksDuration = UInt64.fromUint( OptionsResolver(options,
                     'duration',
                     () => undefined,
@@ -134,10 +134,14 @@ export default class extends ProfileCommand {
                 options.supplymutable ? options.supplymutable : readlineSync.keyInYN(
                     'Do you want mosaic to have supply mutable?'),
                     options.transferable ? options.transferable : readlineSync.keyInYN(
-                        'Do you want mosaic to be transferable?')),
+                        'Do you want mosaic to be transferable?'),
+                options.restrictable ? options.restrictable : readlineSync.keyInYN(
+                    'Do you want mosaic to be restrictable?'),
+            ),
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
             profile.networkType,
+            UInt64.fromUint(options.maxfee),
         );
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
