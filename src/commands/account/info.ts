@@ -16,18 +16,12 @@
  *
  */
 import chalk from 'chalk';
-import { command, metadata, option } from 'clime';
-import {
-    AccountHttp,
-    AccountInfo,
-    Address,
-    MosaicAmountView,
-    MosaicHttp,
-    MosaicService,
-    MultisigAccountInfo,
-    PublicAccount,
-} from 'nem2-sdk';
-import {map, mergeMap, toArray} from 'rxjs/operators';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
+import {command, metadata, option} from 'clime';
+import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService, MultisigAccountInfo, PublicAccount} from 'nem2-sdk';
+import {forkJoin, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
@@ -42,7 +36,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Fetch account info',
+    description: 'Get account information',
 })
 export default class extends ProfileCommand {
 
@@ -60,82 +54,116 @@ export default class extends ProfileCommand {
             OptionsResolver(options,
                 'address',
                 () => this.getProfile(options).account.address.plain(),
-                'Introduce the address: '));
+                'Introduce an address: '));
 
         const accountHttp = new AccountHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);
-        const mosaicService = new MosaicService(
-            accountHttp,
-            mosaicHttp,
-        );
-        accountHttp.getAccountInfo(address)
-            .pipe(
-                mergeMap((accountInfo: AccountInfo) => mosaicService.mosaicsAmountViewFromAddress(address)
-                    .pipe(
-                        mergeMap((_) => _),
-                        toArray(),
-                        map((mosaics: MosaicAmountView[]) => {
-                            return { mosaics, info: accountInfo };
-                        }))),
-            )
-            .subscribe((accountData: any) => {
-                const accountInfo = accountData.info;
-                let text = '';
-                text += chalk.green('Account:\t') + chalk.bold(address.pretty()) + '\n';
-                text += '-'.repeat('Account:\t'.length + address.pretty().length) + '\n\n';
-                text += 'Address:\t' + accountInfo.address.pretty() + '\n';
-                text += 'at height:\t' + accountInfo.addressHeight.compact() + '\n\n';
-                text += 'PublicKey:\t' + accountInfo.publicKey + '\n';
-                text += 'at height:\t' + accountInfo.publicKeyHeight.compact() + '\n\n';
-                text += 'Importance:\t' + accountInfo.importance.compact() + '\n';
-                text += 'at height:\t' + accountInfo.importanceHeight.compact() + '\n\n';
-                text += 'Mosaics' + '\n';
-                accountData.mosaics.map((mosaic: MosaicAmountView) => {
-                    const duration = mosaic.mosaicInfo.duration.compact();
-                    let expiration: string;
-                    if (duration === 0) {
-                        expiration = 'Never';
-                    } else {
-                        const createHeight = mosaic.mosaicInfo.height.compact();
-                        expiration = (createHeight + duration).toString();
-                    }
-                    text += mosaic.fullName() + ':\t' + mosaic.relativeAmount() + '(relative)' + '\t'
-                    + mosaic.amount.compact() + '(absolute)' + '\n';
-                    text += 'expiration height:\t' + expiration + '\n\n';
-                });
-                this.spinner.stop(true);
-                console.log(text);
-            }, (err) => {
-                this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
-            });
+        const mosaicService = new MosaicService(accountHttp, mosaicHttp);
 
-        accountHttp.getMultisigAccountInfo(address)
-            .subscribe((multisigAccountInfo: MultisigAccountInfo) => {
+        forkJoin(
+            accountHttp.getAccountInfo(address),
+            mosaicService.mosaicsAmountViewFromAddress(address),
+            accountHttp.getMultisigAccountInfo(address).pipe(catchError((ignored) => of(null))))
+            .subscribe((res) => {
+                const accountInfo = res[0];
+                const mosaicsInfo = res[1];
+                const multisigInfo = res[2];
+                console.log(
+                    this.formatAccountInfo(accountInfo),
+                    this.formatMosaicsInfo(mosaicsInfo),
+                    this.formatMultisigInfo(multisigInfo));
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.green('cosignatories:\t') + '\n';
-                text += '-'.repeat('cosignatories:\t'.length) + '\n\n';
-                multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
-                    text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
-                    text += 'Address:\t' + publicAccount.address.plain() + '\n\n';
-                });
-                text += chalk.green('multisigAccounts:\t') + '\n';
-                text += '-'.repeat('multisigAccounts:\t'.length) + '\n\n';
-                multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
-                    text += 'PublicKey:\t' + publicAccount.publicKey + '\n';
-                    text += 'Address:\t' + publicAccount.address.plain() + '\n\n';
-                });
-                text += 'MinApproval:\t' + multisigAccountInfo.minApproval + '\n';
-                text += 'MinRemoval:\t' + multisigAccountInfo.minRemoval + '\n\n';
-                console.log(text);
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
+    }
+
+    private formatAccountInfo(accountInfo: AccountInfo) {
+        const table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        let text = '';
+        text += '\n\n' + chalk.green('Account Information') + '\n';
+        table.push(
+            ['Address', accountInfo.address.pretty()],
+            ['Address Height', accountInfo.addressHeight.compact().toString()],
+            ['PublicKey', accountInfo.publicKey],
+            ['PublicKey Height', accountInfo.publicKeyHeight.compact()],
+            ['Importance', accountInfo.importance.compact()],
+            ['Importance Height', accountInfo.importanceHeight.compact()],
+        );
+        text += table.toString();
+        return text;
+    }
+
+    private formatMosaicsInfo(mosaicsInfo: MosaicAmountView[]) {
+        const table = new Table({
+            style: {head: ['cyan']},
+            head: ['Mosaic Id', 'Relative Amount', 'Absolute Amount', 'Expiration Height'],
+        }) as HorizontalTable;
+        let text = '';
+        if (mosaicsInfo.length > 0) {
+            text += chalk.green('\n\n' + 'Balance') + '\n';
+            mosaicsInfo.map((mosaic: MosaicAmountView) => {
+                table.push(
+                    [mosaic.fullName(),
+                        mosaic.relativeAmount().toLocaleString(),
+                        mosaic.amount.compact().toString(),
+                        (mosaic.mosaicInfo.duration.compact() === 0 ?
+                            'Never' : ((mosaic.mosaicInfo.height.compact() + mosaic.mosaicInfo.duration.compact()).toString())),
+                    ],
+                );
+            });
+            text += table.toString();
+        }
+        return text;
+    }
+
+    private formatMultisigInfo(multisigAccountInfo: MultisigAccountInfo | null) {
+        let text = '';
+        if (multisigAccountInfo && multisigAccountInfo.cosignatories.length > 0) {
+            text += chalk.green('\n\n' + 'Multisig Account Information') + '\n';
+            const multisigTable = new Table({
+                style: {head: ['cyan']},
+                head: ['Property', 'Value'],
+            }) as HorizontalTable;
+            multisigTable.push(
+                ['Min Approval', multisigAccountInfo.minApproval.toString()],
+                ['Min Removal', multisigAccountInfo.minRemoval.toString()],
+            );
+            text += multisigTable.toString();
+            text += chalk.green('\n\n' + 'Cosignatories') + '\n';
+            const cosignatoriesTable = new Table({
+                style: {head: ['cyan']},
+                head: ['Public Key', 'Address'],
+            }) as HorizontalTable;
+            multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
+                cosignatoriesTable.push(
+                    ['Public Key', publicAccount.publicKey],
+                    ['Address', publicAccount.address.pretty()],
+                );
+            });
+            text += cosignatoriesTable.toString();
+        }
+        if (multisigAccountInfo && multisigAccountInfo.multisigAccounts.length > 0) {
+            text += chalk.green('\n\n' + 'Is cosignatory of') + '\n';
+            const cosignatoryOfTable = new Table({
+                style: {head: ['cyan']},
+                head: ['Public Key', 'Address'],
+            }) as HorizontalTable;
+
+            multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
+                cosignatoryOfTable.push(
+                    ['Public Key', publicAccount.publicKey],
+                    ['Address', publicAccount.address.pretty()],
+                );
+            });
+            text += cosignatoryOfTable.toString();
+        }
+        return text;
     }
 }
