@@ -54,8 +54,8 @@ export class ReceiptService {
                     txt += 'version:\t' + balanceChangeReceipt.version + '\n';
                     txt += '\t\ttype:\t\t' + balanceChangeReceipt.type + '\n';
                     txt += '\t\tamount:\t\t' + balanceChangeReceipt.amount.compact() + '\n';
-                    txt += '\t\taddress:\t' + balanceChangeReceipt.account.address.pretty() + '\n';
-                    txt += '\t\tpublicKey:\t' + balanceChangeReceipt.account.publicKey + '\n';
+                    txt += '\t\taddress:\t' + balanceChangeReceipt.targetPublicAccount.address.pretty() + '\n';
+                    txt += '\t\tpublicKey:\t' + balanceChangeReceipt.targetPublicAccount.publicKey + '\n';
                     txt += '\t\tmosaicId:\t[ ' + balanceChangeReceipt.mosaicId.id.lower + ', '
                         + balanceChangeReceipt.mosaicId.id.higher + ' ]\n\n';
                 } else if ('4' === typeFlag) {
