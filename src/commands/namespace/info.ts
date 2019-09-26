@@ -46,6 +46,7 @@ export class NamespaceInfoTable {
         }) as HorizontalTable;
         this.table.push(
             ['Id', namespace.id.toHex()],
+            ['Name', namespace.name],
             ['Registration Type', namespace.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
             ['Owner', namespace.owner.address.pretty()],
             ['Start Height',  namespace.startHeight.compact()],
