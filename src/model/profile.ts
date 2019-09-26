@@ -34,6 +34,8 @@ export class Profile {
         this.table.push(
             ['Name', this.name],
             ['Network', NetworkType[this.networkType]],
+            ['Node URL', this.url],
+            ['Generation Hash', this.networkGenerationHash],
             ['Address', this.account.address.plain()],
             ['Public Key', this.account.publicKey],
             ['Private Key', this.account.privateKey],

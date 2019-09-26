@@ -44,7 +44,7 @@ export class MosaicViewTable {
             ['Transferable', mosaicView.mosaicInfo.isTransferable()],
             ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
             ['Height', mosaicView.mosaicInfo.height.compact()],
-            ['Duration', mosaicView.mosaicInfo.height.compact() === 0 ?
+            ['Expiration', mosaicView.mosaicInfo.duration.compact() === 0 ?
                 'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
             ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
             ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
@@ -78,7 +78,7 @@ export default class extends ProfileCommand {
             options.hex = OptionsResolver(options,
                 'hex',
                 () => undefined,
-                'Introduce the mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+                'Introduce the mosaic id in hexadecimal format: ');
         }
         let mosaicId: MosaicId;
         if (options.hex) {
