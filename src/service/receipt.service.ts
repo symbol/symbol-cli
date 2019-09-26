@@ -10,7 +10,7 @@ import {
     TransactionStatement,
 } from 'nem2-sdk';
 
-export class ReceiptService {
+export class ReceiptCLIService {
     constructor() {
 
     }

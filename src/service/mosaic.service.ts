@@ -16,10 +16,13 @@
  *
  */
 
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {ExpectedError} from 'clime';
-import {Address, Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {Address, Mosaic, MosaicId, MosaicView, NamespaceId, UInt64} from 'nem2-sdk';
 
-export class MosaicService {
+export class MosaicCLIService {
 
     public static ALIAS_TAG = '@';
 
@@ -27,9 +30,27 @@ export class MosaicService {
 
     }
 
+    static validate(value: string) {
+        const mosaicParts = value.split('::');
+        let valid = true;
+        try {
+            if (isNaN(+mosaicParts[1])) {
+                valid = false;
+            }
+            const ignored = new Mosaic(this.getMosaicId(mosaicParts[0]),
+                UInt64.fromUint(+mosaicParts[1]));
+        } catch (err) {
+            valid = false;
+        }
+        if (!valid) {
+            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
+        }
+    }
+
     static getRecipient(rawRecipient: string): Address | NamespaceId {
         let recipient: Address | NamespaceId;
-        if (rawRecipient.charAt(0) === MosaicService.ALIAS_TAG) {
+        if (rawRecipient.charAt(0) === MosaicCLIService.ALIAS_TAG) {
             recipient =  new NamespaceId(rawRecipient.substring(1));
         } else  {
             try {
@@ -43,7 +64,7 @@ export class MosaicService {
 
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
         let mosaicId: MosaicId | NamespaceId;
-        if (rawMosaicId.charAt(0) === MosaicService.ALIAS_TAG) {
+        if (rawMosaicId.charAt(0) === MosaicCLIService.ALIAS_TAG) {
             mosaicId = new NamespaceId(rawMosaicId.substring(1));
         } else {
             mosaicId = new MosaicId(rawMosaicId);
@@ -51,21 +72,38 @@ export class MosaicService {
         return mosaicId;
     }
 
-    static validate(value: string) {
-        const mosaicParts = value.split('::');
-        let valid = true;
-        try {
-            if (isNaN(+mosaicParts[1])) {
-                valid = false;
-            }
-            const ignored = new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1]));
-        } catch (err) {
-            valid = false;
-        }
-        if (!valid) {
-            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-        }
+    static getMosaics(rawMosaics: string): Mosaic[] {
+        const mosaics: Mosaic[] = [];
+        const mosaicsData = rawMosaics.split(',');
+        mosaicsData.forEach((mosaicData) => {
+            const mosaicParts = mosaicData.split('::');
+            mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
+                UInt64.fromUint(+mosaicParts[1])));
+        });
+        return mosaics;
+    }
+
+    public formatMosaicView(mosaicView: MosaicView) {
+        const table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        let text = '';
+        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
+        table.push(
+            ['Id', mosaicView.mosaicInfo.id.toHex()],
+            ['Divisibility', mosaicView.mosaicInfo.divisibility],
+            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
+            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
+            ['Height', mosaicView.mosaicInfo.height.compact()],
+            ['Duration', mosaicView.mosaicInfo.height.compact() === 0 ?
+                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
+            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
+            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
+            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
+                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
+        );
+        text += table.toString();
+        return text;
     }
 }

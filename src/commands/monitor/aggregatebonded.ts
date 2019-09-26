@@ -46,7 +46,7 @@ export default class extends MonitorAddressCommand {
 
         listener.open().then(() => {
             listener.aggregateBondedAdded(address).subscribe((transaction) => {
-                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction));
+                console.log('\n' + this.transactionCLIService.formatTransactionToFilter(transaction));
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

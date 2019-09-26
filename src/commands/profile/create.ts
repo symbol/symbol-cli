@@ -29,26 +29,26 @@ import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 export class CommandOptions extends Options {
     @option({
         flag: 'p',
-        description: 'Private key',
+        description: 'Account private key.',
         validator: new PrivateKeyValidator(),
     })
-    privatekey: string;
+    privateKey: string;
 
     @option({
         flag: 'n',
-        description: 'Network Type: MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST',
+        description: 'Network Type. Example: MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST.',
         validator: new NetworkValidator(),
     })
     network: string;
 
     @option({
         flag: 'u',
-        description: 'NEM2 Node URL. Example: http://localhost:3000',
+        description: 'NEM2 Node URL. Example: http://localhost:3000.',
     })
     url: string;
 
     @option({
-        description: '(Optional) profile name, if not private key will be stored as default',
+        description: '(Optional) Profile name, if not private key will override the default profile.',
     })
     profile: string;
 
@@ -88,7 +88,7 @@ export default class extends Command {
 
         const account: Account = Account.createFromPrivateKey(
             OptionsResolver(options,
-                'privatekey',
+                'privateKey',
                 () => undefined,
                 'Introduce your private key: '),
             networkType);
@@ -117,7 +117,7 @@ export default class extends Command {
         forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
             .subscribe((res) => {
                 if (res[0] !== networkType) {
-                    console.log('Network provided and node network don\'t match');
+                    console.log('The network provided and the node network don\'t match.');
                 } else {
                     const profile = this.profileService.createNewProfile(account,
                         url as string,
@@ -125,12 +125,11 @@ export default class extends Command {
                         res[1].generationHash);
                     console.log(chalk.green('\nProfile stored correctly\n') + profile.toString());
                 }
-            }, (err) => {
+            }, (ignored) => {
                 let error = '';
                 error += chalk.red('Error');
-                error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
+                error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000.';
                 console.log(error);
             });
     }
-
 }

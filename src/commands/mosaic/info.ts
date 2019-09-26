@@ -16,94 +16,61 @@
  *
  */
 import chalk from 'chalk';
-import { command, ExpectedError, metadata, option } from 'clime';
-import { AccountHttp, MosaicHttp, MosaicId, MosaicService } from 'nem2-sdk';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {AccountHttp, MosaicHttp, MosaicId, MosaicService} from 'nem2-sdk';
+import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MosaicCLIService} from '../../service/mosaic.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Mosaic Id in hexadecimal format',
+        description: 'Mosaic id in hexadecimal format. Example: 941299B2B7E1291C',
     })
     hex: string;
-
-    @option({
-        flag: 'u',
-        description: 'Mosaic id in uint64 format. [number, number]',
-    })
-    uint: string;
 }
 
 @command({
-    description: 'Fetch Mosaic info',
+    description: 'Fetch mosaic info',
 })
 export default class extends ProfileCommand {
+    public readonly mosaicCLIService: MosaicCLIService;
 
     constructor() {
         super();
+        this.mosaicCLIService = new MosaicCLIService();
+
     }
 
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        if (!options.hex && !options.uint) {
+        if (!options.hex) {
             options.hex = OptionsResolver(options,
                 'hex',
                 () => undefined,
-                'Introduce the mosaic id in hexadecimal format: ');
+                'Introduce the mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
         }
-
         let mosaicId: MosaicId;
         if (options.hex) {
             mosaicId = new MosaicId(options.hex);
-        } else if (options.uint) {
-            mosaicId = new MosaicId(JSON.parse(options.uint));
         } else {
-            throw new ExpectedError('You need to introduce a mosaicId');
+            throw new ExpectedError('Introduce a mosaicId. Example: 941299B2B7E1291C');
         }
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),
             new MosaicHttp(profile.url),
         );
-
         mosaicService.mosaicsView([mosaicId])
             .subscribe((mosaicViews) => {
                 this.spinner.stop(true);
                 if (mosaicViews.length === 0) {
                     console.log('No mosaic exists with this id ' + mosaicId.toHex());
                 } else {
-                    const mosaicView = mosaicViews[0];
-                    let text = '';
-                    let expiration: string;
-                    text += chalk.green('Mosaic:\t\n');
-                    text += 'Hex:\t\t\t' + mosaicId.toHex() + '\n';
-                    text += 'Uint64:\t\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
-                    text += 'divisibility:\t\t' + mosaicView.mosaicInfo.divisibility + '\n';
-                    text += 'transferable:\t\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
-                    text += 'supply mutable:\t\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
-                    text += 'block height:\t\t' + mosaicView.mosaicInfo.height.compact() + '\n';
-                    if (mosaicView.mosaicInfo.duration) {
-                        text += 'duration:\t\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
-                        if (0 === mosaicView.mosaicInfo.duration.compact()) {
-                            expiration = 'Never';
-                        } else {
-                            const mosaicHeight = mosaicView.mosaicInfo.height.compact();
-                            expiration = (mosaicHeight + mosaicView.mosaicInfo.duration.compact()).toString();
-                        }
-                        text += 'expiration height:\t' + expiration + '\n';
-                    }
-                    text += 'owner:\t\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
-                    text += 'supply:\t\t\t' + mosaicView.mosaicInfo.supply.compact()
-                        + '(absolute)\t\t'
-                        + (mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact()
-                            : mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility))
-                        + '(relative)\n';
-                    console.log(text);
+                    console.log(this.mosaicCLIService.formatMosaicView(mosaicViews[0]));
                 }
-
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
@@ -111,4 +78,5 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
+
 }

@@ -38,7 +38,7 @@ export default class extends AccountTransactionsCommand {
 
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,
-                'publickey',
+                'publicKey',
                 () => this.getProfile(options).account.publicKey,
                 'Introduce the public key: '), profile.account.address.networkType);
 
@@ -49,7 +49,7 @@ export default class extends AccountTransactionsCommand {
                 this.spinner.stop(true);
                 let text = '';
                 transactions.map((transaction) => {
-                    text += this.transactionService.formatTransactionToFilter(transaction) + '\n';
+                    text += this.transactionCLIService.formatTransactionToFilter(transaction) + '\n';
                 });
                 console.log(text === '' ? 'There aren\'t unconfirmed transactions' : text);
             }, (err) => {

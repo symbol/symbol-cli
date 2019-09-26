@@ -23,7 +23,7 @@ export class AddressValidator implements Validator<string> {
         try {
             Address.createFromRawAddress(value);
         } catch (err) {
-            throw new ExpectedError('introduce a valid address');
+            throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
         }
     }
 }

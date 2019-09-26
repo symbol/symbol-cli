@@ -19,14 +19,17 @@ import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {DiagnosticHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {DiagnosticCLIService} from '../../service/diagnostic.service';
 
 @command({
-    description: 'Returns the version of the running rest component',
+    description: 'Returns the REST server components versions',
 })
 export default class extends ProfileCommand {
+    private readonly diagnosticCLIService: DiagnosticCLIService;
 
     constructor() {
         super();
+        this.diagnosticCLIService = new DiagnosticCLIService();
     }
 
     @metadata
@@ -40,8 +43,7 @@ export default class extends ProfileCommand {
         diagnosticHttp.getServerInfo()
             .subscribe((serverInfo) => {
                 this.spinner.stop(true);
-                console.log('restVersion: ' + serverInfo.restVersion);
-                console.log('sdkVersion: ' + serverInfo.sdkVersion);
+                console.log(this.diagnosticCLIService.formatServerInfo(serverInfo));
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

@@ -20,25 +20,25 @@ import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {TransactionService} from '../../service/transaction.service';
+import {TransactionCLIService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Transaction hash',
+        description: 'Transaction hash.',
     })
     hash: string;
 }
 
 @command({
-    description: 'Fetch Transaction info',
+    description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
+    private readonly transactionCLIService: TransactionCLIService;
 
     constructor() {
         super();
-        this.transactionService = new TransactionService();
+        this.transactionCLIService = new TransactionCLIService();
     }
 
     @metadata
@@ -58,7 +58,7 @@ export default class extends ProfileCommand {
             .subscribe((transaction) => {
                 this.spinner.stop(true);
 
-                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction) + '\n');
+                console.log('\n' + this.transactionCLIService.formatTransactionToFilter(transaction) + '\n');
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

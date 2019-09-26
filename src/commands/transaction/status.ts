@@ -20,29 +20,31 @@ import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {TransactionCLIService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Transaction hash',
+        description: 'Transaction hash.',
     })
     hash: string;
 }
 
 @command({
-    description: 'Fetch Transaction info',
+    description: 'Fetch transaction status.',
 })
 export default class extends ProfileCommand {
+    private readonly transactionCLIService: TransactionCLIService;
 
     constructor() {
         super();
+        this.transactionCLIService = new TransactionCLIService();
     }
 
     @metadata
     execute(options: CommandOptions) {
 
         const profile = this.getProfile(options);
-
         const transactionHttp = new TransactionHttp(profile.url);
         const hash = OptionsResolver(options,
             'hash',
@@ -52,19 +54,8 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         transactionHttp.getTransactionStatus(hash)
-            .subscribe((transaction) => {
-                let text = '';
-                this.spinner.stop(true);
-                text += 'group:\t' + transaction.group + '\n';
-                text += 'status:\t' + transaction.status + '\n';
-                text += 'hash:\t<' + transaction.hash + '>' + '\n';
-                if (transaction.deadline) {
-                    text += 'deadline:\t' + transaction.deadline.value + '\n';
-                }
-                if (transaction.height && transaction.height.compact() > 0 ) {
-                    text += 'height:\t' + transaction.height.compact() + '\n';
-                }
-                console.log(text);
+            .subscribe((status) => {
+                console.log(this.transactionCLIService.formatTransactionStatus(status));
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

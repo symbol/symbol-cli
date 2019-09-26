@@ -19,14 +19,18 @@ import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {DiagnosticHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {DiagnosticCLIService} from '../../service/diagnostic.service';
 
 @command({
     description: 'Returns diagnostic information about the node storage',
 })
 export default class extends ProfileCommand {
 
+    private readonly diagnosticCLIService: DiagnosticCLIService;
+
     constructor() {
         super();
+        this.diagnosticCLIService = new DiagnosticCLIService();
     }
 
     @metadata
@@ -40,9 +44,7 @@ export default class extends ProfileCommand {
         diagnosticHttp.getDiagnosticStorage()
             .subscribe((storage) => {
                 this.spinner.stop(true);
-                console.log('numBlocks: ' + storage.numBlocks);
-                console.log('numTransactions: ' + storage.numTransactions);
-                console.log('numAccounts: ' + storage.numAccounts);
+                console.log(this.diagnosticCLIService.formatStorage(storage));
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

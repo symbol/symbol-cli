@@ -21,6 +21,7 @@ import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk'
 import {mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceCLIService} from '../../service/namespace.service';
 import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -38,9 +39,11 @@ export class CommandOptions extends ProfileOptions {
 })
 
 export default class extends ProfileCommand {
+    public readonly namespaceCLIService: NamespaceCLIService;
 
     constructor() {
         super();
+        this.namespaceCLIService = new NamespaceCLIService();
     }
 
     @metadata
@@ -66,33 +69,8 @@ export default class extends ProfileCommand {
                 if (namespaces.length === 0) {
                     console.log('The address ' + address.plain() + ' does not own any namespaces');
                 }
-
                 namespaces.map((namespace) => {
-
-                    let text = '';
-                    text += chalk.green('Namespace: ') + chalk.bold(namespace.name) + '\n';
-                    text += '-'.repeat('Namespace: '.length + namespace.name.length) + '\n\n';
-                    text += 'hexadecimal:\t' + namespace.id.toHex() + '\n';
-                    text += 'uint:\t\t[ ' + namespace.id.id.lower + ', ' + namespace.id.id.higher + ' ]\n';
-
-                    if (namespace.isRoot()) {
-                        text += 'type:\t\tRoot namespace \n';
-                    } else {
-                        text += 'type:\t\tSub namespace \n';
-                    }
-
-                    text += 'owner:\t\t' + namespace.owner.address.pretty() + '\n';
-                    text += 'startHeight:\t' + namespace.startHeight.compact() + '\n';
-                    text += 'endHeight:\t' + namespace.endHeight.compact() + '\n\n';
-
-                    if (namespace.isSubnamespace()) {
-                        text += 'Parent Id:' + '\n';
-                        text += 'hexadecimal:\t' + namespace.parentNamespaceId().toHex() + '\n';
-                        text += 'uint:\t\t[ ' + namespace.parentNamespaceId().id.lower + ', ' +
-                            '' + namespace.parentNamespaceId().id.higher + ' ]\n\n';
-                    }
-
-                    console.log(text);
+                    console.log(this.namespaceCLIService.formatNamespace(namespace));
                 });
 
             }, (err) => {

@@ -19,14 +19,17 @@ import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {ChainHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {ChainCLIService} from '../../service/chain.service';
 
 @command({
     description: 'Gets the current score of the chain',
 })
 export default class extends ProfileCommand {
+    private readonly chainCLIService: ChainCLIService;
 
     constructor() {
         super();
+        this.chainCLIService = new ChainCLIService();
     }
 
     @metadata
@@ -38,9 +41,7 @@ export default class extends ProfileCommand {
         const chainHttp = new ChainHttp(profile.url);
         chainHttp.getChainScore().subscribe((score) => {
             this.spinner.stop(true);
-
-            console.log('Low score: ' + score.scoreLow.compact());
-            console.log('High score: ' + score.scoreHigh.compact());
+            console.log(this.chainCLIService.formatChainScore(score));
         }, (err) => {
             this.spinner.stop(true);
             let text = '';

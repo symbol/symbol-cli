@@ -22,13 +22,14 @@ import * as readlineSync from 'readline-sync';
 import {forkJoin} from 'rxjs';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
+import {AccountCLIService} from '../../service/account.service';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
 
 export class CommandOptions extends Options {
     @option({
         flag: 's',
-        description: '(Optional) Save profile',
+        description: '(Optional) Saves the profile',
         toggle: true,
     })
     save: any;
@@ -40,13 +41,13 @@ export class CommandOptions extends Options {
     url: string;
 
     @option({
-        description: '(Optional) When saving profile you can add profile name, if not will be stored as default',
+        description: '(Optional) When saving profile you can add profile name, if not will be stored as default.',
     })
     profile: string;
 
     @option({
         flag: 'n',
-        description: 'Network Type: MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST',
+        description: 'Network Type (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST).',
         validator: new NetworkValidator(),
     })
     network: string;
@@ -61,7 +62,7 @@ export class CommandOptions extends Options {
         } else if (network === 'MIJIN_TEST') {
             return NetworkType.MIJIN_TEST;
         }
-        throw new ExpectedError('Introduce a valid network type');
+        throw new ExpectedError('Introduce a valid network type. Example: MIJIN_TEST');
     }
 }
 
@@ -70,11 +71,13 @@ export class CommandOptions extends Options {
 })
 export default class extends Command {
     private readonly profileService: ProfileService;
+    private readonly accountCLIService: AccountCLIService;
 
     constructor() {
         super();
         const profileRepository = new ProfileRepository('.nem2rc.json');
         this.profileService = new ProfileService(profileRepository);
+        this.accountCLIService = new AccountCLIService();
     }
 
     @metadata
@@ -82,15 +85,12 @@ export default class extends Command {
         const networkType = options.getNetwork(OptionsResolver(options,
             'network',
             () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Introduce the network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
         const account = Account.generateNewAccount(networkType);
+        let text = this.accountCLIService.formatAccountCredentials(account);
 
-        let text = chalk.green('New Account:\t') + account.address.pretty() + '\n';
-        text += 'Public Key:\t' + account.publicKey + '\n';
-        text += 'Private Key:\t' + account.privateKey + '\n';
-
-        if (!options.save && readlineSync.keyInYN('Do you want to save it?')) {
+        if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;
         }
 
@@ -98,14 +98,14 @@ export default class extends Command {
             const url = OptionsResolver(options,
                 'url',
                 () => undefined,
-                'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ').trim();
+                'Introduce the NEM2 node URL. (Example: http://localhost:3000): ').trim();
 
             let profile: string;
             if (options.profile) {
                 profile = options.profile;
             } else {
                 const tmp = readlineSync
-                    .question('Insert profile name ' +
+                    .question('Insert the profile name ' +
                         '(blank means default and it could overwrite the previous profile): ');
                 if (tmp === '') {
                     profile = 'default';
@@ -121,7 +121,7 @@ export default class extends Command {
             forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
                 .subscribe((res) => {
                     if (res[0] !== networkType) {
-                        console.log('Network provided and node network don\'t match');
+                        console.log('The network provided and node network don\'t match.');
                     } else {
                         this.profileService.createNewProfile(account,
                             url as string,
@@ -130,7 +130,7 @@ export default class extends Command {
                         text += chalk.green('\nStored ' + profile + ' profile');
                         console.log(text);
                     }
-                }, (err) => {
+                }, (ignored) => {
                     let error = '';
                     error += chalk.red('Error');
                     error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
@@ -139,6 +139,5 @@ export default class extends Command {
         } else {
             console.log(text);
         }
-
     }
 }

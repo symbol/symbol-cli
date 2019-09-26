@@ -15,20 +15,12 @@
  * limitations under the License.
  *
  */
-import {ValidationContext, Validator} from 'clime';
-import {MosaicCLIService} from '../service/mosaic.service';
+import {ExpectedError, ValidationContext, Validator} from 'clime';
 
-export class MosaicValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        MosaicCLIService.validate(value);
-    }
-}
-
-export class MosaicsValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        const mosaics = value.split(',');
-        mosaics.forEach((mosaic) => {
-            MosaicCLIService.validate(mosaic);
-        });
+export class BinaryValidator implements Validator<number> {
+    validate(value: number, context: ValidationContext): void {
+        if (value !== 0 && value !== 1) {
+            throw new ExpectedError('The value must be 0 or 1.');
+        }
     }
 }

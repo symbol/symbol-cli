@@ -17,31 +17,34 @@
  */
 import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceService} from 'nem2-sdk';
+import {NamespaceHttp, NamespaceId, NamespaceService, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceCLIService} from '../../service/namespace.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
-        description: 'Namespace Id in string format',
+        description: 'Namespace name. Example: cat.currency',
     })
     name: string;
 
     @option({
-        flag: 'u',
-        description: 'Namespace id in uint64 format. [number, number]',
+        flag: 'h',
+        description: 'Namespace id in hexadecimal. Example: 85BBEA6CC462B244',
     })
-    uint: string;
+    hex: string;
 }
 
 @command({
-    description: 'Fetch Namespace info',
+    description: 'Fetch namespace info',
 })
 export default class extends ProfileCommand {
+    public readonly namespaceCLIService: NamespaceCLIService;
 
     constructor() {
         super();
+        this.namespaceCLIService = new NamespaceCLIService();
     }
 
     @metadata
@@ -49,26 +52,27 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const profile = this.getProfile(options);
 
-        if (!options.uint) {
+        if (!options.hex) {
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
             'Introduce the namespace name: ');
         }
         if (options.name === '') {
-            options.uint = OptionsResolver(options,
+            options.hex = OptionsResolver(options,
                 'uint',
                 () => undefined,
-                'Introduce the namepsace id in uint64 format. [number, number]: ');
+                'Introduce the namespace id in hexadecimal: ');
         }
 
         let namespaceId: NamespaceId;
         if (options.name) {
             namespaceId = new NamespaceId(options.name);
-        } else if (options.uint) {
-            namespaceId = new NamespaceId(JSON.parse(options.uint));
+        } else if (options.hex) {
+            const namespaceIdUInt64 = UInt64.fromHex(options.hex);
+            namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         } else {
-            throw new ExpectedError('You need to introduce at least one');
+            throw new ExpectedError('Introduce a valid namespace name. Example: cat.currency');
         }
 
         const namespaceHttp = new NamespaceHttp(profile.url);
@@ -76,30 +80,7 @@ export default class extends ProfileCommand {
         namespaceService.namespace(namespaceId)
             .subscribe((namespace) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.green('Namespace: ') + chalk.bold(namespace.name) + '\n';
-                text += '-'.repeat('Namespace: '.length + namespace.name.length) + '\n\n';
-                text += 'hexadecimal:\t' + namespace.id.toHex() + '\n';
-                text += 'uint:\t\t[ ' + namespace.id.id.lower + ', ' + namespace.id.id.higher + ' ]\n';
-
-                if (namespace.isRoot()) {
-                    text += 'type:\t\tRoot namespace \n';
-                } else {
-                    text += 'type:\t\tSub namespace \n';
-                }
-
-                text += 'owner:\t\t' + namespace.owner.address.pretty() + '\n';
-                text += 'startHeight:\t' + namespace.startHeight.compact() + '\n';
-                text += 'endHeight:\t' + namespace.endHeight.compact() + '\n\n';
-
-                if (namespace.isSubnamespace()) {
-                    text += 'Parent Id:' + '\n';
-                    text += 'hexadecimal:\t' + namespace.parentNamespaceId().toHex() + '\n';
-                    text += 'uint:\t\t[ ' + namespace.parentNamespaceId().id.lower + ', ' +
-                        '' + namespace.parentNamespaceId().id.higher + ' ]\n\n';
-                }
-
-                console.log(text);
+                console.log(this.namespaceCLIService.formatNamespace(namespace));
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
@@ -107,4 +88,5 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
+
 }
