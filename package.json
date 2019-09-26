@@ -21,6 +21,10 @@
         {
             "name": "Guillem",
             "email": "guillem@nemeurope.eu"
+        },
+        {
+            "name": "David",
+            "email": "david@nem.foundation"
         }
     ],
     "bugs": "https://github.com/nemtech/nem2-cli/issues",

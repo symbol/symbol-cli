@@ -16,11 +16,12 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService} from 'nem2-sdk';
+import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MosaicCLIService} from '../../service/mosaic.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -30,16 +31,43 @@ export class CommandOptions extends ProfileOptions {
     hex: string;
 }
 
+export class MosaicViewTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly mosaicView: MosaicView) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Id', mosaicView.mosaicInfo.id.toHex()],
+            ['Divisibility', mosaicView.mosaicInfo.divisibility],
+            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
+            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
+            ['Height', mosaicView.mosaicInfo.height.compact()],
+            ['Duration', mosaicView.mosaicInfo.height.compact() === 0 ?
+                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
+            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
+            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
+            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
+                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
+
 @command({
     description: 'Fetch mosaic info',
 })
 export default class extends ProfileCommand {
-    public readonly mosaicCLIService: MosaicCLIService;
 
     constructor() {
         super();
-        this.mosaicCLIService = new MosaicCLIService();
-
     }
 
     @metadata
@@ -69,7 +97,7 @@ export default class extends ProfileCommand {
                 if (mosaicViews.length === 0) {
                     console.log('No mosaic exists with this id ' + mosaicId.toHex());
                 } else {
-                    console.log(this.mosaicCLIService.formatMosaicView(mosaicViews[0]));
+                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
                 }
             }, (err) => {
                 this.spinner.stop(true);

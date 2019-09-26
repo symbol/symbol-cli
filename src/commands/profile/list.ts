@@ -42,9 +42,9 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        let message = '\n';
+        let message = '';
         this.profileService.findAll().map((profile) => {
-            message += profile.toString() + '\n';
+            message += '\n\n' + profile.toString();
         });
         console.log(message);
     }

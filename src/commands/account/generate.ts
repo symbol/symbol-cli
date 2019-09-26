@@ -16,13 +16,14 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
 import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {forkJoin} from 'rxjs';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
-import {AccountCLIService} from '../../service/account.service';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
 
@@ -66,18 +67,39 @@ export class CommandOptions extends Options {
     }
 }
 
+export class AccountCredentialsTable {
+    private readonly table: HorizontalTable;
+
+    constructor(public readonly account: Account) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Address', account.address.pretty()],
+            ['Public Key', account.publicKey],
+            ['Private Key', account.privateKey],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('New Account') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
+
 @command({
     description: 'Generate new accounts',
 })
 export default class extends Command {
     private readonly profileService: ProfileService;
-    private readonly accountCLIService: AccountCLIService;
 
     constructor() {
         super();
         const profileRepository = new ProfileRepository('.nem2rc.json');
         this.profileService = new ProfileService(profileRepository);
-        this.accountCLIService = new AccountCLIService();
     }
 
     @metadata
@@ -88,7 +110,7 @@ export default class extends Command {
             'Introduce the network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
         const account = Account.generateNewAccount(networkType);
-        let text = this.accountCLIService.formatAccountCredentials(account);
+        let text = new AccountCredentialsTable(account).toString();
 
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;

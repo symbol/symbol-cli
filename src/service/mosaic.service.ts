@@ -16,11 +16,8 @@
  *
  */
 
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
 import {ExpectedError} from 'clime';
-import {Address, Mosaic, MosaicId, MosaicView, NamespaceId, UInt64} from 'nem2-sdk';
+import {Address, Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 
 export class MosaicCLIService {
 
@@ -81,29 +78,5 @@ export class MosaicCLIService {
                 UInt64.fromUint(+mosaicParts[1])));
         });
         return mosaics;
-    }
-
-    public formatMosaicView(mosaicView: MosaicView) {
-        const table = new Table({
-            style: {head: ['cyan']},
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-        let text = '';
-        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
-        table.push(
-            ['Id', mosaicView.mosaicInfo.id.toHex()],
-            ['Divisibility', mosaicView.mosaicInfo.divisibility],
-            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
-            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
-            ['Height', mosaicView.mosaicInfo.height.compact()],
-            ['Duration', mosaicView.mosaicInfo.height.compact() === 0 ?
-                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
-            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
-            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
-            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
-                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
-        );
-        text += table.toString();
-        return text;
     }
 }

@@ -16,11 +16,12 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceService, UInt64} from 'nem2-sdk';
+import {Namespace, NamespaceHttp, NamespaceId, NamespaceService, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {NamespaceCLIService} from '../../service/namespace.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -36,15 +37,42 @@ export class CommandOptions extends ProfileOptions {
     hex: string;
 }
 
+export class NamespaceInfoTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly namespace: Namespace) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Id', namespace.id.toHex()],
+            ['Registration Type', namespace.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
+            ['Owner', namespace.owner.address.pretty()],
+            ['Start Height',  namespace.startHeight.compact()],
+            ['End Height', namespace.endHeight.compact()],
+        );
+        if (namespace.isSubnamespace()) {
+            this.table.push(
+                ['Parent Id', 'namespace.parentNamespaceId().toHex()'],
+            );
+        }
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Namespace Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
+
 @command({
     description: 'Fetch namespace info',
 })
 export default class extends ProfileCommand {
-    public readonly namespaceCLIService: NamespaceCLIService;
 
     constructor() {
         super();
-        this.namespaceCLIService = new NamespaceCLIService();
     }
 
     @metadata
@@ -80,7 +108,7 @@ export default class extends ProfileCommand {
         namespaceService.namespace(namespaceId)
             .subscribe((namespace) => {
                 this.spinner.stop(true);
-                console.log(this.namespaceCLIService.formatNamespace(namespace));
+                console.log(new NamespaceInfoTable(namespace).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

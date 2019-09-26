@@ -16,20 +16,40 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {command, metadata} from 'clime';
-import {ChainHttp} from 'nem2-sdk';
+import {BlockchainScore, ChainHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {ChainCLIService} from '../../service/chain.service';
+
+export class ChainScoreTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly score: BlockchainScore) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Score Low', score.scoreLow.compact()],
+            ['Score High', score.scoreHigh.compact()],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Storage Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
 
 @command({
     description: 'Gets the current score of the chain',
 })
 export default class extends ProfileCommand {
-    private readonly chainCLIService: ChainCLIService;
 
     constructor() {
         super();
-        this.chainCLIService = new ChainCLIService();
     }
 
     @metadata
@@ -41,7 +61,7 @@ export default class extends ProfileCommand {
         const chainHttp = new ChainHttp(profile.url);
         chainHttp.getChainScore().subscribe((score) => {
             this.spinner.stop(true);
-            console.log(this.chainCLIService.formatChainScore(score));
+            console.log(new ChainScoreTable(score).toString());
         }, (err) => {
             this.spinner.stop(true);
             let text = '';

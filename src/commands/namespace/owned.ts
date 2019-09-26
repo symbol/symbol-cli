@@ -21,8 +21,8 @@ import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk'
 import {mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {NamespaceCLIService} from '../../service/namespace.service';
 import {AddressValidator} from '../../validators/address.validator';
+import {NamespaceInfoTable} from './info';
 
 export class CommandOptions extends ProfileOptions {
 
@@ -39,11 +39,9 @@ export class CommandOptions extends ProfileOptions {
 })
 
 export default class extends ProfileCommand {
-    public readonly namespaceCLIService: NamespaceCLIService;
 
     constructor() {
         super();
-        this.namespaceCLIService = new NamespaceCLIService();
     }
 
     @metadata
@@ -70,7 +68,7 @@ export default class extends ProfileCommand {
                     console.log('The address ' + address.plain() + ' does not own any namespaces');
                 }
                 namespaces.map((namespace) => {
-                    console.log(this.namespaceCLIService.formatNamespace(namespace));
+                    console.log(new NamespaceInfoTable(namespace).toString());
                 });
 
             }, (err) => {

@@ -123,7 +123,7 @@ export default class extends Command {
                         url as string,
                         profileName,
                         res[1].generationHash);
-                    console.log(chalk.green('\nProfile stored correctly\n') + profile.toString());
+                    console.log(chalk.green('\nProfile stored correctly\n') + profile.toString() + '\n');
                 }
             }, (ignored) => {
                 let error = '';
