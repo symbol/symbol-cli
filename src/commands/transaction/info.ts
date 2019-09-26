@@ -20,7 +20,7 @@ import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {TransactionCLIService} from '../../service/transaction.service';
+import {TransactionService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -34,11 +34,11 @@ export class CommandOptions extends ProfileOptions {
     description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
-    private readonly transactionCLIService: TransactionCLIService;
+    private readonly transactionCLIService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionCLIService();
+        this.transactionCLIService = new TransactionService();
     }
 
     @metadata

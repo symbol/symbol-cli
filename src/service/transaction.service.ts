@@ -47,7 +47,7 @@ import {
     TransferTransaction,
 } from 'nem2-sdk';
 
-export class TransactionCLIService {
+export class TransactionService {
 
     constructor() {
 

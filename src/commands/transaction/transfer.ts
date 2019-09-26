@@ -19,7 +19,7 @@ import {command, ExpectedError, metadata, option} from 'clime';
 import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransferTransaction, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {MosaicCLIService} from '../../service/mosaic.service';
+import {MosaicService} from '../../service/mosaic.service';
 import {AddressValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
 
@@ -60,7 +60,7 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        const recipient: Address | NamespaceId = MosaicCLIService.getRecipient(OptionsResolver(options,
+        const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
             'recipient',
             () => undefined,
             'Introduce the recipient address: '));
@@ -75,7 +75,7 @@ export default class extends AnnounceTransactionsCommand {
             'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
             ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: > ');
         if (options.mosaics) {
-            mosaics = MosaicCLIService.getMosaics(options.mosaics);
+            mosaics = MosaicService.getMosaics(options.mosaics);
         }
 
         let message: string;

@@ -20,7 +20,7 @@ import {command, metadata, option} from 'clime';
 import {BlockHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {ReceiptCLIService} from '../../service/receipt.service';
+import {ReceiptService} from '../../service/receipt.service';
 import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -36,11 +36,11 @@ export class CommandOptions extends ProfileOptions {
     description: 'Get the receipts triggered for a given block height',
 })
 export default class extends ProfileCommand {
-    private readonly receiptCLIService: ReceiptCLIService;
+    private readonly receiptCLIService: ReceiptService;
 
     constructor() {
         super();
-        this.receiptCLIService = new ReceiptCLIService();
+        this.receiptCLIService = new ReceiptService();
     }
 
     @metadata

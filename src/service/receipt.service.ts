@@ -11,7 +11,7 @@ import {
     TransactionStatement,
 } from 'nem2-sdk';
 
-export class ReceiptCLIService {
+export class ReceiptService {
     constructor() {
 
     }

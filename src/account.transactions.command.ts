@@ -18,15 +18,15 @@
 import {option} from 'clime';
 import {QueryParams} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from './profile.command';
-import {TransactionCLIService} from './service/transaction.service';
+import {TransactionService} from './service/transaction.service';
 import {PublicKeyValidator} from './validators/publicKey.validator';
 
 export abstract class AccountTransactionsCommand extends ProfileCommand {
-    public readonly transactionCLIService: TransactionCLIService;
+    public readonly transactionCLIService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionCLIService();
+        this.transactionCLIService = new TransactionService();
     }
 }
 

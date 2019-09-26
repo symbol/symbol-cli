@@ -19,7 +19,7 @@
 import {ExpectedError} from 'clime';
 import {Address, Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 
-export class MosaicCLIService {
+export class MosaicService {
 
     public static ALIAS_TAG = '@';
 
@@ -47,7 +47,7 @@ export class MosaicCLIService {
 
     static getRecipient(rawRecipient: string): Address | NamespaceId {
         let recipient: Address | NamespaceId;
-        if (rawRecipient.charAt(0) === MosaicCLIService.ALIAS_TAG) {
+        if (rawRecipient.charAt(0) === MosaicService.ALIAS_TAG) {
             recipient =  new NamespaceId(rawRecipient.substring(1));
         } else  {
             try {
@@ -61,7 +61,7 @@ export class MosaicCLIService {
 
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
         let mosaicId: MosaicId | NamespaceId;
-        if (rawMosaicId.charAt(0) === MosaicCLIService.ALIAS_TAG) {
+        if (rawMosaicId.charAt(0) === MosaicService.ALIAS_TAG) {
             mosaicId = new NamespaceId(rawMosaicId.substring(1));
         } else {
             mosaicId = new MosaicId(rawMosaicId);

@@ -16,11 +16,11 @@
  *
  */
 import {ValidationContext, Validator} from 'clime';
-import {MosaicCLIService} from '../service/mosaic.service';
+import {MosaicService} from '../service/mosaic.service';
 
 export class MosaicValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
-        MosaicCLIService.validate(value);
+        MosaicService.validate(value);
     }
 }
 
@@ -28,7 +28,7 @@ export class MosaicsValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
         const mosaics = value.split(',');
         mosaics.forEach((mosaic) => {
-            MosaicCLIService.validate(mosaic);
+            MosaicService.validate(mosaic);
         });
     }
 }

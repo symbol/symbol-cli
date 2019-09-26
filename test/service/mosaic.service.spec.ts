@@ -17,23 +17,23 @@
  */
 import {expect} from 'chai';
 import {Address, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
-import {MosaicCLIService} from '../../src/service/mosaic.service';
+import {MosaicService} from '../../src/service/mosaic.service';
 
 describe('Mosaic service', () => {
 
     it('getMosaicId should return an alias', () => {
         const rawMosaicId = '@foo';
-        expect(MosaicCLIService.getMosaicId(rawMosaicId)).to.be.instanceOf(NamespaceId);
+        expect(MosaicService.getMosaicId(rawMosaicId)).to.be.instanceOf(NamespaceId);
     });
 
     it('getMosaicId (hex) should return a MosaicId', () => {
         const rawMosaicId = '175785202c44e5db';
-        expect(MosaicCLIService.getMosaicId(rawMosaicId)).to.be.instanceOf(MosaicId);
+        expect(MosaicService.getMosaicId(rawMosaicId)).to.be.instanceOf(MosaicId);
     });
 
     it('getMosaics should return an array of mosaics', () => {
         const rawMosaics = '175785202c44e5db::1,@foo2::2';
-        const mosaics = MosaicCLIService.getMosaics(rawMosaics);
+        const mosaics = MosaicService.getMosaics(rawMosaics);
         expect(mosaics.length).to.be.equal(2);
         expect(mosaics[0].id.toHex()).to.be.equal('175785202c44e5db'.toUpperCase());
         expect(mosaics[0].amount.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
@@ -43,34 +43,34 @@ describe('Mosaic service', () => {
 
     it('getRecipient should return an alias', () => {
         const rawRecipient = '@foo';
-        expect(MosaicCLIService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
+        expect(MosaicService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
     });
 
     it('getRecipient should return an address', () => {
         const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRAM';
-        expect(MosaicCLIService.getRecipient(rawRecipient)).to.be.instanceOf(Address);
+        expect(MosaicService.getRecipient(rawRecipient)).to.be.instanceOf(Address);
     });
 
     it('validate should not throw exception (alias)', () => {
         const string = '@foo::1';
-        expect(MosaicCLIService.validate(string)).to.be.equal(undefined);
+        expect(MosaicService.validate(string)).to.be.equal(undefined);
     });
 
     it('validate should not throw exception (hex)', () => {
         const string = '175785202c44e5db::1';
-        expect(MosaicCLIService.validate(string)).to.be.equal(undefined);
+        expect(MosaicService.validate(string)).to.be.equal(undefined);
     });
 
     it('validate should throw exception', () => {
         const string = 'a::1';
-        expect(() => { MosaicCLIService.validate(string); } ).to.throws(
+        expect(() => { MosaicService.validate(string); } ).to.throws(
             'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
             ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
     });
 
     it('validate should throw exception (format)', () => {
         const string = 'a::1';
-        expect(() => { MosaicCLIService.validate(string); } ).to.throws(
+        expect(() => { MosaicService.validate(string); } ).to.throws(
             'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
             ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
     });
