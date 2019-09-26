@@ -34,11 +34,11 @@ export class CommandOptions extends ProfileOptions {
     description: 'Fetch transaction status.',
 })
 export default class extends ProfileCommand {
-    private readonly transactionCLIService: TransactionService;
+    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionService();
+        this.transactionService = new TransactionService();
     }
 
     @metadata
@@ -55,7 +55,7 @@ export default class extends ProfileCommand {
 
         transactionHttp.getTransactionStatus(hash)
             .subscribe((status) => {
-                console.log(this.transactionCLIService.formatTransactionStatus(status));
+                console.log(this.transactionService.formatTransactionStatus(status));
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

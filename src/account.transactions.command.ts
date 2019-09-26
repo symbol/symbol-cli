@@ -22,11 +22,11 @@ import {TransactionService} from './service/transaction.service';
 import {PublicKeyValidator} from './validators/publicKey.validator';
 
 export abstract class AccountTransactionsCommand extends ProfileCommand {
-    public readonly transactionCLIService: TransactionService;
+    public readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionService();
+        this.transactionService = new TransactionService();
     }
 }
 

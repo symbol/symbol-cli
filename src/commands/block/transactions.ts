@@ -55,11 +55,11 @@ export class CommandOptions extends ProfileOptions {
 })
 
 export default class extends ProfileCommand {
-    private readonly transactionCLIService: TransactionService;
+    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionService();
+        this.transactionService = new TransactionService();
     }
 
     @metadata
@@ -96,7 +96,7 @@ export default class extends ProfileCommand {
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
                         txt += '(${index + 1}). ';
-                        txt +=  this.transactionCLIService.formatTransactionToFilter(transaction) + '\n\n';
+                        txt +=  this.transactionService.formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {
                     txt = '[]';

@@ -36,11 +36,11 @@ export class CommandOptions extends ProfileOptions {
     description: 'Get the receipts triggered for a given block height',
 })
 export default class extends ProfileCommand {
-    private readonly receiptCLIService: ReceiptService;
+    private readonly receiptService: ReceiptService;
 
     constructor() {
         super();
-        this.receiptCLIService = new ReceiptService();
+        this.receiptService = new ReceiptService();
     }
 
     @metadata
@@ -59,9 +59,9 @@ export default class extends ProfileCommand {
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
                 let txt = '';
-                txt += this.receiptCLIService.formatTransactionStatements(statement);
-                txt += this.receiptCLIService.formatAddressResolutionStatements(statement);
-                txt += this.receiptCLIService.formatMosaicResolutionStatements(statement);
+                txt += this.receiptService.formatTransactionStatements(statement);
+                txt += this.receiptService.formatAddressResolutionStatements(statement);
+                txt += this.receiptService.formatMosaicResolutionStatements(statement);
                 if ('' === txt) {
                     txt = '[]';
                 }

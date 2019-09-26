@@ -22,11 +22,11 @@ import {TransactionService} from './service/transaction.service';
 import {AddressValidator} from './validators/address.validator';
 
 export abstract class MonitorAddressCommand extends ProfileCommand {
-    public readonly transactionCLIService: TransactionService;
+    public readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionService();
+        this.transactionService = new TransactionService();
     }
 }
 

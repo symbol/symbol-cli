@@ -34,11 +34,11 @@ export class CommandOptions extends ProfileOptions {
     description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
-    private readonly transactionCLIService: TransactionService;
+    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionCLIService = new TransactionService();
+        this.transactionService = new TransactionService();
     }
 
     @metadata
@@ -58,7 +58,7 @@ export default class extends ProfileCommand {
             .subscribe((transaction) => {
                 this.spinner.stop(true);
 
-                console.log('\n' + this.transactionCLIService.formatTransactionToFilter(transaction) + '\n');
+                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction) + '\n');
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

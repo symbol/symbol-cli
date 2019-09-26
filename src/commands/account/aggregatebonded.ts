@@ -48,7 +48,7 @@ export default class extends AccountTransactionsCommand {
                 this.spinner.stop(true);
                 let text = '';
                 transactions.map((transaction) => {
-                    text += this.transactionCLIService.formatTransactionToFilter(transaction) + '\n';
+                    text += this.transactionService.formatTransactionToFilter(transaction) + '\n';
                 });
                 console.log(text === '' ? 'There aren\'t aggregate bonded transaction' : text);
             }, (err) => {
