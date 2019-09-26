@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'nem2-sdk';
+import {Deadline, NamespaceRegistrationTransaction, TransactionHttp, UInt64} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
@@ -103,23 +103,23 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        let registerNamespaceTransaction: RegisterNamespaceTransaction;
+        let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
-            registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(Deadline.create(),
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
                 options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxfee));
         } else {
-            registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(Deadline.create(),
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
                 options.name, options.parentname, profile.networkType, UInt64.fromUint(options.maxfee));
         }
 
-        const signedTransaction = profile.account.sign(registerNamespaceTransaction, profile.networkGenerationHash);
+        const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
 
         const transactionHttp = new TransactionHttp(profile.url);
 
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
             console.log('Hash:   ', signedTransaction.hash);
-            console.log('Signer: ', signedTransaction.signer);
+            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
         }, (err) => {
             this.spinner.stop(true);
             let text = '';

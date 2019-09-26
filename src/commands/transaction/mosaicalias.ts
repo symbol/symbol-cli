@@ -116,7 +116,7 @@ export default class extends ProfileCommand {
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
             console.log('Hash:   ', signedTransaction.hash);
-            console.log('Signer: ', signedTransaction.signer);
+            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
         }, (err) => {
             this.spinner.stop(true);
             let text = '';

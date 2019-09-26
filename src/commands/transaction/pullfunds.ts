@@ -161,7 +161,7 @@ export default class extends ProfileCommand {
                     transactionHttp.announce(lockFundsSignedTransaction).subscribe(() => {
                         console.log(chalk.green('Announce lock funds transaction'));
                         console.log('Hash:   ', lockFundsSignedTransaction.hash);
-                        console.log('Signer: ', lockFundsSignedTransaction.signer, '\n');
+                        console.log('SignerPublicKey: ', lockFundsSignedTransaction.signerPublicKey, '\n');
                         console.log(chalk.green('Waiting for confirmation to announce pull funds transaction\n'));
                     });
                     listener.confirmed(profile.account.address).subscribe((transaction) => {
@@ -169,7 +169,7 @@ export default class extends ProfileCommand {
                             transactionHttp.announceAggregateBonded(signedTransaction).subscribe(() => {
                                 console.log(chalk.green('Pull funds transaction announced'));
                                 console.log('Hash:   ', signedTransaction.hash);
-                                console.log('Signer: ', signedTransaction.signer);
+                                console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
                                 listener.close();
                             }, (err) => {
                                 listener.close();

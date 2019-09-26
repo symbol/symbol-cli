@@ -66,7 +66,7 @@ export default class extends ProfileCommand {
         this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(100))),
+                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount.address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
                     _.transactionInfo.hash === hash), // Filter transaction
