@@ -2,16 +2,18 @@ import { command, metadata, option } from 'clime';
 import {
     Account,
     AccountRestrictionModification,
+    AccountRestrictionModificationAction,
     AccountRestrictionTransaction,
+    AccountRestrictionType,
     Deadline,
     MosaicId,
-    RestrictionModificationType,
-    RestrictionType,
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
 import { OptionsResolver } from '../../options-resolver';
 import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import { ModificationActionValidator } from '../../validators/modificationAction.validator';
+import { RestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -23,12 +25,14 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 't',
         description: 'restriction type (allow / block)',
+        validator: new RestrictionTypeValidator(),
     })
     restrictionType: string;
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove)',
+        validator: new ModificationActionValidator(),
     })
     modificationAction: string;
 
@@ -76,9 +80,9 @@ export default class extends ProfileCommand {
 
         let modificationAction;
         if ('1' === options.modificationAction) {
-            modificationAction = RestrictionModificationType.Add;
+            modificationAction = AccountRestrictionModificationAction.Add;
         } else if ('0' === options.modificationAction) {
-            modificationAction = RestrictionModificationType.Remove;
+            modificationAction = AccountRestrictionModificationAction.Remove;
         } else {
             console.log('Wrong modificationAction. ModificationAction must be one of 1 or 0');
             return;
@@ -86,9 +90,9 @@ export default class extends ProfileCommand {
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = RestrictionType.AllowMosaic;
+            restrictionType = AccountRestrictionType.AllowMosaic;
         } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = RestrictionType.BlockMosaic;
+            restrictionType = AccountRestrictionType.BlockMosaic;
         } else {
             console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
             return;
