@@ -33,7 +33,7 @@ export abstract class MonitorAddressCommand extends ProfileCommand {
 export class MonitorAddressOptions extends ProfileOptions {
     @option({
         flag: 'a',
-        description: 'Address',
+        description: 'Account address.',
         validator: new AddressValidator(),
     })
     address: string;

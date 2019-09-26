@@ -26,7 +26,7 @@ import {HeightValidator} from '../../validators/block.validator';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Block height',
+        description: 'Block height.',
         validator: new HeightValidator(),
     })
     height: number;
@@ -36,9 +36,11 @@ export class CommandOptions extends ProfileOptions {
     description: 'Get the receipts triggered for a given block height',
 })
 export default class extends ProfileCommand {
+    private readonly receiptService: ReceiptService;
 
     constructor() {
         super();
+        this.receiptService = new ReceiptService();
     }
 
     @metadata
@@ -57,10 +59,9 @@ export default class extends ProfileCommand {
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
                 let txt = '';
-                const receiptService = new ReceiptService();
-                txt += receiptService.formatTransactionStatements(statement);
-                txt += receiptService.formatAddressResolutionStatements(statement);
-                txt += receiptService.formatMosaicResolutionStatements(statement);
+                txt += this.receiptService.formatTransactionStatements(statement);
+                txt += this.receiptService.formatAddressResolutionStatements(statement);
+                txt += this.receiptService.formatMosaicResolutionStatements(statement);
                 if ('' === txt) {
                     txt = '[]';
                 }

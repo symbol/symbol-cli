@@ -26,51 +26,49 @@ import {
     MosaicNonce,
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
-    TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Amount of tokens',
+        description: 'Initial supply of mosaics.',
     })
     amount: number;
 
     @option({
         flag: 't',
-        description: 'Mosaic transferable',
+        description: 'Mosaic transferable.',
         toggle: true,
     })
     transferable: any;
 
     @option({
         flag: 's',
-        description: 'Mosaic supply mutable',
+        description: 'Mosaic supply mutable.',
         toggle: true,
     })
-    supplymutable: any;
+    supplyMutable: any;
 
     @option({
         flag: 'r',
-        description: 'Mosaic restrictable',
+        description: 'Mosaic restrictable.',
         toggle: true,
     })
     restrictable: any;
 
     @option({
         flag: 'd',
-        description: 'Mosaic divisibility, from 0 to 6',
+        description: 'Mosaic divisibility, from 0 to 6.',
     })
     divisibility: number;
 
     @option({
         flag: 'u',
-        description: 'Mosaic duration in amount of blocks',
+        description: 'Mosaic duration in amount of blocks.',
     })
     duration: number;
 
@@ -79,14 +77,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Mosaic non-expiring.',
         toggle: true,
     })
-    nonexpiring: any;
-
-    @option({
-        flag: 'f',
-        description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
-    })
-    maxfee: number;
+    nonExpiring: any;
 
 }
 
@@ -94,7 +85,7 @@ export class CommandOptions extends ProfileOptions {
     description: 'Mosaic creation transaction',
 })
 
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -106,7 +97,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
-        if (!options.nonexpiring) {
+        if (!options.nonExpiring) {
             if (!readlineSync.keyInYN('Do you want an non-expiring mosaic?')) {
                 blocksDuration = UInt64.fromUint( OptionsResolver(options,
                     'duration',
@@ -115,8 +106,8 @@ export default class extends ProfileCommand {
             }
         }
 
-        options.maxfee = OptionsResolver(options,
-            'maxfee',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
@@ -131,7 +122,7 @@ export default class extends ProfileCommand {
             nonce,
             MosaicId.createFromNonce(nonce, profile.account.publicAccount),
             MosaicFlags.create(
-                options.supplymutable ? options.supplymutable : readlineSync.keyInYN(
+                options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
                     'Do you want mosaic to have supply mutable?'),
                     options.transferable ? options.transferable : readlineSync.keyInYN(
                         'Do you want mosaic to be transferable?'),
@@ -141,7 +132,7 @@ export default class extends ProfileCommand {
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
             profile.networkType,
-            UInt64.fromUint(options.maxfee),
+            UInt64.fromUint(options.maxFee),
         );
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
@@ -163,24 +154,10 @@ export default class extends ProfileCommand {
             ],
             profile.networkType,
             [],
-            UInt64.fromUint(options.maxfee),
+            UInt64.fromUint(options.maxFee),
         );
         const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
-            console.log(chalk.green('Your mosaic id is:'));
-            console.log('Hex: ', mosaicDefinitionTransaction.mosaicId.toHex());
-            console.log('Uint64: [', mosaicDefinitionTransaction.mosaicId.id.lower, mosaicDefinitionTransaction.mosaicId.id.higher + ']');
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

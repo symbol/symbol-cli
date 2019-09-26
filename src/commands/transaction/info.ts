@@ -25,13 +25,13 @@ import {TransactionService} from '../../service/transaction.service';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Transaction hash',
+        description: 'Transaction hash.',
     })
     hash: string;
 }
 
 @command({
-    description: 'Fetch Transaction info',
+    description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
     private readonly transactionService: TransactionService;
