@@ -15,7 +15,7 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64,} from 'nem2-sdk';
+import {Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
