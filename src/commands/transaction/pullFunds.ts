@@ -42,7 +42,7 @@ import {MosaicValidator} from '../../validators/mosaic.validator';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'r',
-        description: 'Funds holder address',
+        description: 'Funds holder address (recipient)',
         validator: new AddressValidator(),
     })
     recipient: string;
@@ -54,7 +54,7 @@ export class CommandOptions extends ProfileOptions {
     message: string;
 
     @option({
-        flag: 'x',
+        flag: 'M',
         description: 'Mosaic you want to get should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
         validator: new MosaicValidator(),
     })

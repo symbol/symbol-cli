@@ -35,7 +35,7 @@ export class CommandOptions extends Options {
 
     @option({
         flag: 'u',
-        description: '(Optional) When saving profile, provide a NEM2 Node URL. Example: http://localhost:3000',
+        description: 'When saving profile, provide a NEM2 Node URL. Example: http://localhost:3000',
     })
     url: string;
 

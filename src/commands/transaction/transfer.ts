@@ -40,7 +40,7 @@ export class CommandOptions extends ProfileOptions {
     message: string;
 
     @option({
-        flag: 'c',
+        flag: 'M',
         description: 'Mosaic you want to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
         validator: new MosaicsValidator(),
     })

@@ -36,7 +36,7 @@ export class CommandOptions extends ProfileOptions {
     action: number;
 
     @option({
-        flag: 'a',
+        flag: 'A',
         description: 'Address',
         validator: new AddressValidator(),
     })
@@ -70,6 +70,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
+        console.log(options.action, options.address);
         const profile = this.getProfile(options);
 
         options.namespace = OptionsResolver(options,

@@ -16,12 +16,12 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
-import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {TransactionService} from '../../service/transaction.service';
-import {HeightValidator} from '../../validators/block.validator';
+import { command, metadata, option } from 'clime';
+import { BlockHttp, Order, QueryParams } from 'nem2-sdk';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import { TransactionService } from '../../service/transaction.service';
+import { HeightValidator } from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -37,17 +37,17 @@ export class CommandOptions extends ProfileOptions {
     })
     pageSize: number;
 
-@option({
-    flag: 'i',
-    description: 'Id after which we want objects to be returned, defaults to empty',
-})
-id: string;
+    @option({
+        flag: 'i',
+        description: 'Id after which we want objects to be returned, defaults to empty',
+    })
+    id: string;
 
-@option({
-    flag: 'o',
-    description: 'Order of transactions. DESC. Newer to older. ASC. Older to newer. Defaults to DESC',
-})
-order: string;
+    @option({
+        flag: 'o',
+        description: 'Order of transactions. DESC. Newer to older. ASC. Older to newer. Defaults to DESC',
+    })
+    order: string;
 }
 
 @command({
@@ -63,7 +63,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         let height: number;
-        height =  OptionsResolver(options,
+        height = OptionsResolver(options,
             'height',
             () => undefined,
             'Introduce the block height: ');
@@ -75,8 +75,8 @@ export default class extends ProfileCommand {
             pageSize = 100;
         }
 
-        let id: string ;
-        id =  options.id || '';
+        let id: string;
+        id = options.id || '';
 
         let order = options.order;
         if (order !== 'ASC') {
@@ -94,7 +94,7 @@ export default class extends ProfileCommand {
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
                         txt += '(${index + 1}). ';
-                        txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
+                        txt += new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {
                     txt = '[]';
