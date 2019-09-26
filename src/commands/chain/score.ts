@@ -36,7 +36,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         const chainHttp = new ChainHttp(profile.url);
-        chainHttp.getBlockchainScore().subscribe((score) => {
+        chainHttp.getChainScore().subscribe((score) => {
             this.spinner.stop(true);
 
             console.log('Low score: ' + score.scoreLow.compact());

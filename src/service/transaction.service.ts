@@ -16,27 +16,27 @@
  *
  */
 import {
-    AccountAddressRestrictionModificationTransaction,
+    AccountAddressRestrictionTransaction,
     AccountLinkTransaction,
-    AccountMosaicRestrictionModificationTransaction,
-    AccountOperationRestrictionModificationTransaction,
+    AccountMosaicRestrictionTransaction,
+    AccountOperationRestrictionTransaction,
+    AccountRestrictionModificationAction,
+    AccountRestrictionType,
     Address,
     AddressAliasTransaction,
     AggregateTransaction,
-    AliasActionType,
+    AliasAction,
+    CosignatoryModificationAction,
     LinkAction,
     LockFundsTransaction,
-    ModifyMultisigAccountTransaction,
     MosaicAliasTransaction,
     MosaicDefinitionTransaction,
     MosaicId,
+    MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
-    MosaicSupplyType,
-    MultisigCosignatoryModificationType,
-    NamespaceType,
-    RegisterNamespaceTransaction,
-    RestrictionModificationType,
-    RestrictionType,
+    MultisigAccountModificationTransaction,
+    NamespaceRegistrationTransaction,
+    NamespaceRegistrationType,
     SecretLockTransaction,
     SecretProofTransaction,
     Transaction,
@@ -53,10 +53,10 @@ export class TransactionService {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
             transactionFormatted += 'TransferTransaction: Recipient:';
-            if (transaction.recipient instanceof Address) {
-                transactionFormatted += transaction.recipient.pretty();
+            if (transaction.recipientAddress instanceof Address) {
+                transactionFormatted += transaction.recipientAddress.pretty();
             } else {
-                transactionFormatted += transaction.recipient.toHex();
+                transactionFormatted += transaction.recipientAddress.toHex();
             }
             transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
@@ -71,39 +71,39 @@ export class TransactionService {
                 });
                 transactionFormatted = transactionFormatted.substr(0, transactionFormatted.length - 1);
             }
-        } else if (transaction instanceof RegisterNamespaceTransaction) {
-            transactionFormatted += 'RegisterNamespaceTransaction: NamespaceName:' + transaction.namespaceName;
+        } else if (transaction instanceof NamespaceRegistrationTransaction) {
+            transactionFormatted += 'NamespaceRegistrationTransaction: NamespaceName:' + transaction.namespaceName;
 
-            if (transaction.namespaceType === NamespaceType.RootNamespace && transaction.duration !== undefined) {
-                transactionFormatted += ' NamespaceType:RootNamespace Duration:' + transaction.duration.compact();
+            if (transaction.namespaceType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
+                transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.compact();
             } else if (transaction.parentId !== undefined) {
-                transactionFormatted += ' NamespaceType:SubNamespace ParentId:' + transaction.parentId.toHex();
+                transactionFormatted += ' NamespaceRegistrationType:SubNamespace ParentId:' + transaction.parentId.toHex();
             }
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
                 'MosaicName:' + transaction.mosaicId.toHex();
-            if (transaction.mosaicProperties.duration) {
-                transactionFormatted += ' Duration:' + transaction.mosaicProperties.duration.compact();
+            if (transaction.duration) {
+                transactionFormatted += ' Duration:' + transaction.duration.compact();
             }
-            transactionFormatted += ' Divisibility:' + transaction.mosaicProperties.divisibility +
-                ' SupplyMutable:' + transaction.mosaicProperties.supplyMutable +
-                ' Transferable:' + transaction.mosaicProperties.transferable;
+            transactionFormatted += ' Divisibility:' + transaction.divisibility +
+                ' SupplyMutable:' + transaction.flags.supplyMutable +
+                ' Transferable:' + transaction.flags.transferable;
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
-            transactionFormatted += ' Direction:' + (transaction.direction === MosaicSupplyType.Increase ?
+            transactionFormatted += ' Direction:' + (transaction.direction === MosaicSupplyChangeAction.Increase ?
                 'IncreaseSupply' : 'DecreaseSupply');
             transactionFormatted += ' Delta:' + transaction.delta.compact();
 
-        } else if (transaction instanceof ModifyMultisigAccountTransaction) {
-            transactionFormatted += 'ModifyMultisigAccountTransaction:' +
+        } else if (transaction instanceof MultisigAccountModificationTransaction) {
+            transactionFormatted += 'MultisigAccountModificationTransaction:' +
                 ' MinApprovalDelta:' + transaction.minApprovalDelta +
                 ' MinRemovalDelta:' + transaction.minRemovalDelta;
 
             transaction.modifications.map((modification) => {
                 transactionFormatted += ' Type:' +
-                    (modification.type === MultisigCosignatoryModificationType.Add ? 'Add' : 'Remove');
+                    (modification.modificiationType === CosignatoryModificationAction.Add ? 'Add' : 'Remove');
                 transactionFormatted += ' CosignatoryPublicAccount:' + modification.cosignatoryPublicAccount.address.pretty();
             });
 
@@ -137,50 +137,50 @@ export class TransactionService {
                 ' Duration:' + transaction.duration.compact() +
                 ' HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
-                ' Recipient:' + transaction.recipient.pretty();
+                ' Recipient:' + transaction.recipientAddress.pretty();
 
         } else if (transaction instanceof SecretProofTransaction) {
             transactionFormatted += 'SecretProofTransaction: ' +
                 'HashType:' + transaction.hashType +
-                ' Recipient:' + transaction.recipient.pretty() +
+                ' Recipient:' + transaction.recipientAddress.pretty() +
                 ' Secret:' + transaction.secret +
                 ' Proof:' + transaction.proof;
         } else if (transaction instanceof MosaicAliasTransaction) {
             transactionFormatted += 'MosaicAliasTransaction: ' +
-                'AliasAction:' + AliasActionType[transaction.actionType] +
+                'AliasAction:' + AliasAction[transaction.aliasAction] +
                 ' MosaicId:' + transaction.mosaicId.toHex() +
                 ' NamespaceId:' + transaction.namespaceId.toHex();
         } else if (transaction instanceof AddressAliasTransaction) {
             transactionFormatted += 'AddressAliasTransaction: ' +
-                'AliasAction:' + AliasActionType[transaction.actionType] +
+                'AliasAction:' + AliasAction[transaction.aliasAction] +
                 ' Address:' + transaction.address.plain() +
                 ' NamespaceId:' + transaction.namespaceId.toHex();
         } else if (transaction instanceof AccountLinkTransaction) {
             transactionFormatted += 'AccountLinkTransaction: ' +
                 'LinkAction:' + LinkAction[transaction.linkAction] +
-                ' RemoteAccountKey: ' + transaction.remoteAccountKey;
-        } else if (transaction instanceof AccountAddressRestrictionModificationTransaction) {
-            transactionFormatted += 'AccountAddressRestrictionModificationTransaction:' +
-                ' RestrictionType:' + RestrictionType[transaction.restrictionType] +
+                ' RemoteAccountKey: ' + transaction.remotePublicKey;
+        } else if (transaction instanceof AccountAddressRestrictionTransaction) {
+            transactionFormatted += 'AccountAddressRestrictionTransaction:' +
+                ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
                 transaction.modifications.map((modification) => {
                     transactionFormatted += ' modificationType:' +
-                        (modification.modificationType === RestrictionModificationType.Add ? 'Add' : 'Remove');
+                        (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
-        } else if (transaction instanceof AccountMosaicRestrictionModificationTransaction) {
-            transactionFormatted += 'AccountMosaicRestrictionModificationTransaction:' +
-                ' RestrictionType:' + RestrictionType[transaction.restrictionType] +
+        } else if (transaction instanceof AccountMosaicRestrictionTransaction) {
+            transactionFormatted += 'AccountMosaicRestrictionTransaction:' +
+                ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
                 transaction.modifications.map((modification) => {
                     transactionFormatted += ' modificationType:' +
-                        (modification.modificationType === RestrictionModificationType.Add ? 'Add' : 'Remove');
+                        (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
-        } else if (transaction instanceof AccountOperationRestrictionModificationTransaction) {
-            transactionFormatted += 'AccountOperationRestrictionModificationTransaction:' +
-                ' RestrictionType:' + RestrictionType[transaction.restrictionType] +
+        } else if (transaction instanceof AccountOperationRestrictionTransaction) {
+            transactionFormatted += 'AccountOperationRestrictionTransaction:' +
+                ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
                 transaction.modifications.map((modification) => {
                     transactionFormatted += ' modificationType:' +
-                        (modification.modificationType === RestrictionModificationType.Add ? 'Add' : 'Remove');
+                        (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
         }
