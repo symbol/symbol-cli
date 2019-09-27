@@ -67,7 +67,7 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Configure an account',
+    description: 'Create a new profile',
 })
 
 export default class extends Command {
