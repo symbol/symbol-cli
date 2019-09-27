@@ -15,61 +15,42 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransactionHttp, TransferTransaction, UInt64} from 'nem2-sdk';
+import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransferTransaction, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicService} from '../../service/mosaic.service';
 import {AddressValidator} from '../../validators/address.validator';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
-        description: 'Recipient (address or @alias)',
+        description: 'Recipient address or @alias.',
         validator: new AddressValidator(),
     })
     recipient: string;
 
     @option({
         flag: 'm',
-        description: 'Transaction message',
+        description: 'Transaction message.',
     })
     message: string;
 
     @option({
         flag: 'c',
-        description: 'Mosaic you want to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount',
+        description: 'Mosaic to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount. Add multiple mosaics with commas.',
         validator: new MosaicsValidator(),
     })
     mosaics: string;
 
-    @option({
-        flag: 'f',
-        description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
-    })
-    maxfee: number;
-
-    getMosaics(): Mosaic[] {
-        const mosaics: Mosaic[] = [];
-        const mosaicsData = this.mosaics.split(',');
-        mosaicsData.forEach((mosaicData) => {
-            const mosaicParts = mosaicData.split('::');
-            mosaics.push(new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1])));
-        });
-        return mosaics;
-    }
 }
 
 @command({
     description: 'Send transfer transaction',
 })
 
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -84,17 +65,17 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the recipient address: '));
         if (recipient instanceof Address && recipient.networkType !== profile.networkType) {
-            throw new ExpectedError('recipient network doesn\'t match network option');
+            throw new ExpectedError('The recipient address network doesn\'t match network option.');
         }
 
         let mosaics: Mosaic[] = [];
         options.mosaics = OptionsResolver(options,
             'mosaics',
             () => undefined,
-            'Mosaics you want to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-            ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas:\n> ');
+            'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+            ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: > ');
         if (options.mosaics) {
-            mosaics = options.getMosaics();
+            mosaics = MosaicService.getMosaics(options.mosaics);
         }
 
         let message: string;
@@ -103,27 +84,15 @@ export default class extends ProfileCommand {
             () => undefined,
             'Introduce the message: ');
 
-        options.maxfee = OptionsResolver(options,
-            'maxfee',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
-            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxfee));
+            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxFee));
 
         const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

@@ -27,6 +27,24 @@ export class MosaicService {
 
     }
 
+    static validate(value: string) {
+        const mosaicParts = value.split('::');
+        let valid = true;
+        try {
+            if (isNaN(+mosaicParts[1])) {
+                valid = false;
+            }
+            const ignored = new Mosaic(this.getMosaicId(mosaicParts[0]),
+                UInt64.fromUint(+mosaicParts[1]));
+        } catch (err) {
+            valid = false;
+        }
+        if (!valid) {
+            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
+        }
+    }
+
     static getRecipient(rawRecipient: string): Address | NamespaceId {
         let recipient: Address | NamespaceId;
         if (rawRecipient.charAt(0) === MosaicService.ALIAS_TAG) {
@@ -51,21 +69,14 @@ export class MosaicService {
         return mosaicId;
     }
 
-    static validate(value: string) {
-        const mosaicParts = value.split('::');
-        let valid = true;
-        try {
-            if (isNaN(+mosaicParts[1])) {
-                valid = false;
-            }
-            const ignored = new Mosaic(MosaicService.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1]));
-        } catch (err) {
-            valid = false;
-        }
-        if (!valid) {
-            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
-        }
+    static getMosaics(rawMosaics: string): Mosaic[] {
+        const mosaics: Mosaic[] = [];
+        const mosaicsData = rawMosaics.split(',');
+        mosaicsData.forEach((mosaicData) => {
+            const mosaicParts = mosaicData.split('::');
+            mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
+                UInt64.fromUint(+mosaicParts[1])));
+        });
+        return mosaics;
     }
 }
