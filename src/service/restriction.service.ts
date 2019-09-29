@@ -6,7 +6,7 @@ export class MosaicService {
 
     }
 
-    public static getMosaicRestrictionType(type: number): MosaicRestrictionType{
+    public static getMosaicRestrictionType(type: number): MosaicRestrictionType {
         let restrictionType;
         switch (type) {
             case 0: restrictionType = MosaicRestrictionType.NONE; break;
