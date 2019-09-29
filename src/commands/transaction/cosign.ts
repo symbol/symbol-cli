@@ -56,7 +56,7 @@ export default class extends ProfileCommand {
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
 
-        const hash = OptionsResolver(options,
+        options.hash = OptionsResolver(options,
             'hash',
             () => undefined,
             'Introduce aggregate bonded transaction hash to be signed: ');
@@ -69,7 +69,7 @@ export default class extends ProfileCommand {
                 mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount.address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-                    _.transactionInfo.hash === hash), // Filter transaction
+                    _.transactionInfo.hash === options.hash), // Filter transaction
                 toArray(),
             )
             .subscribe((transactions: AggregateTransaction[]) => {

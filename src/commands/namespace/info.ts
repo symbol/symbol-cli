@@ -18,10 +18,11 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {Namespace, NamespaceHttp, NamespaceId, NamespaceService, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -32,7 +33,8 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'h',
-        description: 'Namespace id in hexadecimal. Example: 85BBEA6CC462B244',
+        description: 'Namespace id in hexadecimal.',
+        validator: new NamespaceIdValidator(),
     })
     hex: string;
 }
@@ -94,27 +96,20 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const profile = this.getProfile(options);
 
-        if (!options.hex) {
-        options.name = OptionsResolver(options,
-            'name',
-            () => undefined,
-            'Introduce the namespace name: ');
-        }
-        if (options.name === '') {
-            options.hex = OptionsResolver(options,
-                'uint',
-                () => undefined,
-                'Introduce the namespace id in hexadecimal: ');
-        }
-
         let namespaceId: NamespaceId;
         if (options.name) {
+            options.name = OptionsResolver(options,
+                'name',
+                () => undefined,
+                'Introduce the namespace name: ');
             namespaceId = new NamespaceId(options.name);
-        } else if (options.hex) {
+        } else {
+            options.hex = OptionsResolver(options,
+                'hex',
+                () => undefined,
+                'Introduce the namespace id in hexadecimal: ');
             const namespaceIdUInt64 = UInt64.fromHex(options.hex);
             namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
-        } else {
-            throw new ExpectedError('Introduce a valid namespace name. Example: cat.currency');
         }
 
         const namespaceHttp = new NamespaceHttp(profile.url);
