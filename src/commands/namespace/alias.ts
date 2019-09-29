@@ -17,27 +17,23 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk';
-import {mergeMap, toArray} from 'rxjs/operators';
+import {NamespaceHttp, NamespaceId} from 'nem2-sdk';
+import {forkJoin, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
-import {NamespaceInfoTable} from './info';
 
 export class CommandOptions extends ProfileOptions {
-
     @option({
-        flag: 'a',
-        description: 'Address',
-        validator: new AddressValidator(),
+        flag: 'n',
+        description: 'Namespace name.',
     })
-    address: string;
+    name: string;
 }
 
 @command({
-    description: 'Get owned namespaces',
+    description: 'Get mosaicId or address behind an namespace',
 })
-
 export default class extends ProfileCommand {
 
     constructor() {
@@ -46,31 +42,28 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => this.getProfile(options).account.address.plain(),
-                'Introduce the address: '));
-        const namespaceHttp = new NamespaceHttp(profile.url);
-        const namespaceService = new NamespaceService(namespaceHttp);
         this.spinner.start();
-        namespaceHttp.getNamespacesFromAccount(address)
-            .pipe(
-                mergeMap((_) => _),
-                mergeMap((namespaceInfo: NamespaceInfo) => namespaceService.namespace(namespaceInfo.id)),
-                toArray(),
-            )
-            .subscribe((namespaces) => {
+        const profile = this.getProfile(options);
+
+        options.name = OptionsResolver(options,
+            'name',
+            () => undefined,
+            'Introduce the namespace name: ');
+        const namespaceId = new NamespaceId(options.name);
+
+        const namespaceHttp = new NamespaceHttp(profile.url);
+        forkJoin(
+            namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError((ignored) => of(null))),
+            namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError((ignored) => of(null))),
+        ).subscribe((res) => {
                 this.spinner.stop(true);
-
-                if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces');
+                if (res[0]) {
+                    console.log('\n' + res[0].toHex());
+                } else if (res[1]) {
+                    console.log('\n' + res[1].pretty() );
+                } else {
+                    console.log('\nThe namespace is not linked with a mosaic or address.');
                 }
-                namespaces.map((namespace) => {
-                    console.log(new NamespaceInfoTable(namespace).toString());
-                });
-
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
