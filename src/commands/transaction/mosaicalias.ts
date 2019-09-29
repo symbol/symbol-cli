@@ -19,6 +19,7 @@ import {Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'n
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -30,9 +31,10 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'm',
-        description: 'Mosaic id in in hexadecimal format. Example: 941299B2B7E1291C.',
+        description: 'Mosaic id in hexadecimal format.',
+        validator: new MosaicIdValidator(),
     })
-    mosaic: string;
+    mosaicId: string;
 
     @option({
         flag: 'n',
@@ -60,24 +62,27 @@ export default class extends AnnounceTransactionsCommand {
             'namespace',
             () => undefined,
             'Introduce namespace name: ');
-        options.mosaic = OptionsResolver(options,
-                'mosaic',
+        const namespaceId = new NamespaceId(options.namespace);
+
+        options.action = OptionsResolver(options,
+            'action',
+            () => undefined,
+            'Introduce alias action (1: Link, 0: Unlink): ');
+
+        options.mosaicId = OptionsResolver(options,
+                'mosaicId',
                 () => undefined,
                 'Introduce mosaic in hexadecimal format: ');
+        const mosaicId = new MosaicId(options.mosaicId);
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const mosaicId = new MosaicId(options.mosaic);
-        const namespaceId = new NamespaceId(options.namespace);
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            OptionsResolver(options,
-                'action',
-                () => undefined,
-                'Introduce alias action (1: Link, 0: Unlink): '),
+            options.action,
             namespaceId,
             mosaicId,
             profile.networkType,

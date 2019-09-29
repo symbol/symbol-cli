@@ -45,8 +45,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        let height: number;
-        height =  OptionsResolver(options,
+        options.height =  OptionsResolver(options,
             'height',
             () => undefined,
             'Introduce the block height: ');
@@ -55,7 +54,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
 
-        blockHttp.getBlockReceipts(height)
+        blockHttp.getBlockReceipts(options.height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
                 let txt = '';

@@ -1,5 +1,4 @@
 /*
- *
  * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,65 +15,81 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {Deadline, MosaicId, MosaicSupplyChangeTransaction, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'p',
-        description: 'Remote account public key.',
-        validator: new PublicKeyValidator(),
-    })
-    publicKey: string;
-
-    @option({
         flag: 'a',
-        description: 'Alias action (1: Link, 0: Unlink).',
+        description: 'Mosaic supply change action (1: Increase, 0: Decrease).',
         validator: new BinaryValidator(),
     })
     action: number;
+
+    @option({
+        flag: 'm',
+        description: 'Mosaic id in hexadecimal format.',
+        validator: new MosaicIdValidator(),
+    })
+    mosaicId: string;
+
+    @option({
+        flag: 'd',
+        description: 'Atomic amount of supply change.',
+        validator: new NumericStringValidator(),
+    })
+    delta: string;
 }
 
 @command({
-    description: 'Delegate the account importance to a proxy account',
+    description: 'Change a mosaic supply',
 })
+
 export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
     }
+
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        options.publicKey = OptionsResolver(options,
-            'publicKey',
+        options.mosaicId = OptionsResolver(options,
+            'mosaicId',
             () => undefined,
-            'Introduce the public key of the remote account: ');
+            'Introduce mosaic in hexadecimal format: ');
+        const mosaicId = new MosaicId(options.mosaicId);
 
         options.action = OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce alias action (1: Link, 0: Unlink): ');
+            'Introduce supply change action (1: Increase, 0: Decrease): ');
+
+        options.delta = OptionsResolver(options,
+            'delta',
+            () => undefined,
+            'Introduce atomic amount of supply change: ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const accountLinkTransaction = AccountLinkTransaction.create(
+        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
-            options.publicKey,
+            mosaicId,
             options.action,
+            UInt64.fromNumericString(options.delta),
             profile.networkType,
             UInt64.fromUint(options.maxFee),
         );
 
-        const signedTransaction = profile.account.sign(accountLinkTransaction,
-            profile.networkGenerationHash);
+        const signedTransaction = profile.account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }
