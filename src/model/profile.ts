@@ -36,7 +36,7 @@ export class Profile {
             ['Network', NetworkType[this.networkType]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
-            ['Address', this.account.address.plain()],
+            ['Address', this.account.address.pretty()],
             ['Public Key', this.account.publicKey],
             ['Private Key', this.account.privateKey],
         );

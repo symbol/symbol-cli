@@ -56,8 +56,21 @@ export class NamespaceInfoTable {
         );
         if (namespace.isSubnamespace()) {
             this.table.push(
-                ['Parent Id', 'namespace.parentNamespaceId().toHex()'],
+                ['Parent Id', namespace.parentNamespaceId().toHex()],
             );
+        }
+        if (namespace.hasAlias()) {
+            if (namespace.alias.address) {
+                this.table.push(
+                    ['Alias Type', 'Address'],
+                    ['Alias Address', namespace.alias.address.pretty()],
+                );
+            } else if (namespace.alias.mosaicId) {
+                this.table.push(
+                    ['Alias Type', 'MosaicId'],
+                    ['Alias MosaicId', namespace.alias.mosaicId.toHex()],
+                );
+            }
         }
     }
 
