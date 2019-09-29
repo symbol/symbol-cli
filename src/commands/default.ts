@@ -46,6 +46,10 @@ export const subcommands = [
         brief: 'Get node diagnostics reports',
     },
     {
+        name: 'monitor',
+        brief: 'Monitor blocks, transactions and errors',
+    },
+    {
         name: 'mosaic',
         brief: 'Get mosaic related information',
     },
@@ -54,15 +58,15 @@ export const subcommands = [
         brief: 'Get namespace related information',
     },
     {
-        name: 'transaction',
-        brief: 'Announce transactions',
-    },
-    {
-        name: 'monitor',
-        brief: 'Monitor blocks, transactions and errors',
-    },
-    {
         name: 'profile',
         brief: 'Manage profiles',
+    },
+    {
+        name: 'restriction',
+        brief: 'Get restrictions related information',
+    },
+    {
+        name: 'transaction',
+        brief: 'Announce transactions',
     },
 ];
