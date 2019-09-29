@@ -43,7 +43,7 @@ export class CommandOptions extends Options {
 
     @option({
         flag: 'u',
-        description: 'NEM2 Node URL. Example: http://localhost:3000.',
+        description: 'NEM2 Node URL. Example: http://localhost:3000',
     })
     url: string;
 

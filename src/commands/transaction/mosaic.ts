@@ -77,7 +77,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'n',
-        description: 'Mosaic non-expiring.',
+        description: '(Optional) Mosaic non-expiring.',
         toggle: true,
     })
     nonExpiring: any;
