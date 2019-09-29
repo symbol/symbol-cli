@@ -158,7 +158,7 @@ export class TransactionService {
         } else if (transaction instanceof AddressAliasTransaction) {
             transactionFormatted += 'AddressAliasTransaction: ' +
                 'AliasAction:' + AliasAction[transaction.aliasAction] +
-                ' Address:' + transaction.address.plain() +
+                ' Address:' + transaction.address.pretty() +
                 ' NamespaceId:' + transaction.namespaceId.toHex();
         } else if (transaction instanceof AccountLinkTransaction) {
             transactionFormatted += 'AccountLinkTransaction: ' +
