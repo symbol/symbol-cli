@@ -18,17 +18,17 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'h',
+        flag: 'm',
         description: 'Mosaic id in hexadecimal format. Example: 941299B2B7E1291C',
     })
-    hex: string;
+    mosaicId: string;
 }
 
 export class MosaicViewTable {
@@ -74,18 +74,11 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        if (!options.hex) {
-            options.hex = OptionsResolver(options,
-                'hex',
-                () => undefined,
-                'Introduce the mosaic id in hexadecimal format: ');
-        }
-        let mosaicId: MosaicId;
-        if (options.hex) {
-            mosaicId = new MosaicId(options.hex);
-        } else {
-            throw new ExpectedError('Introduce a mosaicId. Example: 941299B2B7E1291C');
-        }
+        options.mosaicId = OptionsResolver(options,
+            'mosaicId',
+            () => undefined,
+            'Introduce the mosaic id in hexadecimal format: ');
+        const mosaicId = new MosaicId(options.mosaicId);
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),

@@ -32,7 +32,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'a',
-        description: 'Alias action (1: Add, 0: Remove).',
+        description: 'Alias action (1: Link, 0: Unlink).',
         validator: new BinaryValidator(),
     })
     action: number;
@@ -58,7 +58,7 @@ export default class extends AnnounceTransactionsCommand {
         options.action = OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce alias action (1: Add, 0: Remove): ');
+            'Introduce alias action (1: Link, 0: Unlink): ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',

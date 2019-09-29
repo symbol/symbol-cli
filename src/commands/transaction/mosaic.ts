@@ -31,31 +31,33 @@ import {
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Initial supply of mosaics.',
+        validator: new NumericStringValidator(),
     })
-    amount: number;
+    amount: string;
 
     @option({
         flag: 't',
-        description: 'Mosaic transferable.',
+        description: '(Optional) Mosaic transferable.',
         toggle: true,
     })
     transferable: any;
 
     @option({
         flag: 's',
-        description: 'Mosaic supply mutable.',
+        description: '(Optional) Mosaic supply mutable.',
         toggle: true,
     })
     supplyMutable: any;
 
     @option({
         flag: 'r',
-        description: 'Mosaic restrictable.',
+        description: '(Optional) Mosaic restrictable.',
         toggle: true,
     })
     restrictable: any;
@@ -69,8 +71,9 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: 'Mosaic duration in amount of blocks.',
+        validator: new NumericStringValidator(),
     })
-    duration: number;
+    duration: string;
 
     @option({
         flag: 'n',
@@ -99,50 +102,53 @@ export default class extends AnnounceTransactionsCommand {
         let blocksDuration;
         if (!options.nonExpiring) {
             if (!readlineSync.keyInYN('Do you want an non-expiring mosaic?')) {
-                blocksDuration = UInt64.fromUint( OptionsResolver(options,
+                blocksDuration = UInt64.fromNumericString(OptionsResolver(options,
                     'duration',
                     () => undefined,
                     'Introduce the duration in blocks: '));
             }
         }
 
+        options.divisibility = OptionsResolver(options,
+            'divisibility',
+            () => undefined,
+            'Introduce mosaic divisibility: ');
+
+        const mosaicFlags = MosaicFlags.create(
+            options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
+                'Do you want mosaic to have supply mutable?'),
+            options.transferable ? options.transferable : readlineSync.keyInYN(
+                'Do you want mosaic to be transferable?'),
+            options.restrictable ? options.restrictable : readlineSync.keyInYN(
+                'Do you want mosaic to be restrictable?'),
+        );
+
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        if (undefined === options.divisibility) {
-            options.divisibility = OptionsResolver(options,
-                'divisibility',
-                () => undefined,
-                'Introduce mosaic divisibility: ');
-        }
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
             MosaicId.createFromNonce(nonce, profile.account.publicAccount),
-            MosaicFlags.create(
-                options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
-                    'Do you want mosaic to have supply mutable?'),
-                    options.transferable ? options.transferable : readlineSync.keyInYN(
-                        'Do you want mosaic to be transferable?'),
-                options.restrictable ? options.restrictable : readlineSync.keyInYN(
-                    'Do you want mosaic to be restrictable?'),
-            ),
+            mosaicFlags,
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
             profile.networkType,
             UInt64.fromUint(options.maxFee),
         );
 
+        options.amount = OptionsResolver(options,
+            'amount',
+            () => undefined,
+            'Introduce amount of tokens: ');
+
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicDefinitionTransaction.mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromUint(OptionsResolver(options,
-                'amount',
-                () => undefined,
-                'Introduce amount of tokens: ')),
+            UInt64.fromNumericString(options.amount),
             profile.networkType,
         );
 
