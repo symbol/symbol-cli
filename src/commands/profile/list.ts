@@ -28,7 +28,7 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Display the list of accounts stored as profiles',
+    description: 'Display the list of stored profiles',
 })
 
 export default class extends Command {

@@ -78,7 +78,7 @@ export class TransactionService {
         } else if (transaction instanceof NamespaceRegistrationTransaction) {
             transactionFormatted += 'NamespaceRegistrationTransaction: NamespaceName:' + transaction.namespaceName;
 
-            if (transaction.namespaceType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
+            if (transaction.registrationType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.compact();
             } else if (transaction.parentId !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:SubNamespace ParentId:' + transaction.parentId.toHex();

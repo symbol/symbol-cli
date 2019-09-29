@@ -35,7 +35,7 @@ import {ProfileCommand, ProfileOptions} from '../../profile.command';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Aggregate bonded transaction hash to be signed',
+        description: 'Aggregate bonded transaction hash to be signed.',
     })
     hash: string;
 }

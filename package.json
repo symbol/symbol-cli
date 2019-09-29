@@ -42,7 +42,7 @@
         "cli-table": "^0.3.1",
         "cli-table3": "^0.5.1",
         "clime": "^0.5.9",
-        "nem2-sdk": "0.13.2",
+        "nem2-sdk": "^0.13.3",
         "path": "^0.12.7",
         "readline-sync": "^1.4.9",
         "rxjs": "^6.2.1"
