@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ValidationContext, Validator} from 'clime';
+import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {MosaicService} from '../service/mosaic.service';
 
 export class MosaicValidator implements Validator<string> {
@@ -30,5 +30,15 @@ export class MosaicsValidator implements Validator<string> {
         mosaics.forEach((mosaic) => {
             MosaicService.validate(mosaic);
         });
+    }
+}
+
+export class MosaicRestrictionType implements Validator<number> {
+    validate(value: number, context: ValidationContext): void {
+        const limitValue = [0, 1, 2, 3, 4, 5, 6];
+        console.log(value + typeof value);
+        if (!limitValue.includes(value)) {
+            throw new ExpectedError('Wrong mosaic restriction type');
+        }
     }
 }
