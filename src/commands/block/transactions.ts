@@ -33,21 +33,21 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 's',
-        description: 'Page size between 10 and 100, defaults to 10',
+        description: '(Optional) Page size between 10 and 100. Default: 10',
     })
     pageSize: number;
 
-@option({
-    flag: 'i',
-    description: 'Id after which we want objects to be returned, defaults to empty',
-})
-id: string;
+    @option({
+        flag: 'i',
+        description: '(Optional) Id after which we want objects to be returned.',
+    })
+    id: string;
 
-@option({
-    flag: 'o',
-    description: 'Order of transactions. DESC. Newer to older. ASC. Older to newer. Defaults to DESC',
-})
-order: string;
+    @option({
+        flag: 'o',
+        description: '(Optional): Order of transactions. DESC. Newer to older. ASC. Older to newer. Default: DESC',
+    })
+    order: string;
 }
 
 @command({
@@ -55,9 +55,11 @@ order: string;
 })
 
 export default class extends ProfileCommand {
+    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
+        this.transactionService = new TransactionService();
     }
 
     @metadata
@@ -94,7 +96,7 @@ export default class extends ProfileCommand {
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
                         txt += '(${index + 1}). ';
-                        txt +=  new TransactionService().formatTransactionToFilter(transaction) + '\n\n';
+                        txt +=  this.transactionService.formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {
                     txt = '[]';

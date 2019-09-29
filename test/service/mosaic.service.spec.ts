@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {Address, MosaicId, NamespaceId} from 'nem2-sdk';
+import {Address, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 import {MosaicService} from '../../src/service/mosaic.service';
 
 describe('Mosaic service', () => {
@@ -29,6 +29,16 @@ describe('Mosaic service', () => {
     it('getMosaicId (hex) should return a MosaicId', () => {
         const rawMosaicId = '175785202c44e5db';
         expect(MosaicService.getMosaicId(rawMosaicId)).to.be.instanceOf(MosaicId);
+    });
+
+    it('getMosaics should return an array of mosaics', () => {
+        const rawMosaics = '175785202c44e5db::1,@foo2::2';
+        const mosaics = MosaicService.getMosaics(rawMosaics);
+        expect(mosaics.length).to.be.equal(2);
+        expect(mosaics[0].id.toHex()).to.be.equal('175785202c44e5db'.toUpperCase());
+        expect(mosaics[0].amount.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
+        expect(mosaics[1].id.toHex()).to.be.equal(new NamespaceId('foo2').toHex());
+        expect(mosaics[1].amount.toHex()).to.be.equal(UInt64.fromUint(2).toHex());
     });
 
     it('getRecipient should return an alias', () => {

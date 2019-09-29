@@ -14,54 +14,40 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import {command, ExpectedError, metadata, option} from 'clime';
-import {
-    Address,
-    AddressAliasTransaction,
-    Deadline,
-    NamespaceId,
-    TransactionHttp, UInt64,
-} from 'nem2-sdk';
+import {Address, AddressAliasTransaction, Deadline, NamespaceId, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
+import {BinaryValidator} from '../../validators/binary.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Alias action (0: Link, 1: Unlink)',
+        description: 'Alias action (1: Link, 0: Unlink).',
+        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'a',
-        description: 'Address',
+        description: 'Account address.',
         validator: new AddressValidator(),
     })
     address: string;
 
     @option({
         flag: 'n',
-        description: 'Namespace name',
+        description: 'Namespace name.',
     })
     namespace: string;
-
-    @option({
-        flag: 'f',
-        description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
-    })
-    maxfee: number;
-
 }
 
 @command({
     description: 'Set an alias to a mosaic',
 })
 
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -71,30 +57,20 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
 
         const profile = this.getProfile(options);
-
         options.namespace = OptionsResolver(options,
             'namespace',
             () => undefined,
             'Introduce namespace name: ');
-
-        const address: Address = Address.createFromRawAddress(OptionsResolver(options,
+        const namespaceId = new NamespaceId(options.namespace);
+        const address = Address.createFromRawAddress(OptionsResolver(options,
             'recipient',
             () => undefined,
             'Introduce the address: '));
-
-        if (address instanceof Address && address.networkType !== profile.networkType) {
-            throw new ExpectedError('address network doesn\'t match network option');
+        if (address.networkType !== profile.networkType) {
+            throw new ExpectedError('The address network doesn\'t match network option.');
         }
-
-        let namespaceId: NamespaceId;
-        if (options.namespace) {
-            namespaceId = new NamespaceId(options.namespace);
-        } else {
-            throw new ExpectedError('You need to introduce namespace id.');
-        }
-
-        options.maxfee = OptionsResolver(options,
-            'maxfee',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
@@ -103,24 +79,13 @@ export default class extends ProfileCommand {
             OptionsResolver(options,
                 'action',
                 () => undefined,
-                'Introduce alias action (0: Link, 1: Unlink): '),
+                'Introduce alias action (1: Link, 0: Unlink): '),
             namespaceId,
             address,
             profile.networkType,
-            UInt64.fromUint(options.maxfee),
+            UInt64.fromUint(options.maxFee),
         );
         const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

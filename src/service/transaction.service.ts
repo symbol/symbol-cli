@@ -15,6 +15,9 @@
  * limitations under the License.
  *
  */
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {
     AccountAddressRestrictionTransaction,
     AccountLinkTransaction,
@@ -40,6 +43,7 @@ import {
     SecretLockTransaction,
     SecretProofTransaction,
     Transaction,
+    TransactionStatus,
     TransferTransaction,
 } from 'nem2-sdk';
 
@@ -52,7 +56,7 @@ export class TransactionService {
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
-            transactionFormatted += 'TransferTransaction: Recipient:';
+            transactionFormatted += 'TransferTransaction: RecipientAddress:';
             if (transaction.recipientAddress instanceof Address) {
                 transactionFormatted += transaction.recipientAddress.pretty();
             } else {
@@ -74,7 +78,7 @@ export class TransactionService {
         } else if (transaction instanceof NamespaceRegistrationTransaction) {
             transactionFormatted += 'NamespaceRegistrationTransaction: NamespaceName:' + transaction.namespaceName;
 
-            if (transaction.namespaceType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
+            if (transaction.registrationType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.compact();
             } else if (transaction.parentId !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:SubNamespace ParentId:' + transaction.parentId.toHex();
@@ -82,13 +86,14 @@ export class TransactionService {
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
-                'MosaicName:' + transaction.mosaicId.toHex();
+                'MosaicId:' + transaction.mosaicId.toHex();
             if (transaction.duration) {
                 transactionFormatted += ' Duration:' + transaction.duration.compact();
             }
             transactionFormatted += ' Divisibility:' + transaction.divisibility +
                 ' SupplyMutable:' + transaction.flags.supplyMutable +
-                ' Transferable:' + transaction.flags.transferable;
+                ' Transferable:' + transaction.flags.transferable +
+                ' Restrictable:' + transaction.flags.restrictable;
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
@@ -115,7 +120,7 @@ export class TransactionService {
             }
 
             transaction.cosignatures.map((cosignature) => {
-                transactionFormatted += ' Signer:' + cosignature.signer.address.pretty();
+                transactionFormatted += ' SignerPublicKey:' + cosignature.signer.address.pretty();
             });
 
             if (transaction.innerTransactions.length > 0) {
@@ -137,12 +142,12 @@ export class TransactionService {
                 ' Duration:' + transaction.duration.compact() +
                 ' HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
-                ' Recipient:' + transaction.recipientAddress.pretty();
+                ' RecipientAddress:' + transaction.recipientAddress.pretty();
 
         } else if (transaction instanceof SecretProofTransaction) {
             transactionFormatted += 'SecretProofTransaction: ' +
                 'HashType:' + transaction.hashType +
-                ' Recipient:' + transaction.recipientAddress.pretty() +
+                ' RecipientAddress:' + transaction.recipientAddress.pretty() +
                 ' Secret:' + transaction.secret +
                 ' Proof:' + transaction.proof;
         } else if (transaction instanceof MosaicAliasTransaction) {
@@ -163,7 +168,7 @@ export class TransactionService {
             transactionFormatted += 'AccountAddressRestrictionTransaction:' +
                 ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
                 transaction.modifications.map((modification) => {
-                    transactionFormatted += ' modificationType:' +
+                    transactionFormatted += ' modificationAction:' +
                         (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
@@ -171,7 +176,7 @@ export class TransactionService {
             transactionFormatted += 'AccountMosaicRestrictionTransaction:' +
                 ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
                 transaction.modifications.map((modification) => {
-                    transactionFormatted += ' modificationType:' +
+                    transactionFormatted += ' modificationAction:' +
                         (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
@@ -179,14 +184,41 @@ export class TransactionService {
             transactionFormatted += 'AccountOperationRestrictionTransaction:' +
                 ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
                 transaction.modifications.map((modification) => {
-                    transactionFormatted += ' modificationType:' +
+                    transactionFormatted += ' modificationAction:' +
                         (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
         }
-        transactionFormatted += (transaction.signer ? ' Signer:' + transaction.signer.address.pretty() : '') +
+        transactionFormatted += (transaction.signer ? ' SignerPublicKey:' + transaction.signer.address.pretty() : '') +
             ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +
             (transaction.transactionInfo && transaction.transactionInfo.hash ? ' Hash:' + transaction.transactionInfo.hash : '');
         return transactionFormatted;
+    }
+
+    public formatTransactionStatus(status: TransactionStatus) {
+
+        const table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        let text = '';
+        text += '\n\n' + chalk.green('Transaction Status') + '\n';
+        table.push(
+            ['Group', status.group],
+            ['Status', status.status],
+            ['Hash', status.hash],
+        );
+        if (status.deadline) {
+            table.push(
+                ['Deadline', status.deadline.value.toString()],
+            );
+        }
+        if (status.height && status.height.compact() > 0 ) {
+            table.push(
+                ['Height', status.height.compact().toString()],
+            );
+        }
+        text += table.toString();
+        return text;
     }
 }

@@ -16,12 +16,35 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {command, metadata} from 'clime';
-import {DiagnosticHttp} from 'nem2-sdk';
+import {DiagnosticHttp, ServerInfo} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
+export class ServerInfoTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly serverInfo: ServerInfo) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Rest Version', serverInfo.restVersion],
+            ['SDK Version', serverInfo.sdkVersion],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Server Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
+
 @command({
-    description: 'Returns the version of the running rest component',
+    description: 'Returns the REST server components versions',
 })
 export default class extends ProfileCommand {
 
@@ -40,8 +63,7 @@ export default class extends ProfileCommand {
         diagnosticHttp.getServerInfo()
             .subscribe((serverInfo) => {
                 this.spinner.stop(true);
-                console.log('restVersion: ' + serverInfo.restVersion);
-                console.log('sdkVersion: ' + serverInfo.sdkVersion);
+                console.log(new ServerInfoTable(serverInfo).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

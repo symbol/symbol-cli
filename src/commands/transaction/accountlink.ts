@@ -15,40 +15,33 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, TransactionHttp, UInt64} from 'nem2-sdk';
+import {AccountLinkTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
+import {BinaryValidator} from '../../validators/binary.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'p',
-        description: 'Public key of the remote account',
+        description: 'Remote account public key.',
         validator: new PublicKeyValidator(),
     })
-    publickey: string;
+    publicKey: string;
 
     @option({
         flag: 'a',
-        description: 'Alias action (0: Add, 1: Remove)',
+        description: 'Alias action (1: Add, 0: Remove).',
+        validator: new BinaryValidator(),
     })
     action: number;
-
-    @option({
-        flag: 'f',
-        description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
-    })
-    maxfee: number;
 }
 
 @command({
     description: 'Delegate the account importance to a proxy account',
 })
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -57,42 +50,31 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        options.publickey = OptionsResolver(options,
-            'publickey',
+        options.publicKey = OptionsResolver(options,
+            'publicKey',
             () => undefined,
             'Introduce the public key of the remote account: ');
 
         options.action = OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce alias action (0: Add, 1: Remove): ');
+            'Introduce alias action (1: Add, 0: Remove): ');
 
-        options.maxfee = OptionsResolver(options,
-            'maxfee',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
-            options.publickey,
+            options.publicKey,
             options.action,
             profile.networkType,
-            UInt64.fromUint(options.maxfee),
+            UInt64.fromUint(options.maxFee),
         );
 
         const signedTransaction = profile.account.sign(accountLinkTransaction,
             profile.networkGenerationHash);
-        const transactionHttp = new TransactionHttp(profile.url);
-
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

@@ -28,7 +28,7 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Display a list of account',
+    description: 'Display the list of stored profiles',
 })
 
 export default class extends Command {
@@ -42,9 +42,9 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        let message = '\n';
+        let message = '';
         this.profileService.findAll().map((profile) => {
-            message += profile.toString() + '\n';
+            message += '\n\n' + profile.toString();
         });
         console.log(message);
     }
