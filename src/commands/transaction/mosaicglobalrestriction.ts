@@ -5,6 +5,7 @@ import {
     Deadline,
     MosaicGlobalRestrictionTransaction,
     MosaicId,
+    TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
@@ -137,5 +138,12 @@ export default class extends ProfileCommand {
         const signedTransaction = account.sign(transaction, networkGenerationHash);
         console.log(chalk.green('signed transaction hash: \n'));
         console.log(signedTransaction.hash + '\n');
+
+        const transactionHttp = new TransactionHttp(profile.url);
+        transactionHttp
+            .announce(signedTransaction)
+            .subscribe(
+                (x: any) => console.log(x),
+                (err: any) => console.error(err));
     }
 }
