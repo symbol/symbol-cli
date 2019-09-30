@@ -11,10 +11,8 @@ This tool will enable you perform the most common and regular used actions in NE
 
 ## Important Notes
 
-- [0.13.0](CHANGELOG.md#0130-05-Juk-2019) - **Elephant Network Compatibility (catapult-server@0.5.0.1)**
+- [0.13.1](CHANGELOG.md#0131-30-Sep-2019) - **Elephant Network Compatibility (catapult-server@0.7.0.1)**
 - [0.12.0](CHANGELOG.md#0120-04-Jun-2019) - **Dragon Network Compatibility (catapult-server@0.4.0.1)**
-- [0.11.3](CHANGELOG.md#0113-03-Jun-2019) - **Cow Network Compatibility (catapult-server@0.3.0.2)**
-- [0.9.3](CHANGELOG.md#093---3-apr-2018) - **_Alpaca_ / _Bison_ Network Compatibility (catapult-server@0.1 & 0.2)** 
 
 The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
