@@ -1,44 +1,41 @@
 import { command, metadata, option } from 'clime';
 import {
-    Account,
     AccountRestrictionModification,
-    AccountRestrictionModificationAction,
     AccountRestrictionTransaction,
     AccountRestrictionType,
     Deadline,
     MosaicId,
-    TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
 import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { ModificationActionValidator } from '../../validators/modificationAction.validator';
+import { BinaryValidator } from '../../validators/binary.validator';
 import { RestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'p',
-        description: '(Optional) Select between your profiles, by providing a profile (blank means default profile)',
+        description: '(Optional) Select between your profiles, by providing a profile (blank means default profile).',
     })
     profile: string;
 
     @option({
         flag: 't',
-        description: 'restriction type (allow / block)',
+        description: 'restriction type (allow / block).',
         validator: new RestrictionTypeValidator(),
     })
     restrictionType: string;
 
     @option({
         flag: 'a',
-        description: 'Modification action. (1: Add, 0: Remove)',
-        validator: new ModificationActionValidator(),
+        description: 'Modification action (1: Add, 0: Remove).',
+        validator: new BinaryValidator(),
     })
-    modificationAction: string;
+    modificationAction: number;
 
     @option({
         flag: 'v',
-        description: 'Address to allow/block',
+        description: 'Address to allow / block.',
     })
     value: string;
 
@@ -52,41 +49,27 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Allow or block incoming transactions containing a given set of mosaics.',
 })
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
     constructor() {
         super();
     }
 
     @metadata
     execute(options: CommandOptions) {
-        if (!['allow', 'block'].includes(options.restrictionType)) {
-            options.restrictionType = OptionsResolver(options,
-                'restrictionType',
-                () => undefined,
-                'Fill in the restriction type (allow / block): ');
-        }
+        options.restrictionType = OptionsResolver(options,
+            'restrictionType',
+            () => undefined,
+            'Fill in the restriction type (allow / block): ');
 
-        if (!['1', '0'].includes(options.modificationAction)) {
-            options.modificationAction = OptionsResolver(options,
-                'modificationAction',
-                () => undefined,
-                'Fill in the modification action (1: Add, 0: Remove): ');
-        }
+        options.modificationAction = parseInt(OptionsResolver(options,
+            'modificationAction',
+            () => undefined,
+            'Fill in the modification action (1: Add, 0: Remove): '), 10);
 
         options.value = OptionsResolver(options,
             'value',
             () => undefined,
             'Fill in the Address: ');
-
-        let modificationAction;
-        if ('1' === options.modificationAction) {
-            modificationAction = AccountRestrictionModificationAction.Add;
-        } else if ('0' === options.modificationAction) {
-            modificationAction = AccountRestrictionModificationAction.Remove;
-        } else {
-            console.log('Wrong modificationAction. ModificationAction must be one of 1 or 0');
-            return;
-        }
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
@@ -101,7 +84,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const mosaic = new MosaicId(options.value);
 
-        const mosaicRestriction = AccountRestrictionModification.createForMosaic(modificationAction, mosaic);
+        const mosaicRestriction = AccountRestrictionModification.createForMosaic(options.modificationAction, mosaic);
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             restrictionType,
@@ -109,13 +92,7 @@ export default class extends ProfileCommand {
             profile.networkType,
             UInt64.fromUint(options.maxfee));
 
-        const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
-        const transactionHttp = new TransactionHttp(profile.url);
-        transactionHttp
-            .announce(signedTransaction)
-            .subscribe(
-                (x) => console.log(x),
-                (err) => console.error(err));
+        const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

@@ -6,21 +6,20 @@ import {
     AccountRestrictionTransaction,
     AccountRestrictionType,
     Deadline,
-    TransactionHttp,
     TransactionType,
     UInt64,
 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
 import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { ModificationActionValidator } from '../../validators/modificationAction.validator';
-import { RestrictionTypeValidator } from '../../validators/restrictionType.validator';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { AccountRestrictionDirectionValidator, RestrictionTypeValidator } from '../../validators/modificationAction.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     public static transactionType = ['RESERVED', 'TRANSFER', 'REGISTER_NAMESPACE', 'ADDRESS_ALIAS', 'MOSAIC_ALIAS', 'MOSAIC_DEFINITION',
-    'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
-    'SECRET_PROOF', 'ACCOUNT_RESTRICTION_ADDRESS', 'ACCOUNT_RESTRICTION_MOSAIC',
-    'ACCOUNT_RESTRICTION_OPERATION', 'LINK_ACCOUNT', 'MOSAIC_ADDRESS_RESTRICTION', 'MOSAIC_GLOBAL_RESTRICTION',
-    'ACCOUNT_METADATA_TRANSACTION', 'MOSAIC_METADATA_TRANSACTION', 'NAMESPACE_METADATA_TRANSACTION'];
+        'MOSAIC_SUPPLY_CHANGE', 'MODIFY_MULTISIG_ACCOUNT', 'AGGREGATE_COMPLETE', 'AGGREGATE_BONDED', 'LOCK', 'SECRET_LOCK',
+        'SECRET_PROOF', 'ACCOUNT_RESTRICTION_ADDRESS', 'ACCOUNT_RESTRICTION_MOSAIC',
+        'ACCOUNT_RESTRICTION_OPERATION', 'LINK_ACCOUNT', 'MOSAIC_ADDRESS_RESTRICTION', 'MOSAIC_GLOBAL_RESTRICTION',
+        'ACCOUNT_METADATA_TRANSACTION', 'MOSAIC_METADATA_TRANSACTION', 'NAMESPACE_METADATA_TRANSACTION'];
 
     @option({
         flag: 'p',
@@ -38,13 +37,14 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'd',
         description: '(Optional) incoming/outgoing (blank means incoming)',
+        validator: new AccountRestrictionDirectionValidator(),
     })
     restrictionDirection: string;
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove)',
-        validator: new ModificationActionValidator(),
+        validator: new BinaryValidator(),
     })
     modificationAction: string;
 
@@ -64,7 +64,7 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Allow or block outgoing transactions by transaction type.',
 })
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
     constructor() {
         super();
     }
@@ -144,7 +144,10 @@ export default class extends ProfileCommand {
         }
 
         const profile = this.getProfile(options);
-        const entityRestriction = AccountRestrictionModification.createForOperation(modificationAction, transactionEntity);
+        const entityRestriction = AccountRestrictionModification.createForOperation(
+            modificationAction,
+            transactionEntity,
+        );
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
             restrictionType,
@@ -154,12 +157,6 @@ export default class extends ProfileCommand {
 
         const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
-        const transactionHttp = new TransactionHttp(profile.url);
-        transactionHttp
-            .announce(signedTransaction)
-            .subscribe(
-                (x) => console.log(x),
-                (err) => console.error(err));
-
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }
