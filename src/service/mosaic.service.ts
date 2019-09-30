@@ -75,7 +75,7 @@ export class MosaicService {
         mosaicsData.forEach((mosaicData) => {
             const mosaicParts = mosaicData.split('::');
             mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1])));
+                UInt64.fromNumericString(mosaicParts[1])));
         });
         return mosaics;
     }

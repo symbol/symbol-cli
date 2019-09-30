@@ -64,8 +64,8 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        let height: number;
-        height =  OptionsResolver(options,
+
+        options.height =  OptionsResolver(options,
             'height',
             () => undefined,
             'Introduce the block height: ');
@@ -77,8 +77,7 @@ export default class extends ProfileCommand {
             pageSize = 100;
         }
 
-        let id: string ;
-        id =  options.id || '';
+        const id =  options.id || '';
 
         let order = options.order;
         if (order !== 'ASC') {
@@ -89,7 +88,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
 
-        blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
+        blockHttp.getBlockTransactions(options.height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
                 this.spinner.stop(true);
                 let txt = '\n';

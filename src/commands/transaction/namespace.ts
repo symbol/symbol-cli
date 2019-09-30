@@ -46,7 +46,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'd',
         description: 'Duration (use it with --rootnamespace).',
     })
-    duration: number;
+    duration: string;
 
     @option({
         flag: 'p',
@@ -97,7 +97,7 @@ export default class extends AnnounceTransactionsCommand {
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxFee));
+                options.name, UInt64.fromNumericString(options.duration), profile.networkType, UInt64.fromUint(options.maxFee));
         } else {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
                 options.name, options.parentName, profile.networkType, UInt64.fromUint(options.maxFee));
