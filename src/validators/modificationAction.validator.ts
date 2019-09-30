@@ -31,4 +31,3 @@ export class RestrictionTypeValidator implements Validator<string> {
         }
     }
 }
-
