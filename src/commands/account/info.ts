@@ -113,8 +113,7 @@ export class MultisigInfoTable {
             }) as HorizontalTable;
             multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
                 this.cosignatoriesTable.push(
-                    ['Public Key', publicAccount.publicKey],
-                    ['Address', publicAccount.address.pretty()],
+                    [publicAccount.publicKey, publicAccount.address.pretty()],
                 );
             });
         }
@@ -126,8 +125,7 @@ export class MultisigInfoTable {
 
             multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
                 this.cosignatoryOfTable.push(
-                    ['Public Key', publicAccount.publicKey],
-                    ['Address', publicAccount.address.pretty()],
+                    [publicAccount.publicKey, publicAccount.address.pretty()],
                 );
             });
         }
