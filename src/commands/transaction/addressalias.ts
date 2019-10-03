@@ -57,18 +57,28 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
 
         const profile = this.getProfile(options);
+
         options.namespace = OptionsResolver(options,
             'namespace',
             () => undefined,
             'Introduce namespace name: ');
         const namespaceId = new NamespaceId(options.namespace);
-        const address = Address.createFromRawAddress(OptionsResolver(options,
-            'recipient',
+
+        options.address = OptionsResolver(options,
+            'address',
             () => undefined,
-            'Introduce the address: '));
+            'Introduce the address: ');
+
+        const address = Address.createFromRawAddress(options.address);
         if (address.networkType !== profile.networkType) {
             throw new ExpectedError('The address network doesn\'t match network option.');
         }
+
+        options.action = OptionsResolver(options,
+            'action',
+            () => undefined,
+            'Introduce alias action (1: Link, 0: Unlink): ');
+
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
@@ -76,10 +86,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            OptionsResolver(options,
-                'action',
-                () => undefined,
-                'Introduce alias action (1: Link, 0: Unlink): '),
+            options.action,
             namespaceId,
             address,
             profile.networkType,

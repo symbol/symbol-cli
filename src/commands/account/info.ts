@@ -21,7 +21,7 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService, MultisigAccountInfo, PublicAccount} from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {catchError, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
@@ -113,8 +113,7 @@ export class MultisigInfoTable {
             }) as HorizontalTable;
             multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
                 this.cosignatoriesTable.push(
-                    ['Public Key', publicAccount.publicKey],
-                    ['Address', publicAccount.address.pretty()],
+                    [publicAccount.publicKey, publicAccount.address.pretty()],
                 );
             });
         }
@@ -126,8 +125,7 @@ export class MultisigInfoTable {
 
             multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
                 this.cosignatoryOfTable.push(
-                    ['Public Key', publicAccount.publicKey],
-                    ['Address', publicAccount.address.pretty()],
+                    [publicAccount.publicKey, publicAccount.address.pretty()],
                 );
             });
         }
@@ -176,7 +174,7 @@ export default class extends ProfileCommand {
 
         forkJoin(
             accountHttp.getAccountInfo(address),
-            mosaicService.mosaicsAmountViewFromAddress(address),
+            mosaicService.mosaicsAmountViewFromAddress(address).pipe(mergeMap((_) => _), toArray()),
             accountHttp.getMultisigAccountInfo(address).pipe(catchError((ignored) => of(null))))
             .subscribe((res) => {
                 const accountInfo = res[0];
