@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountHttp, AccountRestriction, AccountRestrictionType, Address} from 'nem2-sdk';
+import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
@@ -77,8 +77,8 @@ export default class extends AnnounceTransactionsCommand {
                 () => this.getProfile(options).account.address.plain(),
                 'Introduce an address: '));
 
-        const accountHttp = new AccountHttp(profile.url);
-        accountHttp.getAccountRestrictions(address)
+        const restrictionHttp = new RestrictionHttp(profile.url);
+        restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions) => {
                 this.spinner.stop(true);
                 if (accountRestrictions.accountRestrictions.restrictions.length > 0) {
