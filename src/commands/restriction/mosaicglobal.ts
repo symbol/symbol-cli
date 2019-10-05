@@ -19,12 +19,12 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
+import {MosaicGlobalRestrictionItem, MosaicId, RestrictionHttp} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -33,40 +33,38 @@ export class CommandOptions extends ProfileOptions {
     mosaicId: string;
 }
 
-export class MosaicViewTable {
+export class MosaicGlobalRestrictionsTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly mosaicView: MosaicView) {
+
+    constructor(public readonly mosaicGlobalRestrictions:  Map<string, MosaicGlobalRestrictionItem>) {
         this.table = new Table({
             style: {head: ['cyan']},
-            head: ['Property', 'Value'],
+            head: ['Type', 'Value'],
         }) as HorizontalTable;
-        this.table.push(
-            ['Id', mosaicView.mosaicInfo.id.toHex()],
-            ['Divisibility', mosaicView.mosaicInfo.divisibility],
-            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
-            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
-            ['Height', mosaicView.mosaicInfo.height.compact()],
-            ['Expiration', mosaicView.mosaicInfo.duration.compact() === 0 ?
-                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
-            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
-            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
-            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
-                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
-        );
+
+        mosaicGlobalRestrictions.forEach((value: MosaicGlobalRestrictionItem, key: string) => {
+            this.table.push(
+                ['Reference MosaicId', value.referenceMosaicId.toHex()],
+                ['Restriction Type', value.restrictionType],
+                ['Restriction Key', key],
+                ['Restriction Value', value.restrictionValue],
+            );
+        });
+
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
+        text += '\n\n' + chalk.green('Mosaic Global Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }
 }
 
 @command({
-    description: 'Fetch mosaic info',
+    description: 'Fetch global restrictions assigned to a mosaic',
 })
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -82,17 +80,14 @@ export default class extends ProfileCommand {
             'Introduce the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        const mosaicService = new MosaicService(
-            new AccountHttp(profile.url),
-            new MosaicHttp(profile.url),
-        );
-        mosaicService.mosaicsView([mosaicId])
-            .subscribe((mosaicViews) => {
+        const restrictionHttp = new RestrictionHttp(profile.url);
+        restrictionHttp.getMosaicGlobalRestriction(mosaicId)
+            .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
-                if (mosaicViews.length === 0) {
-                    console.log('No mosaic exists with this id ' + mosaicId.toHex());
+                if (mosaicRestrictions.restrictions.size > 0) {
+                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
+                    console.log('\n The mosaicId does not have any mosaic global restriction assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);
@@ -101,5 +96,4 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
-
 }

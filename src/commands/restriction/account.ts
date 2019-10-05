@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountHttp, AccountRestriction, AccountRestrictionType, Address} from 'nem2-sdk';
+import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
@@ -41,6 +41,7 @@ export class AccountRestrictionsTable {
             style: {head: ['cyan']},
             head: ['Type', 'Value'],
         }) as HorizontalTable;
+
         accountRestrictions
             .filter((accountRestriction) => accountRestriction.values.length > 0)
             .map((accountRestriction) => {
@@ -71,14 +72,15 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => this.getProfile(options).account.address.plain(),
-                'Introduce an address: '));
 
-        const accountHttp = new AccountHttp(profile.url);
-        accountHttp.getAccountRestrictions(address)
+        options.address =  OptionsResolver(options,
+            'address',
+            () => this.getProfile(options).account.address.plain(),
+            'Introduce an address: ');
+        const address = Address.createFromRawAddress(options.address);
+
+        const restrictionHttp = new RestrictionHttp(profile.url);
+        restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions) => {
                 this.spinner.stop(true);
                 if (accountRestrictions.accountRestrictions.restrictions.length > 0) {
