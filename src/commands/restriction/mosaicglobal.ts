@@ -87,7 +87,7 @@ export default class extends AnnounceTransactionsCommand {
                 if (mosaicRestrictions.restrictions.size > 0) {
                     console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The mosaicId does not have any mosaic global restriction assigned.');
+                    console.log('\n The mosaicId does not have mosaic global restrictions assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);

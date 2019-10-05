@@ -86,7 +86,7 @@ export default class extends AnnounceTransactionsCommand {
                 if (accountRestrictions.accountRestrictions.restrictions.length > 0) {
                     console.log(new AccountRestrictionsTable(accountRestrictions.accountRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The address does not have any account restriction assigned.');
+                    console.log('\n The address does not have account restrictions assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);
