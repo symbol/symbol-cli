@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {Namespace, NamespaceHttp, NamespaceId, NamespaceService, UInt64} from 'nem2-sdk';
+import {NamespaceHttp, NamespaceId, NamespaceInfo, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
@@ -41,34 +41,33 @@ export class CommandOptions extends ProfileOptions {
 
 export class NamespaceInfoTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly namespace: Namespace) {
+    constructor(public readonly namespaceInfo: NamespaceInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Id', namespace.id.toHex()],
-            ['Name', namespace.name],
-            ['Registration Type', namespace.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
-            ['Owner', namespace.owner.address.pretty()],
-            ['Start Height',  namespace.startHeight.compact()],
-            ['End Height', namespace.endHeight.compact()],
+            ['Id', namespaceInfo.id.toHex()],
+            ['Registration Type', namespaceInfo.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
+            ['Owner', namespaceInfo.owner.address.pretty()],
+            ['Start Height',  namespaceInfo.startHeight.compact()],
+            ['End Height', namespaceInfo.endHeight.compact()],
         );
-        if (namespace.isSubnamespace()) {
+        if (namespaceInfo.isSubnamespace()) {
             this.table.push(
-                ['Parent Id', namespace.parentNamespaceId().toHex()],
+                ['Parent Id', namespaceInfo.parentNamespaceId().toHex()],
             );
         }
-        if (namespace.hasAlias()) {
-            if (namespace.alias.address) {
+        if (namespaceInfo.hasAlias()) {
+            if (namespaceInfo.alias.address) {
                 this.table.push(
                     ['Alias Type', 'Address'],
-                    ['Alias Address', namespace.alias.address.pretty()],
+                    ['Alias Address', namespaceInfo.alias.address.pretty()],
                 );
-            } else if (namespace.alias.mosaicId) {
+            } else if (namespaceInfo.alias.mosaicId) {
                 this.table.push(
                     ['Alias Type', 'MosaicId'],
-                    ['Alias MosaicId', namespace.alias.mosaicId.toHex()],
+                    ['Alias MosaicId', namespaceInfo.alias.mosaicId.toString()],
                 );
             }
         }
@@ -113,11 +112,10 @@ export default class extends ProfileCommand {
         }
 
         const namespaceHttp = new NamespaceHttp(profile.url);
-        const namespaceService = new NamespaceService(namespaceHttp);
-        namespaceService.namespace(namespaceId)
-            .subscribe((namespace) => {
+        namespaceHttp.getNamespace(namespaceId)
+            .subscribe((namespaceInfo) => {
                 this.spinner.stop(true);
-                console.log(new NamespaceInfoTable(namespace).toString());
+                console.log(new NamespaceInfoTable(namespaceInfo).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
@@ -125,5 +123,4 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
-
 }
