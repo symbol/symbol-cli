@@ -20,11 +20,11 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {Address, Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
@@ -63,7 +63,7 @@ export class MetadataEntryTable {
 @command({
     description: 'Fetch metadata entries from an account',
 })
-export default class extends AnnounceTransactionsCommand {
+export default class extends ProfileCommand {
 
     constructor() {
         super();

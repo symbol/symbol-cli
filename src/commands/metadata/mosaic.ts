@@ -18,12 +18,12 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Metadata, MetadataHttp, MosaicId} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 import {MetadataEntryTable} from './account';
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -35,7 +35,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 @command({
     description: 'Fetch metadata entries from an mosaic',
 })
-export default class extends AnnounceTransactionsCommand {
+export default class extends ProfileCommand {
 
     constructor() {
         super();
