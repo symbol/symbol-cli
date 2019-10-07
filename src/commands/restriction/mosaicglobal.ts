@@ -21,8 +21,8 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

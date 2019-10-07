@@ -21,8 +21,8 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
-import {ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
