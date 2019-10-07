@@ -45,7 +45,6 @@ export class MetadataEntryTable {
         this.table.push(
             ['Sender Public Key', entry.senderPublicKey],
             ['Target Public Key', entry.targetPublicKey],
-            ['Scoped Metadata Key', entry.scopedMetadataKey.toHex()],
             ['Value', entry.value],
         );
         if (entry.targetId) {
@@ -55,7 +54,7 @@ export class MetadataEntryTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Metadata') + '\n';
+        text += '\n\n' + chalk.green('Key:' entry.scopedMetadataKey.toHex()) + '\n';
         text += this.table.toString();
         return text;
     }
