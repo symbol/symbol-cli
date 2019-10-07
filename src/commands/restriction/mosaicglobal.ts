@@ -33,26 +33,25 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     mosaicId: string;
 }
 
-export class MosaicGlobalRestrictionTable {
+export class MosaicGlobalRestrictionsTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly value: MosaicGlobalRestrictionItem, public readonly key: string) {
+    constructor(public readonly mosaicGlobalRestrictions:  Map<string, MosaicGlobalRestrictionItem>) {
         this.table = new Table({
             style: {head: ['cyan']},
-            head: ['Type', 'Value'],
+            head: ['Restriction Key', 'Reference MosaicId', 'Restriction Type', 'Restriction Value'],
         }) as HorizontalTable;
 
-        this.table.push(
-            ['Reference MosaicId', value.referenceMosaicId.toHex()],
-            ['Restriction Type', MosaicRestrictionType[value.restrictionType]],
-            ['Restriction Key', key],
-            ['Restriction Value', value.restrictionValue],
-        );
+        mosaicGlobalRestrictions.forEach((value: MosaicGlobalRestrictionItem, key: string) => {
+            this.table.push(
+                [key, value.referenceMosaicId.toHex(), MosaicRestrictionType[value.restrictionType], value.restrictionValue],
+            );
+        });
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green(this.key) + '\n';
+        text += '\n\n' + chalk.green('Mosaic Global Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -81,11 +80,8 @@ export default class extends AnnounceTransactionsCommand {
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
-                console.log('\n\n' + chalk.green('Mosaic Global Restrictions') + '\n');
                 if (mosaicRestrictions.restrictions.size > 0) {
-                    mosaicRestrictions.restrictions.forEach((value, key) => {
-                        console.log(new MosaicGlobalRestrictionTable(value, key).toString());
-                    });
+                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
                     console.log('\n The mosaicId does not have mosaic global restrictions assigned.');
                 }

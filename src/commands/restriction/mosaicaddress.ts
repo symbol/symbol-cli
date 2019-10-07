@@ -56,7 +56,6 @@ export class MosaicAddressRestrictionsTable {
                 ['Value', value],
             );
         });
-
 }
 
     toString(): string {
