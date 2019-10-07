@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {Address, Metadata, MetadataHttp} from 'nem2-sdk';
+import {Address, Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
@@ -33,27 +33,24 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     address: string;
 }
 
-export class MetadataTable {
+export class MetadataEntryTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly metadataArray: Metadata[]) {
+    constructor(public readonly entry: MetadataEntry) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Type', 'Value'],
         }) as HorizontalTable;
 
-        metadataArray
-            .map((entry: Metadata) => {
-                this.table.push(
-                    ['Sender Public Key', entry.metadataEntry.senderPublicKey],
-                    ['Target Public Key', entry.metadataEntry.targetPublicKey],
-                    ['Scoped Metadata Key', entry.metadataEntry.scopedMetadataKey.toHex()],
-                    ['Value', entry.metadataEntry.value],
-                );
-                if (entry.metadataEntry.targetId) {
-                    this.table.push(['Target Id', entry.metadataEntry.targetId.toHex()]);
-                }
-            });
+        this.table.push(
+            ['Sender Public Key', entry.senderPublicKey],
+            ['Target Public Key', entry.targetPublicKey],
+            ['Scoped Metadata Key', entry.scopedMetadataKey.toHex()],
+            ['Value', entry.value],
+        );
+        if (entry.targetId) {
+            this.table.push(['Target Id', entry.targetId.toHex()]);
+        }
     }
 
     toString(): string {
@@ -88,8 +85,11 @@ export default class extends AnnounceTransactionsCommand {
         metadataHttp.getAccountMetadata(address)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
-                if (metadata.length > 0) {
-                    console.log(new MetadataTable(metadataEntries).toString());
+                if (metadataEntries.length > 0) {
+                    metadataEntries
+                        .map((entry: Metadata) => {
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                        });
                 } else {
                     console.log('\n The address does not have metadata entries assigned.');
                 }

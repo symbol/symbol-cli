@@ -17,11 +17,11 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {MetadataHttp, MosaicId} from 'nem2-sdk';
+import {Metadata, MetadataHttp, MosaicId} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {MetadataTable} from './account';
+import {MetadataEntryTable} from './account';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -56,10 +56,13 @@ export default class extends AnnounceTransactionsCommand {
         metadataHttp.getMosaicMetadata(mosaicId)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
-                if (metadata.length > 0) {
-                    console.log(new MetadataTable(metadataEntries).toString());
+                if (metadataEntries.length > 0) {
+                    metadataEntries
+                        .map((entry: Metadata) => {
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                        });
                 } else {
-                    console.log('\n The mosaicId does not have metadata entries assigned.');
+                    console.log('\n The mosacId does not have metadata entries assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);

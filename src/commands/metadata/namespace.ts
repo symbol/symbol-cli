@@ -17,11 +17,11 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {MetadataHttp, NamespaceId} from 'nem2-sdk';
+import {Metadata, MetadataHttp, NamespaceId} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
-import {MetadataTable} from './account';
+import {MetadataEntryTable} from './account';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -56,8 +56,11 @@ export default class extends AnnounceTransactionsCommand {
         metadataHttp.getNamespaceMetadata(namespaceId)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
-                if (metadata.length > 0) {
-                    console.log(new MetadataTable(metadataEntries).toString());
+                if (metadataEntries.length > 0) {
+                    metadataEntries
+                        .map((entry: Metadata) => {
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                        });
                 } else {
                     console.log('\n The namespaceId does not have metadata entries assigned.');
                 }
