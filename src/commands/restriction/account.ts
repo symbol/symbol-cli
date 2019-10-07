@@ -20,11 +20,11 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
+import {ProfileOptions} from '../../profile.command';
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
@@ -62,7 +62,7 @@ export class AccountRestrictionsTable {
 @command({
     description: 'Fetch account restrictions assigned to an address',
 })
-export default class extends AnnounceTransactionsCommand {
+export default class extends ProfileCommand {
 
     constructor() {
         super();

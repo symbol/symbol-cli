@@ -20,11 +20,11 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionHttp} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {ProfileOptions} from '../../profile.command';
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -60,7 +60,7 @@ export class MosaicGlobalRestrictionsTable {
 @command({
     description: 'Fetch global restrictions assigned to a mosaic',
 })
-export default class extends AnnounceTransactionsCommand {
+export default class extends ProfileCommand {
 
     constructor() {
         super();
