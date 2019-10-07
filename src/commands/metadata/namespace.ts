@@ -20,16 +20,14 @@ import {command, metadata, option} from 'clime';
 import {Metadata, MetadataHttp, NamespaceId} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
 import {MetadataEntryTable} from './account';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'm',
-        description: 'Namespace id in hexadecimal format.',
-        validator: new NamespaceIdValidator(),
+        flag: 'n',
+        description: 'Namespace name.',
     })
-    namespaceId: string;
+    namespaceName: string;
 }
 
 @command({
@@ -46,11 +44,11 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const profile = this.getProfile(options);
 
-        options.namespaceId = OptionsResolver(options,
+        options.namespaceName = OptionsResolver(options,
             'namespaceId',
             () => undefined,
-            'Introduce the namespace id in hexadecimal format: ');
-        const namespaceId = new NamespaceId(options.namespaceId);
+            'Introduce the namespace name: ');
+        const namespaceId = new NamespaceId(options.namespaceName);
 
         const metadataHttp = new MetadataHttp(profile.url);
         metadataHttp.getNamespaceMetadata(namespaceId)
@@ -62,7 +60,7 @@ export default class extends ProfileCommand {
                             console.log(new MetadataEntryTable(entry.metadataEntry).toString());
                         });
                 } else {
-                    console.log('\n The namespaceId does not have metadata entries assigned.');
+                    console.log('\n The namespace does not have metadata entries assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);
