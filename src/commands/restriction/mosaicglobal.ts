@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {MosaicGlobalRestrictionItem, MosaicId, RestrictionHttp} from 'nem2-sdk';
+import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionHttp} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
@@ -33,29 +33,26 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     mosaicId: string;
 }
 
-export class MosaicGlobalRestrictionsTable {
+export class MosaicGlobalRestrictionTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly mosaicGlobalRestrictions:  Map<string, MosaicGlobalRestrictionItem>) {
+    constructor(public readonly value: MosaicGlobalRestrictionItem, public readonly key: string) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Type', 'Value'],
         }) as HorizontalTable;
 
-        mosaicGlobalRestrictions.forEach((value: MosaicGlobalRestrictionItem, key: string) => {
-            this.table.push(
-                ['Reference MosaicId', value.referenceMosaicId.toHex()],
-                ['Restriction Type', value.restrictionType],
-                ['Restriction Key', key],
-                ['Restriction Value', value.restrictionValue],
-            );
-        });
-
+        this.table.push(
+            ['Reference MosaicId', value.referenceMosaicId.toHex()],
+            ['Restriction Type', MosaicRestrictionType[value.restrictionType]],
+            ['Restriction Key', key],
+            ['Restriction Value', value.restrictionValue],
+        );
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Mosaic Global Restrictions') + '\n';
+        text += '\n\n' + chalk.green(this.key) + '\n';
         text += this.table.toString();
         return text;
     }
@@ -84,8 +81,11 @@ export default class extends AnnounceTransactionsCommand {
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
+                console.log('\n\n' + chalk.green('Mosaic Global Restrictions') + '\n');
                 if (mosaicRestrictions.restrictions.size > 0) {
-                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
+                    mosaicRestrictions.restrictions.forEach((value, key) => {
+                        console.log(new MosaicGlobalRestrictionTable(value, key).toString());
+                    });
                 } else {
                     console.log('\n The mosaicId does not have mosaic global restrictions assigned.');
                 }
