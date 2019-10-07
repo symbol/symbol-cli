@@ -15,9 +15,9 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - ``restriction mosaicaddress`` command.
 - ``block header`` command.
 
-### Changed
+### Fixed
 
-- ``namespace info`` now is working.
+- ``namespace info`` command.
 
 ## [0.13.1] - 30-Sep-2019
 
@@ -76,11 +76,13 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ## [0.11.3] - 03-Jun-2019
 
 ### Fixed
+
 - Static nem2-sdk & library version.
 
 ## [0.11.2] - 25-Apr-2019
 
 ### Added
+
 - ``transaction mosaic`` accepts creating eternal mosaics.
 - ``transaction mosaicalias`` command enables assigning namespaces to mosaics.
 - ``transaction addressalias`` command enables assigning namespaces to addresses.
@@ -88,6 +90,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ## [0.11.0] - 18-Mar-2019
 
 ### Changed
+
 - Adapted nem2-sdk 0.11.1 breaking changes.
 - The code is now rxjs 6.0 compatible.
 - ``transaction mosaic`` command does not require to specify a mosaic name.
