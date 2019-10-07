@@ -54,7 +54,7 @@ export class MetadataEntryTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Key:' entry.scopedMetadataKey.toHex()) + '\n';
+        text += '\n\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n';
         text += this.table.toString();
         return text;
     }
