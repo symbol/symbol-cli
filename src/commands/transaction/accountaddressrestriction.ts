@@ -45,12 +45,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Address to allow / block.',
     })
     value: string;
-
-    @option({
-        flag: 'f',
-        description: '(Optional) Maximum fee.',
-    })
-    maxfee: number;
 }
 
 @command({
@@ -66,22 +60,22 @@ export default class extends AnnounceTransactionsCommand {
         options.restrictionType = OptionsResolver(options,
             'restrictionType',
             () => undefined,
-            'Fill in the restriction type (allow / block): ');
+            'Introduce the restriction type (allow/block):');
 
         options.modificationAction = parseInt(OptionsResolver(options,
             'modificationAction',
             () => undefined,
-            'Fill in the modification action (1: Add, 0: Remove): '), 10);
+            'Introduce the modification action (1: Add, 0: Remove): '), 10);
 
         options.restrictionDirection = OptionsResolver(options,
             'restrictionDirection',
             () => undefined,
-            'Fill in the restriction direction (incoming / outgoing): ');
+            'Introduce the restriction direction (incoming / outgoing): ');
 
         options.value = OptionsResolver(options,
             'value',
             () => undefined,
-            'Fill in the Address: ');
+            'Introduce the Address: ');
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
@@ -110,7 +104,7 @@ export default class extends AnnounceTransactionsCommand {
             restrictionType,
             [addressRestriction],
             profile.networkType,
-            UInt64.fromUint(options.maxfee),
+            UInt64.fromUint(options.maxFee),
         );
         const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

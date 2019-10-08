@@ -10,7 +10,7 @@ import {
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
 import { OptionsResolver } from '../../options-resolver';
 import { BinaryValidator } from '../../validators/binary.validator';
-import { RestrictionTypeValidator } from '../../validators/restrictionType.validator';
+import { RestrictionTypeValidator } from '../../validators/modificationAction.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -38,12 +38,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Address to allow / block.',
     })
     value: string;
-
-    @option({
-        flag: 'f',
-        description: '(Optional) Maximum fee',
-    })
-    maxfee: number;
 }
 
 @command({
@@ -59,17 +53,17 @@ export default class extends AnnounceTransactionsCommand {
         options.restrictionType = OptionsResolver(options,
             'restrictionType',
             () => undefined,
-            'Fill in the restriction type (allow / block): ');
+            'Introduce the restriction type (allow / block): ');
 
         options.modificationAction = parseInt(OptionsResolver(options,
             'modificationAction',
             () => undefined,
-            'Fill in the modification action (1: Add, 0: Remove): '), 10);
+            'Introduce the modification action (1: Add, 0: Remove): '), 10);
 
         options.value = OptionsResolver(options,
             'value',
             () => undefined,
-            'Fill in the Address: ');
+            'Introduce the Address: ');
 
         let restrictionType;
         if ('allow' === options.restrictionType.toLowerCase()) {
@@ -90,7 +84,7 @@ export default class extends AnnounceTransactionsCommand {
             restrictionType,
             [mosaicRestriction],
             profile.networkType,
-            UInt64.fromUint(options.maxfee));
+            UInt64.fromUint(options.maxFee));
 
         const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

@@ -53,12 +53,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Transaction Type [' + CommandOptions.transactionType + ']',
     })
     value: string;
-
-    @option({
-        flag: 'f',
-        description: '(Optional) Maximum fee',
-    })
-    maxfee: number;
 }
 
 @command({
@@ -74,18 +68,18 @@ export default class extends AnnounceTransactionsCommand {
         options.restrictionType = OptionsResolver(options,
             'restrictionType',
             () => undefined,
-            'Fill in the restriction type (allow / block): ');
+            'Introduce the restriction type (allow / block): ');
 
         options.modificationAction = OptionsResolver(options,
             'modificationAction',
             () => undefined,
-            'Fill in the modification action (1: Add, 0: Remove): ');
+            'Introduce the modification action (1: Add, 0: Remove): ');
 
         if (!CommandOptions.transactionType.includes(options.value)) {
             options.value = OptionsResolver(options,
                 'value',
                 () => undefined,
-                'Fill in the transaction Type (' + CommandOptions.transactionType + '): ');
+                'Introduce the transaction Type (' + CommandOptions.transactionType + '): ');
         }
 
         let modificationAction;
@@ -153,7 +147,7 @@ export default class extends AnnounceTransactionsCommand {
             restrictionType,
             [entityRestriction],
             profile.networkType,
-            UInt64.fromUint(options.maxfee));
+            UInt64.fromUint(options.maxFee));
 
         const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);

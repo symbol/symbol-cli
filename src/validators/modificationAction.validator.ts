@@ -16,6 +16,10 @@ export class OperationRestrictionTypeValidator implements Validator<string> {
         'ACCOUNT_RESTRICTION_OPERATION', 'LINK_ACCOUNT', 'MOSAIC_ADDRESS_RESTRICTION', 'MOSAIC_GLOBAL_RESTRICTION',
         'ACCOUNT_METADATA_TRANSACTION', 'MOSAIC_METADATA_TRANSACTION', 'NAMESPACE_METADATA_TRANSACTION'];
 
+    getTransactionType(): string[] {
+        return this.transactionType;
+    }
+
     validate(value: string, context: ValidationContext): void {
         value = value.toUpperCase();
         if (!this.transactionType.includes(value)) {
