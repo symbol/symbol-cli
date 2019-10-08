@@ -8,113 +8,108 @@ import {
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicService} from '../../service/restriction.service';
-import {MosaicRestrictionType} from '../../validators/mosaic.validator';
+import {MosaicRestrictionTypeValidator} from '../../validators/mosaic.validator';
 
-export class CommandOptions extends ProfileOptions {
-    public static limitType = [0, 1, 2, 3, 4, 5, 6];
+export class CommandOptions extends AnnounceTransactionsOptions {
+    public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
 
     @option({
         flag: 'p',
-        description: '(Optional) Select between your profiles, by providing a profile',
+        description: '(Optional) Select between your profiles, by providing a profile.',
     })
     profile: string;
 
     @option({
-        flag: 'f',
-        default: 0,
-        description: '(Optional) Maximum fee',
-    })
-    maxfee: number;
-
-    @option({
         flag: 'i',
-        description: 'Identifier of the mosaic being restricted',
+        description: 'Identifier of the mosaic being restricted.',
     })
-    mosaicid: string;
+    mosaicId: string;
 
     @option({
         flag: 'r',
         default: '0',
-        description: '(Optional) Identifier of the mosaic providing the restriction key',
+        description: '(Optional) Identifier of the mosaic providing the restriction key.',
     })
-    referencemosaicid: string;
+    referenceMosaicId: string;
 
     @option({
         flag: 'k',
-        description: 'Restriction key relative to the reference mosaic identifier',
+        description: 'Restriction key relative to the reference mosaic identifier.',
     })
-    restrictionkey: string;
+    restrictionKey: string;
 
     @option({
         flag: 'v',
-        default: '0',
+        default: 'FFFFFFFFFFFFFFFF',
         description: '(Optional) Previous restriction value.',
     })
-    previousrestrictionvalue: string;
+    previousRestrictionValue: string;
 
     @option({
         flag: 't',
-        default: 0,
-        description: '(Optional) Previous restriction type',
-        validator: new MosaicRestrictionType(),
+        default: 'NONE',
+        description: '(Optional) Previous restriction type. (NONE: no restriction, EQ: equal, NE: not equal, LT: less than,' +
+            'LE: less than or equal, GT: greater than, GE: greater than or equal)',
+        validator: new MosaicRestrictionTypeValidator(),
     })
-    previousrestrictiontype: number;
+    previousRestrictionType: string;
 
     @option({
         flag: 'V',
-        description: 'New restriction value',
+        description: 'New restriction value.',
     })
-    newrestrictionvalue: string;
+    newRestrictionValue: string;
 
     @option({
         flag: 'T',
-        description: 'New restriction type',
-        validator: new MosaicRestrictionType(),
+        description: 'New restriction type.',
+        validator: new MosaicRestrictionTypeValidator(),
     })
-    newrestrictiontype: number;
+    newRestrictionType: string;
 }
 
 @command({
     description: 'Set a global restriction to a mosaic.',
 })
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
     constructor() {
         super();
     }
     @metadata
     execute(options: CommandOptions) {
-        options.mosaicid = OptionsResolver(
+        options.mosaicId = OptionsResolver(
             options,
-            'mosaicid',
+            'mosaicId',
             () => undefined,
-            'The identifier of the mosaic being restricted: ',
+            'Introduce identifier of the mosaic being restricted: ',
         );
 
-        options.restrictionkey = OptionsResolver(
+        options.restrictionKey = OptionsResolver(
             options,
-            'restrictionkey',
+            'restrictionKey',
             () => undefined,
-            'Restriction key relative to the reference mosaic identifier: ',
+            'Introduce restriction key relative to the reference mosaic identifier: ',
         );
 
-        options.newrestrictionvalue = OptionsResolver(
+        options.newRestrictionValue = OptionsResolver(
             options,
-            'newrestrictionvalue',
+            'newRestrictionValue',
             () => undefined,
-            'Restriction newrestrictionvalue: ',
+            'Introduce restriction new restriction value: ',
         );
 
-        options.newrestrictiontype = parseInt(OptionsResolver(
+        options.newRestrictionType = OptionsResolver(
             options,
-            'newrestrictiontype',
+            'newRestrictionType',
             () => undefined,
-            'Restriction newrestrictiontype: ',
-        ), 10);
+            'Introduce restriction new restriction type: (NONE: no restriction, EQ: equal, NE: not equal, LT: less than,' +
+            'LE: less than or equal, GT: greater than, GE: greater than or equal)',
+        );
 
-        if (!CommandOptions.limitType.includes(options.newrestrictiontype)) {
+        if (!CommandOptions.limitType.includes(options.newRestrictionType.toUpperCase())) {
             throw new ExpectedError('Wrong mosaic restriction type');
         }
 
@@ -122,28 +117,23 @@ export default class extends ProfileCommand {
 
         const transaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(options.mosaicid),
-            UInt64.fromNumericString(options.restrictionkey),
-            UInt64.fromNumericString(options.previousrestrictionvalue),
-            MosaicService.getMosaicRestrictionType(options.previousrestrictiontype),
-            UInt64.fromNumericString(options.newrestrictionvalue),
-            MosaicService.getMosaicRestrictionType(options.newrestrictiontype),
+            new MosaicId(options.mosaicId),
+            UInt64.fromNumericString(options.restrictionKey),
+            /[a-f|A-F]/.test(options.previousRestrictionValue) ?
+                UInt64.fromHex(options.previousRestrictionValue) : UInt64.fromNumericString(options.previousRestrictionValue),
+            MosaicService.getMosaicRestrictionType(options.previousRestrictionType),
+            UInt64.fromNumericString(options.newRestrictionValue),
+            MosaicService.getMosaicRestrictionType(options.newRestrictionType),
             profile.networkType,
-            new MosaicId(options.referencemosaicid),
-            UInt64.fromUint(options.maxfee),
+            new MosaicId(options.referenceMosaicId),
+            UInt64.fromUint(options.maxFee),
         );
 
-        const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
         const networkGenerationHash = profile.networkGenerationHash;
-        const signedTransaction = account.sign(transaction, networkGenerationHash);
+        const signedTransaction = profile.account.sign(transaction, networkGenerationHash);
         console.log(chalk.green('signed transaction hash: \n'));
         console.log(signedTransaction.hash + '\n');
 
-        const transactionHttp = new TransactionHttp(profile.url);
-        transactionHttp
-            .announce(signedTransaction)
-            .subscribe(
-                (x: any) => console.log(x),
-                (err: any) => console.error(err));
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

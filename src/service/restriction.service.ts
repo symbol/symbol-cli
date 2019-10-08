@@ -6,16 +6,16 @@ export class MosaicService {
 
     }
 
-    public static getMosaicRestrictionType(type: number): MosaicRestrictionType {
+    public static getMosaicRestrictionType(type: string): MosaicRestrictionType {
         let restrictionType;
         switch (type) {
-            case 0: restrictionType = MosaicRestrictionType.NONE; break;
-            case 1: restrictionType = MosaicRestrictionType.EQ; break;
-            case 2: restrictionType = MosaicRestrictionType.NE; break;
-            case 3: restrictionType = MosaicRestrictionType.LT; break;
-            case 4: restrictionType = MosaicRestrictionType.LE; break;
-            case 5: restrictionType = MosaicRestrictionType.GT; break;
-            case 6: restrictionType = MosaicRestrictionType.GE; break;
+            case 'NONE': restrictionType = MosaicRestrictionType.NONE; break;
+            case 'EQ': restrictionType = MosaicRestrictionType.EQ; break;
+            case 'NE': restrictionType = MosaicRestrictionType.NE; break;
+            case 'LT': restrictionType = MosaicRestrictionType.LT; break;
+            case 'LE': restrictionType = MosaicRestrictionType.LE; break;
+            case 'GT': restrictionType = MosaicRestrictionType.GT; break;
+            case 'GE': restrictionType = MosaicRestrictionType.GE; break;
             default: throw new Error('invalid restriction type');
         }
         return restrictionType;
