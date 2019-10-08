@@ -52,13 +52,13 @@ describe('mosaic  validator', () => {
 describe('mosaic restriction type validator', () => {
 
     it('valid mosaic restriction type', () => {
-        const mosaic = 1;
+        const mosaic = 'EQ';
         expect(new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: String(mosaic) }))
             .to.be.equal(undefined);
     });
 
     it('invalid mosaic restriction type', () => {
-        const mosaic = 100;
+        const mosaic = 'error';
         expect(() => {
             new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: String(mosaic) });
         }).to.throws('Wrong mosaic restriction type');
