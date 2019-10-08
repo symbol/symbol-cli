@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.1] - 30-Sep-2019
+
+### Added
+
+- ``account info`` command returns multisig account related information.
+- ``block transactions`` command.
+- ``block receipts`` command.
+- ``diagnostic serverInfo`` command.
+- ``diagnostic storage`` command.
+- ``namespace alias`` command.
+- ``namespace info`` command returns alias information.
+- ``restriction account`` command.
+- ``maxFee`` parameter to transactions commands.
+- ``cli3-table`` extension to render results as tables.
+- ``NamespaceIdValidator``, ``MosaicIdValidator``, ``BinaryValidator`` validators.
+
+### Changed
+
+- ``nem2-sdk`` dependency to 0.13.3
+- ``account info`` and ``mosaic info`` commands returns mosaic in absolute and relative amounts.
+- ``account info`` and ``mosaic info`` commands returns the block expiration height of the returned mosaics.
+- Command parameters are now in camelCase.
+
+### Removed
+
+- ``transaction pullfunds`` command.
+
 ## [0.13.0] - 05-Jul-2019
 
 ### Added
@@ -58,6 +85,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 - Initial code release.
 
+[0.13.1]: https://github.com/nemtech/nem2-cli/compare/v0.12.0...v0.13.1
 [0.13.0]: https://github.com/nemtech/nem2-cli/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/nemtech/nem2-cli/compare/v0.11.3...v0.12.0
 [0.11.3]: https://github.com/nemtech/nem2-cli/compare/v0.11.2...v0.11.3
