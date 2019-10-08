@@ -15,27 +15,27 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {MosaicsValidator, MosaicValidator} from '../../src/validators/mosaic.validator';
+import { expect } from 'chai';
+import { MosaicRestrictionTypeValidator, MosaicsValidator, MosaicValidator } from '../../src/validators/mosaic.validator';
 
 describe('mosaic  validator', () => {
 
     it('Valid mosaic (@aliasName)', () => {
         const mosaic = '@cat.currency::1000000';
-        expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
+        expect(new MosaicValidator().validate(mosaic, { name: 'mosaic', source: mosaic }))
             .to.be.equal(undefined);
     });
 
     it('Valid mosaic (hex)', () => {
         const mosaic = '85BBEA6CC462B244::1000000';
-        expect(new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic}))
+        expect(new MosaicValidator().validate(mosaic, { name: 'mosaic', source: mosaic }))
             .to.be.equal(undefined);
     });
 
     it('Invalid mosaic', () => {
         const mosaic = 'cat.currencxy::1000000';
         expect(() => {
-            new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});
+            new MosaicValidator().validate(mosaic, { name: 'mosaic', source: mosaic });
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
             '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
     });
@@ -43,8 +43,24 @@ describe('mosaic  validator', () => {
     it('Invalid format', () => {
         const mosaic = 'cat.currencxy:1000000';
         expect(() => {
-            new MosaicValidator().validate(mosaic, {name: 'mosaic', source: mosaic});
+            new MosaicValidator().validate(mosaic, { name: 'mosaic', source: mosaic });
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
             '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
+    });
+});
+
+describe('mosaic restriction type validator', () => {
+
+    it('valid mosaic restriction type', () => {
+        const mosaic = 1;
+        expect(new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: String(mosaic) }))
+            .to.be.equal(undefined);
+    });
+
+    it('invalid mosaic restriction type', () => {
+        const mosaic = 100;
+        expect(() => {
+            new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: String(mosaic) });
+        }).to.throws('Wrong mosaic restriction type');
     });
 });
