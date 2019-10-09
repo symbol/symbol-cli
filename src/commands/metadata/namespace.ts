@@ -17,26 +17,22 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Address, NamespaceHttp} from 'nem2-sdk';
+import {Metadata, MetadataHttp, NamespaceId} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
-import {NamespaceInfoTable} from './info';
+import {MetadataEntryTable} from './account';
 
 export class CommandOptions extends ProfileOptions {
-
     @option({
-        flag: 'a',
-        description: 'Address',
-        validator: new AddressValidator(),
+        flag: 'n',
+        description: 'Namespace name.',
     })
-    address: string;
+    namespaceName: string;
 }
 
 @command({
-    description: 'Get owned namespaces',
+    description: 'Fetch metadata entries from an namespace',
 })
-
 export default class extends ProfileCommand {
 
     constructor() {
@@ -45,25 +41,27 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => this.getProfile(options).account.address.plain(),
-                'Introduce the address: '));
-        const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();
-        namespaceHttp.getNamespacesFromAccount(address)
-            .subscribe((namespaces) => {
+        const profile = this.getProfile(options);
+
+        options.namespaceName = OptionsResolver(options,
+            'namespaceId',
+            () => undefined,
+            'Introduce the namespace name: ');
+        const namespaceId = new NamespaceId(options.namespaceName);
+
+        const metadataHttp = new MetadataHttp(profile.url);
+        metadataHttp.getNamespaceMetadata(namespaceId)
+            .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
-
-                if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces');
+                if (metadataEntries.length > 0) {
+                    metadataEntries
+                        .map((entry: Metadata) => {
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                        });
+                } else {
+                    console.log('\n The namespace does not have metadata entries assigned.');
                 }
-                namespaces.map((namespace) => {
-                    console.log(new NamespaceInfoTable(namespace).toString());
-                });
-
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
 import {
     AccountAddressRestrictionTransaction,
     AccountLinkTransaction,
+    AccountMetadataTransaction,
     AccountMosaicRestrictionTransaction,
     AccountOperationRestrictionTransaction,
     AccountRestrictionModificationAction,
@@ -32,18 +30,22 @@ import {
     CosignatoryModificationAction,
     LinkAction,
     LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
     MosaicAliasTransaction,
     MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
     MosaicId,
+    MosaicMetadataTransaction,
+    MosaicRestrictionType,
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
     MultisigAccountModificationTransaction,
+    NamespaceMetadataTransaction,
     NamespaceRegistrationTransaction,
     NamespaceRegistrationType,
     SecretLockTransaction,
     SecretProofTransaction,
     Transaction,
-    TransactionStatus,
     TransferTransaction,
 } from 'nem2-sdk';
 
@@ -77,13 +79,11 @@ export class TransactionService {
             }
         } else if (transaction instanceof NamespaceRegistrationTransaction) {
             transactionFormatted += 'NamespaceRegistrationTransaction: NamespaceName:' + transaction.namespaceName;
-
             if (transaction.registrationType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.compact();
             } else if (transaction.parentId !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:SubNamespace ParentId:' + transaction.parentId.toHex();
             }
-
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
@@ -105,31 +105,25 @@ export class TransactionService {
             transactionFormatted += 'MultisigAccountModificationTransaction:' +
                 ' MinApprovalDelta:' + transaction.minApprovalDelta +
                 ' MinRemovalDelta:' + transaction.minRemovalDelta;
-
             transaction.modifications.map((modification) => {
                 transactionFormatted += ' Type:' +
                     (modification.modificiationType === CosignatoryModificationAction.Add ? 'Add' : 'Remove');
                 transactionFormatted += ' CosignatoryPublicAccount:' + modification.cosignatoryPublicAccount.address.pretty();
             });
-
         } else if (transaction instanceof AggregateTransaction) {
             transactionFormatted += 'AggregateTransaction: ';
-
             if (transaction.cosignatures.length > 0) {
                 transactionFormatted += 'Cosignatures:';
             }
-
             transaction.cosignatures.map((cosignature) => {
                 transactionFormatted += ' SignerPublicKey:' + cosignature.signer.address.pretty();
             });
-
             if (transaction.innerTransactions.length > 0) {
                 transactionFormatted += ' InnerTransactions: [';
                 transaction.innerTransactions.map((innerTransaction) => {
                     transactionFormatted += ' ' + this.formatTransactionToFilter(innerTransaction) + '';
                 });
                 transactionFormatted += ' ]';
-
             }
         } else if (transaction instanceof LockFundsTransaction) {
             transactionFormatted += 'LockFundsTransaction: ' +
@@ -143,7 +137,6 @@ export class TransactionService {
                 ' HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
                 ' RecipientAddress:' + transaction.recipientAddress.pretty();
-
         } else if (transaction instanceof SecretProofTransaction) {
             transactionFormatted += 'SecretProofTransaction: ' +
                 'HashType:' + transaction.hashType +
@@ -188,6 +181,42 @@ export class TransactionService {
                         (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
                     transactionFormatted += 'value:' + modification.value;
                 });
+        } else if (transaction instanceof MosaicGlobalRestrictionTransaction) {
+            transactionFormatted += 'MosaicGlobalRestrictionTransaction: ' +
+                'MosaicId:' + transaction.mosaicId.toHex() +
+                ' ReferenceMosaicId:' + transaction.referenceMosaicId.toHex() +
+                ' RestrictionKey:' + transaction.restrictionKey.toHex() +
+                ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
+                ' PreviousRestrictionType:' + MosaicRestrictionType[transaction.previousRestrictionType] +
+                ' NewRestrictionValue:' + transaction.newRestrictionValue.toString() +
+                ' NewRestrictionType:' + MosaicRestrictionType[transaction.newRestrictionType];
+        } else if (transaction instanceof MosaicAddressRestrictionTransaction) {
+            transactionFormatted += 'MosaicAddressRestrictionTransaction: ' +
+                'MosaicId:' + transaction.mosaicId.toHex() +
+                ' RestrictionKey:' + transaction.restrictionKey.toHex() +
+                ' TargetAddress:' + transaction.targetAddress.pretty() +
+                ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
+                ' NewRestrictionValue:' + transaction.newRestrictionValue.toString();
+        } else if (transaction instanceof AccountMetadataTransaction) {
+            transactionFormatted += 'AccountMetadataTransaction: ' +
+                'TargetPublicKey:' + transaction.targetPublicKey +
+                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toHex() +
+                ' ValueSizeDelta:' + transaction.valueSizeDelta.toString() +
+                ' Value:' + transaction.value;
+        } else if (transaction instanceof MosaicMetadataTransaction) {
+            transactionFormatted += 'MosaicMetadataTransaction: ' +
+                'TargetPublicKey:' + transaction.targetPublicKey +
+                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toHex() +
+                ' TargetMosaicId:' + transaction.targetMosaicId.toHex() +
+                ' ValueSizeDelta:' + transaction.valueSizeDelta.toString() +
+                ' Value:' + transaction.value;
+        } else if (transaction instanceof NamespaceMetadataTransaction) {
+            transactionFormatted += 'NamespaceMetadataTransaction: ' +
+                'TargetPublicKey:' + transaction.targetPublicKey +
+                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toHex() +
+                ' TargetNamespaceId:' + transaction.targetNamespaceId.toHex() +
+                ' ValueSizeDelta:' + transaction.valueSizeDelta.toString() +
+                ' Value:' + transaction.value;
         }
         transactionFormatted += (transaction.signer ? ' SignerPublicKey:' + transaction.signer.address.pretty() : '') +
             ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +
@@ -195,30 +224,4 @@ export class TransactionService {
         return transactionFormatted;
     }
 
-    public formatTransactionStatus(status: TransactionStatus) {
-
-        const table = new Table({
-            style: {head: ['cyan']},
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-        let text = '';
-        text += '\n\n' + chalk.green('Transaction Status') + '\n';
-        table.push(
-            ['Group', status.group],
-            ['Status', status.status],
-            ['Hash', status.hash],
-        );
-        if (status.deadline) {
-            table.push(
-                ['Deadline', status.deadline.value.toString()],
-            );
-        }
-        if (status.height && status.height.compact() > 0 ) {
-            table.push(
-                ['Height', status.height.compact().toString()],
-            );
-        }
-        text += table.toString();
-        return text;
-    }
 }

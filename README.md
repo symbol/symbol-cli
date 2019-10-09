@@ -11,17 +11,14 @@ This tool will enable you perform the most common and regular used actions in NE
 
 ## Important Notes
 
-- [0.13.1](CHANGELOG.md#0131-30-Sep-2019) - **Elephant Network Compatibility (catapult-server@0.7.0.1)**
+- [0.13.2](CHANGELOG.md#0132-07-Oct-2019) - **Elephant Network Compatibility (catapult-server@0.7.0.1)**
 - [0.12.0](CHANGELOG.md#0120-04-Jun-2019) - **Dragon Network Compatibility (catapult-server@0.4.0.1)**
 
 The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
 ## Requirements
 
-The nem2-cli works on NodeJS versions:
-
-- 8.9.X
-- 9.X.X
+- Node v10.13.0 (LTS)
 
 ## Installation
 
