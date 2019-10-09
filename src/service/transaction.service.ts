@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
 import {
     AccountAddressRestrictionTransaction,
     AccountLinkTransaction,
@@ -48,157 +48,233 @@ import {
 } from 'nem2-sdk';
 
 export class TransactionService {
-
+    private table: HorizontalTable;
     constructor() {
 
     }
 
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
+        const propertyList: any[] = [];
         if (transaction instanceof TransferTransaction) {
-            transactionFormatted += 'TransferTransaction: RecipientAddress:';
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['RecipientAddress', 'Message', 'Mosaics', 'SignerPublicKey', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'TransferTransaction:\n';
             if (transaction.recipientAddress instanceof Address) {
-                transactionFormatted += transaction.recipientAddress.pretty();
+                propertyList[0] = transaction.recipientAddress.pretty();
             } else {
-                transactionFormatted += transaction.recipientAddress.toHex();
+                propertyList[0] = transaction.recipientAddress.toHex();
             }
-            transactionFormatted += transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
+            propertyList[1] = transaction.message.payload.length > 0 ? ' Message:\"' + transaction.message.payload + '\"' : '';
             if (transaction.mosaics.length > 0) {
-                transactionFormatted += ' Mosaics: ';
+                let mosaicText = '';
                 transaction.mosaics.map((mosaic) => {
                     if (mosaic.id instanceof MosaicId) {
-                        transactionFormatted += 'MosaicId:';
+                        mosaicText += 'MosaicId:';
                     } else {
-                        transactionFormatted += 'NamespaceId:';
+                        mosaicText += 'NamespaceId:';
                     }
-                    transactionFormatted += mosaic.id.toHex() + '::' + mosaic.amount.compact() + ',';
+                    mosaicText += mosaic.id.toHex() + '::' + mosaic.amount.compact() + ',';
                 });
-                transactionFormatted = transactionFormatted.substr(0, transactionFormatted.length - 1);
+                mosaicText = mosaicText.substr(0, mosaicText.length - 1);
+                propertyList[2] = mosaicText;
             }
         } else if (transaction instanceof NamespaceRegistrationTransaction) {
-            transactionFormatted += 'NamespaceRegistrationTransaction: NamespaceName:' + transaction.namespaceName;
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['NamespaceName', 'NamespaceRegistrationType', 'Duration', 'ParentId', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+            transactionFormatted += 'NamespaceRegistrationTransaction:\n';
+            propertyList[0] = transaction.namespaceName;
 
             if (transaction.registrationType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
-                transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.compact();
+                propertyList[1] = 'RootNamespace';
+                propertyList[2] = transaction.duration.compact();
             } else if (transaction.parentId !== undefined) {
-                transactionFormatted += ' NamespaceRegistrationType:SubNamespace ParentId:' + transaction.parentId.toHex();
+                propertyList[1] = 'SubNamespace';
+                propertyList[3] = transaction.parentId.toHex();
             }
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
-            transactionFormatted += 'MosaicDefinitionTransaction: ' +
-                'MosaicId:' + transaction.mosaicId.toHex();
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['MosaicId', 'Duration', 'Divisibility', 'SupplyMutable', 'Transferable', 'Restrictable', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'MosaicDefinitionTransaction:\n';
+            propertyList[0] = transaction.mosaicId.toHex();
             if (transaction.duration) {
-                transactionFormatted += ' Duration:' + transaction.duration.compact();
+                propertyList[1] = transaction.duration.compact();
             }
-            transactionFormatted += ' Divisibility:' + transaction.divisibility +
-                ' SupplyMutable:' + transaction.flags.supplyMutable +
-                ' Transferable:' + transaction.flags.transferable +
-                ' Restrictable:' + transaction.flags.restrictable;
+            propertyList[2] = transaction.divisibility;
+            propertyList[3] = transaction.flags.supplyMutable;
+            propertyList[4] = transaction.flags.transferable;
+            propertyList[5] = transaction.flags.restrictable;
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
-            transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
-                'MosaicId:' + transaction.mosaicId.toHex();
-            transactionFormatted += ' Direction:' + (transaction.direction === MosaicSupplyChangeAction.Increase ?
-                'IncreaseSupply' : 'DecreaseSupply');
-            transactionFormatted += ' Delta:' + transaction.delta.compact();
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['MosaicId', 'Direction', 'Delta', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
 
+            transactionFormatted += 'MosaicSupplyChangeTransaction:\n';
+            propertyList[0] = transaction.mosaicId.toHex();
+            propertyList[1] = transaction.direction === MosaicSupplyChangeAction.Increase ?
+                'IncreaseSupply' : 'DecreaseSupply';
+            propertyList[2] = transaction.delta.compact();
         } else if (transaction instanceof MultisigAccountModificationTransaction) {
-            transactionFormatted += 'MultisigAccountModificationTransaction:' +
-                ' MinApprovalDelta:' + transaction.minApprovalDelta +
-                ' MinRemovalDelta:' + transaction.minRemovalDelta;
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['MinApprovalDelta', 'MinRemovalDelta', 'Type', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
 
+            transactionFormatted += 'MultisigAccountModificationTransaction:\n';
+            propertyList[0] = transaction.minApprovalDelta;
+            propertyList[1] = transaction.minRemovalDelta;
+            propertyList[2] = '';
             transaction.modifications.map((modification) => {
-                transactionFormatted += ' Type:' +
+                propertyList[2] += 'Type: ' +
                     (modification.modificiationType === CosignatoryModificationAction.Add ? 'Add' : 'Remove');
-                transactionFormatted += ' CosignatoryPublicAccount:' + modification.cosignatoryPublicAccount.address.pretty();
+                propertyList[2] += 'CosignatoryPublicAccount: ' + modification.cosignatoryPublicAccount.address.pretty() + '\n';
             });
 
         } else if (transaction instanceof AggregateTransaction) {
-            transactionFormatted += 'AggregateTransaction: ';
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['Cosignatures', 'InnerTransactions', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
 
-            if (transaction.cosignatures.length > 0) {
-                transactionFormatted += 'Cosignatures:';
-            }
-
+            transactionFormatted += 'AggregateTransaction:\n';
+            propertyList[0] = '';
             transaction.cosignatures.map((cosignature) => {
-                transactionFormatted += ' SignerPublicKey:' + cosignature.signer.address.pretty();
+                propertyList[0] += 'SignerPublicKey:' + cosignature.signer.address.pretty();
             });
 
-            if (transaction.innerTransactions.length > 0) {
-                transactionFormatted += ' InnerTransactions: [';
-                transaction.innerTransactions.map((innerTransaction) => {
-                    transactionFormatted += ' ' + this.formatTransactionToFilter(innerTransaction) + '';
-                });
-                transactionFormatted += ' ]';
-
-            }
+            propertyList[1] = '[ ';
+            transaction.innerTransactions.map((innerTransaction) => {
+                propertyList[1] += ' ' + this.formatTransactionToFilter(innerTransaction);
+            });
+            propertyList[1] += ' ]';
         } else if (transaction instanceof LockFundsTransaction) {
-            transactionFormatted += 'LockFundsTransaction: ' +
-                'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
-                ' Duration:' + transaction.duration.compact() +
-                ' Hash:' + transaction.hash;
-        } else if (transaction instanceof SecretLockTransaction) {
-            transactionFormatted += 'SecretLockTransaction: ' +
-                'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
-                ' Duration:' + transaction.duration.compact() +
-                ' HashType:' + transaction.hashType +
-                ' Secret:' + transaction.secret +
-                ' RecipientAddress:' + transaction.recipientAddress.pretty();
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['Mosaic', 'Duration', 'Hash', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
 
+            transactionFormatted += 'LockFundsTransaction:\n';
+            propertyList[0] = transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact();
+            propertyList[1] = transaction.duration.compact();
+            propertyList[2] = transaction.hash;
+        } else if (transaction instanceof SecretLockTransaction) {
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['Mosaic', 'Duration', 'HashType', 'Secret', 'RecipientAddress', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'SecretLockTransaction:\n';
+            propertyList[0] = transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact();
+            propertyList[1] = transaction.duration.compact();
+            propertyList[2] = transaction.hashType;
+            propertyList[3] = transaction.secret;
+            propertyList[4] = transaction.recipientAddress.pretty();
         } else if (transaction instanceof SecretProofTransaction) {
-            transactionFormatted += 'SecretProofTransaction: ' +
-                'HashType:' + transaction.hashType +
-                ' RecipientAddress:' + transaction.recipientAddress.pretty() +
-                ' Secret:' + transaction.secret +
-                ' Proof:' + transaction.proof;
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['HashType', 'RecipientAddress', 'Secret', 'Proof', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'SecretProofTransaction: ';
+            propertyList[0] = transaction.hashType;
+            propertyList[1] = transaction.recipientAddress.pretty();
+            propertyList[2] = transaction.secret;
+            propertyList[3] = transaction.proof;
         } else if (transaction instanceof MosaicAliasTransaction) {
-            transactionFormatted += 'MosaicAliasTransaction: ' +
-                'AliasAction:' + AliasAction[transaction.aliasAction] +
-                ' MosaicId:' + transaction.mosaicId.toHex() +
-                ' NamespaceId:' + transaction.namespaceId.toHex();
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['AliasAction', 'MosaicId', 'NamespaceId', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'MosaicAliasTransaction:\n';
+            propertyList[0] = AliasAction[transaction.aliasAction];
+            propertyList[1] = transaction.mosaicId.toHex();
+            propertyList[2] = transaction.namespaceId.toHex();
         } else if (transaction instanceof AddressAliasTransaction) {
-            transactionFormatted += 'AddressAliasTransaction: ' +
-                'AliasAction:' + AliasAction[transaction.aliasAction] +
-                ' Address:' + transaction.address.pretty() +
-                ' NamespaceId:' + transaction.namespaceId.toHex();
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['AliasAction', 'Address', 'NamespaceId', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'AddressAliasTransaction: \n';
+            propertyList[0] = AliasAction[transaction.aliasAction];
+            propertyList[1] = transaction.address.pretty();
+            propertyList[2] = transaction.namespaceId.toHex();
         } else if (transaction instanceof AccountLinkTransaction) {
-            transactionFormatted += 'AccountLinkTransaction: ' +
-                'LinkAction:' + LinkAction[transaction.linkAction] +
-                ' RemoteAccountKey: ' + transaction.remotePublicKey;
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['LinkAction', 'RemoteAccountKey', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'AccountLinkTransaction:\n';
+            propertyList[0] = LinkAction[transaction.linkAction];
+            propertyList[1] = transaction.remotePublicKey;
         } else if (transaction instanceof AccountAddressRestrictionTransaction) {
-            transactionFormatted += 'AccountAddressRestrictionTransaction:' +
-                ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
-                transaction.modifications.map((modification) => {
-                    transactionFormatted += ' modificationAction:' +
-                        (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
-                    transactionFormatted += 'value:' + modification.value;
-                });
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['AccountRestrictionType', 'modifications', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'AccountAddressRestrictionTransaction:\n';
+            propertyList[0] = AccountRestrictionType[transaction.restrictionType];
+            propertyList[1] = '';
+            transaction.modifications.map((modification) => {
+                propertyList[1] += ' modificationAction:' +
+                    (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
+                propertyList[1] += 'value:' + modification.value + ' ';
+            });
         } else if (transaction instanceof AccountMosaicRestrictionTransaction) {
-            transactionFormatted += 'AccountMosaicRestrictionTransaction:' +
-                ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
-                transaction.modifications.map((modification) => {
-                    transactionFormatted += ' modificationAction:' +
-                        (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
-                    transactionFormatted += 'value:' + modification.value;
-                });
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['AccountRestrictionType', 'modifications', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'AccountMosaicRestrictionTransaction:\n';
+            propertyList[0] = AccountRestrictionType[transaction.restrictionType];
+            propertyList[1] = '';
+            transaction.modifications.map((modification) => {
+                propertyList[1] += ' modificationAction:' +
+                    (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
+                propertyList[1] += 'value:' + modification.value;
+            });
         } else if (transaction instanceof AccountOperationRestrictionTransaction) {
-            transactionFormatted += 'AccountOperationRestrictionTransaction:' +
-                ' AccountRestrictionType:' + AccountRestrictionType[transaction.restrictionType] +
-                transaction.modifications.map((modification) => {
-                    transactionFormatted += ' modificationAction:' +
-                        (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
-                    transactionFormatted += 'value:' + modification.value;
-                });
+            this.table = new Table({
+                style: { head: ['cyan'] },
+                head: ['AccountRestrictionType', 'modifications', 'Deadline', 'Hash'],
+            }) as HorizontalTable;
+
+            transactionFormatted += 'AccountOperationRestrictionTransaction:\n';
+            propertyList[0] = AccountRestrictionType[transaction.restrictionType];
+            propertyList[1] = '';
+            transaction.modifications.map((modification) => {
+                propertyList[1] += ' modificationAction:' +
+                    (modification.modificationType === AccountRestrictionModificationAction.Add ? 'Add' : 'Remove');
+                propertyList[1] += 'value:' + modification.value;
+            });
         }
-        transactionFormatted += (transaction.signer ? ' SignerPublicKey:' + transaction.signer.address.pretty() : '') +
-            ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +
-            (transaction.transactionInfo && transaction.transactionInfo.hash ? ' Hash:' + transaction.transactionInfo.hash : '');
+        propertyList.push(transaction.signer ? transaction.signer.address.pretty() : '');
+        propertyList.push(transaction.deadline.value.toLocalDate().toString());
+        propertyList.push(transaction.transactionInfo && transaction.transactionInfo.hash ? transaction.transactionInfo.hash : '');
+        // this.table.push(propertyList);
+        console.log(propertyList);
+        transactionFormatted += this.table.toString();
         return transactionFormatted;
     }
 
     public formatTransactionStatus(status: TransactionStatus) {
 
         const table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         let text = '';
@@ -213,7 +289,7 @@ export class TransactionService {
                 ['Deadline', status.deadline.value.toString()],
             );
         }
-        if (status.height && status.height.compact() > 0 ) {
+        if (status.height && status.height.compact() > 0) {
             table.push(
                 ['Height', status.height.compact().toString()],
             );
