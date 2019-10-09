@@ -46,6 +46,10 @@ export const subcommands = [
         brief: 'Get node diagnostics reports',
     },
     {
+        name: 'metadata',
+        brief: 'Get metadata related information',
+    },
+    {
         name: 'monitor',
         brief: 'Monitor blocks, transactions and errors',
     },
