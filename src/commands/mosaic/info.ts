@@ -16,27 +16,53 @@
  *
  */
 import chalk from 'chalk';
-import { command, ExpectedError, metadata, option } from 'clime';
-import { AccountHttp, MosaicHttp, MosaicId, MosaicService } from 'nem2-sdk';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
+import {command, metadata, option} from 'clime';
+import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
+import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'h',
-        description: 'Mosaic Id in hexadecimal format',
+        flag: 'm',
+        description: 'Mosaic id in hexadecimal format. Example: 941299B2B7E1291C',
     })
-    hex: string;
+    mosaicId: string;
+}
 
-    @option({
-        flag: 'u',
-        description: 'Mosaic id in uint64 format. [number, number]',
-    })
-    uint: string;
+export class MosaicViewTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly mosaicView: MosaicView) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Id', mosaicView.mosaicInfo.id.toHex()],
+            ['Divisibility', mosaicView.mosaicInfo.divisibility],
+            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
+            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
+            ['Height', mosaicView.mosaicInfo.height.compact()],
+            ['Expiration', mosaicView.mosaicInfo.duration.compact() === 0 ?
+                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
+            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
+            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
+            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
+                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
 }
 
 @command({
-    description: 'Fetch Mosaic info',
+    description: 'Fetch mosaic info',
 })
 export default class extends ProfileCommand {
 
@@ -48,62 +74,24 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile();
-        if (!options.hex && !options.uint) {
-            options.hex = OptionsResolver(options,
-                'hex',
-                () => undefined,
-                'Introduce the mosaic id in hexadecimal format: ');
-        }
-
-        let mosaicId: MosaicId;
-        if (options.hex) {
-            mosaicId = new MosaicId(options.hex);
-        } else if (options.uint) {
-            mosaicId = new MosaicId(JSON.parse(options.uint));
-        } else {
-            throw new ExpectedError('You need to introduce a mosaicId');
-        }
+        options.mosaicId = OptionsResolver(options,
+            'mosaicId',
+            () => undefined,
+            'Introduce the mosaic id in hexadecimal format: ');
+        const mosaicId = new MosaicId(options.mosaicId);
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),
             new MosaicHttp(profile.url),
         );
-
         mosaicService.mosaicsView([mosaicId])
             .subscribe((mosaicViews) => {
                 this.spinner.stop(true);
                 if (mosaicViews.length === 0) {
                     console.log('No mosaic exists with this id ' + mosaicId.toHex());
                 } else {
-                    const mosaicView = mosaicViews[0];
-                    let text = '';
-                    let expiration: string;
-                    text += chalk.green('Mosaic:\t\n');
-                    text += 'Hex:\t\t\t' + mosaicId.toHex() + '\n';
-                    text += 'Uint64:\t\t\t[ ' + mosaicId.id.lower + ', ' + mosaicId.id.higher + ' ]\n\n';
-                    text += 'divisibility:\t\t' + mosaicView.mosaicInfo.divisibility + '\n';
-                    text += 'transferable:\t\t' + mosaicView.mosaicInfo.isTransferable() + '\n';
-                    text += 'supply mutable:\t\t' + mosaicView.mosaicInfo.isSupplyMutable() + '\n';
-                    text += 'block height:\t\t' + mosaicView.mosaicInfo.height.compact() + '\n';
-                    if (mosaicView.mosaicInfo.duration) {
-                        text += 'duration:\t\t' + mosaicView.mosaicInfo.duration.compact() + '\n';
-                        if (0 === mosaicView.mosaicInfo.duration.compact()) {
-                            expiration = 'Never';
-                        } else {
-                            const mosaicHeight = mosaicView.mosaicInfo.height.compact();
-                            expiration = (mosaicHeight + mosaicView.mosaicInfo.duration.compact()).toString();
-                        }
-                        text += 'expiration height:\t' + expiration + '\n';
-                    }
-                    text += 'owner:\t\t\t' + mosaicView.mosaicInfo.owner.address.pretty() + '\n';
-                    text += 'supply:\t\t\t' + mosaicView.mosaicInfo.supply.compact()
-                        + '(absolute)\t\t'
-                        + (mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact()
-                            : mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility))
-                        + '(relative)\n';
-                    console.log(text);
+                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
                 }
-
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
@@ -111,4 +99,5 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
+
 }

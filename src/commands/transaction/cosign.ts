@@ -35,7 +35,7 @@ import {ProfileCommand, ProfileOptions} from '../../profile.command';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Aggregate bonded transaction hash to be signed',
+        description: 'Aggregate bonded transaction hash to be signed.',
     })
     hash: string;
 }
@@ -56,7 +56,7 @@ export default class extends ProfileCommand {
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
 
-        const hash = OptionsResolver(options,
+        options.hash = OptionsResolver(options,
             'hash',
             () => undefined,
             'Introduce aggregate bonded transaction hash to be signed: ');
@@ -66,10 +66,10 @@ export default class extends ProfileCommand {
         this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount, new QueryParams(100))),
+                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount.address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-                    _.transactionInfo.hash === hash), // Filter transaction
+                    _.transactionInfo.hash === options.hash), // Filter transaction
                 toArray(),
             )
             .subscribe((transactions: AggregateTransaction[]) => {

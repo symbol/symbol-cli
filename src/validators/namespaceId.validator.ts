@@ -16,14 +16,15 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
+import {NamespaceId, UInt64} from 'nem2-sdk';
 
-export class AddressValidator implements Validator<string> {
+export class NamespaceIdValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
         try {
-            Address.createFromRawAddress(value);
+            const namespaceIdUInt64 = UInt64.fromHex(value);
+            const ignored = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         } catch (err) {
-            throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Introduce a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
         }
     }
 }

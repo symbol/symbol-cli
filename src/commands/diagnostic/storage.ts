@@ -16,9 +16,33 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {command, metadata} from 'clime';
-import {DiagnosticHttp} from 'nem2-sdk';
+import {BlockchainStorageInfo, DiagnosticHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+
+export class StorageTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly storage: BlockchainStorageInfo) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Number of Accounts', storage.numAccounts],
+            ['Number of Blocks', storage.numBlocks],
+            ['Number of Transactions', storage.numAccounts],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Storage Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
 
 @command({
     description: 'Returns diagnostic information about the node storage',
@@ -40,9 +64,7 @@ export default class extends ProfileCommand {
         diagnosticHttp.getDiagnosticStorage()
             .subscribe((storage) => {
                 this.spinner.stop(true);
-                console.log('numBlocks: ' + storage.numBlocks);
-                console.log('numTransactions: ' + storage.numTransactions);
-                console.log('numAccounts: ' + storage.numAccounts);
+                console.log(new StorageTable(storage).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

@@ -33,28 +33,28 @@ export abstract class AccountTransactionsCommand extends ProfileCommand {
 export class AccountTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'p',
-        description: 'Account public key',
+        description: 'Account public key.',
         validator: new PublicKeyValidator(),
     })
-    publickey: string;
+    publicKey: string;
 
     @option({
         flag: 'n',
-        description: '(optional) Number of transactions',
+        description: '(Optional) Number of transactions.',
         default: 10,
     })
-    numtransactions: number;
+    numTransactions: number;
 
     @option({
         flag: 'i',
-        description: '(optional) Identifier of the transaction after which we want the transactions to be returned',
+        description: '(Optional) Identifier of the transaction after which we want the transactions to be returned.',
     })
     id: string;
 
     getQueryParams(): QueryParams {
         if (this.id === undefined) {
-            return new QueryParams(this.numtransactions);
+            return new QueryParams(this.numTransactions);
         }
-        return new QueryParams(this.numtransactions, this.id);
+        return new QueryParams(this.numTransactions, this.id);
     }
 }

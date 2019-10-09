@@ -16,14 +16,14 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
+import {UInt64} from 'nem2-sdk';
 
-export class AddressValidator implements Validator<string> {
+export class NumericStringValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
         try {
-            Address.createFromRawAddress(value);
+            UInt64.fromNumericString(value);
         } catch (err) {
-            throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Introduce a number.');
         }
     }
 }

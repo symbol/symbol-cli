@@ -47,7 +47,7 @@ export default class extends MonitorAddressCommand {
         listener.open().then(() => {
             listener.cosignatureAdded(address).subscribe((transaction) => {
                 const transactionFormatted = '\nCosignatureSignedTransaction: ParentHash:' + transaction.parentHash +
-                    ' Signer:' + transaction.signer +
+                    ' SignerPublicKey:' + transaction.signerPublicKey +
                     ' Signature:' + transaction.signature;
                 console.log(transactionFormatted);
             }, (err) => {

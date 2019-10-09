@@ -17,54 +17,53 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp} from 'nem2-sdk';
+import {NamespaceHttp, NamespaceId} from 'nem2-sdk';
+import {forkJoin, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {ReceiptService} from '../../service/receipt.service';
-import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'h',
-        description: 'Block height.',
-        validator: new HeightValidator(),
+        flag: 'n',
+        description: 'Namespace name.',
     })
-    height: number;
+    name: string;
 }
 
 @command({
-    description: 'Get the receipts triggered for a given block height',
+    description: 'Get mosaicId or address behind an namespace',
 })
 export default class extends ProfileCommand {
-    private readonly receiptService: ReceiptService;
 
     constructor() {
         super();
-        this.receiptService = new ReceiptService();
     }
 
     @metadata
     execute(options: CommandOptions) {
-        options.height =  OptionsResolver(options,
-            'height',
-            () => undefined,
-            'Introduce the block height: ');
-
         this.spinner.start();
         const profile = this.getProfile();
-        const blockHttp = new BlockHttp(profile.url);
 
-        blockHttp.getBlockReceipts(options.height)
-            .subscribe((statement: any) => {
+        options.name = OptionsResolver(options,
+            'name',
+            () => undefined,
+            'Introduce the namespace name: ');
+        const namespaceId = new NamespaceId(options.name);
+
+        const namespaceHttp = new NamespaceHttp(profile.url);
+        forkJoin(
+            namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError((ignored) => of(null))),
+            namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError((ignored) => of(null))),
+        ).subscribe((res) => {
                 this.spinner.stop(true);
-                let txt = '';
-                txt += this.receiptService.formatTransactionStatements(statement);
-                txt += this.receiptService.formatAddressResolutionStatements(statement);
-                txt += this.receiptService.formatMosaicResolutionStatements(statement);
-                if ('' === txt) {
-                    txt = '[]';
+                if (res[0]) {
+                    console.log('\n' + res[0].toHex());
+                } else if (res[1]) {
+                    console.log('\n' + res[1].pretty() );
+                } else {
+                    console.log('\nThe namespace is not linked with a mosaic or address.');
                 }
-                console.log(txt);
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

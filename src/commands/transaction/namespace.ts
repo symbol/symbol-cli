@@ -15,60 +15,51 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Deadline, RegisterNamespaceTransaction, TransactionHttp, UInt64} from 'nem2-sdk';
+import {Deadline, NamespaceRegistrationTransaction, UInt64} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'n',
-        description: 'Namespace name',
+        description: 'Namespace name.',
     })
     name: string;
 
     @option({
         flag: 'r',
-        description: 'Root namespace',
+        description: 'Root namespace.',
         toggle: true,
     })
     rootnamespace: any;
 
     @option({
         flag: 's',
-        description: 'Sub namespace',
+        description: 'Sub namespace.',
         toggle: true,
     })
     subnamespace: any;
 
     @option({
         flag: 'd',
-        description: 'Duration (use it with --rootnamespace)',
+        description: 'Duration (use it with --rootnamespace).',
     })
-    duration: number;
+    duration: string;
 
     @option({
         flag: 'p',
-        description: 'Parent namespace name (use it with --subnamespace)',
+        description: 'Parent namespace name (use it with --subnamespace).',
     })
-    parentname: string;
-
-    @option({
-        flag: 'f',
-        description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
-    })
-    maxfee: number;
+    parentName: string;
 }
 
 @command({
     description: 'Register namespace transaction',
 })
 
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -88,43 +79,31 @@ export default class extends ProfileCommand {
 
         if (!options.rootnamespace) {
             options.subnamespace = true;
-            options.parentname = OptionsResolver(options,
-                'parentname',
+            options.parentName = OptionsResolver(options,
+                'parentName',
                 () => undefined,
-                'Introduce the Parent name: ');
+                'Introduce the parent namespace name: ');
         } else {
             options.duration = OptionsResolver(options,
                 'duration',
                 () => undefined,
                 'Introduce namespace rental duration: ');
         }
-        options.maxfee = OptionsResolver(options,
-            'maxfee',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        let registerNamespaceTransaction: RegisterNamespaceTransaction;
+        let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
-            registerNamespaceTransaction = RegisterNamespaceTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromUint(options.duration), profile.networkType, UInt64.fromUint(options.maxfee));
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
+                options.name, UInt64.fromNumericString(options.duration), profile.networkType, UInt64.fromUint(options.maxFee));
         } else {
-            registerNamespaceTransaction = RegisterNamespaceTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentname, profile.networkType, UInt64.fromUint(options.maxfee));
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
+                options.name, options.parentName, profile.networkType, UInt64.fromUint(options.maxFee));
         }
 
-        const signedTransaction = profile.account.sign(registerNamespaceTransaction, profile.networkGenerationHash);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('Signer: ', signedTransaction.signer);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

@@ -1,10 +1,11 @@
-
 import chalk from 'chalk';
 import {
+    Address,
     ArtifactExpiryReceipt,
     BalanceChangeReceipt,
     BalanceTransferReceipt,
     InflationReceipt,
+    ReceiptType,
     ResolutionEntry,
     ResolutionStatement,
     TransactionStatement,
@@ -28,56 +29,33 @@ export class ReceiptService {
             txt += 'height:\t\t' + transaction.height + '\n';
             transaction.receipts.map((receipt: any, receiptIndex: number) => {
                 txt += '<index: ' + transactionIndex + '-' + receiptIndex + '>\t';
-                const typeFlag = parseInt(String(receipt.type), 10).toString(16).charAt(0);
-                if ('1' === typeFlag) {
-                    const balanceTransferReceipt = new BalanceTransferReceipt(
-                        receipt.account,
-                        receipt.account.address,
-                        receipt.mosaicId,
-                        receipt.amount,
-                        receipt.version,
-                        receipt.type);
-                    txt += 'version:\t' + balanceTransferReceipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + balanceTransferReceipt.type + '\n';
-                    txt += '\t\tamount:\t\t' + balanceTransferReceipt.amount.compact() + '\n';
-                    txt += '\t\taddress:\t' + balanceTransferReceipt.sender.address.pretty() + '\n';
-                    txt += '\t\tpublicKey:\t' + balanceTransferReceipt.sender.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + balanceTransferReceipt.mosaicId.id.lower + ', '
-                        + balanceTransferReceipt.mosaicId.id.higher + ' ]\n\n';
-                } else if ('2' === typeFlag || '3' === typeFlag) {
-                    const balanceChangeReceipt = new BalanceChangeReceipt(
-                        receipt.account,
-                        receipt.mosaicId,
-                        receipt.amount,
-                        receipt.version,
-                        receipt.type);
-                    txt += 'version:\t' + balanceChangeReceipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + balanceChangeReceipt.type + '\n';
-                    txt += '\t\tamount:\t\t' + balanceChangeReceipt.amount.compact() + '\n';
-                    txt += '\t\taddress:\t' + balanceChangeReceipt.account.address.pretty() + '\n';
-                    txt += '\t\tpublicKey:\t' + balanceChangeReceipt.account.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + balanceChangeReceipt.mosaicId.id.lower + ', '
-                        + balanceChangeReceipt.mosaicId.id.higher + ' ]\n\n';
-                } else if ('4' === typeFlag) {
-                    const artifactExpiryReceipt = new ArtifactExpiryReceipt(
-                        receipt.mosaicId,
-                        receipt.version,
-                        receipt.type);
-                    txt += 'version:\t' + artifactExpiryReceipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + artifactExpiryReceipt.type + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + artifactExpiryReceipt.artifactId.id.lower + ', '
-                        + artifactExpiryReceipt.artifactId.id.higher + ' ]\n\n';
-                } else if ('5' === typeFlag) {
-                    const inflationReceipt = new InflationReceipt(
-                        receipt.mosaicId,
-                        receipt.amount,
-                        receipt.version,
-                        receipt.type);
-                    txt += 'version:\t' + inflationReceipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + inflationReceipt.type + '\n';
-                    txt += '\t\tamount:\t\t' + inflationReceipt.amount.compact() + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + inflationReceipt.mosaicId.id.lower + ', '
-                        + inflationReceipt.mosaicId.id.higher + ' ]\n\n';
+                if (receipt instanceof BalanceTransferReceipt) {
+                    txt += 'version:\t' + receipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
+                    txt += '\t\trecipientAddress:\t' +
+                        (receipt.recipientAddress instanceof Address ?
+                            receipt.recipientAddress.pretty() : receipt.recipientAddress.toHex()) + '\n';
+                    txt += '\t\tsenderPublickey:\t' + receipt.sender.publicKey + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + receipt.mosaicId.id.lower + ', ' + receipt.mosaicId.id.higher + ' ]\n\n';
+                    txt += '\t\tamount:\t\t' + receipt.amount.compact() + '\n';
+                } else if (receipt instanceof BalanceChangeReceipt) {
+                    txt += 'version:\t' + receipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n';
+                    txt += '\t\ttargetPublicKey:\t' + receipt.targetPublicAccount.publicKey + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + receipt.mosaicId.id.lower + ', '
+                        + receipt.mosaicId.id.higher + ' ]\n\n';
+                    txt += '\t\tamount:\t\t' + receipt.amount.compact() + '\n';
+                }  else if (receipt instanceof ArtifactExpiryReceipt) {
+                    txt += 'version:\t' + receipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + receipt.artifactId.id.lower + ', '
+                        + receipt.artifactId.id.higher + ' ]\n\n';
+                }  else if (receipt instanceof InflationReceipt) {
+                    txt += 'version:\t' + receipt.version + '\n';
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
+                    txt += '\t\tamount:\t\t' + receipt.amount.compact() + '\n';
+                    txt += '\t\tmosaicId:\t[ ' + receipt.mosaicId.id.lower + ', '
+                        + receipt.mosaicId.id.higher + ' ]\n\n';
                 }
             });
         });

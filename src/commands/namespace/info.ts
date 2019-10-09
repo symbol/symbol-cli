@@ -16,27 +16,74 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceService} from 'nem2-sdk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
+import {command, metadata, option} from 'clime';
+import {Namespace, NamespaceHttp, NamespaceId, NamespaceService, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
-        description: 'Namespace Id in string format',
+        description: 'Namespace name. Example: cat.currency',
     })
     name: string;
 
     @option({
-        flag: 'u',
-        description: 'Namespace id in uint64 format. [number, number]',
+        flag: 'h',
+        description: 'Namespace id in hexadecimal.',
+        validator: new NamespaceIdValidator(),
     })
-    uint: string;
+    hex: string;
+}
+
+export class NamespaceInfoTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly namespace: Namespace) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Id', namespace.id.toHex()],
+            ['Name', namespace.name],
+            ['Registration Type', namespace.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
+            ['Owner', namespace.owner.address.pretty()],
+            ['Start Height',  namespace.startHeight.compact()],
+            ['End Height', namespace.endHeight.compact()],
+        );
+        if (namespace.isSubnamespace()) {
+            this.table.push(
+                ['Parent Id', namespace.parentNamespaceId().toHex()],
+            );
+        }
+        if (namespace.hasAlias()) {
+            if (namespace.alias.address) {
+                this.table.push(
+                    ['Alias Type', 'Address'],
+                    ['Alias Address', namespace.alias.address.pretty()],
+                );
+            } else if (namespace.alias.mosaicId) {
+                this.table.push(
+                    ['Alias Type', 'MosaicId'],
+                    ['Alias MosaicId', namespace.alias.mosaicId.toHex()],
+                );
+            }
+        }
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Namespace Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
 }
 
 @command({
-    description: 'Fetch Namespace info',
+    description: 'Fetch namespace info',
 })
 export default class extends ProfileCommand {
 
@@ -49,26 +96,20 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const profile = this.getProfile();
 
-        if (!options.uint) {
-        options.name = OptionsResolver(options,
-            'name',
-            () => undefined,
-            'Introduce the namespace name: ');
-        }
-        if (options.name === '') {
-            options.uint = OptionsResolver(options,
-                'uint',
-                () => undefined,
-                'Introduce the namepsace id in uint64 format. [number, number]: ');
-        }
-
         let namespaceId: NamespaceId;
         if (options.name) {
+            options.name = OptionsResolver(options,
+                'name',
+                () => undefined,
+                'Introduce the namespace name: ');
             namespaceId = new NamespaceId(options.name);
-        } else if (options.uint) {
-            namespaceId = new NamespaceId(JSON.parse(options.uint));
         } else {
-            throw new ExpectedError('You need to introduce at least one');
+            options.hex = OptionsResolver(options,
+                'hex',
+                () => undefined,
+                'Introduce the namespace id in hexadecimal: ');
+            const namespaceIdUInt64 = UInt64.fromHex(options.hex);
+            namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         }
 
         const namespaceHttp = new NamespaceHttp(profile.url);
@@ -76,30 +117,7 @@ export default class extends ProfileCommand {
         namespaceService.namespace(namespaceId)
             .subscribe((namespace) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.green('Namespace: ') + chalk.bold(namespace.name) + '\n';
-                text += '-'.repeat('Namespace: '.length + namespace.name.length) + '\n\n';
-                text += 'hexadecimal:\t' + namespace.id.toHex() + '\n';
-                text += 'uint:\t\t[ ' + namespace.id.id.lower + ', ' + namespace.id.id.higher + ' ]\n';
-
-                if (namespace.isRoot()) {
-                    text += 'type:\t\tRoot namespace \n';
-                } else {
-                    text += 'type:\t\tSub namespace \n';
-                }
-
-                text += 'owner:\t\t' + namespace.owner.address.pretty() + '\n';
-                text += 'startHeight:\t' + namespace.startHeight.compact() + '\n';
-                text += 'endHeight:\t' + namespace.endHeight.compact() + '\n\n';
-
-                if (namespace.isSubnamespace()) {
-                    text += 'Parent Id:' + '\n';
-                    text += 'hexadecimal:\t' + namespace.parentNamespaceId().toHex() + '\n';
-                    text += 'uint:\t\t[ ' + namespace.parentNamespaceId().id.lower + ', ' +
-                        '' + namespace.parentNamespaceId().id.higher + ' ]\n\n';
-                }
-
-                console.log(text);
+                console.log(new NamespaceInfoTable(namespace).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
@@ -107,4 +125,5 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
+
 }

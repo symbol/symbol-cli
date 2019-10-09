@@ -16,10 +16,10 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AccountHttp, PublicAccount} from 'nem2-sdk';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import { command, metadata } from 'clime';
+import { AccountHttp, PublicAccount } from 'nem2-sdk';
+import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../account.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
 
 @command({
     description: 'Fetch incoming transactions from account',
@@ -44,7 +44,7 @@ export default class extends AccountTransactionsCommand {
 
         const accountHttp = new AccountHttp(profile.url);
 
-        accountHttp.incomingTransactions(publicAccount, options.getQueryParams())
+        accountHttp.incomingTransactions(publicAccount.address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';

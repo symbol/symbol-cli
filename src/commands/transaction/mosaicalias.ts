@@ -14,51 +14,40 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
-import {
-    Deadline,
-    MosaicAliasTransaction,
-    MosaicId,
-    NamespaceId,
-    TransactionHttp, UInt64,
-} from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
+import {BinaryValidator} from '../../validators/binary.validator';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Alias action (0: Link, 1: Unlink)',
+        description: 'Alias action (1: Link, 0: Unlink).',
+        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'm',
-        description: 'Mosaic Id in in hexadecimal format',
+        description: 'Mosaic id in hexadecimal format.',
+        validator: new MosaicIdValidator(),
     })
-    mosaic: string;
+    mosaicId: string;
 
     @option({
         flag: 'n',
-        description: 'Namespace name',
+        description: 'Namespace name.',
     })
     namespace: string;
-
-    @option({
-        flag: 'f',
-        description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
-    })
-    maxfee: number;
 }
 
 @command({
     description: 'Set an alias to a mosaic',
 })
 
-export default class extends ProfileCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -73,55 +62,34 @@ export default class extends ProfileCommand {
             'namespace',
             () => undefined,
             'Introduce namespace name: ');
-        options.mosaic = OptionsResolver(options,
-                'mosaic',
+        const namespaceId = new NamespaceId(options.namespace);
+
+        options.action = OptionsResolver(options,
+            'action',
+            () => undefined,
+            'Introduce alias action (1: Link, 0: Unlink): ');
+
+        options.mosaicId = OptionsResolver(options,
+                'mosaicId',
                 () => undefined,
                 'Introduce mosaic in hexadecimal format: ');
+        const mosaicId = new MosaicId(options.mosaicId);
 
-        options.maxfee = OptionsResolver(options,
-            'maxfee',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        let mosaicId: MosaicId;
-        if (options.mosaic) {
-            mosaicId = new MosaicId(options.mosaic);
-        } else {
-            throw new ExpectedError('You need to introduce mosaic id.');
-        }
-
-        let namespaceId: NamespaceId;
-        if (options.namespace) {
-            namespaceId = new NamespaceId(options.namespace);
-        } else {
-            throw new ExpectedError('You need to introduce namespace id.');
-        }
-
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            OptionsResolver(options,
-                'action',
-                () => undefined,
-                'Introduce alias action (0: Link, 1: Unlink): '),
+            options.action,
             namespaceId,
             mosaicId,
             profile.networkType,
-            UInt64.fromUint(options.maxfee),
+            UInt64.fromUint(options.maxFee),
         );
 
         const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('Signer: ', signedTransaction.signer);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }

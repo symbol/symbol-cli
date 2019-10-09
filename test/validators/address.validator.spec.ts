@@ -42,7 +42,7 @@ describe('address validator', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
             new AddressValidator().validate(address, {name: 'address', source: address});
-        }).to.throws('introduce a valid address');
+        }).to.throws('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 
 });
