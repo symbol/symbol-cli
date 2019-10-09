@@ -67,7 +67,7 @@ export class NamespaceInfoTable {
             } else if (namespaceInfo.alias.mosaicId) {
                 this.table.push(
                     ['Alias Type', 'MosaicId'],
-                    ['Alias MosaicId', namespaceInfo.alias.mosaicId.toString()],
+                    ['Alias MosaicId', namespaceInfo.alias.mosaicId.toHex()],
                 );
             }
         }
