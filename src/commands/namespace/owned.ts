@@ -17,8 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Address, NamespaceHttp, NamespaceInfo, NamespaceService} from 'nem2-sdk';
-import {mergeMap, toArray} from 'rxjs/operators';
+import {Address, NamespaceHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
@@ -53,14 +52,8 @@ export default class extends ProfileCommand {
                 () => this.getProfile(options).account.address.plain(),
                 'Introduce the address: '));
         const namespaceHttp = new NamespaceHttp(profile.url);
-        const namespaceService = new NamespaceService(namespaceHttp);
         this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)
-            .pipe(
-                mergeMap((_) => _),
-                mergeMap((namespaceInfo: NamespaceInfo) => namespaceService.namespace(namespaceInfo.id)),
-                toArray(),
-            )
             .subscribe((namespaces) => {
                 this.spinner.stop(true);
 
