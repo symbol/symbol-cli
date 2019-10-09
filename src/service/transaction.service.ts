@@ -185,7 +185,7 @@ export class TransactionService {
             transactionFormatted += 'MosaicGlobalRestrictionTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex() +
                 ' ReferenceMosaicId:' + transaction.referenceMosaicId.toHex() +
-                ' RestrictionKey:' + transaction.restrictionKey.toString() +
+                ' RestrictionKey:' + transaction.restrictionKey.toHex() +
                 ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
                 ' PreviousRestrictionType:' + MosaicRestrictionType[transaction.previousRestrictionType] +
                 ' NewRestrictionValue:' + transaction.newRestrictionValue.toString() +
@@ -193,30 +193,30 @@ export class TransactionService {
         } else if (transaction instanceof MosaicAddressRestrictionTransaction) {
             transactionFormatted += 'MosaicAddressRestrictionTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex() +
-                ' RestrictionKey:' + transaction.restrictionKey.toString() +
+                ' RestrictionKey:' + transaction.restrictionKey.toHex() +
                 ' TargetAddress:' + transaction.targetAddress.pretty() +
                 ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
                 ' NewRestrictionValue:' + transaction.newRestrictionValue.toString();
         } else if (transaction instanceof AccountMetadataTransaction) {
             transactionFormatted += 'AccountMetadataTransaction: ' +
                 'TargetPublicKey:' + transaction.targetPublicKey +
-                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toString() +
+                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toHex() +
                 ' ValueSizeDelta:' + transaction.valueSizeDelta.toString() +
-                ' Value:' + transaction.value.toString();
+                ' Value:' + transaction.value;
         } else if (transaction instanceof MosaicMetadataTransaction) {
             transactionFormatted += 'MosaicMetadataTransaction: ' +
                 'TargetPublicKey:' + transaction.targetPublicKey +
-                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toString() +
-                ' TargetMosaicId:' + transaction.targetMosaicId.toString() +
+                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toHex() +
+                ' TargetMosaicId:' + transaction.targetMosaicId.toHex() +
                 ' ValueSizeDelta:' + transaction.valueSizeDelta.toString() +
-                ' Value:' + transaction.value.toString();
+                ' Value:' + transaction.value;
         } else if (transaction instanceof NamespaceMetadataTransaction) {
             transactionFormatted += 'NamespaceMetadataTransaction: ' +
                 'TargetPublicKey:' + transaction.targetPublicKey +
-                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toString() +
-                ' TargetNamespaceId:' + transaction.targetNamespaceId.toString() +
+                ' ScopedMetadataKey:' + transaction.scopedMetadataKey.toHex() +
+                ' TargetNamespaceId:' + transaction.targetNamespaceId.toHex() +
                 ' ValueSizeDelta:' + transaction.valueSizeDelta.toString() +
-                ' Value:' + transaction.value.toString();
+                ' Value:' + transaction.value;
         }
         transactionFormatted += (transaction.signer ? ' SignerPublicKey:' + transaction.signer.address.pretty() : '') +
             ' Deadline:' + transaction.deadline.value.toLocalDate().toString() +
