@@ -97,10 +97,12 @@ export default class extends AnnounceTransactionsCommand {
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromNumericString(options.duration), profile.networkType, UInt64.fromUint(options.maxFee));
+                options.name, UInt64.fromNumericString(options.duration), profile.networkType,
+                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         } else {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentName, profile.networkType, UInt64.fromUint(options.maxFee));
+                options.name, options.parentName, profile.networkType,
+                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         }
 
         const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
