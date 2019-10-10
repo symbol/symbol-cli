@@ -42,7 +42,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const profile = this.getProfile();
 
         options.namespaceName = OptionsResolver(options,
             'namespaceId',
