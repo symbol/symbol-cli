@@ -59,7 +59,7 @@ export class TransactionService {
         if (transaction instanceof TransferTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['RecipientAddress', 'Message', 'Mosaics', 'SignerPublicKey', 'Deadline', 'Hash'],
+                head: ['RecipientAddress', 'Message', 'Mosaics', 'SignerPublicKey', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'TransferTransaction:\n';
@@ -85,7 +85,7 @@ export class TransactionService {
         } else if (transaction instanceof NamespaceRegistrationTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['NamespaceName', 'NamespaceRegistrationType', 'Duration', 'ParentId', 'Deadline', 'Hash'],
+                head: ['NamespaceName', 'NamespaceRegistrationType', 'Duration', 'ParentId', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
             transactionFormatted += 'NamespaceRegistrationTransaction:\n';
             propertyList[0] = transaction.namespaceName;
@@ -93,15 +93,27 @@ export class TransactionService {
             if (transaction.registrationType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
                 propertyList[1] = 'RootNamespace';
                 propertyList[2] = transaction.duration.compact();
+                propertyList[3] = '';
             } else if (transaction.parentId !== undefined) {
                 propertyList[1] = 'SubNamespace';
+                propertyList[2] = '';
                 propertyList[3] = transaction.parentId.toHex();
             }
 
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['MosaicId', 'Duration', 'Divisibility', 'SupplyMutable', 'Transferable', 'Restrictable', 'Deadline', 'Hash'],
+                head: [
+                    'MosaicId',
+                    'Duration',
+                    'Divisibility',
+                    'SupplyMutable',
+                    'Transferable',
+                    'Restrictable',
+                    'SignerPublicKey',
+                    'Deadline',
+                    'Hash',
+                ],
             }) as HorizontalTable;
 
             transactionFormatted += 'MosaicDefinitionTransaction:\n';
@@ -116,7 +128,7 @@ export class TransactionService {
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['MosaicId', 'Direction', 'Delta', 'Deadline', 'Hash'],
+                head: ['MosaicId', 'Direction', 'Delta', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'MosaicSupplyChangeTransaction:\n';
@@ -127,7 +139,7 @@ export class TransactionService {
         } else if (transaction instanceof MultisigAccountModificationTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['MinApprovalDelta', 'MinRemovalDelta', 'Type', 'Deadline', 'Hash'],
+                head: ['MinApprovalDelta', 'MinRemovalDelta', 'Type', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'MultisigAccountModificationTransaction:\n';
@@ -143,7 +155,7 @@ export class TransactionService {
         } else if (transaction instanceof AggregateTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['Cosignatures', 'InnerTransactions', 'Deadline', 'Hash'],
+                head: ['Cosignatures', 'InnerTransactions', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'AggregateTransaction:\n';
@@ -160,7 +172,7 @@ export class TransactionService {
         } else if (transaction instanceof LockFundsTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['Mosaic', 'Duration', 'Hash', 'Deadline', 'Hash'],
+                head: ['Mosaic', 'Duration', 'Hash', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'LockFundsTransaction:\n';
@@ -170,7 +182,7 @@ export class TransactionService {
         } else if (transaction instanceof SecretLockTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['Mosaic', 'Duration', 'HashType', 'Secret', 'RecipientAddress', 'Deadline', 'Hash'],
+                head: ['Mosaic', 'Duration', 'HashType', 'Secret', 'RecipientAddress', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'SecretLockTransaction:\n';
@@ -182,7 +194,7 @@ export class TransactionService {
         } else if (transaction instanceof SecretProofTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['HashType', 'RecipientAddress', 'Secret', 'Proof', 'Deadline', 'Hash'],
+                head: ['HashType', 'RecipientAddress', 'Secret', 'Proof', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'SecretProofTransaction: ';
@@ -193,7 +205,7 @@ export class TransactionService {
         } else if (transaction instanceof MosaicAliasTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['AliasAction', 'MosaicId', 'NamespaceId', 'Deadline', 'Hash'],
+                head: ['AliasAction', 'MosaicId', 'NamespaceId', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'MosaicAliasTransaction:\n';
@@ -203,7 +215,7 @@ export class TransactionService {
         } else if (transaction instanceof AddressAliasTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['AliasAction', 'Address', 'NamespaceId', 'Deadline', 'Hash'],
+                head: ['AliasAction', 'Address', 'NamespaceId', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'AddressAliasTransaction: \n';
@@ -213,7 +225,7 @@ export class TransactionService {
         } else if (transaction instanceof AccountLinkTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['LinkAction', 'RemoteAccountKey', 'Deadline', 'Hash'],
+                head: ['LinkAction', 'RemoteAccountKey', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'AccountLinkTransaction:\n';
@@ -222,7 +234,7 @@ export class TransactionService {
         } else if (transaction instanceof AccountAddressRestrictionTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['AccountRestrictionType', 'modifications', 'Deadline', 'Hash'],
+                head: ['AccountRestrictionType', 'modifications', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'AccountAddressRestrictionTransaction:\n';
@@ -236,7 +248,7 @@ export class TransactionService {
         } else if (transaction instanceof AccountMosaicRestrictionTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['AccountRestrictionType', 'modifications', 'Deadline', 'Hash'],
+                head: ['AccountRestrictionType', 'modifications', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'AccountMosaicRestrictionTransaction:\n';
@@ -250,7 +262,7 @@ export class TransactionService {
         } else if (transaction instanceof AccountOperationRestrictionTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['AccountRestrictionType', 'modifications', 'Deadline', 'Hash'],
+                head: ['AccountRestrictionType', 'modifications', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'AccountOperationRestrictionTransaction:\n';
@@ -265,8 +277,7 @@ export class TransactionService {
         propertyList.push(transaction.signer ? transaction.signer.address.pretty() : '');
         propertyList.push(transaction.deadline.value.toLocalDate().toString());
         propertyList.push(transaction.transactionInfo && transaction.transactionInfo.hash ? transaction.transactionInfo.hash : '');
-        // this.table.push(propertyList);
-        console.log(propertyList);
+        this.table.push(propertyList);
         transactionFormatted += this.table.toString();
         return transactionFormatted;
     }

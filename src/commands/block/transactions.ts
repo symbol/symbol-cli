@@ -94,7 +94,7 @@ export default class extends ProfileCommand {
                 let txt = '\n';
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
-                        txt += '(${index + 1}). ';
+                        txt += '(' + (index + 1) + '). ';
                         txt +=  this.transactionService.formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {
