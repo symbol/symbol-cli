@@ -21,6 +21,7 @@ import { HorizontalTable } from 'cli-table3';
 import {
     AccountAddressRestrictionTransaction,
     AccountLinkTransaction,
+    AccountMetadataTransaction,
     AccountMosaicRestrictionTransaction,
     AccountOperationRestrictionTransaction,
     AccountRestrictionModificationAction,
@@ -32,18 +33,22 @@ import {
     CosignatoryModificationAction,
     LinkAction,
     LockFundsTransaction,
+    MosaicAddressRestrictionTransaction,
     MosaicAliasTransaction,
     MosaicDefinitionTransaction,
+    MosaicGlobalRestrictionTransaction,
     MosaicId,
+    MosaicMetadataTransaction,
+    MosaicRestrictionType,
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
     MultisigAccountModificationTransaction,
+    NamespaceMetadataTransaction,
     NamespaceRegistrationTransaction,
     NamespaceRegistrationType,
     SecretLockTransaction,
     SecretProofTransaction,
     Transaction,
-    TransactionStatus,
     TransferTransaction,
 } from 'nem2-sdk';
 
@@ -99,7 +104,6 @@ export class TransactionService {
                 propertyList[2] = '';
                 propertyList[3] = transaction.parentId.toHex();
             }
-
         } else if (transaction instanceof MosaicDefinitionTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
@@ -151,7 +155,6 @@ export class TransactionService {
                     (modification.modificiationType === CosignatoryModificationAction.Add ? 'Add' : 'Remove');
                 propertyList[2] += 'CosignatoryPublicAccount: ' + modification.cosignatoryPublicAccount.address.pretty() + '\n';
             });
-
         } else if (transaction instanceof AggregateTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
@@ -282,30 +285,4 @@ export class TransactionService {
         return transactionFormatted;
     }
 
-    public formatTransactionStatus(status: TransactionStatus) {
-
-        const table = new Table({
-            style: { head: ['cyan'] },
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-        let text = '';
-        text += '\n\n' + chalk.green('Transaction Status') + '\n';
-        table.push(
-            ['Group', status.group],
-            ['Status', status.status],
-            ['Hash', status.hash],
-        );
-        if (status.deadline) {
-            table.push(
-                ['Deadline', status.deadline.value.toString()],
-            );
-        }
-        if (status.height && status.height.compact() > 0) {
-            table.push(
-                ['Height', status.height.compact().toString()],
-            );
-        }
-        text += table.toString();
-        return text;
-    }
 }

@@ -16,8 +16,10 @@
  *
  */
 import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {TransactionHttp} from 'nem2-sdk';
+import {TransactionHttp, TransactionStatus} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
@@ -28,6 +30,38 @@ export class CommandOptions extends ProfileOptions {
         description: 'Transaction hash.',
     })
     hash: string;
+}
+
+export class TransactionStatusTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly status: TransactionStatus) {
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Group', status.group],
+            ['Status', status.status],
+            ['Hash', status.hash],
+        );
+        if (status.deadline) {
+            this.table.push(
+                ['Deadline', status.deadline.value.toString()],
+            );
+        }
+        if (status.height && status.height.compact() > 0) {
+            this.table.push(
+                ['Height', status.height.compact().toString()],
+            );
+        }
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n\n' + chalk.green('Transaction Status') + '\n';
+        text += this.table.toString();
+        return text;
+    }
 }
 
 @command({
@@ -55,7 +89,7 @@ export default class extends ProfileCommand {
 
         transactionHttp.getTransactionStatus(hash)
             .subscribe((status) => {
-                console.log(this.transactionService.formatTransactionStatus(status));
+                console.log(new TransactionStatusTable(status).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

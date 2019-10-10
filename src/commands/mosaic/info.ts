@@ -22,11 +22,13 @@ import {command, metadata, option} from 'clime';
 import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
-        description: 'Mosaic id in hexadecimal format. Example: 941299B2B7E1291C',
+        description: 'Mosaic id in hexadecimal format.',
+        validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 }

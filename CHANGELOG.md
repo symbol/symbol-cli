@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.13.2] - 07-Oct-2019
+
+### Added
+
+- ``metadata account`` command.
+- ``metadata mosaic`` command.
+- ``metadata namespace`` command.
+- ``restriction mosaicglobal`` command.
+- ``restriction mosaicaddress`` command.
+- ``block header`` command.
+
+### Fixed
+
+- ``namespace info`` command.
+
 ## [0.13.1] - 30-Sep-2019
 
 ### Added
@@ -61,11 +76,13 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ## [0.11.3] - 03-Jun-2019
 
 ### Fixed
+
 - Static nem2-sdk & library version.
 
 ## [0.11.2] - 25-Apr-2019
 
 ### Added
+
 - ``transaction mosaic`` accepts creating eternal mosaics.
 - ``transaction mosaicalias`` command enables assigning namespaces to mosaics.
 - ``transaction addressalias`` command enables assigning namespaces to addresses.
@@ -73,6 +90,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ## [0.11.0] - 18-Mar-2019
 
 ### Changed
+
 - Adapted nem2-sdk 0.11.1 breaking changes.
 - The code is now rxjs 6.0 compatible.
 - ``transaction mosaic`` command does not require to specify a mosaic name.
@@ -85,7 +103,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 - Initial code release.
 
-[0.13.1]: https://github.com/nemtech/nem2-cli/compare/v0.12.0...v0.13.1
+[0.13.2]: https://github.com/nemtech/nem2-cli/compare/v0.13.1...v0.13.2
+[0.13.1]: https://github.com/nemtech/nem2-cli/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/nemtech/nem2-cli/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/nemtech/nem2-cli/compare/v0.11.3...v0.12.0
 [0.11.3]: https://github.com/nemtech/nem2-cli/compare/v0.11.2...v0.11.3
