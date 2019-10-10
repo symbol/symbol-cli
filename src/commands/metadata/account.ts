@@ -19,78 +19,79 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {TransactionHttp, TransactionStatus} from 'nem2-sdk';
+import {Address, Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {TransactionService} from '../../service/transaction.service';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'h',
-        description: 'Transaction hash.',
+        flag: 'a',
+        description: 'Account address.',
+        validator: new AddressValidator(),
     })
-    hash: string;
+    address: string;
 }
 
-export class TransactionStatusTable {
+export class MetadataEntryTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly status: TransactionStatus) {
+
+    constructor(public readonly entry: MetadataEntry) {
         this.table = new Table({
             style: {head: ['cyan']},
-            head: ['Property', 'Value'],
+            head: ['Type', 'Value'],
         }) as HorizontalTable;
+
         this.table.push(
-            ['Group', status.group],
-            ['Status', status.status],
-            ['Hash', status.hash],
+            ['Sender Public Key', entry.senderPublicKey],
+            ['Target Public Key', entry.targetPublicKey],
+            ['Value', entry.value],
         );
-        if (status.deadline) {
-            this.table.push(
-                ['Deadline', status.deadline.value.toString()],
-            );
-        }
-        if (status.height && status.height.compact() > 0) {
-            this.table.push(
-                ['Height', status.height.compact().toString()],
-            );
+        if (entry.targetId) {
+            this.table.push(['Target Id', entry.targetId.toHex()]);
         }
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Transaction Status') + '\n';
+        text += '\n\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n';
         text += this.table.toString();
         return text;
     }
 }
 
 @command({
-    description: 'Fetch transaction status.',
+    description: 'Fetch metadata entries from an account',
 })
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionService = new TransactionService();
     }
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile();
-
-        const transactionHttp = new TransactionHttp(profile.url);
-        const hash = OptionsResolver(options,
-            'hash',
-            () => undefined,
-            'Introduce the transaction hash: ');
-
         this.spinner.start();
+        const profile = this.getProfile(options);
 
-        transactionHttp.getTransactionStatus(hash)
-            .subscribe((status) => {
-                console.log(new TransactionStatusTable(status).toString());
+        options.address = OptionsResolver(options,
+                'address',
+                () => this.getProfile(options).account.address.plain(),
+                'Introduce an address: ');
+        const address = Address.createFromRawAddress(options.address);
+
+        const metadataHttp = new MetadataHttp(profile.url);
+        metadataHttp.getAccountMetadata(address)
+            .subscribe((metadataEntries) => {
+                this.spinner.stop(true);
+                if (metadataEntries.length > 0) {
+                    metadataEntries
+                        .map((entry: Metadata) => {
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                        });
+                } else {
+                    console.log('\n The address does not have metadata entries assigned.');
+                }
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';

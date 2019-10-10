@@ -26,7 +26,7 @@ import {HeightValidator} from '../../validators/block.validator';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
-        description: 'Block height',
+        description: 'Block height.',
         validator: new HeightValidator(),
     })
     height: number;

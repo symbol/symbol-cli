@@ -20,11 +20,11 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
@@ -41,6 +41,7 @@ export class AccountRestrictionsTable {
             style: {head: ['cyan']},
             head: ['Type', 'Value'],
         }) as HorizontalTable;
+
         accountRestrictions
             .filter((accountRestriction) => accountRestriction.values.length > 0)
             .map((accountRestriction) => {
@@ -61,7 +62,7 @@ export class AccountRestrictionsTable {
 @command({
     description: 'Fetch account restrictions assigned to an address',
 })
-export default class extends AnnounceTransactionsCommand {
+export default class extends ProfileCommand {
 
     constructor() {
         super();
@@ -71,11 +72,12 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile();
-        const address: Address = Address.createFromRawAddress(
+        options.address = Address.createFromRawAddress(
             OptionsResolver(options,
                 'address',
                 () => profile.account.address.plain(),
-                'Introduce an address: '));
+                'Introduce an address: ')).plain();
+        const address = Address.createFromRawAddress(options.address);
 
         const restrictionHttp = new RestrictionHttp(profile.url);
         restrictionHttp.getAccountRestrictions(address)
@@ -84,7 +86,7 @@ export default class extends AnnounceTransactionsCommand {
                 if (accountRestrictions.accountRestrictions.restrictions.length > 0) {
                     console.log(new AccountRestrictionsTable(accountRestrictions.accountRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The address does not have any account restriction assigned.');
+                    console.log('\n The address does not have account restrictions assigned.');
                 }
             }, (err: any) => {
                 this.spinner.stop(true);

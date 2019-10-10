@@ -19,12 +19,20 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
+import {Address, MosaicId, RestrictionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressValidator} from '../../validators/address.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
+    @option({
+        flag: 'a',
+        description: 'Account address.',
+        validator: new AddressValidator(),
+    })
+    address: string;
+
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -33,38 +41,33 @@ export class CommandOptions extends ProfileOptions {
     mosaicId: string;
 }
 
-export class MosaicViewTable {
+export class MosaicAddressRestrictionsTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly mosaicView: MosaicView) {
+
+    constructor(public readonly mosaicAddressRestrictions:  Map<string, string>) {
         this.table = new Table({
             style: {head: ['cyan']},
-            head: ['Property', 'Value'],
+            head: ['Type', 'Value'],
         }) as HorizontalTable;
-        this.table.push(
-            ['Id', mosaicView.mosaicInfo.id.toHex()],
-            ['Divisibility', mosaicView.mosaicInfo.divisibility],
-            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
-            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
-            ['Height', mosaicView.mosaicInfo.height.compact()],
-            ['Expiration', mosaicView.mosaicInfo.duration.compact() === 0 ?
-                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
-            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
-            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
-            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
-                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
-        );
-    }
+
+        mosaicAddressRestrictions.forEach((value: string, key: string) => {
+            this.table.push(
+                ['Key', key],
+                ['Value', value],
+            );
+        });
+}
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
+        text += '\n\n' + chalk.green('Mosaic Address Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }
 }
 
 @command({
-    description: 'Fetch mosaic info',
+    description: 'Fetch mosaic restrictions assigned to an address',
 })
 export default class extends ProfileCommand {
 
@@ -75,24 +78,28 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile();
+        const profile = this.getProfile(options);
+
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
             'Introduce the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        const mosaicService = new MosaicService(
-            new AccountHttp(profile.url),
-            new MosaicHttp(profile.url),
-        );
-        mosaicService.mosaicsView([mosaicId])
-            .subscribe((mosaicViews) => {
+        options.address =  OptionsResolver(options,
+            'address',
+            () => this.getProfile(options).account.address.plain(),
+            'Introduce an address: ');
+        const address = Address.createFromRawAddress(options.address);
+
+        const restrictionHttp = new RestrictionHttp(profile.url);
+        restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
+            .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
-                if (mosaicViews.length === 0) {
-                    console.log('No mosaic exists with this id ' + mosaicId.toHex());
+                if (mosaicRestrictions.restrictions.size > 0) {
+                    console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
+                    console.log('\n The address does not have mosaic address restrictions assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);
@@ -101,5 +108,4 @@ export default class extends ProfileCommand {
                 console.log(text, err.response !== undefined ? err.response.text : err);
             });
     }
-
 }
