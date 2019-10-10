@@ -19,48 +19,46 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
+import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'a',
-        description: 'Account address.',
-        validator: new AddressValidator(),
+        flag: 'm',
+        description: 'Mosaic id in hexadecimal format.',
+        validator: new MosaicIdValidator(),
     })
-    address: string;
+    mosaicId: string;
 }
 
-export class AccountRestrictionsTable {
+export class MosaicGlobalRestrictionsTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly accountRestrictions: AccountRestriction[]) {
+    constructor(public readonly mosaicGlobalRestrictions:  Map<string, MosaicGlobalRestrictionItem>) {
         this.table = new Table({
             style: {head: ['cyan']},
-            head: ['Type', 'Value'],
+            head: ['Restriction Key', 'Reference MosaicId', 'Restriction Type', 'Restriction Value'],
         }) as HorizontalTable;
 
-        accountRestrictions
-            .filter((accountRestriction) => accountRestriction.values.length > 0)
-            .map((accountRestriction) => {
-                this.table.push(
-                    [AccountRestrictionType[accountRestriction.restrictionType], accountRestriction.values.toString()],
-                );
-            });
+        mosaicGlobalRestrictions.forEach((value: MosaicGlobalRestrictionItem, key: string) => {
+            this.table.push(
+                [key, value.referenceMosaicId.toHex(), MosaicRestrictionType[value.restrictionType], value.restrictionValue],
+            );
+        });
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Account Restrictions') + '\n';
+        text += '\n\n' + chalk.green('Mosaic Global Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }
 }
 
 @command({
-    description: 'Fetch account restrictions assigned to an address',
+    description: 'Fetch global restrictions assigned to a mosaic',
 })
 export default class extends ProfileCommand {
 
@@ -72,21 +70,20 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        options.address =  OptionsResolver(options,
-            'address',
-            () => this.getProfile(options).account.address.plain(),
-            'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
+        options.mosaicId = OptionsResolver(options,
+            'mosaicId',
+            () => undefined,
+            'Introduce the mosaic id in hexadecimal format: ');
+        const mosaicId = new MosaicId(options.mosaicId);
 
         const restrictionHttp = new RestrictionHttp(profile.url);
-        restrictionHttp.getAccountRestrictions(address)
-            .subscribe((accountRestrictions) => {
+        restrictionHttp.getMosaicGlobalRestriction(mosaicId)
+            .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
-                if (accountRestrictions.accountRestrictions.restrictions.length > 0) {
-                    console.log(new AccountRestrictionsTable(accountRestrictions.accountRestrictions.restrictions).toString());
+                if (mosaicRestrictions.restrictions.size > 0) {
+                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The address does not have account restrictions assigned.');
+                    console.log('\n The mosaicId does not have mosaic global restrictions assigned.');
                 }
             }, (err) => {
                 this.spinner.stop(true);

@@ -33,8 +33,7 @@ export abstract class ProfileCommand extends Command {
     }
 
     public getProfile(options: ProfileOptions): Profile {
-        const profileName = options.profile ? options.profile :
-            (process.env.NEM2_PROFILE !== undefined ? process.env.NEM2_PROFILE : 'default') as string;
+        const profileName = options.profile ? options.profile : 'default';
         try {
             return this.profileService.findProfileNamed(profileName);
         } catch (err) {
