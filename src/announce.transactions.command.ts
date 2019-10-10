@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import {option} from 'clime';
 import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from './profile.command';
-import {MaxFeeValidator} from './validators/maxFee.validator';
+import {NumericStringValidator} from './validators/numericString.validator';
 
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
@@ -48,7 +48,7 @@ export class AnnounceTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'f',
         description: 'Maximum fee you want to pay to announce this transaction.',
-        validator: new MaxFeeValidator(),
+        validator: new NumericStringValidator(),
     })
-    maxFee: number;
+    maxFee: string;
 }
