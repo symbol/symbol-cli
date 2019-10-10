@@ -136,8 +136,7 @@ export default class extends AnnounceTransactionsCommand {
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
             profile.networkType,
-            UInt64.fromUint(options.maxFee),
-        );
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         options.amount = OptionsResolver(options,
             'amount',
@@ -160,8 +159,7 @@ export default class extends AnnounceTransactionsCommand {
             ],
             profile.networkType,
             [],
-            UInt64.fromUint(options.maxFee),
-        );
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
         this.announceTransaction(signedTransaction, profile.url);
