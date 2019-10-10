@@ -70,8 +70,7 @@ export default class extends AnnounceTransactionsCommand {
             options.publicKey,
             options.action,
             profile.networkType,
-            UInt64.fromUint(options.maxFee),
-        );
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const signedTransaction = profile.account.sign(accountLinkTransaction,
             profile.networkGenerationHash);
