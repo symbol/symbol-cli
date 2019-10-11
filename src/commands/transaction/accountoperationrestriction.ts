@@ -73,7 +73,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the transaction type. Example: 4154 (Transfer): ');
 
-        const profile = this.getProfile(options);
+        const profile = this.getProfile();
         const entityRestriction = AccountRestrictionModification.createForOperation(
             options.modificationAction, parseInt(options.value, 16));
 

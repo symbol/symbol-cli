@@ -36,8 +36,8 @@ import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicService} from '../../service/mosaic.service';
 import {AddressValidator} from '../../validators/address.validator';
-import {MaxFeeValidator} from '../../validators/maxFee.validator';
 import {MosaicValidator} from '../../validators/mosaic.validator';
+import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -70,7 +70,7 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'f',
         description: 'Maximum fee',
-        validator: new MaxFeeValidator(),
+        validator: new NumericStringValidator(),
     })
     maxfee: number;
 

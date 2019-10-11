@@ -73,7 +73,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the mosaic identifier: ');
 
-        const profile = this.getProfile(options);
+        const profile = this.getProfile();
         const mosaic = new MosaicId(options.value);
 
         const mosaicRestriction = AccountRestrictionModification.createForMosaic(options.modificationAction, mosaic);
