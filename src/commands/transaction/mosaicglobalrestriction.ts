@@ -126,7 +126,7 @@ export default class extends AnnounceTransactionsCommand {
             MosaicService.getMosaicRestrictionType(options.newRestrictionType),
             profile.networkType,
             new MosaicId(options.referenceMosaicId),
-            UInt64.fromUint(options.maxFee),
+            UInt64.fromNumericString(options.maxFee),
         );
 
         const networkGenerationHash = profile.networkGenerationHash;
