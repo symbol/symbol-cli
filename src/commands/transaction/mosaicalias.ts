@@ -86,8 +86,7 @@ export default class extends AnnounceTransactionsCommand {
             namespaceId,
             mosaicId,
             profile.networkType,
-            UInt64.fromUint(options.maxFee),
-        );
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
