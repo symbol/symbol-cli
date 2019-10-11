@@ -1,17 +1,27 @@
-import chalk from 'chalk';
-import { command, ExpectedError, metadata, option} from 'clime';
-import {
-    Account,
-    Deadline,
-    MosaicGlobalRestrictionTransaction,
-    MosaicId,
-    TransactionHttp,
-    UInt64,
-} from 'nem2-sdk';
+/*
+ *
+ * Copyright 2018-present NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+
+import {command, ExpectedError, metadata, option} from 'clime';
+import {Deadline, MosaicGlobalRestrictionTransaction, MosaicId, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/restriction.service';
-import {MosaicRestrictionTypeValidator} from '../../validators/mosaic.validator';
+import {RestrictionService} from '../../service/restriction.service';
+import {MosaicRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
@@ -121,9 +131,9 @@ export default class extends AnnounceTransactionsCommand {
             UInt64.fromNumericString(options.restrictionKey),
             /[a-f|A-F]/.test(options.previousRestrictionValue) ?
                 UInt64.fromHex(options.previousRestrictionValue) : UInt64.fromNumericString(options.previousRestrictionValue),
-            MosaicService.getMosaicRestrictionType(options.previousRestrictionType),
+            RestrictionService.getMosaicRestrictionType(options.previousRestrictionType),
             UInt64.fromNumericString(options.newRestrictionValue),
-            MosaicService.getMosaicRestrictionType(options.newRestrictionType),
+            RestrictionService.getMosaicRestrictionType(options.newRestrictionType),
             profile.networkType,
             new MosaicId(options.referenceMosaicId),
             UInt64.fromNumericString(options.maxFee),
@@ -131,9 +141,6 @@ export default class extends AnnounceTransactionsCommand {
 
         const networkGenerationHash = profile.networkGenerationHash;
         const signedTransaction = profile.account.sign(transaction, networkGenerationHash);
-        console.log(chalk.green('signed transaction hash: \n'));
-        console.log(signedTransaction.hash + '\n');
-
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

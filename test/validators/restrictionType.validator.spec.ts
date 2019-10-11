@@ -18,7 +18,7 @@
 import {expect} from 'chai';
 import {
     AccountRestrictionDirectionValidator,
-    AccountRestrictionTypeValidator,
+    AccountRestrictionTypeValidator, MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator';
 
 describe('Account restriction direction validator', () => {
@@ -60,5 +60,20 @@ describe('Account Restriction type validator', () => {
         expect(() => {
             new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value});
         }).to.throws('restrictionType must be one of \'allow\' or \'block\'');
+    });
+});
+
+describe('Mosaic Restriction type validator', () => {
+    it('valid value EQ', () => {
+        const value = 'EQ';
+        expect(new MosaicRestrictionTypeValidator().validate(value, {name: 'value', source: value}))
+            .to.be.equal(undefined);
+    });
+
+    it('invalid value', () => {
+        const value = 'NO';
+        expect(() => {
+            new MosaicRestrictionTypeValidator().validate(value, {name: 'value', source: value});
+        }).to.throws('Wrong mosaic restriction type');
     });
 });
