@@ -1,41 +1,41 @@
-import { command, metadata, option } from 'clime';
+import {command, metadata, option} from 'clime';
+import {AccountRestrictionModification, AccountRestrictionTransaction, Deadline, MosaicId, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {OptionsResolver} from '../../options-resolver';
+import {RestrictionService} from '../../service/restriction.service';
+import {BinaryValidator} from '../../validators/binary.validator';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 import {
-    AccountRestrictionModification,
-    AccountRestrictionTransaction,
-    AccountRestrictionType,
-    Deadline,
-    MosaicId,
-    UInt64,
-} from 'nem2-sdk';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { OptionsResolver } from '../../options-resolver';
-import { BinaryValidator } from '../../validators/binary.validator';
-import { RestrictionTypeValidator } from '../../validators/modificationAction.validator';
+    AccountRestrictionDirectionValidator,
+    AccountRestrictionTypeValidator,
+} from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'p',
-        description: '(Optional) Select between your profiles, by providing a profile (blank means default profile).',
-    })
-    profile: string;
-
-    @option({
         flag: 't',
-        description: 'restriction type (allow / block).',
-        validator: new RestrictionTypeValidator(),
+        description: 'Restriction type (allow, block).',
+        validator: new AccountRestrictionTypeValidator(),
     })
     restrictionType: string;
 
     @option({
+        flag: 'd',
+        description: 'Restriction direction (incoming, outgoing).',
+        validator: new AccountRestrictionDirectionValidator(),
+    })
+    restrictionDirection: string;
+
+    @option({
         flag: 'a',
-        description: 'Modification action (1: Add, 0: Remove).',
+        description: 'Modification action. (1: Add, 0: Remove).',
         validator: new BinaryValidator(),
     })
     modificationAction: number;
 
     @option({
         flag: 'v',
-        description: 'Address to allow / block.',
+        description: 'Mosaic to allow / block.',
+        validator: new MosaicIdValidator(),
     })
     value: string;
 }
@@ -44,8 +44,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Allow or block incoming transactions containing a given set of mosaics.',
 })
 export default class extends AnnounceTransactionsCommand {
+    private readonly restrictionService: RestrictionService;
+
     constructor() {
         super();
+        this.restrictionService = new RestrictionService();
     }
 
     @metadata
@@ -53,27 +56,22 @@ export default class extends AnnounceTransactionsCommand {
         options.restrictionType = OptionsResolver(options,
             'restrictionType',
             () => undefined,
-            'Introduce the restriction type (allow / block): ');
+            'Introduce the restriction type (allow, block):');
 
-        options.modificationAction = parseInt(OptionsResolver(options,
+        options.modificationAction = OptionsResolver(options,
             'modificationAction',
             () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove): '), 10);
+            'Introduce the modification action (1: Add, 0: Remove): ');
+
+        options.restrictionDirection = OptionsResolver(options,
+            'restrictionDirection',
+            () => undefined,
+            'Introduce the restriction direction (incoming, outgoing): ');
 
         options.value = OptionsResolver(options,
             'value',
             () => undefined,
-            'Introduce the Address: ');
-
-        let restrictionType;
-        if ('allow' === options.restrictionType.toLowerCase()) {
-            restrictionType = AccountRestrictionType.AllowMosaic;
-        } else if ('block' === options.restrictionType.toLowerCase()) {
-            restrictionType = AccountRestrictionType.BlockMosaic;
-        } else {
-            console.log('Wrong restrictionType. restrictionType must be one of \'allow\' or \'block\'');
-            return;
-        }
+            'Introduce the mosaic identifier: ');
 
         const profile = this.getProfile(options);
         const mosaic = new MosaicId(options.value);
@@ -81,10 +79,10 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicRestriction = AccountRestrictionModification.createForMosaic(options.modificationAction, mosaic);
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            restrictionType,
+            this.restrictionService.getAccountMosaicRestrictionType(options.restrictionType),
             [mosaicRestriction],
             profile.networkType,
-            UInt64.fromUint(options.maxFee));
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

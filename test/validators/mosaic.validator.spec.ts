@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {MosaicsValidator, MosaicValidator} from '../../src/validators/mosaic.validator';
+import {MosaicValidator} from '../../src/validators/mosaic.validator';
 
 describe('mosaic  validator', () => {
 
