@@ -147,7 +147,7 @@ export default class extends AnnounceTransactionsCommand {
             restrictionType,
             [entityRestriction],
             profile.networkType,
-            UInt64.fromUint(options.maxFee));
+            UInt64.fromNumericString(options.maxFee));
 
         const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);

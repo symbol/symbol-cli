@@ -84,7 +84,7 @@ export default class extends AnnounceTransactionsCommand {
             restrictionType,
             [mosaicRestriction],
             profile.networkType,
-            UInt64.fromUint(options.maxFee));
+            UInt64.fromNumericString(options.maxFee));
 
         const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
