@@ -30,7 +30,7 @@ describe('network type validator', () => {
         const networkType = 'TEST';
         expect(() => {
             new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType});
-        }).to.throws('it should be a valid network type');
+        }).to.throws('Introduce a valid network type');
     });
 
 });
