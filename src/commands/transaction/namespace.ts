@@ -87,7 +87,7 @@ export default class extends AnnounceTransactionsCommand {
             options.duration = OptionsResolver(options,
                 'duration',
                 () => undefined,
-                'Introduce namespace rental duration: ');
+                'Introduce the namespace rental duration: ');
         }
         options.maxFee = OptionsResolver(options,
             'maxFee',

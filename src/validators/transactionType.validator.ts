@@ -16,11 +16,23 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {TransactionType} from 'nem2-sdk';
 
-export class NetworkValidator implements Validator<string> {
+export class TransactionTypeValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
-        if (!(value === 'MIJIN' || value === 'MIJIN_TEST' || value === 'MAIN_NET' || value === 'TEST_NET')) {
-            throw new ExpectedError('Introduce a valid network type');
+        let success = true;
+        try {
+            const h = parseInt(value, 16);
+            if (h.toString(16) !== value.toLowerCase()) {
+                success = false;
+            } else if (!(h in TransactionType)) {
+                success = false;
+            }
+        } catch (err) {
+            success = false;
+        }
+        if (!success) {
+            throw new ExpectedError('Introduce a transaction type in hexadecimal. Example: 4154');
         }
     }
 }
