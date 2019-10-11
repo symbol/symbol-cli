@@ -16,12 +16,24 @@
  *
  */
 import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, Deadline, Mosaic, NamespaceId, PlainMessage, TransferTransaction, UInt64} from 'nem2-sdk';
+import {
+    Address,
+    Deadline,
+    EncryptedMessage,
+    Mosaic,
+    NamespaceId,
+    PlainMessage,
+    PublicAccount,
+    TransferTransaction,
+    UInt64,
+} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicService} from '../../service/mosaic.service';
 import {AddressValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
+import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -43,6 +55,21 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new MosaicsValidator(),
     })
     mosaics: string;
+
+    @option({
+        flag: 'e',
+        description: '(Optional) Send an encrypted message. ' +
+            'If you set this value, you should set the value of \'recipientPublicKey\' as well).',
+        toggle: true,
+    })
+    encrypted: any;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) The recipient public key in an encrypted message.',
+        validator: new PublicKeyValidator(),
+    })
+    recipientPublicKey: string;
 
 }
 
@@ -77,20 +104,44 @@ export default class extends AnnounceTransactionsCommand {
         if (options.mosaics) {
             mosaics = MosaicService.getMosaics(options.mosaics);
         }
-
-        let message: string;
-        message = options.recipient ? (options.message || '') : OptionsResolver(options,
+        options.message = OptionsResolver(options,
             'message',
-            () => undefined,
+            () => '',
             'Introduce the message: ');
+
+        let message: PlainMessage | EncryptedMessage;
+
+        if (options.message) {
+            options.encrypted = options.encrypted ? options.encrypted : readlineSync.keyInYN(
+                'Do you want to send an encrypted message?');
+        }
+
+        if (options.message && options.encrypted) {
+            options.recipientPublicKey = OptionsResolver(options,
+                'recipientPublicKey',
+                () => undefined,
+                'Introduce the recipient public key: ');
+            message = profile.account.encryptMessage(
+                options.message,
+                PublicAccount.createFromPublicKey(options.recipientPublicKey,
+                    profile.networkType),
+                profile.networkType);
+        } else {
+            message = PlainMessage.create(options.message);
+        }
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const transferTransaction = TransferTransaction.create(Deadline.create(), recipient, mosaics,
-            PlainMessage.create(message), profile.networkType, UInt64.fromUint(options.maxFee));
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            recipient,
+            mosaics,
+            message,
+            profile.networkType,
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

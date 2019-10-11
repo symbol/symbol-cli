@@ -83,8 +83,8 @@ export default class extends ProfileCommand {
         restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions: any) => {
                 this.spinner.stop(true);
-                if (accountRestrictions.accountRestrictions.restrictions.length > 0) {
-                    console.log(new AccountRestrictionsTable(accountRestrictions.accountRestrictions.restrictions).toString());
+                if (accountRestrictions.length > 0) {
+                    console.log(new AccountRestrictionsTable(accountRestrictions).toString());
                 } else {
                     console.log('\n The address does not have account restrictions assigned.');
                 }

@@ -16,11 +16,23 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {TransactionType} from 'nem2-sdk';
 
-export class MaxFeeValidator implements Validator<number> {
-    validate(value: number, context: ValidationContext): void {
-        if (!(Number.isInteger(value) && value >= 0)) {
-            throw new ExpectedError('maxfee should be positive integer or equal to 0');
+export class TransactionTypeValidator implements Validator<string> {
+    validate(value: string, context: ValidationContext): void {
+        let success = true;
+        try {
+            const h = parseInt(value, 16);
+            if (h.toString(16) !== value.toLowerCase()) {
+                success = false;
+            } else if (!(h in TransactionType)) {
+                success = false;
+            }
+        } catch (err) {
+            success = false;
+        }
+        if (!success) {
+            throw new ExpectedError('Introduce a transaction type in hexadecimal. Example: 4154');
         }
     }
 }
