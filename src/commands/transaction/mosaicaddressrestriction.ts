@@ -124,7 +124,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             /[a-f|A-F]/.test(options.previousRestrictionValue) ?
                 UInt64.fromHex(options.previousRestrictionValue) : UInt64.fromNumericString(options.previousRestrictionValue),
-            UInt64.fromUint(options.maxFee),
+            UInt64.fromNumericString(options.maxFee),
         );
 
         const networkGenerationHash = profile.networkGenerationHash;
