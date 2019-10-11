@@ -16,21 +16,21 @@
  *
  */
 import {expect} from 'chai';
-import {NetworkValidator} from '../../src/validators/network.validator';
+import {TransactionTypeValidator} from '../../src/validators/transactionType.validator';
 
-describe('network type validator', () => {
+describe('Transaction Type validator', () => {
 
-    it('Valid network type', () => {
-        const networkType = 'MIJIN_TEST';
-        expect(new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType}))
+    it('Valid transaction type', () => {
+        const value = '414C';
+        expect(new TransactionTypeValidator().validate(value, {name: 'value', source: value}))
             .to.be.equal(undefined);
     });
 
-    it('Invalid network type', () => {
-        const networkType = 'TEST';
+    it('Invalid transaction type', () => {
+        const value = 'test';
         expect(() => {
-            new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType});
-        }).to.throws('Introduce a valid network type');
+            new TransactionTypeValidator().validate(value, {name: 'value', source: value});
+        }).to.throws('Introduce a transaction type in hexadecimal. Example: 4154');
     });
 
 });
