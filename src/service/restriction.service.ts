@@ -17,9 +17,17 @@
  */
 
 import {ExpectedError} from 'clime';
-import {Address, Mosaic, MosaicId, MosaicRestrictionType, NamespaceId, UInt64} from 'nem2-sdk';
+import {
+    AccountRestrictionType,
+    Address,
+    Mosaic,
+    MosaicId,
+    MosaicRestrictionType,
+    NamespaceId,
+    UInt64,
+} from 'nem2-sdk';
 
-export class MosaicService {
+export class RestrictionService {
     constructor() {
 
     }
@@ -38,7 +46,7 @@ export class MosaicService {
         }
         return restrictionType;
     }
-    
+
   public getAccountAddressRestrictionType(restrictionType: string, restrictionDirection: string): AccountRestrictionType {
         const lowerRestrictionType = restrictionType.toLowerCase();
         const lowerRestrictionDirection = restrictionDirection.toLowerCase();

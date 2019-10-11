@@ -10,7 +10,7 @@ import {
 } from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/restriction.service';
+import {RestrictionService} from '../../service/restriction.service';
 import {MosaicRestrictionTypeValidator} from '../../validators/mosaic.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -121,9 +121,9 @@ export default class extends AnnounceTransactionsCommand {
             UInt64.fromNumericString(options.restrictionKey),
             /[a-f|A-F]/.test(options.previousRestrictionValue) ?
                 UInt64.fromHex(options.previousRestrictionValue) : UInt64.fromNumericString(options.previousRestrictionValue),
-            MosaicService.getMosaicRestrictionType(options.previousRestrictionType),
+            RestrictionService.getMosaicRestrictionType(options.previousRestrictionType),
             UInt64.fromNumericString(options.newRestrictionValue),
-            MosaicService.getMosaicRestrictionType(options.newRestrictionType),
+            RestrictionService.getMosaicRestrictionType(options.newRestrictionType),
             profile.networkType,
             new MosaicId(options.referenceMosaicId),
             UInt64.fromNumericString(options.maxFee),
