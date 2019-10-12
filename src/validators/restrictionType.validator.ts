@@ -16,7 +16,7 @@
  *
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime';
-import {MosaicRestrictionType} from "nem2-sdk";
+import {MosaicRestrictionType} from 'nem2-sdk';
 
 export class AccountRestrictionDirectionValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -45,4 +45,3 @@ export class MosaicRestrictionTypeValidator implements Validator<string> {
         }
     }
 }
-
