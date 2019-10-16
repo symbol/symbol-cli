@@ -110,7 +110,6 @@ export default class extends AnnounceTransactionsCommand {
             'secret',
             () => undefined,
             'Introduce proof hashed: ');
-
         options.recipientAddress = OptionsResolver(options,
             'recipientAddress',
             () => undefined,
