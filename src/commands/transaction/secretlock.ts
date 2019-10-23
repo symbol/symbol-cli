@@ -1,3 +1,19 @@
+/*
+ * Copyright 2018-present NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 import chalk from 'chalk';
 import { command, metadata, option } from 'clime';
 import {
@@ -18,6 +34,7 @@ import { AddressValidator } from '../../validators/address.validator';
 import { HashAlgorithmValidator } from '../../validators/hashAlgorithm.Validator';
 import { MosaicIdValidator } from '../../validators/mosaicId.validator';
 import { NetworkValidator } from '../../validators/network.validator';
+import { NumericStringValidator } from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -30,45 +47,46 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: '(Optional) Amount to lock.',
         flag: 'a',
-        default: 10,
+        validator: new NumericStringValidator(),
     })
-    amount: number;
+    amount: string;
 
     @option({
         description: 'Number of blocks for which a lock should be valid. ' +
             'Duration is allowed to lie up to 30 days. If reached, the mosaics will be returned to the initiator.',
         flag: 'd',
+        validator: new NumericStringValidator(),
     })
-    duration: number;
+    duration: string;
 
     @option({
-        description: 'Algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256). ',
+        description: 'Algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256).',
         flag: 'H',
         validator: new HashAlgorithmValidator(),
     })
     hashAlgorithm: number;
 
     @option({
-        description: 'Proof hashed. ',
+        description: 'Proof hashed.',
         flag: 's',
     })
     secret: string;
 
     @option({
-        description: 'Address that receives the funds once unlocked. ',
+        description: 'Address that receives the funds once unlocked.',
         flag: 'r',
         validator: new AddressValidator(),
     })
     recipientAddress: string;
 
     @option({
-        description: 'The private key of your account on the other chain. ',
+        description: 'The private key of your account on the other chain.',
         flag: 'p',
     })
     privateKey: string;
 
     @option({
-        description: 'The url of the other chain. ',
+        description: 'The url of the other chain.',
         flag: 'u',
     })
     url: string;
@@ -143,8 +161,8 @@ export default class extends AnnounceTransactionsCommand {
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             new Mosaic(new MosaicId(options.mosaicId),
-            UInt64.fromUint(options.amount)),
-            UInt64.fromUint(options.duration),
+            UInt64.fromNumericString(options.amount)),
+            UInt64.fromNumericString(options.duration),
             cryptoType,
             secret,
             Address.createFromRawAddress(options.recipientAddress),
