@@ -12,11 +12,12 @@ import {
     TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
-import {filter, mergeMap} from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
 import { OptionsResolver } from '../../options-resolver';
-import {CosignatoryModificationService} from '../../service/cosignatoryModificationService.service';
-import {BinaryValidator} from '../../validators/binary.validator';
+import { CosignatoryModificationService } from '../../service/cosignatoryModificationService.service';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { PublicKeyValidator } from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -43,12 +44,14 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'p',
         description: 'Cosignatory account public key.',
+        validator: new PublicKeyValidator(),
     })
     cosignatoryPublicKey: string;
 
     @option({
         flag: 'm',
         description: 'Multisig account public key.',
+        validator: new PublicKeyValidator(),
     })
     multisigAccountPublicKey: string;
 }
