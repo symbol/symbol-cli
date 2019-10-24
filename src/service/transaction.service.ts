@@ -194,13 +194,9 @@ export class TransactionService {
             transactionFormatted += 'MosaicAddressRestrictionTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex() +
                 ' RestrictionKey:' + transaction.restrictionKey.toHex() +
-                ' TargetAddress:';
-            if (transaction.targetAddress instanceof Address) {
-                transactionFormatted += transaction.targetAddress.pretty();
-            } else {
-                transactionFormatted += transaction.targetAddress.toHex();
-            }
-            transactionFormatted += ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
+                ' TargetAddress:' + (transaction.targetAddress instanceof Address ?
+                transaction.targetAddress.pretty() : transaction.targetAddress.toHex()) +
+                ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
                 ' NewRestrictionValue:' + transaction.newRestrictionValue.toString();
         } else if (transaction instanceof AccountMetadataTransaction) {
             transactionFormatted += 'AccountMetadataTransaction: ' +
