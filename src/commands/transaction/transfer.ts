@@ -120,34 +120,31 @@ export default class extends AnnounceTransactionsCommand {
             'message',
             () => '',
             'Introduce the message: ');
-
-        let message: PlainMessage | EncryptedMessage;
-
         if (options.message) {
             options.encrypted = options.encrypted ? options.encrypted : readlineSync.keyInYN(
                 'Do you want to send an encrypted message?');
         }
-
-        if (options.message && options.encrypted) {
-            options.recipientPublicKey = OptionsResolver(options,
-                'recipientPublicKey',
-                () => undefined,
-                'Introduce the recipient public key: ');
-            message = profile.account.encryptMessage(
-                options.message,
-                PublicAccount.createFromPublicKey(options.recipientPublicKey,
-                    profile.networkType),
-                profile.networkType);
-        } else {
-            message = PlainMessage.create(options.message);
-        }
-
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         if (true !== options.persistentHarvestingDelegation) {
+            let message: PlainMessage | EncryptedMessage;
+            if (options.message && options.encrypted) {
+                options.recipientPublicKey = OptionsResolver(options,
+                    'recipientPublicKey',
+                    () => undefined,
+                    'Introduce the recipient public key: ');
+                message = profile.account.encryptMessage(
+                    options.message,
+                    PublicAccount.createFromPublicKey(options.recipientPublicKey,
+                        profile.networkType),
+                    profile.networkType);
+            } else {
+                message = PlainMessage.create(options.message);
+            }
+
             const transferTransaction = TransferTransaction.create(
                 Deadline.create(),
                 recipient,
@@ -159,6 +156,11 @@ export default class extends AnnounceTransactionsCommand {
             const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
             this.announceTransaction(signedTransaction, profile.url);
         } else {
+            options.recipientPublicKey = OptionsResolver(options,
+                'recipientPublicKey',
+                () => undefined,
+                'Introduce the recipient public key: ');
+
             const remoteAccount = Account.generateNewAccount(profile.networkType);
             const nodePublicAccount = PublicAccount.createFromPublicKey(options.recipientPublicKey, profile.networkType);
 
