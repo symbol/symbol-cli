@@ -1,25 +1,40 @@
+/*
+ * Copyright 2018-present NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
 import chalk from 'chalk';
-import { command, metadata, option } from 'clime';
+import {command, metadata, option} from 'clime';
 import {
     AggregateTransaction,
     Deadline,
     HashLockTransaction,
-    Listener,
     MultisigAccountModificationTransaction,
     MultisigCosignatoryModification,
     NetworkCurrencyMosaic,
     PublicAccount,
-    TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
-import { filter, mergeMap } from 'rxjs/operators';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { OptionsResolver } from '../../options-resolver';
-import { CosignatoryModificationService } from '../../service/cosignatoryModificationService.service';
-import { BinaryValidator } from '../../validators/binary.validator';
-import { PublicKeyValidator } from '../../validators/publicKey.validator';
+import {
+    AnnounceAggregateTransactionsCommand,
+    AnnounceAggregateTransactionsOptions,
+} from '../../announce.aggregatetransactions.command';
+import {OptionsResolver} from '../../options-resolver';
+import {BinaryValidator} from '../../validators/binary.validator';
+import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
         flag: 'R',
         description: '(Optional) Number of signatures needed to remove a cosignatory. ',
@@ -59,12 +74,10 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 @command({
     description: 'Create or modify a multisig contract.',
 })
-export default class extends AnnounceTransactionsCommand {
-    private readonly cosignatoryModificationService: CosignatoryModificationService;
+export default class extends AnnounceAggregateTransactionsCommand {
 
     constructor() {
         super();
-        this.cosignatoryModificationService = new CosignatoryModificationService();
     }
 
     @metadata
@@ -72,28 +85,35 @@ export default class extends AnnounceTransactionsCommand {
         options.action = OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove):');
+            'Introduce the modification action (1: Add, 0: Remove): ');
 
         options.cosignatoryPublicKey = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            'Introduce the cosignatory account public key:');
+            'Introduce the cosignatory account public key: ');
 
         options.multisigAccountPublicKey = OptionsResolver(options,
             'multisigAccountPublicKey',
             () => undefined,
-            'Introduce the multisig account public key:');
+            'Introduce the multisig account public key: ');
 
-        const cosignatoryModificationAction = this.cosignatoryModificationService.getCosignatoryModificationAction(options.action);
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the multisig modification transaction: ');
+
+        options.maxFeeHashLock = OptionsResolver(options,
+            'maxFeeHashLock',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
+
         const profile = this.getProfile(options);
-        const listener = new Listener(profile.url);
-        const transactionHttp = new TransactionHttp(profile.url);
 
         const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, profile.networkType);
         const newCosignatoryAccount = PublicAccount.createFromPublicKey(options.cosignatoryPublicKey, profile.networkType);
 
         const multisigCosignatoryModification = new MultisigCosignatoryModification(
-            cosignatoryModificationAction,
+            options.action,
             newCosignatoryAccount);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
@@ -102,7 +122,7 @@ export default class extends AnnounceTransactionsCommand {
             options.minRemovalDelta,
             [multisigCosignatoryModification],
             profile.networkType,
-            UInt64.fromNumericString(options.maxFee));
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
@@ -110,35 +130,22 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType);
 
         const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
-        console.log(chalk.green('signedTransactionHash: ') + signedTransaction.hash + '\n');
+        console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash);
 
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(10),
-            UInt64.fromUint(480),
+            NetworkCurrencyMosaic.createRelative(UInt64.fromNumericString(options.amount)),
+            UInt64.fromNumericString(options.duration),
             signedTransaction,
-            profile.networkType);
+            profile.networkType,
+            options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+        const signedHashLockTransaction = profile.account.sign(hashLockTransaction, profile.networkGenerationHash);
+        console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 
-        const hashLockTransactionSigned = profile.account.sign(hashLockTransaction, profile.networkGenerationHash);
-
-        listener.open().then(() => {
-
-            transactionHttp
-                .announce(hashLockTransactionSigned)
-                .subscribe(
-                    (x) => console.log(x),
-                    (err) => console.error(err),
-                );
-
-            listener
-                .confirmed(profile.account.address)
-                .pipe(
-                    filter((transaction) => transaction.transactionInfo !== undefined
-                        && transaction.transactionInfo.hash === hashLockTransactionSigned.hash),
-                    mergeMap(() => transactionHttp.announceAggregateBonded(signedTransaction)),
-                )
-                .subscribe((announcedAggregateBonded) => console.log(announcedAggregateBonded),
-                    (err) => console.error(err));
-        });
+        this.announceAggregateTransaction(
+            signedHashLockTransaction,
+            signedTransaction,
+            profile.account.address,
+            profile.url);
     }
 }
