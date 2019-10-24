@@ -15,25 +15,31 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
+import { command, ExpectedError, metadata, option } from 'clime';
 import {
+    Account,
+    AccountLinkTransaction,
     Address,
+    AggregateTransaction,
     Deadline,
     EncryptedMessage,
+    LinkAction,
     Mosaic,
     NamespaceId,
+    PersistentDelegationRequestTransaction,
+    PersistentHarvestingDelegationMessage,
     PlainMessage,
     PublicAccount,
     TransferTransaction,
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/mosaic.service';
-import {AddressValidator} from '../../validators/address.validator';
-import {MosaicsValidator} from '../../validators/mosaic.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { MosaicService } from '../../service/mosaic.service';
+import { AddressValidator } from '../../validators/address.validator';
+import { MosaicsValidator } from '../../validators/mosaic.validator';
+import { PublicKeyValidator } from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -71,6 +77,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     })
     recipientPublicKey: string;
 
+    @option({
+        flag: '',
+        description: '(Optional) Start persistent harvesting delegation.',
+        toggle: true,
+    })
+    persistentHarvestingDelegation: any;
 }
 
 @command({
@@ -135,15 +147,54 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const transferTransaction = TransferTransaction.create(
-            Deadline.create(),
-            recipient,
-            mosaics,
-            message,
-            profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+        if (true !== options.persistentHarvestingDelegation) {
+            const transferTransaction = TransferTransaction.create(
+                Deadline.create(),
+                recipient,
+                mosaics,
+                message,
+                profile.networkType,
+                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+            const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
+            this.announceTransaction(signedTransaction, profile.url);
+        } else {
+            const remoteAccount = Account.generateNewAccount(profile.networkType);
+            const nodePublicAccount = PublicAccount.createFromPublicKey(options.recipientPublicKey, profile.networkType);
+
+            const accountLinkTransaction = AccountLinkTransaction.create(
+                Deadline.create(),
+                remoteAccount.publicKey,
+                LinkAction.Link,
+                profile.networkType,
+            );
+
+            const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction
+                .create(
+                    Deadline.create(),
+                    nodePublicAccount.address,
+                    [],
+                    PersistentHarvestingDelegationMessage.create(
+                        remoteAccount.privateKey,
+                        profile.account.privateKey,
+                        nodePublicAccount.publicKey,
+                        // @ts-ignore
+                        profile.networkType),
+                    profile.networkType,
+                );
+
+            const aggregateTransaction = AggregateTransaction.createComplete(
+                Deadline.create(),
+                [
+                    accountLinkTransaction.toAggregate(profile.account.publicAccount),
+                    persistentDelegationRequestTransaction.toAggregate(profile.account.publicAccount),
+                ],
+                profile.networkType,
+                [],
+            );
+
+            const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }
