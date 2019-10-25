@@ -104,8 +104,8 @@ export class ReceiptService {
         statement.addressResolutionStatements.map((addressResolution: ResolutionStatement, addressResolutionIndex: number) => {
             addressResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
                 this.addressResolutionStatementsTable.push([
-                    resolutionEntry.resolved instanceof AddressAlias ?
-                        resolutionEntry.resolved.address.pretty() : resolutionEntry.resolved.mosaicId.toHex(),
+                    resolutionEntry.resolved instanceof Address ?
+                        resolutionEntry.resolved.pretty() : resolutionEntry.resolved.toHex(),
                     resolutionEntry.source.primaryId,
                     resolutionEntry.source.secondaryId,
                 ]);
@@ -126,8 +126,8 @@ export class ReceiptService {
         statement.mosaicResolutionStatements.map((mosaicResolution: ResolutionStatement, mosaicResolutionIndex: number) => {
             mosaicResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
                 this.mosaicResolutionStatementsTable.push([
-                    resolutionEntry.resolved instanceof AddressAlias ?
-                        resolutionEntry.resolved.address.pretty() : resolutionEntry.resolved.mosaicId.toHex(),
+                    resolutionEntry.resolved instanceof Address ?
+                        resolutionEntry.resolved.pretty() : resolutionEntry.resolved.toHex(),
                     resolutionEntry.source.primaryId,
                     resolutionEntry.source.secondaryId,
                 ]);
