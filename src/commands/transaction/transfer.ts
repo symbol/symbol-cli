@@ -180,7 +180,6 @@ export default class extends AnnounceTransactionsCommand {
                         remoteAccount.privateKey,
                         profile.account.privateKey,
                         nodePublicAccount.publicKey,
-                        // @ts-ignore
                         profile.networkType),
                     profile.networkType,
                 );
