@@ -132,12 +132,12 @@ export class TransactionService {
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             this.table = new Table({
                 style: { head: ['cyan'] },
-                head: ['MosaicId', 'Direction', 'Delta', 'SignerPublicKey', 'Deadline', 'Hash'],
+                head: ['MosaicId', 'Action', 'Delta', 'SignerPublicKey', 'Deadline', 'Hash'],
             }) as HorizontalTable;
 
             transactionFormatted += 'MosaicSupplyChangeTransaction:\n';
             propertyList[0] = transaction.mosaicId.toHex();
-            propertyList[1] = transaction.direction === MosaicSupplyChangeAction.Increase ?
+            propertyList[1] = transaction.action === MosaicSupplyChangeAction.Increase ?
                 'IncreaseSupply' : 'DecreaseSupply';
             propertyList[2] = transaction.delta.compact();
         } else if (transaction instanceof MultisigAccountModificationTransaction) {

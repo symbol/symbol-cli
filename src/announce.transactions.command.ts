@@ -32,8 +32,8 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
         transactionHttp.announce(signedTransaction).subscribe(() => {
             console.log(chalk.green('Transaction announced correctly'));
-            console.log('Hash:   ', signedTransaction.hash);
-            console.log('SignerPublicKey: ', signedTransaction.signerPublicKey);
+            console.log(chalk.green('Hash:   '), signedTransaction.hash);
+            console.log(chalk.green('SignerPublicKey: '), signedTransaction.signerPublicKey);
         }, (err) => {
             this.spinner.stop(true);
             let text = '';
