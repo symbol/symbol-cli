@@ -30,7 +30,6 @@ export class CommandOptions extends Options {
 @command({
     description: 'Display the list of stored profiles',
 })
-
 export default class extends Command {
     private readonly profileService: ProfileService;
 
