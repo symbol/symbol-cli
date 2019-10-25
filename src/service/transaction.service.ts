@@ -97,7 +97,7 @@ export class TransactionService {
         } else if (transaction instanceof MosaicSupplyChangeTransaction) {
             transactionFormatted += 'MosaicSupplyChangeTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
-            transactionFormatted += ' Direction:' + (transaction.direction === MosaicSupplyChangeAction.Increase ?
+            transactionFormatted += ' Action:' + (transaction.action === MosaicSupplyChangeAction.Increase ?
                 'IncreaseSupply' : 'DecreaseSupply');
             transactionFormatted += ' Delta:' + transaction.delta.compact();
 
@@ -194,7 +194,8 @@ export class TransactionService {
             transactionFormatted += 'MosaicAddressRestrictionTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex() +
                 ' RestrictionKey:' + transaction.restrictionKey.toHex() +
-                ' TargetAddress:' + transaction.targetAddress.pretty() +
+                ' TargetAddress:' + (transaction.targetAddress instanceof Address ?
+                transaction.targetAddress.pretty() : transaction.targetAddress.toHex()) +
                 ' PreviousRestrictionValue:' + transaction.previousRestrictionValue.toString() +
                 ' NewRestrictionValue:' + transaction.newRestrictionValue.toString();
         } else if (transaction instanceof AccountMetadataTransaction) {
