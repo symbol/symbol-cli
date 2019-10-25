@@ -14,38 +14,25 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import { command, metadata, option } from 'clime';
-import {
-    Account,
-    Address,
-    BlockHttp,
-    Deadline,
-    Mosaic,
-    MosaicId,
-    SecretLockTransaction,
-    TransactionHttp,
-    UInt64,
-} from 'nem2-sdk';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { OptionsResolver } from '../../options-resolver';
-import { SecretLockService } from '../../service/secretlock.service';
-import { AddressValidator } from '../../validators/address.validator';
-import { HashAlgorithmValidator } from '../../validators/hashAlgorithm.Validator';
-import { MosaicIdValidator } from '../../validators/mosaicId.validator';
-import { NetworkValidator } from '../../validators/network.validator';
-import { NumericStringValidator } from '../../validators/numericString.validator';
+import {command, metadata, option} from 'clime';
+import {Address, Deadline, Mosaic, MosaicId, SecretLockTransaction, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {OptionsResolver} from '../../options-resolver';
+import {AddressValidator} from '../../validators/address.validator';
+import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.Validator';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        description: 'Locked mosaic ID.',
+        description: 'Locked mosaic identifier.',
         flag: 'm',
         validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 
     @option({
-        description: '(Optional) Amount to lock.',
+        description: 'Amount of mosaic units to lock.',
         flag: 'a',
         validator: new NumericStringValidator(),
     })
@@ -60,17 +47,17 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     duration: string;
 
     @option({
-        description: 'Algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256).',
+        description: 'Proof hashed in hexadecimal format.',
+        flag: 's',
+    })
+    secret: string;
+
+    @option({
+        description: 'Algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256).',
         flag: 'H',
         validator: new HashAlgorithmValidator(),
     })
     hashAlgorithm: number;
-
-    @option({
-        description: 'Proof hashed.',
-        flag: 's',
-    })
-    secret: string;
 
     @option({
         description: 'Address that receives the funds once unlocked.',
@@ -78,29 +65,10 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new AddressValidator(),
     })
     recipientAddress: string;
-
-    @option({
-        description: 'The private key of your account on the other chain.',
-        flag: 'p',
-    })
-    privateKey: string;
-
-    @option({
-        description: 'The url of the other chain.',
-        flag: 'u',
-    })
-    url: string;
-
-    @option({
-        description: 'The network type of the other chain. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
-        flag: 'n',
-        validator: new NetworkValidator(),
-    })
-    networkType: string;
 }
 
 @command({
-    description: ' Creates a secretLock transaction ',
+    description: 'Creates a secret lock transaction ',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -112,78 +80,52 @@ export default class extends AnnounceTransactionsCommand {
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
-            'Introduce the locked mosaic ID: ');
+            'Introduce locked mosaic identifier: ');
+
+        options.amount = OptionsResolver(options,
+            'amount',
+            () => undefined,
+            'Introduce amount of mosaic units to lock: ');
+
+        options.recipientAddress = OptionsResolver(options,
+            'recipientAddress',
+            () => undefined,
+            'Introduce address that receives the funds once unlocked: ');
 
         options.duration = OptionsResolver(options,
             'duration',
             () => undefined,
-            'Number of blocks for which a lock should be valid: ');
+            'Introduce number of blocks for which a lock should be valid: ');
+
+        options.secret = OptionsResolver(options,
+            'secret',
+            () => undefined,
+            'Introduce proof hashed in hexadecimal format: ');
 
         options.hashAlgorithm = OptionsResolver(options,
             'hashAlgorithm',
             () => undefined,
             'Introduce algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
 
-        options.secret = OptionsResolver(options,
-            'secret',
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
             () => undefined,
-            'Introduce proof hashed: ');
-        options.recipientAddress = OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            'Introduce proof hashed: ');
-        options.privateKey = OptionsResolver(options,
-            'privateKey',
-            () => undefined,
-            'Introduce the private key of your account on the other chain: ');
-        options.url = OptionsResolver(options,
-            'url',
-            () => undefined,
-            'Introduce the url of the other chain: ');
-        options.networkType = OptionsResolver(options,
-            'networkType',
-            () => undefined,
-            'Introduce the network type of the other chain: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)');
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const profile = this.getProfile(options);
-
-        const otherChainAccount = Account.createFromPrivateKey(options.privateKey, profile.networkType);
-
-        const secretLockService = new SecretLockService();
-        const {proof, secret} = secretLockService.createSecret();
-
-        console.log(chalk.green('proof: ') + proof + '\n');
-        console.log(chalk.green('secret: ') + secret + '\n');
-
-        const networkType = secretLockService.getNetworkType(options.networkType);
-        const cryptoType = secretLockService.getCryptoType(options.hashAlgorithm);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
             new Mosaic(new MosaicId(options.mosaicId),
-            UInt64.fromNumericString(options.amount)),
+                UInt64.fromNumericString(options.amount)),
             UInt64.fromNumericString(options.duration),
-            cryptoType,
-            secret,
+            options.hashAlgorithm,
+            options.secret,
             Address.createFromRawAddress(options.recipientAddress),
-            networkType);
+            profile.networkType,
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+        const signedTransaction = profile.account.sign(secretLockTransaction, profile.networkGenerationHash);
 
-        const blockHttp = new BlockHttp(options.url);
-        const privateChainTransactionHttp = new TransactionHttp(options.url);
-        blockHttp.getBlockByHeight(1).subscribe((blockInfo) => {
-            const secretLockTransactionSigned = otherChainAccount.sign(secretLockTransaction, blockInfo.generationHash);
-            privateChainTransactionHttp
-                .announce(secretLockTransactionSigned)
-                .subscribe(
-                    (x) => console.log(x),
-                    (err) => console.error(err),
-                );
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        this.announceTransaction(signedTransaction, profile.url);
     }
-
 }

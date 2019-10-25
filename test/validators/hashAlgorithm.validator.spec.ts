@@ -26,6 +26,6 @@ describe('hashAlgorithm value', () => {
         const value = 10;
         expect(() => {
             new HashAlgorithmValidator().validate(value, {name: 'value', source: String(value)});
-        }).to.throws('hashAlgorithm must be one of ' + HashAlgorithmValidator.hashAlgorithm);
+        }).to.throws('hashAlgorithm must be one of (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256)');
     });
 });

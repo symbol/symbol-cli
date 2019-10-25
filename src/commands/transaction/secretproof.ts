@@ -14,40 +14,44 @@
  * limitations under the License.
  *
  */
-import { command, metadata, option } from 'clime';
-import {
-    Deadline,
-    SecretProofTransaction,
-} from 'nem2-sdk';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { OptionsResolver } from '../../options-resolver';
-import { SecretLockService } from '../../service/secretlock.service';
-import { HashAlgorithmValidator } from '../../validators/hashAlgorithm.Validator';
+import {command, metadata, option} from 'clime';
+import {Address, Deadline, SecretProofTransaction, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {OptionsResolver} from '../../options-resolver';
+import {AddressValidator} from '../../validators/address.validator';
+import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.Validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
-        description: 'Algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256). ',
+        description: 'Proof hashed in hexadecimal. ',
+        flag: 's',
+    })
+    secret: string;
+
+    @option({
+        description: 'Original random set of bytes in hexadecimal. ',
+        flag: 'p',
+    })
+    proof: string;
+
+    @option({
+        description: 'Algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256). ',
         flag: 'H',
         validator: new HashAlgorithmValidator(),
     })
     hashAlgorithm: number;
 
     @option({
-        description: 'Proof hashed. ',
-        flag: 's',
+        description: 'Address that receives the funds once unlocked.',
+        flag: 'r',
+        validator: new AddressValidator(),
     })
-    secret: string;
-
-    @option({
-        description: 'Original random set of bytes. ',
-        flag: 'p',
-    })
-    proof: string;
+    recipientAddress: string;
 }
 
 @command({
-    description: ' Creates a secretLock transaction ',
+    description: ' Creates a secret proof transaction ',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -56,34 +60,39 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        options.secret = OptionsResolver(options,
+            'secret',
+            () => undefined,
+            'Introduce proof hashed in hexadecimal: ');
+
+        options.proof = OptionsResolver(options,
+            'proof',
+            () => undefined,
+            'Introduce original random set of bytes in hexadecimal: ');
+
         options.hashAlgorithm = OptionsResolver(options,
             'hashAlgorithm',
             () => undefined,
             'Introduce algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
-        options.secret = OptionsResolver(options,
-            'secret',
+
+        options.recipientAddress = OptionsResolver(options,
+            'recipientAddress',
             () => undefined,
-            'Introduce proof hashed: ');
-        options.proof = OptionsResolver(options,
-            'proof',
-            () => undefined,
-            'Introduce original random set of bytes: ');
+            'Introduce address that receives the funds once unlocked: ');
+        const recipientAddress = Address.createFromRawAddress(options.recipientAddress);
 
         const profile = this.getProfile(options);
 
-        const secretLockService = new SecretLockService();
-        const cryptoType = secretLockService.getCryptoType(options.hashAlgorithm);
-
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            cryptoType,
+            options.hashAlgorithm,
             options.secret,
-            profile.account.address,
+            recipientAddress,
             options.proof,
             profile.networkType,
-        );
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+        const signedTransaction = profile.account.sign(secretProofTransaction, profile.networkGenerationHash);
 
-        const secretProofTransactionSigned = profile.account.sign(secretProofTransaction, profile.networkGenerationHash);
-        this.announceTransaction(secretProofTransactionSigned, profile.url);
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }
