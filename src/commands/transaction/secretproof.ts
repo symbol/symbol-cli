@@ -81,6 +81,11 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce address that receives the funds once unlocked: ');
         const recipientAddress = Address.createFromRawAddress(options.recipientAddress);
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
         const profile = this.getProfile(options);
 
         const secretProofTransaction = SecretProofTransaction.create(

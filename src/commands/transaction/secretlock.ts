@@ -91,6 +91,7 @@ export default class extends AnnounceTransactionsCommand {
             'recipientAddress',
             () => undefined,
             'Introduce address that receives the funds once unlocked: ');
+        const recipientAddress =  Address.createFromRawAddress(options.recipientAddress);
 
         options.duration = OptionsResolver(options,
             'duration',
@@ -121,7 +122,7 @@ export default class extends AnnounceTransactionsCommand {
             UInt64.fromNumericString(options.duration),
             options.hashAlgorithm,
             options.secret,
-            Address.createFromRawAddress(options.recipientAddress),
+            recipientAddress,
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         const signedTransaction = profile.account.sign(secretLockTransaction, profile.networkGenerationHash);
