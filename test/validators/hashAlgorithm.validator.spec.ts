@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {HashAlgorithmValidator} from '../../src/validators/hashAlgorithm.Validator';
+import {HashAlgorithmValidator} from '../../src/validators/hashAlgorithm.validator';
 
 describe('hashAlgorithm value', () => {
     it('Valid value: 0', () => {

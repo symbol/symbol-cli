@@ -19,7 +19,7 @@ import {Address, Deadline, Mosaic, MosaicId, SecretLockTransaction, UInt64} from
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
-import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.Validator';
+import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 import {NumericStringValidator} from '../../validators/numericString.validator';
 

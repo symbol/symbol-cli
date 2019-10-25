@@ -19,7 +19,7 @@ import {Address, Deadline, SecretProofTransaction, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
-import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.Validator';
+import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
