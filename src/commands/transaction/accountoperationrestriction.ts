@@ -90,6 +90,11 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the transaction type. Example: 4154 (Transfer): ');
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
         const profile = this.getProfile(options);
         const entityRestriction = AccountRestrictionModification.createForOperation(
             options.modificationAction, parseInt(options.value, 16));
