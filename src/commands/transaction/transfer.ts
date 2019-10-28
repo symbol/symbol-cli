@@ -40,7 +40,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'r',
         description: 'Recipient address or @alias.',
     })
-    recipient: string;
+    recipientAddress: string;
 
     @option({
         flag: 'm',
@@ -92,11 +92,11 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
-            'recipient',
+        const recipientAddress: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
+            'recipientAddress',
             () => undefined,
             'Introduce the recipient address: '));
-        if (recipient instanceof Address && recipient.networkType !== profile.networkType) {
+        if (recipientAddress instanceof Address && recipientAddress.networkType !== profile.networkType) {
             throw new ExpectedError('The recipient address network doesn\'t match network option.');
         }
 
@@ -152,7 +152,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            recipient,
+            recipientAddress,
             mosaics,
             message,
             profile.networkType,
