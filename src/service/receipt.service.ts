@@ -20,7 +20,6 @@ import {HorizontalTable} from 'cli-table3';
 import * as Table from 'cli-table3';
 import {
     Address,
-    AddressAlias,
     ArtifactExpiryReceipt,
     BalanceChangeReceipt,
     BalanceTransferReceipt,
@@ -64,7 +63,7 @@ export class ReceiptService {
             transaction.receipts.map((receipt: any, receiptIndex: number) => {
                 if (receipt instanceof BalanceTransferReceipt) {
                     this.transactionStatementsTable.push([
-                        receipt.version as Table.CellOptions,
+                        receipt.version as string,
                         ReceiptType[receipt.type],
                         (receipt.recipientAddress instanceof Address ?
                             receipt.recipientAddress.pretty() : receipt.recipientAddress.toHex()),
@@ -75,7 +74,7 @@ export class ReceiptService {
                     ]);
                 } else if (receipt instanceof BalanceChangeReceipt) {
                     this.transactionStatementsTable.push([
-                        receipt.version as Table.CellOptions,
+                        receipt.version as string,
                         ReceiptType[receipt.type],
                         '',
                         '',
@@ -85,7 +84,7 @@ export class ReceiptService {
                     ]);
                 }  else if (receipt instanceof ArtifactExpiryReceipt) {
                     this.transactionStatementsTable.push([
-                        receipt.version as Table.CellOptions,
+                        receipt.version as string,
                         ReceiptType[receipt.type],
                         '',
                         '',
@@ -95,7 +94,7 @@ export class ReceiptService {
                     ]);
                 }  else if (receipt instanceof InflationReceipt) {
                     this.transactionStatementsTable.push([
-                        receipt.version as Table.CellOptions,
+                        receipt.version as string,
                         ReceiptType[receipt.type],
                         '',
                         '',
