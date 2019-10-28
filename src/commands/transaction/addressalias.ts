@@ -74,7 +74,7 @@ export default class extends AnnounceTransactionsCommand {
             throw new ExpectedError('The address network doesn\'t match network option.');
         }
 
-        options.action = OptionsResolver(options,
+        options.action = +OptionsResolver(options,
             'action',
             () => undefined,
             'Introduce alias action (1: Link, 0: Unlink): ');

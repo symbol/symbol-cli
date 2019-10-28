@@ -55,7 +55,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the public key of the remote account: ');
 
-        options.action = OptionsResolver(options,
+        options.action = +OptionsResolver(options,
             'action',
             () => undefined,
             'Introduce alias action (1: Link, 0: Unlink): ');
