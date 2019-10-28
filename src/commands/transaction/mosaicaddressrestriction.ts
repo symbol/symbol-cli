@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { command, ExpectedError, metadata, option} from 'clime';
+import { command, ExpectedError, metadata, option } from 'clime';
 import {
     Address,
     Deadline,
@@ -7,10 +7,10 @@ import {
     MosaicId,
     UInt64,
 } from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {MosaicRestrictionTypeValidator} from '../../validators/mosaic.validator';
-import {NumericStringValidator} from '../../validators/numericString.validator';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { MosaicRestrictionTypeValidator } from '../../validators/mosaic.validator';
+import { NumericStringValidator } from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
@@ -58,7 +58,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Set a mosaic restriction to an specific address.',
+    description: 'Set a mosaic restriction to an specific address',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
