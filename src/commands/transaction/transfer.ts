@@ -18,15 +18,11 @@
 import { command, ExpectedError, metadata, option } from 'clime';
 import {
     Account,
-    AccountLinkTransaction,
     Address,
-    AggregateTransaction,
     Deadline,
     EncryptedMessage,
-    LinkAction,
     Mosaic,
     NamespaceId,
-    PersistentDelegationRequestTransaction,
     PersistentHarvestingDelegationMessage,
     PlainMessage,
     PublicAccount,
@@ -37,7 +33,6 @@ import * as readlineSync from 'readline-sync';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
 import { OptionsResolver } from '../../options-resolver';
 import { MosaicService } from '../../service/mosaic.service';
-import { AddressValidator } from '../../validators/address.validator';
 import { MosaicsValidator } from '../../validators/mosaic.validator';
 import { PublicKeyValidator } from '../../validators/publicKey.validator';
 
