@@ -51,7 +51,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: ' Creates a secret proof transaction ',
+    description: 'Creates a secret proof transaction',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
