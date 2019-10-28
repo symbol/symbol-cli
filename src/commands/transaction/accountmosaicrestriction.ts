@@ -58,7 +58,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Allow or block incoming transactions containing a given set of mosaics.',
+    description: 'Allow or block incoming transactions containing a given set of mosaics',
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
