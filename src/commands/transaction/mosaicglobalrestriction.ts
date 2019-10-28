@@ -16,12 +16,13 @@
  *
  */
 
-import {command, ExpectedError, metadata, option} from 'clime';
-import {Deadline, MosaicGlobalRestrictionTransaction, MosaicId, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {RestrictionService} from '../../service/restriction.service';
-import {MosaicRestrictionTypeValidator} from '../../validators/restrictionType.validator';
+import { command, ExpectedError, metadata, option } from 'clime';
+import { Deadline, MosaicGlobalRestrictionTransaction, MosaicId, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { RestrictionService } from '../../service/restriction.service';
+import { NumericStringValidator } from '../../validators/numericString.validator';
+import { MosaicRestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
@@ -49,6 +50,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'v',
         default: 'FFFFFFFFFFFFFFFF',
         description: '(Optional) Previous restriction value.',
+        validator: new NumericStringValidator(),
     })
     previousRestrictionValue: string;
 
@@ -76,7 +78,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Set a global restriction to a mosaic.',
+    description: 'Set a global restriction to a mosaic',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
