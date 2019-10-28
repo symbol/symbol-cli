@@ -32,7 +32,7 @@ export default class extends MonitorAddressCommand {
 
     @metadata
     execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         const address = Address.createFromRawAddress(
             OptionsResolver(options,

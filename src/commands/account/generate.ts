@@ -17,15 +17,15 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
+import { HorizontalTable } from 'cli-table3';
+import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
+import { Account, BlockHttp, NetworkHttp, NetworkType } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {forkJoin} from 'rxjs';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
-import {NetworkValidator} from '../../validators/network.validator';
+import { forkJoin } from 'rxjs';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileRepository } from '../../respository/profile.repository';
+import { ProfileService } from '../../service/profile.service';
+import { NetworkValidator } from '../../validators/network.validator';
 
 export class CommandOptions extends Options {
     @option({
@@ -72,7 +72,7 @@ export class AccountCredentialsTable {
 
     constructor(public readonly account: Account) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
@@ -149,7 +149,12 @@ export default class extends Command {
                             url as string,
                             profile,
                             res[1].generationHash);
-                        this.profileService.changeCurrentProfile(profile);
+
+                        const isCurrent = readlineSync
+                            .question('Do you want to set the account created as the current profile? [y/n]');
+                        if ('y' === isCurrent.toLowerCase()) {
+                            this.profileService.changeCurrentProfile(profile);
+                        }
                         text += chalk.green('\nStored ' + profile + ' profile');
                         console.log(text);
                     }

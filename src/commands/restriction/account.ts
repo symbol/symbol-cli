@@ -17,12 +17,12 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { AccountRestriction, AccountRestrictionType, Address, RestrictionHttp } from 'nem2-sdk';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import { AddressValidator } from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -38,7 +38,7 @@ export class AccountRestrictionsTable {
 
     constructor(public readonly accountRestrictions: AccountRestriction[]) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Type', 'Value'],
         }) as HorizontalTable;
 
@@ -71,12 +71,11 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile();
-        options.address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.account.address.plain(),
-                'Introduce an address: ')).plain();
+        const profile = this.getProfile(options.profile);
+        options.address = OptionsResolver(options,
+            'address',
+            () => profile.account.address.plain(),
+            'Introduce an address: ');
         const address = Address.createFromRawAddress(options.address);
 
         const restrictionHttp = new RestrictionHttp(profile.url);

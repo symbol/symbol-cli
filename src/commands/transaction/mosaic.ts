@@ -97,7 +97,7 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.nonExpiring) {

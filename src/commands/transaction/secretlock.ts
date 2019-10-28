@@ -113,7 +113,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const profile = this.getProfile(options);
+        const profile = this.getProfile(options.profile);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),

@@ -90,7 +90,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the address: ');
 
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
         const address = Address.createFromRawAddress(options.value);
 
         const addressRestriction = AccountRestrictionModification.createForAddress(options.modificationAction, address);

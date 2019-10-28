@@ -85,7 +85,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
             'recipient',

@@ -48,7 +48,7 @@ export default class extends AnnounceTransactionsCommand {
     }
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         options.publicKey = OptionsResolver(options,
             'publicKey',

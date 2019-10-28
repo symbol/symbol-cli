@@ -33,7 +33,7 @@ export default class extends AccountTransactionsCommand {
     @metadata
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,

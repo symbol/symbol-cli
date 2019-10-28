@@ -56,7 +56,7 @@ export default class extends ProfileCommand {
     execute(options: ProfileOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         const diagnosticHttp = new DiagnosticHttp(profile.url);
 

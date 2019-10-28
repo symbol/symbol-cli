@@ -34,11 +34,11 @@ export default class extends AccountTransactionsCommand {
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,
-                'publickey',
+                'publicKey',
                 () => profile.account.publicKey,
                 'Introduce the public key: '), profile.account.address.networkType);
 

@@ -32,8 +32,11 @@ export abstract class ProfileCommand extends Command {
         this.spinner.setSpinnerString('|/-\\');
     }
 
-    public getProfile(): Profile {
+    public getProfile(profileName: string = ''): Profile {
         try {
+            if ('' !== profileName) {
+                return this.profileService.findProfileNamed(profileName);
+            }
             return this.profileService.getCurrentProfile();
         } catch (err) {
             throw new ExpectedError('Can\'t retrieve the current profile.\n' +
@@ -58,7 +61,7 @@ export abstract class ProfileCommand extends Command {
 
 export class ProfileOptions extends Options {
     @option({
-        description: '(Optional) Select between your profiles, by providing a profile name',
+        description: '(Optional) Select between your profiles, by providing a profile name.',
     })
     profile: string;
 }

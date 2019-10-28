@@ -20,7 +20,7 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile();
+        const profile = this.getProfile(options.profile);
 
         if (undefined === options.profile || '' === options.profile) {
             console.log('default profile name: ' + profile.name);
