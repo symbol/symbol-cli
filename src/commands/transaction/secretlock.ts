@@ -68,7 +68,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Creates a secret lock transaction ',
+    description: 'Announce a secret lock transaction',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -103,10 +103,10 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce proof hashed in hexadecimal format: ');
 
-        options.hashAlgorithm = OptionsResolver(options,
+        options.hashAlgorithm = +OptionsResolver(options,
             'hashAlgorithm',
             () => undefined,
-            'Introduce algorithm used to hash the proof(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
+            'Introduce algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',

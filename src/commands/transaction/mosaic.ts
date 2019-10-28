@@ -85,7 +85,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Mosaic creation transaction',
+    description: 'Create a new mosaic',
 })
 
 export default class extends AnnounceTransactionsCommand {
@@ -109,7 +109,7 @@ export default class extends AnnounceTransactionsCommand {
             }
         }
 
-        options.divisibility = OptionsResolver(options,
+        options.divisibility = +OptionsResolver(options,
             'divisibility',
             () => undefined,
             'Introduce mosaic divisibility: ');
