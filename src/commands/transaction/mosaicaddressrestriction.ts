@@ -1,12 +1,10 @@
 import chalk from 'chalk';
 import { command, ExpectedError, metadata, option} from 'clime';
 import {
-    Account,
     Address,
     Deadline,
     MosaicAddressRestrictionTransaction,
     MosaicId,
-    TransactionHttp,
     UInt64,
 } from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
@@ -39,6 +37,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'v',
         default: 'FFFFFFFFFFFFFFFF',
         description: '(Optional) Previous restriction value.',
+        validator: new NumericStringValidator(),
     })
     previousRestrictionValue: string;
 
