@@ -90,6 +90,11 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the mosaic identifier: ');
 
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
         const profile = this.getProfile(options);
         const mosaic = new MosaicId(options.value);
 
