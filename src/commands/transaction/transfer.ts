@@ -128,8 +128,8 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
+        let message: PlainMessage | EncryptedMessage | PersistentHarvestingDelegationMessage;
         if (true !== options.persistentHarvestingDelegation) {
-            let message: PlainMessage | EncryptedMessage;
             if (options.message && options.encrypted) {
                 options.recipientPublicKey = OptionsResolver(options,
                     'recipientPublicKey',
@@ -143,17 +143,6 @@ export default class extends AnnounceTransactionsCommand {
             } else {
                 message = PlainMessage.create(options.message);
             }
-
-            const transferTransaction = TransferTransaction.create(
-                Deadline.create(),
-                recipient,
-                mosaics,
-                message,
-                profile.networkType,
-                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-
-            const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
-            this.announceTransaction(signedTransaction, profile.url);
         } else {
             options.recipientPublicKey = OptionsResolver(options,
                 'recipientPublicKey',
@@ -163,38 +152,22 @@ export default class extends AnnounceTransactionsCommand {
             const remoteAccount = Account.generateNewAccount(profile.networkType);
             const nodePublicAccount = PublicAccount.createFromPublicKey(options.recipientPublicKey, profile.networkType);
 
-            const accountLinkTransaction = AccountLinkTransaction.create(
-                Deadline.create(),
-                remoteAccount.publicKey,
-                LinkAction.Link,
-                profile.networkType,
-            );
-
-            const persistentDelegationRequestTransaction = PersistentDelegationRequestTransaction
-                .create(
-                    Deadline.create(),
-                    nodePublicAccount.address,
-                    [],
-                    PersistentHarvestingDelegationMessage.create(
-                        remoteAccount.privateKey,
-                        profile.account.privateKey,
-                        nodePublicAccount.publicKey,
-                        profile.networkType),
-                    profile.networkType,
-                );
-
-            const aggregateTransaction = AggregateTransaction.createComplete(
-                Deadline.create(),
-                [
-                    accountLinkTransaction.toAggregate(profile.account.publicAccount),
-                    persistentDelegationRequestTransaction.toAggregate(profile.account.publicAccount),
-                ],
-                profile.networkType,
-                [],
-            );
-
-            const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
-            this.announceTransaction(signedTransaction, profile.url);
+            message = PersistentHarvestingDelegationMessage.create(
+                remoteAccount.privateKey,
+                profile.account.privateKey,
+                nodePublicAccount.publicKey,
+                profile.networkType);
         }
+
+        const transferTransaction = TransferTransaction.create(
+            Deadline.create(),
+            recipient,
+            mosaics,
+            message,
+            profile.networkType,
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+
+        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
+        this.announceTransaction(signedTransaction, profile.url);
     }
 }
