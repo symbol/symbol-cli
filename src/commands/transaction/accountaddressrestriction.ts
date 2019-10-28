@@ -58,7 +58,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Allow or block incoming and outgoing transactions for a given a set of addresses.',
+    description: 'Allow or block incoming and outgoing transactions for a given a set of addresses',
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
