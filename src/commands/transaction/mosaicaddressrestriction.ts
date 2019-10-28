@@ -18,12 +18,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
 
     @option({
-        flag: 'p',
-        description: '(Optional) Select between your profiles, by providing a profile.',
-    })
-    profile: string;
-
-    @option({
         flag: 'i',
         description: 'Identifier of the mosaic being restricted.',
     })
