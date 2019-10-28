@@ -93,7 +93,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
 
         let namespaceId: NamespaceId;
         if (options.name) {

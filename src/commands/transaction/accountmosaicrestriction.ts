@@ -58,7 +58,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Allow or block incoming transactions containing a given set of mosaics.',
+    description: 'Allow or block incoming transactions containing a given set of mosaics',
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
@@ -90,7 +90,12 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the mosaic identifier: ');
 
-        const profile = this.getProfile(options.profile);
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
+        const profile = this.getProfile(options);
         const mosaic = new MosaicId(options.value);
 
         const mosaicRestriction = AccountRestrictionModification.createForMosaic(options.modificationAction, mosaic);

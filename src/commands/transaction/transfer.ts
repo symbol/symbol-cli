@@ -39,7 +39,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
-        validator: new AddressValidator(),
     })
     recipient: string;
 
@@ -85,7 +84,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
 
         const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
             'recipient',

@@ -51,7 +51,7 @@ export default class extends ProfileCommand {
             'Introduce the block height: ');
 
         this.spinner.start();
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
 
         blockHttp.getBlockReceipts(options.height)

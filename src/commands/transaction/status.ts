@@ -65,7 +65,7 @@ export class TransactionStatusTable {
 }
 
 @command({
-    description: 'Fetch transaction status.',
+    description: 'Fetch transaction status',
 })
 export default class extends ProfileCommand {
     private readonly transactionService: TransactionService;
@@ -78,7 +78,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
 
         const transactionHttp = new TransactionHttp(profile.url);
         const hash = OptionsResolver(options,

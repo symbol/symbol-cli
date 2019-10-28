@@ -85,7 +85,7 @@ export default class extends ProfileCommand {
         }
 
         this.spinner.start();
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
 
         blockHttp.getBlockTransactions(options.height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))

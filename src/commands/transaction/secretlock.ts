@@ -68,7 +68,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Creates a secret lock transaction ',
+    description: 'Creates a secret lock transaction',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -113,7 +113,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),

@@ -72,7 +72,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 }
 
 @command({
-    description: 'Create or modify a multisig contract.',
+    description: 'Create or modify a multisig account',
 })
 export default class extends AnnounceAggregateTransactionsCommand {
 
@@ -107,7 +107,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
 
-        const profile = this.getProfile(options.profile);
+        const profile = this.getProfile(options);
 
         const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, profile.networkType);
         const newCosignatoryAccount = PublicAccount.createFromPublicKey(options.cosignatoryPublicKey, profile.networkType);

@@ -32,10 +32,10 @@ export abstract class ProfileCommand extends Command {
         this.spinner.setSpinnerString('|/-\\');
     }
 
-    public getProfile(profileName: string = ''): Profile {
+    public getProfile(options: ProfileOptions): Profile {
         try {
-            if ('' !== profileName) {
-                return this.profileService.findProfileNamed(profileName);
+            if ('' !== options.profile) {
+                return this.profileService.findProfileNamed(options.profile);
             }
             return this.profileService.getCurrentProfile();
         } catch (err) {

@@ -58,7 +58,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Allow or block incoming and outgoing transactions for a given a set of addresses.',
+    description: 'Allow or block incoming and outgoing transactions for a given a set of addresses',
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
@@ -90,7 +90,12 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the address: ');
 
-        const profile = this.getProfile(options.profile);
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
+
+        const profile = this.getProfile(options);
         const address = Address.createFromRawAddress(options.value);
 
         const addressRestriction = AccountRestrictionModification.createForAddress(options.modificationAction, address);
