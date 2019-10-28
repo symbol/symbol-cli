@@ -45,7 +45,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
-        validator: new AddressValidator(),
     })
     recipient: string;
 
