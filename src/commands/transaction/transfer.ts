@@ -78,7 +78,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     recipientPublicKey: string;
 
     @option({
-        flag: '',
+        flag: 'd',
         description: '(Optional) Start persistent harvesting delegation.',
         toggle: true,
     })
