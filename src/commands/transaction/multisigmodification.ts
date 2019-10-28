@@ -72,7 +72,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 }
 
 @command({
-    description: 'Create or modify a multisig contract.',
+    description: 'Create or modify a multisig account',
 })
 export default class extends AnnounceAggregateTransactionsCommand {
 

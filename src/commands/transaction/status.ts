@@ -65,7 +65,7 @@ export class TransactionStatusTable {
 }
 
 @command({
-    description: 'Fetch transaction status.',
+    description: 'Fetch transaction status',
 })
 export default class extends ProfileCommand {
     private readonly transactionService: TransactionService;
