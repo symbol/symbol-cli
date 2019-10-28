@@ -58,7 +58,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Allow or block outgoing transactions by transaction type.',
+    description: 'Allow or block outgoing transactions by transaction type',
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
@@ -89,6 +89,11 @@ export default class extends AnnounceTransactionsCommand {
             'value',
             () => undefined,
             'Introduce the transaction type. Example: 4154 (Transfer): ');
+
+        options.maxFee = OptionsResolver(options,
+            'maxFee',
+            () => undefined,
+            'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const profile = this.getProfile(options);
         const entityRestriction = AccountRestrictionModification.createForOperation(
