@@ -56,7 +56,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Register namespace transaction',
+    description: 'Register a namespace',
 })
 
 export default class extends AnnounceTransactionsCommand {
