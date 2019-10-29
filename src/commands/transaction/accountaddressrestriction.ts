@@ -75,7 +75,7 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the restriction type (allow, block):');
 
-        options.modificationAction = OptionsResolver(options,
+        options.modificationAction = +OptionsResolver(options,
             'modificationAction',
             () => undefined,
             'Introduce the modification action (1: Add, 0: Remove): ');

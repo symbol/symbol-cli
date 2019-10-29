@@ -22,10 +22,7 @@ import {OptionsResolver} from '../../options-resolver';
 import {RestrictionService} from '../../service/restriction.service';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {
-    AccountRestrictionDirectionValidator,
-    AccountRestrictionTypeValidator,
-} from '../../validators/restrictionType.validator';
+import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -34,13 +31,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new AccountRestrictionTypeValidator(),
     })
     restrictionType: string;
-
-    @option({
-        flag: 'd',
-        description: 'Restriction direction (incoming, outgoing).',
-        validator: new AccountRestrictionDirectionValidator(),
-    })
-    restrictionDirection: string;
 
     @option({
         flag: 'a',
@@ -75,15 +65,10 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the restriction type (allow, block):');
 
-        options.modificationAction = OptionsResolver(options,
+        options.modificationAction = +OptionsResolver(options,
             'modificationAction',
             () => undefined,
             'Introduce the modification action (1: Add, 0: Remove): ');
-
-        options.restrictionDirection = OptionsResolver(options,
-            'restrictionDirection',
-            () => undefined,
-            'Introduce the restriction direction (incoming, outgoing): ');
 
         options.value = OptionsResolver(options,
             'value',
