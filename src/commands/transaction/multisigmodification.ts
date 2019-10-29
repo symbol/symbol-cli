@@ -82,7 +82,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.action = OptionsResolver(options,
+        options.action = +OptionsResolver(options,
             'action',
             () => undefined,
             'Introduce the modification action (1: Add, 0: Remove): ');

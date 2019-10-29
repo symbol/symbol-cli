@@ -65,7 +65,7 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce mosaic in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        options.action = OptionsResolver(options,
+        options.action = +OptionsResolver(options,
             'action',
             () => undefined,
             'Introduce supply change action (1: Increase, 0: Decrease): ');
