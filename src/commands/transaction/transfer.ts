@@ -19,9 +19,10 @@ import {command, ExpectedError, metadata, option} from 'clime';
 import {
     Address,
     Deadline,
-    EncryptedMessage,
+    Message,
     Mosaic,
     NamespaceId,
+    PersistentHarvestingDelegationMessage,
     PlainMessage,
     PublicAccount,
     TransferTransaction,
@@ -31,7 +32,6 @@ import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicService} from '../../service/mosaic.service';
-import {AddressValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
@@ -40,7 +40,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'r',
         description: 'Recipient address or @alias.',
     })
-    recipient: string;
+    recipientAddress: string;
 
     @option({
         flag: 'm',
@@ -70,6 +70,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     })
     recipientPublicKey: string;
 
+    @option({
+        flag: 'd',
+        description: '(Optional) Start persistent harvesting delegation.',
+        toggle: true,
+    })
+    persistentHarvestingDelegation: any;
 }
 
 @command({
@@ -86,11 +92,11 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        const recipient: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
-            'recipient',
+        const recipientAddress: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
+            'recipientAddress',
             () => undefined,
             'Introduce the recipient address: '));
-        if (recipient instanceof Address && recipient.networkType !== profile.networkType) {
+        if (recipientAddress instanceof Address && recipientAddress.networkType !== profile.networkType) {
             throw new ExpectedError('The recipient address network doesn\'t match network option.');
         }
 
@@ -107,36 +113,46 @@ export default class extends AnnounceTransactionsCommand {
             'message',
             () => '',
             'Introduce the message: ');
-
-        let message: PlainMessage | EncryptedMessage;
-
-        if (options.message) {
+        if (options.message && !options.persistentHarvestingDelegation) {
             options.encrypted = options.encrypted ? options.encrypted : readlineSync.keyInYN(
                 'Do you want to send an encrypted message?');
         }
-
-        if (options.message && options.encrypted) {
-            options.recipientPublicKey = OptionsResolver(options,
-                'recipientPublicKey',
-                () => undefined,
-                'Introduce the recipient public key: ');
-            message = profile.account.encryptMessage(
-                options.message,
-                PublicAccount.createFromPublicKey(options.recipientPublicKey,
-                    profile.networkType),
-                profile.networkType);
-        } else {
-            message = PlainMessage.create(options.message);
-        }
-
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
+        let message: Message;
+        if (options.message && options.persistentHarvestingDelegation) {
+            options.recipientPublicKey = OptionsResolver(options,
+                'recipientPublicKey',
+                () => undefined,
+                'Introduce the recipient public key: ');
+
+            message = PersistentHarvestingDelegationMessage.create(
+                options.message,
+                profile.account.privateKey,
+                options.recipientPublicKey,
+                profile.networkType);
+
+        } else if (options.message && options.encrypted) {
+                options.recipientPublicKey = OptionsResolver(options,
+                    'recipientPublicKey',
+                    () => undefined,
+                    'Introduce the recipient public key: ');
+
+                message = profile.account.encryptMessage(
+                    options.message,
+                    PublicAccount.createFromPublicKey(options.recipientPublicKey,
+                        profile.networkType),
+                    profile.networkType);
+        } else {
+            message = PlainMessage.create(options.message);
+        }
+
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
-            recipient,
+            recipientAddress,
             mosaics,
             message,
             profile.networkType,
