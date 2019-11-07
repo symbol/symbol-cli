@@ -42,7 +42,7 @@ export class CommandOptions extends Options {
     url: string;
 
     @option({
-        description: '(Optional) When saving profile you can add profile name, if not will be stored as default.',
+        description: '(Optional) Profile name.',
     })
     profile: string;
 
@@ -126,16 +126,9 @@ export default class extends Command {
             if (options.profile) {
                 profile = options.profile;
             } else {
-                const tmp = readlineSync
-                    .question('Insert the profile name ' +
-                        '(blank means default and it could overwrite the previous profile): ');
-                if (tmp === '') {
-                    profile = 'default';
-                } else {
-                    profile = tmp;
-                }
+                profile = readlineSync.question('Insert the profile name: ');
             }
-            profile = profile.trim();
+            profile.trim();
 
             const networkHttp = new NetworkHttp(url);
             const blockHttp = new BlockHttp(url);
@@ -149,11 +142,8 @@ export default class extends Command {
                             url as string,
                             profile,
                             res[1].generationHash);
-
-                        const isCurrent = readlineSync
-                            .question('Do you want to set the account created as the current profile? [y/n]');
-                        if ('y' === isCurrent.toLowerCase()) {
-                            this.profileService.changeCurrentProfile(profile);
+                        if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
+                            this.profileService.setDefaultProfile(profile);
                         }
                         text += chalk.green('\nStored ' + profile + ' profile');
                         console.log(text);
@@ -161,7 +151,7 @@ export default class extends Command {
                 }, (ignored) => {
                     let error = '';
                     error += chalk.red('Error');
-                    error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
+                    error += ' Check if you can reach the NEM2 url provided: ' + url + '/block/1';
                     console.log(error);
                 });
         } else {

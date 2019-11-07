@@ -34,27 +34,24 @@ export abstract class ProfileCommand extends Command {
 
     public getProfile(options: ProfileOptions): Profile {
         try {
-            if ('' !== options.profile) {
+            if (options.profile) {
                 return this.profileService.findProfileNamed(options.profile);
             }
-            return this.profileService.getCurrentProfile();
+            return this.profileService.getDefaultProfile();
         } catch (err) {
             throw new ExpectedError('Can\'t retrieve the current profile.\n' +
             'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-            'if not, use \'nem2-cli profile create\' to create a profile.');
+            'if not, use \'nem2-cli profile create\' to create a new profile.');
         }
     }
 
-    public setCurrentProfile(options: ProfileOptions): Profile {
-        const profileName = options.profile;
+    protected setDefaultProfile(options: ProfileOptions) {
         try {
-            return this.profileService.changeCurrentProfile(profileName);
+            this.profileService.setDefaultProfile(options.profile);
         } catch (err) {
-            throw new ExpectedError(options.profile ?
-                'Set default profile fail.\n' +
+            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile\n.' +
                 'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile.' :
-                'Can\'t set the profile [' + options.profile + '] as the default profile.');
+                'if not, use \'nem2-cli profile create\' to create a profile.');
         }
     }
 }

@@ -56,40 +56,40 @@ export class ProfileRepository {
 
     public save(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
-        profiles[name] = {privateKey: account.privateKey, networkType: account.address.networkType, url, networkGenerationHash};
+        profiles[name] = {privateKey: account.privateKey,
+            networkType: account.address.networkType,
+            url,
+            networkGenerationHash,
+            default: '0'};
         this.saveProfiles(profiles);
         return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
     }
 
-    public changeCurrentProfile(name: string): Profile {
+    public setDefaultProfile(name: string) {
         const profiles = this.getProfiles();
-        let currentProfile;
-        if (!Object.keys(profiles).includes(name)) {
-            name = 'default';
-        }
-        for (const item in profiles) {
-            if (item !== name) {
-                profiles[item].current = '0';
-            } else {
-                profiles[item].current = '1';
-                currentProfile = JSON.parse(JSON.stringify(profiles[item]));
-                currentProfile.name = item;
+        if (profiles[name]) {
+            for (const item in profiles) {
+                if (item !== name) {
+                    profiles[item].default = '0';
+                } else {
+                    profiles[item].default = '1';
+                }
             }
+            this.saveProfiles(profiles);
+        } else {
+            throw new Error(`${name} not found`);
         }
-        this.saveProfiles(profiles);
-        return currentProfile;
     }
 
-    public getCurrentProfile(): Profile {
+    public getDefaultProfile(): Profile {
         const profiles = this.getProfiles();
-        let currentProfile;
-        for (const item in profiles) {
-            if ('1' === profiles[item].current) {
-                currentProfile = JSON.parse(JSON.stringify(profiles[item]));
-                currentProfile.name = item;
+        let defaultProfile = '';
+        for (const name in profiles) {
+            if ('1' === profiles[name].default) {
+                defaultProfile = name;
             }
         }
-        return currentProfile;
+        return this.find(defaultProfile);
     }
 
     private getProfiles(): any {
