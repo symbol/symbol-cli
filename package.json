@@ -41,7 +41,7 @@
         "cli-spinner": "^0.2.7",
         "cli-table3": "^0.5.1",
         "clime": "^0.5.9",
-        "nem2-sdk": "^0.14.3",
+        "nem2-sdk": "^0.14.4",
         "path": "^0.12.7",
         "readline-sync": "^1.4.9",
         "rxjs": "^6.2.1"
