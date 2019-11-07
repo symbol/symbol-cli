@@ -82,4 +82,26 @@ describe('Configure service', () => {
             profileService.findProfileNamed('default');
         }).to.throw(Error);
     });
+
+    it('should get current profile', () => {
+        const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
+            NetworkType.MIJIN_TEST);
+        const url = 'http://localhost:1234';
+
+        const networkGenerationHash = 'test';
+        const profile = new Profile(account,
+            NetworkType.MIJIN_TEST,
+            url,
+            'test',
+            networkGenerationHash);
+        const mockProfileRepository = mock(ProfileRepository);
+        when(mockProfileRepository.find('test'))
+            .thenReturn(profile);
+
+        const profileService = new ProfileService(instance(mockProfileRepository));
+        const currentProfile = profileService.getDefaultProfile();
+        if (currentProfile instanceof Profile) {
+            expect(currentProfile.account).to.be.equal(account);
+        }
+    });
 });
