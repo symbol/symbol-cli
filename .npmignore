@@ -6,7 +6,6 @@ docs/
 coverage/
 .nyc_output/
 .idea/
+.vscode/
 build/test
 licenses/
-.vscode/
-

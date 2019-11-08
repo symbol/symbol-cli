@@ -39,7 +39,7 @@ export default class extends AccountTransactionsCommand {
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,
                 'publicKey',
-                () => this.getProfile(options).account.publicKey,
+                () => profile.account.publicKey,
                 'Introduce the public key: '), profile.account.address.networkType);
 
         const accountHttp = new AccountHttp(profile.url);

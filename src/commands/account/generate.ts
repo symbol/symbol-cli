@@ -17,15 +17,15 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
+import { HorizontalTable } from 'cli-table3';
+import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
+import { Account, BlockHttp, NetworkHttp, NetworkType } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {forkJoin} from 'rxjs';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
-import {NetworkValidator} from '../../validators/network.validator';
+import { forkJoin } from 'rxjs';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileRepository } from '../../respository/profile.repository';
+import { ProfileService } from '../../service/profile.service';
+import { NetworkValidator } from '../../validators/network.validator';
 
 export class CommandOptions extends Options {
     @option({
@@ -42,7 +42,7 @@ export class CommandOptions extends Options {
     url: string;
 
     @option({
-        description: '(Optional) When saving profile you can add profile name, if not will be stored as default.',
+        description: '(Optional) Profile name.',
     })
     profile: string;
 
@@ -72,7 +72,7 @@ export class AccountCredentialsTable {
 
     constructor(public readonly account: Account) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
@@ -126,16 +126,9 @@ export default class extends Command {
             if (options.profile) {
                 profile = options.profile;
             } else {
-                const tmp = readlineSync
-                    .question('Insert the profile name ' +
-                        '(blank means default and it could overwrite the previous profile): ');
-                if (tmp === '') {
-                    profile = 'default';
-                } else {
-                    profile = tmp;
-                }
+                profile = readlineSync.question('Insert the profile name: ');
             }
-            profile = profile.trim();
+            profile.trim();
 
             const networkHttp = new NetworkHttp(url);
             const blockHttp = new BlockHttp(url);
@@ -149,13 +142,16 @@ export default class extends Command {
                             url as string,
                             profile,
                             res[1].generationHash);
+                        if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
+                            this.profileService.setDefaultProfile(profile);
+                        }
                         text += chalk.green('\nStored ' + profile + ' profile');
                         console.log(text);
                     }
                 }, (ignored) => {
                     let error = '';
                     error += chalk.red('Error');
-                    error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000';
+                    error += ' Check if you can reach the NEM2 url provided: ' + url + '/block/1';
                     console.log(error);
                 });
         } else {

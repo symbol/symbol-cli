@@ -165,8 +165,8 @@ export default class extends ProfileCommand {
         const address: Address = Address.createFromRawAddress(
             OptionsResolver(options,
                 'address',
-                () => this.getProfile(options).account.address.plain(),
-                'Introduce an address: '));
+                () => profile.account.address.plain(),
+                'Introduce the address: '));
 
         const accountHttp = new AccountHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);

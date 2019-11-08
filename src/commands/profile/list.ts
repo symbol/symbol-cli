@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+import chalk from 'chalk';
 import {Command, command, metadata, option, Options} from 'clime';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
@@ -46,5 +47,11 @@ export default class extends Command {
             message += '\n\n' + profile.toString();
         });
         console.log(message);
+        try {
+            const currentProfile = this.profileService.getDefaultProfile();
+            console.log(chalk.green('\n\n Default profile:', currentProfile.name));
+        } catch {
+            console.log(chalk.green('\n\n Default profile: None'));
+        }
     }
 }
