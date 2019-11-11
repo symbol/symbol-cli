@@ -46,10 +46,10 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const address = Address.createFromRawAddress(
+        const address: Address = Address.createFromRawAddress(
             OptionsResolver(options,
                 'address',
-                () => this.getProfile(options).account.address.plain(),
+                () => profile.account.address.plain(),
                 'Introduce the address: '));
         const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();
