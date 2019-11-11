@@ -60,6 +60,7 @@ fabric.properties
 # See https://github.com/joeblau/gitignore.io/issues/186 and https://github.com/joeblau/gitignore.io/issues/360
 
 .idea/
+.vscode/
 
 ### Node ###
 # Logs

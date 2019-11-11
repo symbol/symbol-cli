@@ -38,4 +38,12 @@ export class ProfileService {
         return this.profileRepository.all();
     }
 
+    setDefaultProfile(name: string) {
+        this.profileRepository.setDefaultProfile(name);
+    }
+
+    getDefaultProfile(): Profile {
+        return this.profileRepository.getDefaultProfile();
+    }
+
 }

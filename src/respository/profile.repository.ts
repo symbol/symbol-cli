@@ -56,9 +56,40 @@ export class ProfileRepository {
 
     public save(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
-        profiles[name] = {privateKey: account.privateKey, networkType: account.address.networkType, url, networkGenerationHash};
+        profiles[name] = {privateKey: account.privateKey,
+            networkType: account.address.networkType,
+            url,
+            networkGenerationHash,
+            default: '0'};
         this.saveProfiles(profiles);
         return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
+    }
+
+    public setDefaultProfile(name: string) {
+        const profiles = this.getProfiles();
+        if (profiles[name]) {
+            for (const item in profiles) {
+                if (item !== name) {
+                    profiles[item].default = '0';
+                } else {
+                    profiles[item].default = '1';
+                }
+            }
+            this.saveProfiles(profiles);
+        } else {
+            throw new Error(`${name} not found`);
+        }
+    }
+
+    public getDefaultProfile(): Profile {
+        const profiles = this.getProfiles();
+        let defaultProfile = '';
+        for (const name in profiles) {
+            if ('1' === profiles[name].default) {
+                defaultProfile = name;
+            }
+        }
+        return this.find(defaultProfile);
     }
 
     private getProfiles(): any {

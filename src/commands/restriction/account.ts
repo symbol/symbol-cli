@@ -17,12 +17,12 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {AccountRestriction, AccountRestrictionType, Address, RestrictionHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { AccountRestriction, AccountRestrictionType, Address, RestrictionHttp } from 'nem2-sdk';
+import { OptionsResolver } from '../../options-resolver';
+import { ProfileCommand, ProfileOptions } from '../../profile.command';
+import { AddressValidator } from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -38,7 +38,7 @@ export class AccountRestrictionsTable {
 
     constructor(public readonly accountRestrictions: AccountRestriction[]) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Type', 'Value'],
         }) as HorizontalTable;
 
@@ -72,23 +72,22 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        options.address =  OptionsResolver(options,
+        options.address = OptionsResolver(options,
             'address',
-            () => this.getProfile(options).account.address.plain(),
+            () => profile.account.address.plain(),
             'Introduce an address: ');
         const address = Address.createFromRawAddress(options.address);
 
         const restrictionHttp = new RestrictionHttp(profile.url);
         restrictionHttp.getAccountRestrictions(address)
-            .subscribe((accountRestrictions) => {
+            .subscribe((accountRestrictions: any) => {
                 this.spinner.stop(true);
                 if (accountRestrictions.length > 0) {
                     console.log(new AccountRestrictionsTable(accountRestrictions).toString());
                 } else {
                     console.log('\n The address does not have account restrictions assigned.');
                 }
-            }, (err) => {
+            }, (err: any) => {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
