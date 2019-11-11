@@ -16,10 +16,10 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AccountHttp, PublicAccount} from 'nem2-sdk';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import { command, metadata } from 'clime';
+import { AccountHttp, PublicAccount } from 'nem2-sdk';
+import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../account.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
 
 @command({
     description: 'Fetch incoming transactions from account',
@@ -39,7 +39,7 @@ export default class extends AccountTransactionsCommand {
         const publicAccount = PublicAccount.createFromPublicKey(
             OptionsResolver(options,
                 'publicKey',
-                () => this.getProfile(options).account.publicKey,
+                () => profile.account.publicKey,
                 'Introduce the public key: '), profile.account.address.networkType);
 
         const accountHttp = new AccountHttp(profile.url);

@@ -48,7 +48,7 @@ export class CommandOptions extends Options {
     url: string;
 
     @option({
-        description: '(Optional) Profile name, if not private key will override the default profile.',
+        description: 'Profile name.',
     })
     profile: string;
 
@@ -102,12 +102,7 @@ export default class extends Command {
         if (options.profile) {
             profileName = options.profile;
         } else {
-            const tmp = readlineSync.question('Insert profile name (blank means default and it could overwrite the previous profile): ');
-            if (tmp === '') {
-                profileName = 'default';
-            } else {
-                profileName = tmp;
-            }
+            profileName = readlineSync.question('Insert profile name: ');
         }
         profileName.trim();
 
@@ -123,12 +118,15 @@ export default class extends Command {
                         url as string,
                         profileName,
                         res[1].generationHash);
+                    if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
+                        this.profileService.setDefaultProfile(profileName);
+                    }
                     console.log(chalk.green('\nProfile stored correctly\n') + profile.toString() + '\n');
                 }
             }, (ignored) => {
                 let error = '';
                 error += chalk.red('Error');
-                error += ' Provide a valid NEM2 Node URL. Example: http://localhost:3000.';
+                error += ' Check if you can reach the NEM2 url provided: ' + url + '/block/1';
                 console.log(error);
             });
     }

@@ -103,4 +103,24 @@ describe('ProfileRepository', () => {
             expect(savedProfile.networkGenerationHash).to.be.equal('test');
         }
     });
+
+    it('should save two accounts and find default', () => {
+        const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
+            NetworkType.MIJIN_TEST);
+        const url = 'http://localhost:3000';
+        const account2 = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B31',
+            NetworkType.MIJIN_TEST);
+        const url2 = 'http://localhost:3000';
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        const networkGenerationHash = 'test';
+        profileRepository.save(account, url, 'nodefault', networkGenerationHash);
+        profileRepository.save(account2, url2, 'default', networkGenerationHash);
+        profileRepository.setDefaultProfile('default');
+        const currentDefaultProfile = profileRepository.getDefaultProfile();
+        expect(currentDefaultProfile).to.not.be.equal(undefined);
+        if (currentDefaultProfile instanceof Profile) {
+            expect(currentDefaultProfile.account.privateKey).to.be.equal(account2.privateKey);
+        }
+    });
+
 });

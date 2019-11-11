@@ -18,7 +18,7 @@ The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
 ## Requirements
 
-- Node v10.13.0 (LTS)
+- Node v12.13.0 (LTS)
 
 ## Installation
 
