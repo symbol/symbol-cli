@@ -26,6 +26,7 @@ import {
     AccountRestrictionDirectionValidator,
     AccountRestrictionTypeValidator,
 } from '../../validators/restrictionType.validator';
+import {AddressAliasValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -52,7 +53,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'v',
         description: 'Address to allow / block.',
-        validator: new AddressValidator(),
+        validator: new AddressAliasValidator(),
     })
     value: string;
 }

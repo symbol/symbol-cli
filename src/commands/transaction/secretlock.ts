@@ -14,20 +14,21 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Address, Deadline, Mosaic, MosaicId, SecretLockTransaction, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AddressValidator} from '../../validators/address.validator';
-import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {NumericStringValidator} from '../../validators/numericString.validator';
+import { command, metadata, option } from 'clime';
+import { Address, Deadline, Mosaic, MosaicId, NamespaceId, SecretLockTransaction, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { MosaicService } from '../../service/mosaic.service';
+import {AddressAliasValidator} from '../../validators/address.validator';
+import { HashAlgorithmValidator } from '../../validators/hashAlgorithm.validator';
+import { MosaicIdAliasValidator } from '../../validators/mosaicId.validator';
+import { NumericStringValidator } from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: 'Locked mosaic identifier.',
         flag: 'm',
-        validator: new MosaicIdValidator(),
+        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 
@@ -62,7 +63,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: 'Address that receives the funds once unlocked.',
         flag: 'r',
-        validator: new AddressValidator(),
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }
@@ -91,7 +92,6 @@ export default class extends AnnounceTransactionsCommand {
             'recipientAddress',
             () => undefined,
             'Introduce address that receives the funds once unlocked: ');
-        const recipientAddress =  Address.createFromRawAddress(options.recipientAddress);
 
         options.duration = OptionsResolver(options,
             'duration',
@@ -115,9 +115,12 @@ export default class extends AnnounceTransactionsCommand {
 
         const profile = this.getProfile(options);
 
+        const mosaicId: MosaicId | NamespaceId = MosaicService.getMosaicId(options.mosaicId);
+        const recipientAddress: Address | NamespaceId = MosaicService.getRecipient(options.recipientAddress);
+
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            new Mosaic(new MosaicId(options.mosaicId),
+            new Mosaic(mosaicId,
                 UInt64.fromNumericString(options.amount)),
             UInt64.fromNumericString(options.duration),
             options.hashAlgorithm,

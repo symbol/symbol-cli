@@ -30,8 +30,8 @@ export class AddressValidator implements Validator<string> {
 
 export class AddressAliasValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
-        const ALIAS_TAG = '@';
-        if (value.charAt(0) !== ALIAS_TAG) {
+        const aliasTag = '@';
+        if (value.charAt(0) !== aliasTag) {
             try {
                 Address.createFromRawAddress(value);
             } catch (e) {

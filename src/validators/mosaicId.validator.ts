@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {MosaicId} from 'nem2-sdk';
+import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 
 export class MosaicIdValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -24,6 +24,25 @@ export class MosaicIdValidator implements Validator<string> {
             const ignored = new MosaicId(value);
         } catch (err) {
             throw new ExpectedError('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+        }
+    }
+}
+
+export class MosaicIdAliasValidator implements Validator<string> {
+    validate(value: string, context: ValidationContext): void {
+        const aliasTag = '@';
+        if (value.charAt(0) !== aliasTag) {
+            try {
+                const mosaic = new Mosaic(new MosaicId(value), UInt64.fromUint(0));
+            } catch (err) {
+                throw new ExpectedError('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+            }
+        } else {
+            try {
+                const mosaic = new Mosaic(new NamespaceId(value), UInt64.fromUint(0));
+            } catch (err) {
+                throw new ExpectedError('Introduce valid mosaic alias. Example: @Apple');
+            }
         }
     }
 }

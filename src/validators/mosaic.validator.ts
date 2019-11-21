@@ -32,3 +32,4 @@ export class MosaicsValidator implements Validator<string> {
         });
     }
 }
+
