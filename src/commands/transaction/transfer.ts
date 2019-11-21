@@ -32,6 +32,7 @@ import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicService} from '../../service/mosaic.service';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
@@ -39,6 +40,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 

@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
+import {Address, NamespaceId, RawAddress} from 'nem2-sdk';
 
 export class AddressValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -24,6 +24,19 @@ export class AddressValidator implements Validator<string> {
             Address.createFromRawAddress(value);
         } catch (err) {
             throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+        }
+    }
+}
+
+export class AddressAliasValidator implements Validator<string> {
+    validate(value: string, context: ValidationContext): void {
+        const ALIAS_TAG = '@';
+        if (value.charAt(0) !== ALIAS_TAG) {
+            try {
+                Address.createFromRawAddress(value);
+            } catch (e) {
+                throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            }
         }
     }
 }
