@@ -20,13 +20,12 @@ import {AccountRestrictionModification, AccountRestrictionTransaction, Address, 
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {RestrictionService} from '../../service/restriction.service';
-import {AddressValidator} from '../../validators/address.validator';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {
     AccountRestrictionDirectionValidator,
     AccountRestrictionTypeValidator,
 } from '../../validators/restrictionType.validator';
-import {AddressAliasValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
