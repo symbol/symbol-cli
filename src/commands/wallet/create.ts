@@ -17,12 +17,12 @@
  */
 import chalk from 'chalk';
 import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
-import {BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import { BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {forkJoin} from 'rxjs';
-import {OptionsResolver} from '../../options-resolver';
-import {WalletRepository} from '../../respository/wallet.repository';
-import {WalletService} from '../../service/wallet.service';
+import { forkJoin } from 'rxjs';
+import { OptionsResolver } from '../../options-resolver';
+import { WalletRepository } from '../../respository/wallet.repository';
+import { WalletService } from '../../service/wallet.service';
 import { NetworkValidator } from '../../validators/network.validator';
 import { PrivateKeyValidator } from '../../validators/privateKey.validator';
 
@@ -74,7 +74,7 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Create a new profile',
+    description: 'Create a new wallet',
 })
 export default class extends Command {
     private readonly walletService: WalletService;
@@ -112,27 +112,31 @@ export default class extends Command {
         const networkHttp = new NetworkHttp(options.url);
         const blockHttp = new BlockHttp(options.url);
         forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
-        .subscribe((res) => {
-            if (res[0] !== networkType) {
-                console.log('The network provided and the node network don\'t match.');
-            } else {
-                const isWalletExist: boolean = this.walletService.checkWalletExist(options.name);
-                if (isWalletExist) {
-                    if (!readlineSync.keyInYN('wallet ' + options.name + ' has already exist. Are you sure to recover it?')) {
-                        return;
+            .subscribe((res) => {
+                if (res[0] !== networkType) {
+                    console.log('The network provided and the node network don\'t match.');
+                } else {
+                    const isWalletExist: boolean = this.walletService.checkWalletExist(options.name);
+                    if (isWalletExist) {
+                        if (!readlineSync.keyInYN('wallet ' + options.name + ' has already exist. Are you sure to recover it?')) {
+                            return;
+                        }
                     }
+                    const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
+                    console.log(simpleWallet);
+
+                    const wallet = this.walletService.createWallet(
+                        simpleWallet,
+                        options.url,
+                        res[1].generationHash);
+
+                    // const account = this.getAccount(wallet, '214333890');
+                    if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
+                        this.walletService.setDefaultWallet(wallet.name);
+                    }
+                    console.log(chalk.green('\nProfile stored correctly\n') + wallet + '\n');
                 }
-                const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
-                const wallet = this.walletService.createWallet(
-                    simpleWallet,
-                    options.url,
-                    res[1].generationHash);
-                if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
-                    this.walletService.setDefaultWallet(wallet.name);
-                }
-                console.log(chalk.green('\nProfile stored correctly\n') + wallet.toString() + '\n');
-            }
-        });
+            });
 
     }
 }

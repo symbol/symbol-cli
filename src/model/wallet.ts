@@ -1,6 +1,6 @@
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Address, NetworkType} from 'nem2-sdk';
+import {Address, EncryptedPrivateKey, NetworkType} from 'nem2-sdk';
 
 export class Wallet {
     private readonly table: HorizontalTable;
@@ -10,18 +10,19 @@ export class Wallet {
         public readonly url: string,
         public readonly networkGenerationHash: string,
         public readonly address: Address,
+        public readonly encryptedPrivateKey: EncryptedPrivateKey,
     ) {
-        this.table = new Table({
-            style: {head: ['cyan']},
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-        this.table.push(
-            ['Name', this.name],
-            ['Network', NetworkType[this.networkType]],
-            ['Node URL', this.url],
-            ['Generation Hash', this.networkGenerationHash],
-            ['Address', this.address.pretty()],
-        );
+        // this.table = new Table({
+        //     style: {head: ['cyan']},
+        //     head: ['Property', 'Value'],
+        // }) as HorizontalTable;
+        // this.table.push(
+        //     ['Name', this.name],
+        //     ['Network', NetworkType[this.networkType]],
+        //     ['Node URL', this.url],
+        //     ['Generation Hash', this.networkGenerationHash],
+        //     ['Address', this.address.pretty()],
+        // );
     }
 
     toJSON() {

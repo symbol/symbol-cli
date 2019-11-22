@@ -31,10 +31,11 @@ export class WalletRepository {
         if (wallets[name]) {
             return new Wallet(
                 wallets[name].name,
-                wallets[name].networkType,
+                wallets[name].network,
                 wallets[name].url,
                 wallets[name].networkGenerationHash,
                 wallets[name].address,
+                wallets[name].encryptedPrivateKey,
                 );
         }
         throw new Error(`${name} not found`);
@@ -48,6 +49,7 @@ export class WalletRepository {
             address: simpleWallet.address.plain(),
             url,
             networkGenerationHash,
+            encryptedPrivateKey: simpleWallet.encryptedPrivateKey,
             default: '0',
         };
 
@@ -58,6 +60,7 @@ export class WalletRepository {
             url,
             networkGenerationHash,
             simpleWallet.address,
+            simpleWallet.encryptedPrivateKey,
         );
     }
 

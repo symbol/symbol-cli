@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { SimpleWallet } from 'nem2-sdk';
+import { Account, Crypto, SimpleWallet, WalletAlgorithm } from 'nem2-sdk';
 import { Wallet } from '../model/wallet';
 import { WalletRepository } from '../respository/wallet.repository';
 
@@ -29,11 +29,26 @@ export class WalletService {
     createWallet(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Wallet {
         return this.walletRepository.save(simpleWallet, url, networkGenerationHash);
     }
+
+    getWallet(name: string): Wallet {
+        return this.walletRepository.find(name);
+    }
+
     setDefaultWallet(name: string) {
         this.walletRepository.setDefaultWallet(name);
     }
 
     checkWalletExist(name: string): boolean {
         return this.walletRepository.checkExist(name);
+    }
+
+    getAccount(wallet: Wallet, password: string): Account {
+        const { encryptedKey, iv } = wallet.encryptedPrivateKey;
+        const common = { password, privateKey: '' };
+        const walletInfo = { encrypted: encryptedKey, iv };
+        Crypto.passwordToPrivateKey(common, walletInfo, WalletAlgorithm.Pass_bip32);
+        const privateKey = common.privateKey;
+        const account = Account.createFromPrivateKey(privateKey, wallet.networkType);
+        return account;
     }
 }
