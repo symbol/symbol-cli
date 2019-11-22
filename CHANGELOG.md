@@ -9,6 +9,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 
 - ``profile current`` command.
+-  Persistent harvesting delegation support.
 
 ### Changed
 
