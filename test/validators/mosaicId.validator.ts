@@ -60,5 +60,5 @@ describe('mosaic alias validator', () => {
         expect(() => {
             new MosaicIdAliasValidator().validate(value, {name: 'value', source: value});
         }).to.throws('Introduce valid mosaic alias. Example: @nem.xem');
-    })
+    });
 });
