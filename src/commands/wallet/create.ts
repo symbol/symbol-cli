@@ -123,18 +123,21 @@ export default class extends Command {
                         }
                     }
                     const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
-                    console.log(simpleWallet);
-
                     const wallet = this.walletService.createWallet(
                         simpleWallet,
                         options.url,
                         res[1].generationHash);
 
-                    // const account = this.getAccount(wallet, '214333890');
                     if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
                         this.walletService.setDefaultWallet(wallet.name);
                     }
-                    console.log(chalk.green('\nProfile stored correctly\n') + wallet + '\n');
+                    console.log(chalk.green('wallet info'));
+                    console.log('name: ' + wallet.name);
+                    console.log('networkType: ' + wallet.networkType);
+                    console.log('url: ' + wallet.url);
+                    console.log('networkGenerationHash: ' + wallet.networkGenerationHash);
+                    console.log('address: ' + wallet.address.pretty());
+                    console.log('encryptedPrivateKey: ' + wallet.encryptedPrivateKey + '\n');
                 }
             });
 
