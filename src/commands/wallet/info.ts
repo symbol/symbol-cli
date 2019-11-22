@@ -1,7 +1,8 @@
+import * as Table from 'cli-table3';
 import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
 import { OptionsResolver } from '../../options-resolver';
-import {WalletRepository} from '../../respository/wallet.repository';
-import {WalletService} from '../../service/wallet.service';
+import { WalletRepository } from '../../respository/wallet.repository';
+import { WalletService } from '../../service/wallet.service';
 
 export class CommandOptions extends Options {
     @option({
@@ -22,10 +23,15 @@ export class CommandOptions extends Options {
 })
 export default class extends Command {
     private readonly walletService: WalletService;
+    private readonly table: Table.HorizontalTable;
     constructor() {
         super();
         const profileRepository = new WalletRepository('.nem2rcWallet.json');
         this.walletService = new WalletService(profileRepository);
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as Table.HorizontalTable;
     }
 
     @metadata
@@ -42,9 +48,13 @@ export default class extends Command {
 
         const wallet = this.walletService.getWallet(options.name);
         const account = this.walletService.getAccount(wallet, options.password);
-        console.log('address: ' + account.address.pretty());
-        console.log('privateKey: ' + account.privateKey);
-        console.log('publicKey: ' + account.publicKey);
-        console.log('networkType: ' + account.networkType);
+
+        this.table.push(
+            ['Address', account.address.pretty()],
+            ['Private Key', account.privateKey],
+            ['Public Key', account.publicKey],
+            ['NetworkType', account.networkType],
+        );
+        console.log(this.table.toString());
     }
 }

@@ -16,7 +16,7 @@
  *
  */
 import * as fs from 'fs';
-import { SimpleWallet } from 'nem2-sdk';
+import { Address, SimpleWallet } from 'nem2-sdk';
 import { Wallet } from '../model/wallet';
 
 export class WalletRepository {
@@ -34,7 +34,7 @@ export class WalletRepository {
                 wallets[name].network,
                 wallets[name].url,
                 wallets[name].networkGenerationHash,
-                wallets[name].address,
+                Address.createFromRawAddress(wallets[name].address),
                 wallets[name].encryptedPrivateKey,
                 );
         }

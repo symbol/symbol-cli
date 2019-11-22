@@ -12,26 +12,22 @@ export class Wallet {
         public readonly address: Address,
         public readonly encryptedPrivateKey: EncryptedPrivateKey,
     ) {
-        // this.table = new Table({
-        //     style: {head: ['cyan']},
-        //     head: ['Property', 'Value'],
-        // }) as HorizontalTable;
-        // this.table.push(
-        //     ['Name', this.name],
-        //     ['Network', NetworkType[this.networkType]],
-        //     ['Node URL', this.url],
-        //     ['Generation Hash', this.networkGenerationHash],
-        //     ['Address', this.address.pretty()],
-        // );
+        this.table = new Table({
+            style: {head: ['cyan']},
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Name', this.name],
+            ['networkType', this.networkType],
+            ['Node URL', this.url],
+            ['Generation Hash', this.networkGenerationHash],
+            ['Address', this.address.pretty()],
+            ['Encrypted PrivateKey', this.encryptedPrivateKey.encryptedKey],
+            ['iv', this.encryptedPrivateKey.iv],
+        );
     }
 
-    toJSON() {
-        return {
-            name: this.name,
-            networkType: this.networkType,
-            url: this.url,
-            networkGenerationHash: this.networkGenerationHash,
-            address: this.address,
-        };
+    toString() {
+        return this.table.toString();
     }
 }

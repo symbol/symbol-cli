@@ -131,13 +131,7 @@ export default class extends Command {
                     if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
                         this.walletService.setDefaultWallet(wallet.name);
                     }
-                    console.log(chalk.green('wallet info'));
-                    console.log('name: ' + wallet.name);
-                    console.log('networkType: ' + wallet.networkType);
-                    console.log('url: ' + wallet.url);
-                    console.log('networkGenerationHash: ' + wallet.networkGenerationHash);
-                    console.log('address: ' + wallet.address.pretty());
-                    console.log('encryptedPrivateKey: ' + wallet.encryptedPrivateKey + '\n');
+                    console.log(wallet.toString());
                 }
             });
 
