@@ -34,8 +34,15 @@ export class AddressAliasValidator implements Validator<string> {
         if (value.charAt(0) !== aliasTag) {
             try {
                 Address.createFromRawAddress(value);
-            } catch (e) {
+            } catch (error) {
                 throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            }
+        } else {
+            const alias = value.substring(1);
+            try {
+                const namespaceId = new NamespaceId(alias);
+            } catch (error) {
+                throw new ExpectedError('Introduce a valid alias. Example: @xem');
             }
         }
     }

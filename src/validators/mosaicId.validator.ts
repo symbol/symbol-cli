@@ -33,15 +33,16 @@ export class MosaicIdAliasValidator implements Validator<string> {
         const aliasTag = '@';
         if (value.charAt(0) !== aliasTag) {
             try {
-                const mosaic = new Mosaic(new MosaicId(value), UInt64.fromUint(0));
+                const mosaic = new MosaicId(value);
             } catch (err) {
                 throw new ExpectedError('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
             }
         } else {
+            const alias = value.substring(1);
             try {
-                const mosaic = new Mosaic(new NamespaceId(value), UInt64.fromUint(0));
+                const mosaic = new NamespaceId(alias);
             } catch (err) {
-                throw new ExpectedError('Introduce valid mosaic alias. Example: @Apple');
+                throw new ExpectedError('Introduce valid mosaic alias. Example: @nem.xem');
             }
         }
     }

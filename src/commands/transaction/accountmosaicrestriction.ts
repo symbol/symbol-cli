@@ -41,7 +41,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'v',
-        description: 'Mosaic to allow / block.',
+        description: 'Mosaic or @alias to allow / block.',
         validator: new MosaicIdValidator(),
     })
     value: string;
@@ -52,7 +52,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
-
+    private readonly aliasTag = '@';
     constructor() {
         super();
         this.restrictionService = new RestrictionService();
@@ -81,6 +81,9 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce the maximum fee you want to spend to announce the transaction: ');
 
         const profile = this.getProfile(options);
+        if (this.aliasTag === options.value) {
+            options.value = options.value.substring(1);
+        }
         const mosaic = new MosaicId(options.value);
 
         const mosaicRestriction = AccountRestrictionModification.createForMosaic(options.modificationAction, mosaic);

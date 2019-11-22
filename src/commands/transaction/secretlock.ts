@@ -26,7 +26,7 @@ import { NumericStringValidator } from '../../validators/numericString.validator
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        description: 'Locked mosaic identifier.',
+        description: 'Locked mosaic identifier or @alias.',
         flag: 'm',
         validator: new MosaicIdAliasValidator(),
     })
@@ -61,7 +61,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     hashAlgorithm: number;
 
     @option({
-        description: 'Address that receives the funds once unlocked.',
+        description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
         validator: new AddressAliasValidator(),
     })
