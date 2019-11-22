@@ -28,7 +28,7 @@ import {
     MosaicService,
     MultisigAccountInfo,
     MultisigHttp,
-    PublicAccount
+    PublicAccount,
 } from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';

@@ -25,7 +25,7 @@ import {
     PublicAccount,
     UInt64,
 } from 'nem2-sdk';
-import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions,} from '../../announce.aggregatetransactions.command';
+import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
