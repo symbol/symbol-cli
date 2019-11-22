@@ -21,7 +21,7 @@ import {
     AccountHttp,
     AggregateTransaction,
     CosignatureTransaction,
-    MultisigAccountInfo,
+    MultisigAccountInfo, MultisigHttp,
     PublicAccount,
     QueryParams,
     TransactionHttp,
@@ -66,7 +66,7 @@ export default class extends ProfileCommand {
         this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount.address, new QueryParams(100))),
+                mergeMap((publicAccount) => accountHttp.getAccountPartialTransactions(publicAccount.address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
                     _.transactionInfo.hash === options.hash), // Filter transaction
@@ -108,7 +108,7 @@ export default class extends ProfileCommand {
     }
 
     private getGraphAccounts(profile: Profile): Observable<PublicAccount[]> {
-        return new AccountHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
+        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
             .pipe(
                 map((_) => {
                     let publicAccounts: PublicAccount[] = [];

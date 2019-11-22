@@ -44,7 +44,7 @@ export default class extends AccountTransactionsCommand {
 
         const accountHttp = new AccountHttp(profile.url);
 
-        accountHttp.incomingTransactions(publicAccount.address, options.getQueryParams())
+        accountHttp.getAccountIncomingTransactions(publicAccount.address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';

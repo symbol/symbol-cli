@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { AccountRestriction, AccountRestrictionType, Address, RestrictionHttp } from 'nem2-sdk';
+import { AccountRestriction, AccountRestrictionFlags, Address, RestrictionAccountHttp } from 'nem2-sdk';
 import { OptionsResolver } from '../../options-resolver';
 import { ProfileCommand, ProfileOptions } from '../../profile.command';
 import { AddressValidator } from '../../validators/address.validator';
@@ -39,14 +39,14 @@ export class AccountRestrictionsTable {
     constructor(public readonly accountRestrictions: AccountRestriction[]) {
         this.table = new Table({
             style: { head: ['cyan'] },
-            head: ['Type', 'Value'],
+            head: ['Flags', 'Value'],
         }) as HorizontalTable;
 
         accountRestrictions
             .filter((accountRestriction) => accountRestriction.values.length > 0)
             .map((accountRestriction) => {
                 this.table.push(
-                    [AccountRestrictionType[accountRestriction.restrictionType], accountRestriction.values.toString()],
+                    [AccountRestrictionFlags[accountRestriction.restrictionFlags], accountRestriction.values.toString()],
                 );
             });
     }
@@ -78,7 +78,7 @@ export default class extends ProfileCommand {
             'Introduce an address: ');
         const address = Address.createFromRawAddress(options.address);
 
-        const restrictionHttp = new RestrictionHttp(profile.url);
+        const restrictionHttp = new RestrictionAccountHttp(profile.url);
         restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions: any) => {
                 this.spinner.stop(true);

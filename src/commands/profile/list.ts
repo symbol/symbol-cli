@@ -23,7 +23,7 @@ import {ProfileService} from '../../service/profile.service';
 export class CommandOptions extends Options {
     @option({
         flag: 'a',
-        description: 'Account address',
+        description: 'Account address.',
     })
     address: string;
 }
