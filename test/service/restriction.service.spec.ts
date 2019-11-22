@@ -16,76 +16,68 @@
  *
  */
 import {expect} from 'chai';
-import {AccountRestrictionType} from 'nem2-sdk';
+import {AccountRestrictionFlags} from 'nem2-sdk';
 import {RestrictionService} from '../../src/service/restriction.service';
 
 describe('Restriction service', () => {
 
-    it('getAccountAddressRestrictionType should return valid type', () => {
+    it('getAccountAddressRestrictionFlags should return valid type', () => {
         const service = new RestrictionService();
-        expect(service.getAccountAddressRestrictionType('allow', 'incoming'))
-            .to.be.equal(AccountRestrictionType.AllowIncomingAddress);
-        expect(service.getAccountAddressRestrictionType('block', 'incoming'))
-            .to.be.equal(AccountRestrictionType.BlockIncomingAddress);
-        expect(service.getAccountAddressRestrictionType('allow', 'outgoing'))
-            .to.be.equal(AccountRestrictionType.AllowOutgoingAddress);
-        expect(service.getAccountAddressRestrictionType('block', 'outgoing'))
-            .to.be.equal(AccountRestrictionType.BlockOutgoingAddress);
+        expect(service.getAccountAddressRestrictionFlags('allow', 'incoming'))
+            .to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(service.getAccountAddressRestrictionFlags('block', 'incoming'))
+            .to.be.equal(AccountRestrictionFlags.BlockIncomingAddress);
+        expect(service.getAccountAddressRestrictionFlags('allow', 'outgoing'))
+            .to.be.equal(AccountRestrictionFlags.AllowOutgoingAddress);
+        expect(service.getAccountAddressRestrictionFlags('block', 'outgoing'))
+            .to.be.equal(AccountRestrictionFlags.BlockOutgoingAddress);
 
     });
 
-    it('getAccountAddressRestrictionType should return valid type with typo', () => {
+    it('getAccountAddressRestrictionFlags should return valid type with typo', () => {
         const service = new RestrictionService();
-        expect(service.getAccountAddressRestrictionType('aLlow', 'incOming'))
-            .to.be.equal(AccountRestrictionType.AllowIncomingAddress);
-        expect(service.getAccountAddressRestrictionType('Block', 'iNcoming'))
-            .to.be.equal(AccountRestrictionType.BlockIncomingAddress);
-        expect(service.getAccountAddressRestrictionType('aLlow', 'outgoIng'))
-            .to.be.equal(AccountRestrictionType.AllowOutgoingAddress);
-        expect(service.getAccountAddressRestrictionType('blOck', 'ouTgoing'))
-            .to.be.equal(AccountRestrictionType.BlockOutgoingAddress);
+        expect(service.getAccountAddressRestrictionFlags('aLlow', 'incOming'))
+            .to.be.equal(AccountRestrictionFlags.AllowIncomingAddress);
+        expect(service.getAccountAddressRestrictionFlags('Block', 'iNcoming'))
+            .to.be.equal(AccountRestrictionFlags.BlockIncomingAddress);
+        expect(service.getAccountAddressRestrictionFlags('aLlow', 'outgoIng'))
+            .to.be.equal(AccountRestrictionFlags.AllowOutgoingAddress);
+        expect(service.getAccountAddressRestrictionFlags('blOck', 'ouTgoing'))
+            .to.be.equal(AccountRestrictionFlags.BlockOutgoingAddress);
 
     });
 
-    it('getMosaicRestrictionType should return valid type', () => {
+    it('getMosaicRestrictionFlags should return valid type', () => {
         const service = new RestrictionService();
-        expect(service.getAccountMosaicRestrictionType('allow'))
-            .to.be.equal(AccountRestrictionType.AllowMosaic);
-        expect(service.getAccountMosaicRestrictionType('block'))
-            .to.be.equal(AccountRestrictionType.BlockMosaic);
+        expect(service.getAccountMosaicRestrictionFlags('allow'))
+            .to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(service.getAccountMosaicRestrictionFlags('block'))
+            .to.be.equal(AccountRestrictionFlags.BlockMosaic);
     });
 
-    it('getAccountAddressRestrictionType should return valid type with typo', () => {
+    it('getAccountAddressRestrictionFlags should return valid type with typo', () => {
         const service = new RestrictionService();
-        expect(service.getAccountMosaicRestrictionType('Allow'))
-            .to.be.equal(AccountRestrictionType.AllowMosaic);
-        expect(service.getAccountMosaicRestrictionType('blocK'))
-            .to.be.equal(AccountRestrictionType.BlockMosaic);
+        expect(service.getAccountMosaicRestrictionFlags('Allow'))
+            .to.be.equal(AccountRestrictionFlags.AllowMosaic);
+        expect(service.getAccountMosaicRestrictionFlags('blocK'))
+            .to.be.equal(AccountRestrictionFlags.BlockMosaic);
 
     });
-    it('getAccountOperationRestrictionType should return valid type', () => {
+    it('getAccountOperationRestrictionFlags should return valid type', () => {
         const service = new RestrictionService();
-        expect(service.getAccountOperationRestrictionType('allow', 'incoming'))
-            .to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
-        expect(service.getAccountOperationRestrictionType('block', 'incoming'))
-            .to.be.equal(AccountRestrictionType.BlockIncomingTransactionType);
-        expect(service.getAccountOperationRestrictionType('allow', 'outgoing'))
-            .to.be.equal(AccountRestrictionType.AllowOutgoingTransactionType);
-        expect(service.getAccountOperationRestrictionType('block', 'outgoing'))
-            .to.be.equal(AccountRestrictionType.BlockOutgoingTransactionType);
+        expect(service.getAccountOperationRestrictionFlags('allow'))
+            .to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
+        expect(service.getAccountOperationRestrictionFlags('block'))
+            .to.be.equal(AccountRestrictionFlags.BlockOutgoingTransactionType);
 
     });
 
-    it('getAccountAddressRestrictionType should return valid type with typo', () => {
+    it('getAccountAddressRestrictionFlags should return valid type with typo', () => {
         const service = new RestrictionService();
-        expect(service.getAccountOperationRestrictionType('aLlow', 'incomIng'))
-            .to.be.equal(AccountRestrictionType.AllowIncomingTransactionType);
-        expect(service.getAccountOperationRestrictionType('bLock', 'inComing'))
-            .to.be.equal(AccountRestrictionType.BlockIncomingTransactionType);
-        expect(service.getAccountOperationRestrictionType('Allow', 'ouTgoing'))
-            .to.be.equal(AccountRestrictionType.AllowOutgoingTransactionType);
-        expect(service.getAccountOperationRestrictionType('bLock', 'oUtgoing'))
-            .to.be.equal(AccountRestrictionType.BlockOutgoingTransactionType);
+        expect(service.getAccountOperationRestrictionFlags('Allow'))
+            .to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType);
+        expect(service.getAccountOperationRestrictionFlags('bLock'))
+            .to.be.equal(AccountRestrictionFlags.BlockOutgoingTransactionType);
     });
 
 });

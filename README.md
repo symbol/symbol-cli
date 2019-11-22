@@ -5,14 +5,12 @@
 [![Coverage Status](https://coveralls.io/repos/github/nemtech/nem2-cli/badge.svg?branch=travis-ci)](https://coveralls.io/github/nemtech/nem2-cli?branch=travis-ci)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-The nem2 Command Line Interface (CLI) is a unified tool to interact with the NEM2 Blockchain.
-
-This tool will enable you perform the most common and regular used actions in NEM2 (a.k.a Catapult)
+Command Line Interface (CLI) to interact with the Catapult.
 
 ## Important Notes
 
-- [0.13.4](CHANGELOG.md#0134-28-Oct-2019) - **Fushicho Network Compatibility (catapult-server@0.8.0.3)**
-- [0.12.0](CHANGELOG.md#0120-04-Jun-2019) - **Dragon Network Compatibility (catapult-server@0.4.0.1)**
+- [0.14.0](CHANGELOG.md#0140-21-Nov-2019) - **Fushicho2 Network Compatibility (catapult-server@0.9.0.1)**
+- [0.13.4](CHANGELOG.md#0134-28-Oct-2019) - **Fushicho1 Network Compatibility (catapult-server@0.8.0.3)**
 
 The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
