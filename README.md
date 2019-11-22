@@ -22,7 +22,9 @@ The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
 The nem2-cli is distributed using the node package manager npm.
 
-`npm install nem2-cli -g`
+```
+npm install nem2-cli -g
+```
 
 :warning: nem2-cli does not encrypt the profiles yet. Use it just on test environments.
 
