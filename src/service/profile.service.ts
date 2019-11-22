@@ -45,5 +45,4 @@ export class ProfileService {
     getDefaultProfile(): Profile {
         return this.profileRepository.getDefaultProfile();
     }
-
 }

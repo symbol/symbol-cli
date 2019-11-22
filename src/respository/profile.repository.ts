@@ -16,12 +16,16 @@
  *
  */
 import * as fs from 'fs';
-import {Account} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import { Account, SimpleWallet } from 'nem2-sdk';
+import { Profile } from '../model/profile';
+import { Wallet } from '../model/wallet';
 
 export class ProfileRepository {
 
-    constructor(private readonly fileUrl: string) {
+    constructor(
+        private readonly fileUrl: string,
+        private readonly walletUrl: string = '.nem2rcWallet.json',
+    ) {
 
     }
 
@@ -56,11 +60,13 @@ export class ProfileRepository {
 
     public save(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
-        profiles[name] = {privateKey: account.privateKey,
+        profiles[name] = {
+            privateKey: account.privateKey,
             networkType: account.address.networkType,
             url,
             networkGenerationHash,
-            default: '0'};
+            default: '0',
+        };
         this.saveProfiles(profiles);
         return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
     }

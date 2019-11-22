@@ -69,7 +69,6 @@ export class CommandOptions extends Options {
 @command({
     description: 'Create a new profile',
 })
-
 export default class extends Command {
     private readonly profileService: ProfileService;
 
