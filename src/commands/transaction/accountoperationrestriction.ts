@@ -16,31 +16,21 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Account, AccountRestrictionModification, AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {Account, AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {RestrictionService} from '../../service/restriction.service';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {
-    AccountRestrictionDirectionValidator,
-    AccountRestrictionTypeValidator,
-} from '../../validators/restrictionType.validator';
+import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 import {TransactionTypeValidator} from '../../validators/transactionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 't',
-        description: 'Restriction type (allow, block).',
+        description: 'Restriction flag (allow, block).',
         validator: new AccountRestrictionTypeValidator(),
     })
-    restrictionType: string;
-
-    @option({
-        flag: 'd',
-        description: 'Restriction direction (incoming, outgoing).',
-        validator: new AccountRestrictionDirectionValidator(),
-    })
-    restrictionDirection: string;
+    restrictionFlag: string;
 
     @option({
         flag: 'a',
@@ -70,20 +60,15 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.restrictionType = OptionsResolver(options,
-            'restrictionType',
+        options.restrictionFlag = OptionsResolver(options,
+            'restrictionFlag',
             () => undefined,
-            'Introduce the restriction type (allow, block):');
+            'Introduce the restriction flag (allow, block):');
 
         options.modificationAction = +OptionsResolver(options,
             'modificationAction',
             () => undefined,
             'Introduce the modification action (1: Add, 0: Remove): ');
-
-        options.restrictionDirection = OptionsResolver(options,
-            'restrictionDirection',
-            () => undefined,
-            'Introduce the restriction direction (incoming, outgoing): ');
 
         options.value = OptionsResolver(options,
             'value',
@@ -93,16 +78,16 @@ export default class extends AnnounceTransactionsCommand {
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+            'Introduce the maximum fee (absolute amount): ');
 
         const profile = this.getProfile(options);
-        const entityRestriction = AccountRestrictionModification.createForOperation(
-            options.modificationAction, parseInt(options.value, 16));
+        const value = parseInt(options.value, 16);
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            this.restrictionService.getAccountOperationRestrictionType(options.restrictionType, options.restrictionDirection),
-            [entityRestriction],
+            this.restrictionService.getAccountOperationRestrictionFlags(options.restrictionFlag),
+            (options.modificationAction === 1) ? [value] : [],
+            (options.modificationAction === 0) ? [value] : [],
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 

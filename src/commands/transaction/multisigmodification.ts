@@ -21,15 +21,11 @@ import {
     Deadline,
     HashLockTransaction,
     MultisigAccountModificationTransaction,
-    MultisigCosignatoryModification,
     NetworkCurrencyMosaic,
     PublicAccount,
     UInt64,
 } from 'nem2-sdk';
-import {
-    AnnounceAggregateTransactionsCommand,
-    AnnounceAggregateTransactionsOptions,
-} from '../../announce.aggregatetransactions.command';
+import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
@@ -112,15 +108,12 @@ export default class extends AnnounceAggregateTransactionsCommand {
         const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, profile.networkType);
         const newCosignatoryAccount = PublicAccount.createFromPublicKey(options.cosignatoryPublicKey, profile.networkType);
 
-        const multisigCosignatoryModification = new MultisigCosignatoryModification(
-            options.action,
-            newCosignatoryAccount);
-
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             options.minApprovalDelta,
             options.minRemovalDelta,
-            [multisigCosignatoryModification],
+            (options.action === 1) ? [newCosignatoryAccount] : [],
+            (options.action === 0) ? [newCosignatoryAccount] : [],
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 

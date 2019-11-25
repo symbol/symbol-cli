@@ -29,7 +29,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Block height.',
         validator: new HeightValidator(),
     })
-    height: number;
+    height: string;
 
     @option({
         flag: 's',
