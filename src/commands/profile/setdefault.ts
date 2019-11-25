@@ -1,14 +1,10 @@
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import {command, metadata} from 'clime';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
 export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'd',
-        description: 'Profile name.',
-    })
-    profile: string;
+
 }
 
 @command({

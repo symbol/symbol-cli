@@ -47,7 +47,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 export class AnnounceTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'f',
-        description: 'Maximum fee you want to pay to announce this transaction.',
+        description: 'Maximum fee (absolute amount).',
         validator: new NumericStringValidator(),
     })
     maxFee: string;

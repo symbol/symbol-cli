@@ -30,7 +30,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Block height.',
         validator: new HeightValidator(),
     })
-    height: number;
+    height: string;
 }
 
 export class BlockHeaderTable {

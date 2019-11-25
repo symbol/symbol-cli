@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {Address, MosaicId, RestrictionHttp} from 'nem2-sdk';
+import {Address, MosaicId, RestrictionMosaicHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
@@ -92,7 +92,7 @@ export default class extends ProfileCommand {
             'Introduce an address: ');
         const address = Address.createFromRawAddress(options.address);
 
-        const restrictionHttp = new RestrictionHttp(profile.url);
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);

@@ -19,7 +19,17 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountHttp, AccountInfo, Address, MosaicAmountView, MosaicHttp, MosaicService, MultisigAccountInfo, PublicAccount} from 'nem2-sdk';
+import {
+    AccountHttp,
+    AccountInfo,
+    Address,
+    MosaicAmountView,
+    MosaicHttp,
+    MosaicService,
+    MultisigAccountInfo,
+    MultisigHttp,
+    PublicAccount,
+} from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
@@ -29,7 +39,7 @@ import {AddressValidator} from '../../validators/address.validator';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
-        description: 'Account address',
+        description: 'Account address.',
         validator: new AddressValidator(),
     })
     address: string;
@@ -169,13 +179,14 @@ export default class extends ProfileCommand {
                 'Introduce the address: '));
 
         const accountHttp = new AccountHttp(profile.url);
+        const multisigHttp = new MultisigHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
 
         forkJoin(
             accountHttp.getAccountInfo(address),
             mosaicService.mosaicsAmountViewFromAddress(address).pipe(mergeMap((_) => _), toArray()),
-            accountHttp.getMultisigAccountInfo(address).pipe(catchError((ignored) => of(null))))
+            multisigHttp.getMultisigAccountInfo(address).pipe(catchError((ignored) => of(null))))
             .subscribe((res) => {
                 const accountInfo = res[0];
                 const mosaicsInfo = res[1];

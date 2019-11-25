@@ -27,10 +27,10 @@ import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 't',
-        description: 'Restriction type (allow, block).',
+        description: 'Restriction flag (allow, block).',
         validator: new AccountRestrictionTypeValidator(),
     })
-    restrictionType: string;
+    restrictionFlag: string;
 
     @option({
         flag: 'a',
@@ -60,10 +60,10 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.restrictionType = OptionsResolver(options,
-            'restrictionType',
+        options.restrictionFlag = OptionsResolver(options,
+            'restrictionFlag',
             () => undefined,
-            'Introduce the restriction type (allow, block):');
+            'Introduce the restriction flag (allow, block):');
 
         options.modificationAction = +OptionsResolver(options,
             'modificationAction',
@@ -78,7 +78,7 @@ export default class extends AnnounceTransactionsCommand {
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+            'Introduce the maximum fee (absolute amount): ');
 
         const profile = this.getProfile(options);
         if (this.aliasTag === options.value) {
@@ -86,11 +86,11 @@ export default class extends AnnounceTransactionsCommand {
         }
         const mosaic = new MosaicId(options.value);
 
-        const mosaicRestriction = AccountRestrictionModification.createForMosaic(options.modificationAction, mosaic);
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            this.restrictionService.getAccountMosaicRestrictionType(options.restrictionType),
-            [mosaicRestriction],
+            this.restrictionService.getAccountMosaicRestrictionFlags(options.restrictionFlag),
+            (options.modificationAction === 1) ? [mosaic] : [],
+            (options.modificationAction === 0) ? [mosaic] : [],
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
