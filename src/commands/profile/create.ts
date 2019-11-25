@@ -108,7 +108,7 @@ export default class extends Command {
         const networkHttp = new NetworkHttp(url);
         const blockHttp = new BlockHttp(url);
 
-        forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
+        forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight('1'))
             .subscribe((res) => {
                 if (res[0] !== networkType) {
                     console.log('The network provided and the node network don\'t match.');

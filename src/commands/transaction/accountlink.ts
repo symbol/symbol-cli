@@ -63,7 +63,7 @@ export default class extends AnnounceTransactionsCommand {
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+            'Introduce the maximum fee (absolute amount): ');
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),

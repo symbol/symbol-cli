@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp} from 'nem2-sdk';
+import {BlockHttp, ReceiptHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {ReceiptService} from '../../service/receipt.service';
@@ -29,7 +29,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Block height.',
         validator: new HeightValidator(),
     })
-    height: number;
+    height: string;
 }
 
 @command({
@@ -52,9 +52,9 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
+        const receiptHttp = new ReceiptHttp(profile.url);
 
-        blockHttp.getBlockReceipts(options.height)
+        receiptHttp.getBlockReceipts(options.height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
                 let txt = '';

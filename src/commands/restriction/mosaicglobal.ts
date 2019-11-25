@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionHttp} from 'nem2-sdk';
+import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
@@ -76,7 +76,7 @@ export default class extends ProfileCommand {
             'Introduce the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        const restrictionHttp = new RestrictionHttp(profile.url);
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
