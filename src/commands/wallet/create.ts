@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
-import { BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet } from 'nem2-sdk';
+import { BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet, BlockInfo } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import { forkJoin } from 'rxjs';
 import { OptionsResolver } from '../../options-resolver';
@@ -111,28 +111,28 @@ export default class extends Command {
         options.name = options.name.trim();
         const networkHttp = new NetworkHttp(options.url);
         const blockHttp = new BlockHttp(options.url);
-        forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
-            .subscribe((res) => {
+        forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight('1'))
+            .subscribe((res: [NetworkType, BlockInfo]) => {
                 if (res[0] !== networkType) {
                     console.log('The network provided and the node network don\'t match.');
-                } else {
-                    const isWalletExist: boolean = this.walletService.checkWalletExist(options.name);
-                    if (isWalletExist) {
-                        if (!readlineSync.keyInYN('wallet ' + options.name + ' has already exist. Are you sure to recover it?')) {
-                            return;
-                        }
-                    }
-                    const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
-                    const wallet = this.walletService.createWallet(
-                        simpleWallet,
-                        options.url,
-                        res[1].generationHash);
-
-                    if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
-                        this.walletService.setDefaultWallet(wallet.name);
-                    }
-                    console.log(wallet.toString());
+                    return;
                 }
+                const isWalletExist: boolean = this.walletService.checkWalletExist(options.name);
+                if (isWalletExist) {
+                    if (!readlineSync.keyInYN('wallet ' + options.name + ' has already exist. Are you sure to recover it?')) {
+                        return;
+                    }
+                }
+                const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
+                const wallet = this.walletService.createWallet(
+                    simpleWallet,
+                    options.url,
+                    res[1].generationHash);
+
+                if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
+                    this.walletService.setDefaultWallet(wallet.name);
+                }
+                console.log(wallet.toString());
             });
 
     }
