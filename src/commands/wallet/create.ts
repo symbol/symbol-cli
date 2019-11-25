@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
-import { BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet, BlockInfo } from 'nem2-sdk';
+import { BlockHttp, BlockInfo, NetworkHttp, NetworkType, Password, SimpleWallet } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import { forkJoin } from 'rxjs';
 import { OptionsResolver } from '../../options-resolver';
