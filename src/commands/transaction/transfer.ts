@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
+import { command, ExpectedError, metadata, option } from 'clime';
 import {
     Address,
     Deadline,
@@ -29,11 +29,11 @@ import {
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/mosaic.service';
-import {MosaicsValidator} from '../../validators/mosaic.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { MosaicService } from '../../service/mosaic.service';
+import { MosaicsValidator } from '../../validators/mosaic.validator';
+import { PublicKeyValidator } from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -87,6 +87,11 @@ export default class extends AnnounceTransactionsCommand {
     constructor() {
         super();
     }
+    private shortPayload(payload: string, keepLength: number = 10, startNumber: number = 6): string {
+        const startPart = payload.substring(0, keepLength);
+        const endPart = payload.substring(payload.length - keepLength);
+        return startPart + '*'.repeat(startNumber) + endPart;
+    }
 
     @metadata
     execute(options: CommandOptions) {
@@ -136,16 +141,16 @@ export default class extends AnnounceTransactionsCommand {
                 profile.networkType);
 
         } else if (options.message && options.encrypted) {
-                options.recipientPublicKey = OptionsResolver(options,
-                    'recipientPublicKey',
-                    () => undefined,
-                    'Introduce the recipient public key: ');
+            options.recipientPublicKey = OptionsResolver(options,
+                'recipientPublicKey',
+                () => undefined,
+                'Introduce the recipient public key: ');
 
-                message = profile.account.encryptMessage(
-                    options.message,
-                    PublicAccount.createFromPublicKey(options.recipientPublicKey,
-                        profile.networkType),
-                    profile.networkType);
+            message = profile.account.encryptMessage(
+                options.message,
+                PublicAccount.createFromPublicKey(options.recipientPublicKey,
+                    profile.networkType),
+                profile.networkType);
         } else {
             message = PlainMessage.create(options.message);
         }
@@ -159,6 +164,12 @@ export default class extends AnnounceTransactionsCommand {
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+
+        const payload = signedTransaction.payload;
+        const shortPayload = this.shortPayload(payload);
+        const isAnnounce = readlineSync.keyInYN('Do you want to announce this transaction? Payload: ' + shortPayload);
+        if (isAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }
