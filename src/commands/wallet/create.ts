@@ -119,7 +119,7 @@ export default class extends Command {
                 }
                 const isWalletExist: boolean = this.walletService.checkWalletExist(options.name);
                 if (isWalletExist) {
-                    if (!readlineSync.keyInYN('wallet ' + options.name + ' has already exist. Are you sure to recover it?')) {
+                    if (!readlineSync.keyInYN('wallet ' + options.name + ' already exist. Do you wish to recover this wallet?')) {
                         return;
                     }
                 }
@@ -129,7 +129,7 @@ export default class extends Command {
                     options.url,
                     res[1].generationHash);
 
-                if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
+                if (readlineSync.keyInYN('Do you want to set the wallet as the default wallet?')) {
                     this.walletService.setDefaultWallet(wallet.name);
                 }
                 console.log(wallet.toString());
