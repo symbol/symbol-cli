@@ -136,16 +136,16 @@ export default class extends AnnounceTransactionsCommand {
                 profile.networkType);
 
         } else if (options.message && options.encrypted) {
-                options.recipientPublicKey = OptionsResolver(options,
-                    'recipientPublicKey',
-                    () => undefined,
-                    'Introduce the recipient public key: ');
+            options.recipientPublicKey = OptionsResolver(options,
+                'recipientPublicKey',
+                () => undefined,
+                'Introduce the recipient public key: ');
 
-                message = profile.account.encryptMessage(
-                    options.message,
-                    PublicAccount.createFromPublicKey(options.recipientPublicKey,
-                        profile.networkType),
-                    profile.networkType);
+            message = profile.account.encryptMessage(
+                options.message,
+                PublicAccount.createFromPublicKey(options.recipientPublicKey,
+                    profile.networkType),
+                profile.networkType);
         } else {
             message = PlainMessage.create(options.message);
         }
