@@ -54,7 +54,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 
     @option({
         flag: 'p',
-        description: 'Cosignatory account public key.',
+        description: 'Cosignatory account public key (separated by a comma).',
         validator: new PublicKeyValidator(),
     })
     cosignatoryPublicKey: string;
@@ -86,7 +86,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
         options.cosignatoryPublicKey = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            'Introduce the cosignatory account public key: ');
+            'Introduce the cosignatory account public key. (separated by a comma): ');
 
         options.multisigAccountPublicKey = OptionsResolver(options,
             'multisigAccountPublicKey',
@@ -105,15 +105,19 @@ export default class extends AnnounceAggregateTransactionsCommand {
 
         const profile = this.getProfile(options);
 
+        const cosignatoryPublicKeys = options.cosignatoryPublicKey.split(',');
+        const cosignatories: PublicAccount[] = [];
+        cosignatoryPublicKeys.map((cosignatory: string) => {
+            cosignatories.push(PublicAccount.createFromPublicKey(cosignatory, profile.networkType));
+        });
         const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, profile.networkType);
-        const newCosignatoryAccount = PublicAccount.createFromPublicKey(options.cosignatoryPublicKey, profile.networkType);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             options.minApprovalDelta,
             options.minRemovalDelta,
-            (options.action === 1) ? [newCosignatoryAccount] : [],
-            (options.action === 0) ? [newCosignatoryAccount] : [],
+            (options.action === 1) ? cosignatories : [],
+            (options.action === 0) ? cosignatories : [],
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
