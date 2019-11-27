@@ -86,7 +86,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
         options.cosignatoryPublicKey = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            'Introduce the cosignatory account public key. (separated by a comma): ');
+            'Introduce the cosignatory account public key (separated by a comma): ');
 
         options.multisigAccountPublicKey = OptionsResolver(options,
             'multisigAccountPublicKey',
