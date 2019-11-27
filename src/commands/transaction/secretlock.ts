@@ -14,15 +14,16 @@
  * limitations under the License.
  *
  */
-import { command, metadata, option } from 'clime';
-import { Address, Deadline, Mosaic, MosaicId, NamespaceId, SecretLockTransaction, UInt64 } from 'nem2-sdk';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { OptionsResolver } from '../../options-resolver';
-import { MosaicService } from '../../service/mosaic.service';
+import {command, metadata, option} from 'clime';
+import {Deadline, Mosaic, SecretLockTransaction, UInt64} from 'nem2-sdk';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {OptionsResolver} from '../../options-resolver';
+import {AccountService} from '../../service/account.service';
+import {MosaicService} from '../../service/mosaic.service';
 import {AddressAliasValidator} from '../../validators/address.validator';
-import { HashAlgorithmValidator } from '../../validators/hashAlgorithm.validator';
-import { MosaicIdAliasValidator } from '../../validators/mosaicId.validator';
-import { NumericStringValidator } from '../../validators/numericString.validator';
+import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
+import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
+import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -115,8 +116,8 @@ export default class extends AnnounceTransactionsCommand {
 
         const profile = this.getProfile(options);
 
-        const mosaicId: MosaicId | NamespaceId = MosaicService.getMosaicId(options.mosaicId);
-        const recipientAddress: Address | NamespaceId = MosaicService.getRecipient(options.recipientAddress);
+        const mosaicId = MosaicService.getMosaicId(options.mosaicId);
+        const recipientAddress = AccountService.getRecipient(options.recipientAddress);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),

@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address, NamespaceId, RawAddress} from 'nem2-sdk';
+import {Address, NamespaceId} from 'nem2-sdk';
 
 export class AddressValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
@@ -40,7 +40,7 @@ export class AddressAliasValidator implements Validator<string> {
         } else {
             const alias = value.substring(1);
             try {
-                const namespaceId = new NamespaceId(alias);
+                const ignored = new NamespaceId(alias);
             } catch (error) {
                 throw new ExpectedError('Introduce a valid alias. Example: @xem');
             }
