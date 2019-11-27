@@ -16,9 +16,10 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Address, Deadline, UInt64} from 'nem2-sdk';
+import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {MosaicService} from '../../service/mosaic.service';
 import {RestrictionService} from '../../service/restriction.service';
 import {AddressAliasValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
@@ -59,7 +60,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
-    private readonly aliasTag = '@';
     constructor() {
         super();
         this.restrictionService = new RestrictionService();
@@ -93,10 +93,7 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce the maximum fee (absolute amount): ');
 
         const profile = this.getProfile(options);
-        if (this.aliasTag === options.value) {
-            options.value = options.value.substring(1);
-        }
-        const address = Address.createFromRawAddress(options.value);
+        const address = MosaicService.getRecipient(options.value);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
