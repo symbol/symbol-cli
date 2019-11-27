@@ -18,6 +18,7 @@
 import chalk from 'chalk';
 import {option} from 'clime';
 import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
 
@@ -27,20 +28,27 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
         super();
     }
 
+    private formatPayload(payload: string) {
+        return payload.match(/.{1,64}/g) || [];
+    }
+
      protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        const transactionHttp = new TransactionHttp(url);
-
-        transactionHttp.announce(signedTransaction).subscribe(() => {
-            console.log(chalk.green('Transaction announced correctly'));
-            console.log(chalk.green('Hash:   '), signedTransaction.hash);
-            console.log(chalk.green('SignerPublicKey: '), signedTransaction.signerPublicKey);
-        }, (err) => {
-            this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
-
+        const payload = this.formatPayload(signedTransaction.payload).join('\n');
+        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ' +
+             'Payload:\n' + payload);
+        if (shouldAnnounceTransaction) {
+            const transactionHttp = new TransactionHttp(url);
+            transactionHttp.announce(signedTransaction).subscribe(() => {
+                console.log(chalk.green('Transaction announced correctly'));
+                console.log(chalk.green('Hash:   '), signedTransaction.hash);
+                console.log(chalk.green('SignerPublicKey: '), signedTransaction.signerPublicKey);
+            }, (err) => {
+                this.spinner.stop(true);
+                let text = '';
+                text += chalk.red('Error');
+                console.log(text, err.response !== undefined ? err.response.text : err);
+            });
+         }
     }
 }
 
