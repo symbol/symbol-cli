@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {MosaicIdValidator} from '../../src/validators/mosaicId.validator';
+import {MosaicIdAliasValidator, MosaicIdValidator} from '../../src/validators/mosaicId.validator';
 
 describe('mosaic id validator', () => {
 
@@ -33,4 +33,32 @@ describe('mosaic id validator', () => {
         }).to.throws('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
     });
 
+});
+
+describe('mosaic alias validator', () => {
+    it('Valid mosaic id', () => {
+        const mosaicId = '941299B2B7E1291C';
+        expect(new MosaicIdAliasValidator().validate(mosaicId, {name: 'mosaicId', source: mosaicId}))
+            .to.be.equal(undefined);
+    });
+
+    it('Invalid mosaic id (string)', () => {
+        const value = 'test';
+        expect(() => {
+            new MosaicIdAliasValidator().validate(value, {name: 'value', source: value});
+        }).to.throws('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+    });
+
+    it('Valid mosaic alias', () => {
+        const alias = '@nem.xem';
+        expect(new MosaicIdAliasValidator().validate(alias, {name: 'alias', source: alias}))
+            .to.be.equal(undefined);
+    });
+
+    it('Invalid mosaic alias', () => {
+        const value = '@myOwnAlias.name';
+        expect(() => {
+            new MosaicIdAliasValidator().validate(value, {name: 'value', source: value});
+        }).to.throws('Introduce valid mosaic alias. Example: @nem.xem');
+    });
 });

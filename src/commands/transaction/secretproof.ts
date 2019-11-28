@@ -15,10 +15,11 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Address, Deadline, SecretProofTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, SecretProofTransaction, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
-import {AddressValidator} from '../../validators/address.validator';
+import {AccountService} from '../../service/account.service';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -43,9 +44,9 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     hashAlgorithm: number;
 
     @option({
-        description: 'Address that receives the funds once unlocked.',
+        description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
-        validator: new AddressValidator(),
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }
@@ -79,7 +80,6 @@ export default class extends AnnounceTransactionsCommand {
             'recipientAddress',
             () => undefined,
             'Introduce address that receives the funds once unlocked: ');
-        const recipientAddress = Address.createFromRawAddress(options.recipientAddress);
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
@@ -88,6 +88,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const profile = this.getProfile(options);
 
+        const recipientAddress = AccountService.getRecipient(options.recipientAddress);
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
             options.hashAlgorithm,

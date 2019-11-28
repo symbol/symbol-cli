@@ -17,7 +17,7 @@
  */
 
 import {ExpectedError} from 'clime';
-import {Address, Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 
 export class MosaicService {
 
@@ -43,20 +43,6 @@ export class MosaicService {
             throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
                 ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
         }
-    }
-
-    static getRecipient(rawRecipient: string): Address | NamespaceId {
-        let recipient: Address | NamespaceId;
-        if (rawRecipient.charAt(0) === MosaicService.ALIAS_TAG) {
-            recipient =  new NamespaceId(rawRecipient.substring(1));
-        } else  {
-            try {
-                recipient = Address.createFromRawAddress(rawRecipient);
-            } catch (err) {
-                throw new ExpectedError('Introduce a valid address');
-            }
-        }
-        return recipient;
     }
 
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
