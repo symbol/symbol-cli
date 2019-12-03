@@ -26,6 +26,16 @@ export class WalletService {
         this.walletRepository = walletRepository;
     }
 
+    public static getAccount(wallet: Wallet, password: string): Account {
+        const { encryptedKey, iv } = wallet.encryptedPrivateKey;
+        const common = { password, privateKey: '' };
+        const walletInfo = { encrypted: encryptedKey, iv };
+        Crypto.passwordToPrivateKey(common, walletInfo, WalletAlgorithm.Pass_bip32);
+        const privateKey = common.privateKey;
+        const account = Account.createFromPrivateKey(privateKey, wallet.networkType);
+        return account;
+    }
+
     createWallet(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Wallet {
         return this.walletRepository.save(simpleWallet, url, networkGenerationHash);
     }
@@ -34,21 +44,19 @@ export class WalletService {
         return this.walletRepository.find(name);
     }
 
+    getAllWallet(): Wallet[] {
+        return this.walletRepository.findAll();
+    }
+
     setDefaultWallet(name: string) {
         this.walletRepository.setDefaultWallet(name);
     }
 
-    checkWalletExist(name: string): boolean {
-        return this.walletRepository.checkExist(name);
+    getDefaultWallet(): Wallet | undefined {
+        return this.walletRepository.getDefaultWallet();
     }
 
-    getAccount(wallet: Wallet, password: string): Account {
-        const { encryptedKey, iv } = wallet.encryptedPrivateKey;
-        const common = { password, privateKey: '' };
-        const walletInfo = { encrypted: encryptedKey, iv };
-        Crypto.passwordToPrivateKey(common, walletInfo, WalletAlgorithm.Pass_bip32);
-        const privateKey = common.privateKey;
-        const account = Account.createFromPrivateKey(privateKey, wallet.networkType);
-        return account;
+    checkWalletExist(name: string): boolean {
+        return this.walletRepository.checkExist(name);
     }
 }

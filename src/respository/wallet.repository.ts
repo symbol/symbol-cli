@@ -21,7 +21,7 @@ import { Wallet } from '../model/wallet';
 
 export class WalletRepository {
     constructor(
-        private readonly fileUrl: string = '.nem2rcWallet.json',
+        private readonly fileUrl: string = '.nem2rc-wallet.json',
     ) {
 
     }
@@ -36,9 +36,26 @@ export class WalletRepository {
                 wallets[name].networkGenerationHash,
                 Address.createFromRawAddress(wallets[name].address),
                 wallets[name].encryptedPrivateKey,
-                );
+            );
         }
         throw new Error(`${name} not found`);
+    }
+
+    public findAll(): Wallet[] {
+        const wallets = this.getWallets();
+        const result: Wallet[] = [];
+        for (const item of wallets) {
+            const tempWallet = new Wallet(
+                item.name,
+                item.network,
+                item.url,
+                item.networkGenerationHash,
+                Address.createFromRawAddress(item.address),
+                item.encryptedPrivateKey,
+            );
+            result.push(tempWallet);
+        }
+        return result;
     }
 
     public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Wallet {
@@ -82,6 +99,24 @@ export class WalletRepository {
             }
         }
         this.saveWallets(wallets);
+    }
+
+    public getDefaultWallet(): Wallet | undefined {
+        const wallets = this.getWallets();
+        for (const item of wallets) {
+            if ('1' === item.default) {
+                const wallet = new Wallet(
+                    item.name,
+                    item.network,
+                    item.url,
+                    item.networkGenerationHash,
+                    Address.createFromRawAddress(item.address),
+                    item.encryptedPrivateKey,
+                );
+                return wallet;
+            }
+        }
+        return undefined;
     }
 
     private getWallets(): any {

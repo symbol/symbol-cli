@@ -15,24 +15,34 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
+import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
+import { BlockHttp, BlockInfo, NetworkHttp, NetworkType, Password, SimpleWallet } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {forkJoin} from 'rxjs';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
-import {NetworkValidator} from '../../validators/network.validator';
-import {PrivateKeyValidator} from '../../validators/privateKey.validator';
+import { forkJoin } from 'rxjs';
+import { OptionsResolver } from '../../options-resolver';
+import { WalletRepository } from '../../respository/wallet.repository';
+import { WalletService } from '../../service/wallet.service';
+import { NetworkValidator } from '../../validators/network.validator';
+import { PrivateKeyValidator } from '../../validators/privateKey.validator';
 
 export class CommandOptions extends Options {
     @option({
-        flag: 'p',
-        description: 'Account private key.',
-        validator: new PrivateKeyValidator(),
+        flag: 'N',
+        description: 'Wallet name.',
     })
-    privateKey: string;
+    name: string;
+
+    @option({
+        flag: 'P',
+        description: 'Wallet password',
+    })
+    password: string;
+
+    @option({
+        flag: 'u',
+        description: 'NEM2 Node URL. Example: http://localhost:3000',
+    })
+    url: string;
 
     @option({
         flag: 'n',
@@ -42,15 +52,11 @@ export class CommandOptions extends Options {
     network: string;
 
     @option({
-        flag: 'u',
-        description: 'NEM2 Node URL. Example: http://localhost:3000',
+        flag: 'p',
+        description: '(Optional) Account private key.',
+        validator: new PrivateKeyValidator(),
     })
-    url: string;
-
-    @option({
-        description: 'Profile name.',
-    })
-    profile: string;
+    privateKey: string;
 
     getNetwork(network: string): NetworkType {
         if (network === 'MAIN_NET') {
@@ -67,66 +73,65 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Create a new profile',
+    description: 'Create a new wallet',
 })
 export default class extends Command {
-    private readonly profileService: ProfileService;
+    private readonly walletService: WalletService;
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
+        const profileRepository = new WalletRepository('.nem2rc-wallet.json');
+        this.walletService = new WalletService(profileRepository);
     }
-
     @metadata
     execute(options: CommandOptions) {
-        const networkType = options.getNetwork(OptionsResolver(options,
+        options.name = OptionsResolver(options,
+            'name',
+            () => undefined,
+            'Introduce wallet name: ');
+
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce Wallet password: ');
+
+        options.network = OptionsResolver(options,
             'network',
             () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): ');
 
-        const account: Account = Account.createFromPrivateKey(
-            OptionsResolver(options,
-                'privateKey',
-                () => undefined,
-                'Introduce your private key: '),
-            networkType);
-
-        const url = OptionsResolver(options,
+        options.url = OptionsResolver(options,
             'url',
             () => undefined,
             'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
 
-        let profileName: string;
-        if (options.profile) {
-            profileName = options.profile;
-        } else {
-            profileName = readlineSync.question('Insert profile name: ');
-        }
-        profileName.trim();
+        const networkType = options.getNetwork(options.network);
 
-        const networkHttp = new NetworkHttp(url);
-        const blockHttp = new BlockHttp(url);
-
+        options.name = options.name.trim();
+        const networkHttp = new NetworkHttp(options.url);
+        const blockHttp = new BlockHttp(options.url);
         forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight('1'))
-            .subscribe((res) => {
+            .subscribe((res: [NetworkType, BlockInfo]) => {
                 if (res[0] !== networkType) {
                     console.log('The network provided and the node network don\'t match.');
-                } else {
-                    const profile = this.profileService.createNewProfile(account,
-                        url as string,
-                        profileName,
-                        res[1].generationHash);
-                    if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
-                        this.profileService.setDefaultProfile(profileName);
-                    }
-                    console.log(chalk.green('\nProfile stored correctly\n') + profile.toString() + '\n');
+                    return;
                 }
-            }, (ignored) => {
-                let error = '';
-                error += chalk.red('Error');
-                error += ' Check if you can reach the NEM2 url provided: ' + url + '/block/1';
-                console.log(error);
+                const isWalletExist: boolean = this.walletService.checkWalletExist(options.name);
+                if (isWalletExist) {
+                    if (!readlineSync.keyInYN('wallet ' + options.name + ' already exist. Do you wish to recover this wallet?')) {
+                        return;
+                    }
+                }
+                const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
+                const wallet = this.walletService.createWallet(
+                    simpleWallet,
+                    options.url,
+                    res[1].generationHash);
+
+                if (readlineSync.keyInYN('Do you want to set the wallet as the default wallet?')) {
+                    this.walletService.setDefaultWallet(wallet.name);
+                }
+                console.log(wallet.toString());
             });
     }
 }

@@ -17,39 +17,34 @@
  */
 import chalk from 'chalk';
 import {Command, command, metadata, option, Options} from 'clime';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
-
-export class CommandOptions extends Options {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-    })
-    address: string;
-}
+import { Wallet } from '../../model/wallet';
+import {WalletRepository} from '../../respository/wallet.repository';
+import {WalletService} from '../../service/wallet.service';
 
 @command({
-    description: 'Display the list of stored profiles',
+    description: 'Display the list of stored wallets',
 })
 export default class extends Command {
-    private readonly profileService: ProfileService;
+    private readonly walletService: WalletService;
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
+        const walletRepository = new WalletRepository('.nem2rc-wallet.json');
+        this.walletService = new WalletService(walletRepository);
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    execute() {
         let message = '';
-        this.profileService.findAll().map((profile) => {
-            message += '\n\n' + profile.toString();
+        this.walletService.getAllWallet().map((wallet: Wallet) => {
+            message += '\n\n' + wallet.toString();
         });
         console.log(message);
         try {
-            const currentProfile = this.profileService.getDefaultProfile();
-            console.log(chalk.green('\n\n Default profile:', currentProfile.name));
+            const currentWallet = this.walletService.getDefaultWallet();
+            if (currentWallet) {
+                console.log(chalk.green('\n\n Default profile:', currentWallet.name));
+            }
         } catch {
             console.log(chalk.green('\n\n Default profile: None'));
         }

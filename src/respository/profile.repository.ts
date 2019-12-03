@@ -24,7 +24,6 @@ export class ProfileRepository {
 
     constructor(
         private readonly fileUrl: string,
-        private readonly walletUrl: string = '.nem2rcWallet.json',
     ) {
 
     }

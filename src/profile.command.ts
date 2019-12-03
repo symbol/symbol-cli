@@ -17,48 +17,55 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
-import {Profile} from './model/profile';
-import {ProfileRepository} from './respository/profile.repository';
-import {ProfileService} from './service/profile.service';
+import {Wallet} from './model/wallet';
+import {WalletRepository} from './respository/wallet.repository';
+import {WalletService} from './service/wallet.service';
 
-export abstract class ProfileCommand extends Command {
-    private readonly profileService: ProfileService;
+export abstract class WalletCommand extends Command {
+    private readonly walletService: WalletService;
     public spinner = new Spinner('processing.. %s');
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
+        const walletRepository = new WalletRepository('.nem2rc-wallet.json');
+        this.walletService = new WalletService(walletRepository);
         this.spinner.setSpinnerString('|/-\\');
     }
 
-    public getProfile(options: ProfileOptions): Profile {
+    public getDefaultWallet(options: ProfileOptions): Wallet {
         try {
-            if (options.profile) {
-                return this.profileService.findProfileNamed(options.profile);
+            if (options.wallet) {
+                return this.walletService.getWallet(options.wallet);
             }
-            return this.profileService.getDefaultProfile();
+            const wallet = this.walletService.getDefaultWallet();
+            if (wallet) {
+                return wallet;
+            } else {
+                throw new ExpectedError('Can\'t retrieve the current wallet.\n' +
+                'Use \'nem2-cli wallet list\' to check whether the wallet exist, ' +
+                'if not, use \'nem2-cli wallet create\' to create a new wallet.');
+            }
         } catch (err) {
-            throw new ExpectedError('Can\'t retrieve the current profile.\n' +
-            'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-            'if not, use \'nem2-cli profile create\' to create a new profile.');
+            throw new ExpectedError('Can\'t retrieve the current wallet.\n' +
+            'Use \'nem2-cli wallet list\' to check whether the wallet exist, ' +
+            'if not, use \'nem2-cli wallet create\' to create a new wallet.');
         }
     }
 
-    protected setDefaultProfile(options: ProfileOptions) {
+    protected setDefaultWallet(options: ProfileOptions) {
         try {
-            this.profileService.setDefaultProfile(options.profile);
+            this.walletService.setDefaultWallet(options.wallet);
         } catch (err) {
-            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile\n.' +
-                'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile.');
+            throw new ExpectedError('Can\'t set the wallet [' + options.wallet + '] as the default wallet\n.' +
+                'Use \'nem2-cli wallet list\' to check whether the wallet exist, ' +
+                'if not, use \'nem2-cli wallet create\' to create a wallet.');
         }
     }
 }
 
 export class ProfileOptions extends Options {
     @option({
-        description: '(Optional) Select between your profiles, by providing a profile name.',
+        description: '(Optional) Select between your wallets, by providing a wallet name.',
     })
-    profile: string;
+    wallet: string;
 }
