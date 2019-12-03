@@ -21,7 +21,6 @@ import {
     Deadline,
     Message,
     Mosaic,
-    NamespaceId,
     PersistentHarvestingDelegationMessage,
     PlainMessage,
     PublicAccount,
@@ -31,7 +30,9 @@ import {
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {AccountService} from '../../service/account.service';
 import {MosaicService} from '../../service/mosaic.service';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
@@ -39,6 +40,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 
@@ -92,7 +94,7 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
-        const recipientAddress: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
+        const recipientAddress = AccountService.getRecipient(OptionsResolver(options,
             'recipientAddress',
             () => undefined,
             'Introduce the recipient address: '));
@@ -136,16 +138,16 @@ export default class extends AnnounceTransactionsCommand {
                 profile.networkType);
 
         } else if (options.message && options.encrypted) {
-                options.recipientPublicKey = OptionsResolver(options,
-                    'recipientPublicKey',
-                    () => undefined,
-                    'Introduce the recipient public key: ');
+            options.recipientPublicKey = OptionsResolver(options,
+                'recipientPublicKey',
+                () => undefined,
+                'Introduce the recipient public key: ');
 
-                message = profile.account.encryptMessage(
-                    options.message,
-                    PublicAccount.createFromPublicKey(options.recipientPublicKey,
-                        profile.networkType),
-                    profile.networkType);
+            message = profile.account.encryptMessage(
+                options.message,
+                PublicAccount.createFromPublicKey(options.recipientPublicKey,
+                    profile.networkType),
+                profile.networkType);
         } else {
             message = PlainMessage.create(options.message);
         }
