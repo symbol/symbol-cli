@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {AccountHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {WalletTransactionCommand, WalletTransactionOptions} from '../../Wallet.transactions.command';
+import {WalletTransactionCommand, WalletTransactionOptions} from '../../wallet.transactions.command';
 
 export class CommandOptions extends WalletTransactionOptions {
     @option({
