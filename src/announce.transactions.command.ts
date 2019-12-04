@@ -19,8 +19,8 @@ import chalk from 'chalk';
 import {option} from 'clime';
 import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {WalletCommand, WalletOptions} from './wallet.command';
 import {NumericStringValidator} from './validators/numericString.validator';
+import {WalletCommand, WalletOptions} from './wallet.command';
 
 export abstract class AnnounceTransactionsCommand extends WalletCommand {
 

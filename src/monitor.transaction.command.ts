@@ -17,9 +17,9 @@
  */
 import {option} from 'clime';
 import {Address} from 'nem2-sdk';
-import {WalletCommand, WalletOptions} from './wallet.command';
 import {TransactionService} from './service/transaction.service';
 import {AddressValidator} from './validators/address.validator';
+import {WalletCommand, WalletOptions} from './wallet.command';
 
 export abstract class MonitorAddressCommand extends WalletCommand {
     public readonly transactionService: TransactionService;
