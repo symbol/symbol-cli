@@ -21,8 +21,15 @@ import {Wallet} from './model/wallet';
 import {WalletRepository} from './respository/wallet.repository';
 import {WalletService} from './service/wallet.service';
 
+export class WalletOptions extends Options {
+    @option({
+        description: '(Optional) Select between your wallets, by providing a wallet name.',
+    })
+    wallet: string;
+}
+
 export abstract class WalletCommand extends Command {
-    private readonly walletService: WalletService;
+    protected readonly walletService: WalletService;
     public spinner = new Spinner('processing.. %s');
 
     constructor() {
@@ -32,9 +39,9 @@ export abstract class WalletCommand extends Command {
         this.spinner.setSpinnerString('|/-\\');
     }
 
-    public getDefaultWallet(options: ProfileOptions): Wallet {
+    public getDefaultWallet(options?: WalletOptions): Wallet {
         try {
-            if (options.wallet) {
+            if (options && options.wallet) {
                 return this.walletService.getWallet(options.wallet);
             }
             const wallet = this.walletService.getDefaultWallet();
@@ -52,7 +59,7 @@ export abstract class WalletCommand extends Command {
         }
     }
 
-    protected setDefaultWallet(options: ProfileOptions) {
+    protected setDefaultWallet(options: WalletOptions) {
         try {
             this.walletService.setDefaultWallet(options.wallet);
         } catch (err) {
@@ -61,11 +68,4 @@ export abstract class WalletCommand extends Command {
                 'if not, use \'nem2-cli wallet create\' to create a wallet.');
         }
     }
-}
-
-export class ProfileOptions extends Options {
-    @option({
-        description: '(Optional) Select between your wallets, by providing a wallet name.',
-    })
-    wallet: string;
 }

@@ -16,33 +16,41 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AccountHttp, PublicAccount} from 'nem2-sdk';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
+import {command, metadata, option} from 'clime';
+import {AccountHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
+import {WalletTransactionCommand, WalletTransactionOptions} from '../../Wallet.transactions.command';
+
+export class CommandOptions extends WalletTransactionOptions {
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
+}
 
 @command({
     description: 'Fetch outgoing transactions from account',
 })
-export default class extends AccountTransactionsCommand {
+export default class extends WalletTransactionCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: AccountTransactionsOptions) {
+    execute(options: CommandOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const publicAccount = PublicAccount.createFromPublicKey(
-            OptionsResolver(options,
-                'publicKey',
-                () => profile.account.publicKey,
-                'Introduce the public key: '), profile.account.address.networkType);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ').trim();
+        const account = wallet.getAccount(options.password);
+        const publicAccount = account.publicAccount;
 
-        const accountHttp = new AccountHttp(profile.url);
+        const accountHttp = new AccountHttp(wallet.url);
 
         accountHttp.getAccountOutgoingTransactions(publicAccount.address, options.getQueryParams())
             .subscribe((transactions) => {

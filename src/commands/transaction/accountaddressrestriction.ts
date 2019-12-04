@@ -53,6 +53,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new AddressAliasValidator(),
     })
     value: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -92,19 +97,25 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const wallet = this.getDefaultWallet(options);
         const address = AccountService.getRecipient(options.value);
+        const account = wallet.getAccount(options.password.trim());
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             this.restrictionService.getAccountAddressRestrictionFlags(options.restrictionFlag, options.restrictionDirection),
             (options.modificationAction === 1) ? [address] : [],
             (options.modificationAction === 0) ? [address] : [],
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(transaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 
 }

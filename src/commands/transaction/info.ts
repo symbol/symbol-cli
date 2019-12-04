@@ -19,10 +19,10 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'h',
         description: 'Transaction hash.',
@@ -33,7 +33,7 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Fetch transaction info',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
     private readonly transactionService: TransactionService;
 
     constructor() {
@@ -44,9 +44,9 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const transactionHttp = new TransactionHttp(profile.url);
+        const transactionHttp = new TransactionHttp(wallet.url);
         const hash = OptionsResolver(options,
             'hash',
             () => undefined,

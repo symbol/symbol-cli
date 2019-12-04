@@ -15,16 +15,14 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
+import { command, ExpectedError, metadata, option, Options } from 'clime';
 import { BlockHttp, BlockInfo, NetworkHttp, NetworkType, Password, SimpleWallet } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import { forkJoin } from 'rxjs';
 import { OptionsResolver } from '../../options-resolver';
-import { WalletRepository } from '../../respository/wallet.repository';
-import { WalletService } from '../../service/wallet.service';
 import { NetworkValidator } from '../../validators/network.validator';
 import { PrivateKeyValidator } from '../../validators/privateKey.validator';
+import { WalletCommand } from '../../wallet.command';
 
 export class CommandOptions extends Options {
     @option({
@@ -76,13 +74,9 @@ export class CommandOptions extends Options {
 @command({
     description: 'Create a new wallet',
 })
-export default class extends Command {
-    private readonly walletService: WalletService;
-
+export default class extends WalletCommand {
     constructor() {
         super();
-        const profileRepository = new WalletRepository('.nem2rcWallet.json');
-        this.walletService = new WalletService(profileRepository);
     }
     @metadata
     execute(options: CommandOptions) {
@@ -107,7 +101,12 @@ export default class extends Command {
             'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
 
         const networkType = options.getNetwork(options.network);
-
+        let simpleWallet: SimpleWallet;
+        if (options.privateKey) {
+            simpleWallet = SimpleWallet.createFromPrivateKey(options.name, new Password(options.password), options.privateKey, networkType);
+        } else {
+            simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
+        }
         options.name = options.name.trim();
         const networkHttp = new NetworkHttp(options.url);
         const blockHttp = new BlockHttp(options.url);
@@ -123,7 +122,6 @@ export default class extends Command {
                         return;
                     }
                 }
-                const simpleWallet = SimpleWallet.create(options.name, new Password(options.password), networkType);
                 const wallet = this.walletService.createWallet(
                     simpleWallet,
                     options.url,
@@ -134,6 +132,5 @@ export default class extends Command {
                 }
                 console.log(wallet.toString());
             });
-
     }
 }

@@ -62,8 +62,8 @@ export const subcommands = [
         brief: 'Get namespace related information',
     },
     {
-        name: 'profile',
-        brief: 'Manage profiles',
+        name: 'wallet',
+        brief: 'Manage wallets',
     },
     {
         name: 'restriction',

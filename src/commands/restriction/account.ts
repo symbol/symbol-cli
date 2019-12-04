@@ -18,20 +18,9 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
-import { command, metadata, option } from 'clime';
-import { AccountRestriction, AccountRestrictionFlags, Address, RestrictionAccountHttp } from 'nem2-sdk';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { AddressValidator } from '../../validators/address.validator';
-
-export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-        validator: new AddressValidator(),
-    })
-    address: string;
-}
+import { command, metadata } from 'clime';
+import { AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp } from 'nem2-sdk';
+import { WalletCommand, WalletOptions } from '../../wallet.command';
 
 export class AccountRestrictionsTable {
     private readonly table: HorizontalTable;
@@ -62,24 +51,19 @@ export class AccountRestrictionsTable {
 @command({
     description: 'Fetch account restrictions assigned to an address',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    execute(options: WalletOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
-        options.address = OptionsResolver(options,
-            'address',
-            () => profile.account.address.plain(),
-            'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
+        const wallet = this.getDefaultWallet(options);
 
-        const restrictionHttp = new RestrictionAccountHttp(profile.url);
-        restrictionHttp.getAccountRestrictions(address)
+        const restrictionHttp = new RestrictionAccountHttp(wallet.url);
+        restrictionHttp.getAccountRestrictions(wallet.address)
             .subscribe((accountRestrictions: any) => {
                 this.spinner.stop(true);
                 if (accountRestrictions.length > 0) {

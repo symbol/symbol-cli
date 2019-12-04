@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
+import { command, metadata, option } from 'clime';
+import { AccountLinkTransaction, Deadline, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { PublicKeyValidator } from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -36,6 +36,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new BinaryValidator(),
     })
     action: number;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -48,8 +53,7 @@ export default class extends AnnounceTransactionsCommand {
     }
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-
+        const wallet = this.getDefaultWallet(options);
         options.publicKey = OptionsResolver(options,
             'publicKey',
             () => undefined,
@@ -65,15 +69,21 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const account = wallet.getAccount(options.password.trim());
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
             options.publicKey,
             options.action,
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(accountLinkTransaction,
-            profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(accountLinkTransaction,
+            wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

@@ -16,8 +16,9 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
+    Account,
     AccountHttp,
     AggregateTransaction,
     CosignatureTransaction,
@@ -26,24 +27,29 @@ import {
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
-import {Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
-import {Profile} from '../../model/profile';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import { Observable, of } from 'rxjs';
+import { catchError, filter, map, mergeMap, toArray } from 'rxjs/operators';
+import { Wallet } from '../../model/wallet';
+import { OptionsResolver } from '../../options-resolver';
+import { WalletCommand, WalletOptions } from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'h',
         description: 'Aggregate bonded transaction hash to be signed.',
     })
     hash: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
     description: 'Cosign an aggregate bonded transaction',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -51,19 +57,25 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const accountHttp = new AccountHttp(profile.url);
-        const transactionHttp = new TransactionHttp(profile.url);
+        const accountHttp = new AccountHttp(wallet.url);
+        const transactionHttp = new TransactionHttp(wallet.url);
 
         options.hash = OptionsResolver(options,
             'hash',
             () => undefined,
             'Introduce aggregate bonded transaction hash to be signed: ');
 
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+        const account = wallet.getAccount(options.password);
+
         this.spinner.start();
 
-        this.getGraphAccounts(profile)
+        this.getGraphAccounts(wallet, account)
             .pipe(
                 mergeMap((_) => _),
                 mergeMap((publicAccount) => accountHttp.getAccountPartialTransactions(publicAccount.address, new QueryParams(100))),
@@ -80,11 +92,9 @@ export default class extends ProfileCommand {
                     text += chalk.red('Error');
                     console.log(text, 'This aggregate bonded transaction for given hash in this profile');
                 } else {
-
                     const transaction = transactions[0];
-
                     const cosignatureTransaction = CosignatureTransaction.create(transaction);
-                    const signedCosignature = profile.account.signCosignatureTransaction(cosignatureTransaction);
+                    const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
 
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
@@ -107,8 +117,8 @@ export default class extends ProfileCommand {
             });
     }
 
-    private getGraphAccounts(profile: Profile): Observable<PublicAccount[]> {
-        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
+    private getGraphAccounts(wallet: Wallet, account: Account): Observable<PublicAccount[]> {
+        return new MultisigHttp(wallet.url).getMultisigAccountGraphInfo(account.address)
             .pipe(
                 map((_) => {
                     let publicAccounts: PublicAccount[] = [];
@@ -120,6 +130,6 @@ export default class extends ProfileCommand {
                     });
                     return publicAccounts;
                 }),
-                catchError((ignored) => of([profile.account.publicAccount])));
+                catchError((ignored) => of([account.publicAccount])));
     }
 }

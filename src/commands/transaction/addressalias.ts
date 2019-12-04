@@ -14,12 +14,12 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, AddressAliasTransaction, Deadline, NamespaceId, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AddressValidator} from '../../validators/address.validator';
-import {BinaryValidator} from '../../validators/binary.validator';
+import { command, ExpectedError, metadata, option } from 'clime';
+import { Address, AddressAliasTransaction, Deadline, NamespaceId, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { AddressValidator } from '../../validators/address.validator';
+import { BinaryValidator } from '../../validators/binary.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -41,6 +41,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Namespace name.',
     })
     namespace: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -55,8 +60,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.namespace = OptionsResolver(options,
             'namespace',
@@ -70,7 +74,7 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce the address: ');
 
         const address = Address.createFromRawAddress(options.address);
-        if (address.networkType !== profile.networkType) {
+        if (address.networkType !== wallet.networkType) {
             throw new ExpectedError('The address network doesn\'t match network option.');
         }
 
@@ -84,14 +88,20 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
             options.action,
             namespaceId,
             address,
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+
+        const account = wallet.getAccount(options.password.trim());
+        const signedTransaction = account.sign(addressAliasTransaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

@@ -21,10 +21,10 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -66,7 +66,7 @@ export class MosaicViewTable {
 @command({
     description: 'Fetch mosaic info',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -75,7 +75,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
@@ -83,8 +83,8 @@ export default class extends ProfileCommand {
         const mosaicId = new MosaicId(options.mosaicId);
 
         const mosaicService = new MosaicService(
-            new AccountHttp(profile.url),
-            new MosaicHttp(profile.url),
+            new AccountHttp(wallet.url),
+            new MosaicHttp(wallet.url),
         );
         mosaicService.mosaicsView([mosaicId])
             .subscribe((mosaicViews) => {

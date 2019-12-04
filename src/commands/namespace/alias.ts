@@ -21,9 +21,9 @@ import {NamespaceHttp, NamespaceId} from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
@@ -34,7 +34,7 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Get mosaicId or address behind an namespace',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -43,7 +43,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.name = OptionsResolver(options,
             'name',
@@ -51,7 +51,7 @@ export default class extends ProfileCommand {
             'Introduce the namespace name: ');
         const namespaceId = new NamespaceId(options.name);
 
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = new NamespaceHttp(wallet.url);
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError((ignored) => of(null))),
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError((ignored) => of(null))),

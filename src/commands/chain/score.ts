@@ -20,7 +20,7 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata} from 'clime';
 import {BlockchainScore, ChainHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
 export class ChainScoreTable {
     private readonly table: HorizontalTable;
@@ -46,19 +46,19 @@ export class ChainScoreTable {
 @command({
     description: 'Gets the current score of the chain',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: ProfileOptions) {
+    execute(options: WalletOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = new ChainHttp(wallet.url);
         chainHttp.getChainScore().subscribe((score) => {
             this.spinner.stop(true);
             console.log(new ChainScoreTable(score).toString());

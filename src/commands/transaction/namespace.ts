@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, NamespaceRegistrationTransaction, UInt64} from 'nem2-sdk';
+import { command, metadata, option } from 'clime';
+import { Deadline, NamespaceRegistrationTransaction, UInt64 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -53,6 +53,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Parent namespace name (use it with --subnamespace).',
     })
     parentName: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -67,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
@@ -93,19 +98,25 @@ export default class extends AnnounceTransactionsCommand {
             'maxFee',
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const account = wallet.getAccount(options.password.trim());
 
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromNumericString(options.duration), profile.networkType,
+                options.name, UInt64.fromNumericString(options.duration), wallet.networkType,
                 options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         } else {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentName, profile.networkType,
+                options.name, options.parentName, wallet.networkType,
                 options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         }
 
-        const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(namespaceRegistrationTransaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

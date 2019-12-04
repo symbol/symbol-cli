@@ -17,48 +17,32 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Address, NamespaceHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceHttp} from 'nem2-sdk';
 import {AddressValidator} from '../../validators/address.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 import {NamespaceInfoTable} from './info';
-
-export class CommandOptions extends ProfileOptions {
-
-    @option({
-        flag: 'a',
-        description: 'Address',
-        validator: new AddressValidator(),
-    })
-    address: string;
-}
 
 @command({
     description: 'Get owned namespaces',
 })
 
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.account.address.plain(),
-                'Introduce the address: '));
-        const namespaceHttp = new NamespaceHttp(profile.url);
+    execute(options: WalletOptions) {
+        const wallet = this.getDefaultWallet(options);
+        const namespaceHttp = new NamespaceHttp(wallet.url);
         this.spinner.start();
-        namespaceHttp.getNamespacesFromAccount(address)
+        namespaceHttp.getNamespacesFromAccount(wallet.address)
             .subscribe((namespaces) => {
                 this.spinner.stop(true);
 
                 if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces');
+                    console.log('The address ' + wallet.address.pretty() + ' does not own any namespaces');
                 }
                 namespaces.map((namespace) => {
                     console.log(new NamespaceInfoTable(namespace).toString());

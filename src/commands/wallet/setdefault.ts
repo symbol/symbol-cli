@@ -17,40 +17,26 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {Listener} from 'nem2-sdk';
+import {OptionsResolver} from '../../options-resolver';
 import {WalletCommand, WalletOptions} from '../../wallet.command';
 
 @command({
-    description: 'Monitor new blocks',
+    description: 'Change the default wallet',
 })
 export default class extends WalletCommand {
-
     constructor() {
         super();
     }
 
     @metadata
     execute(options: WalletOptions) {
-        const wallet = this.getDefaultWallet(options);
-
-        const listener = new Listener(wallet.url);
-
-        console.log(`Using ${wallet.url}`);
-
-        listener.open().then(() => {
-            listener.newBlock().subscribe((block) => {
-                console.log('\n');
-                console.log(block);
-            }, (err) => {
-                this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
-            });
-        }, (err) => {
-            let text = '';
-            text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
-        });
+        options.wallet = OptionsResolver(options,
+            'wallet',
+            () => undefined,
+            'New default wallet: ');
+        if (options.wallet) {
+            this.setDefaultWallet(options);
+            console.log(chalk.green('\nDefault wallet changed to [' + options.wallet + ']'));
+        }
     }
 }

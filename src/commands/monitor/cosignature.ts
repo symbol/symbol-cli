@@ -17,9 +17,8 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {Address, Listener} from 'nem2-sdk';
+import {Listener} from 'nem2-sdk';
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transaction.command';
-import {OptionsResolver} from '../../options-resolver';
 
 @command({
     description: 'Monitor cosignatures added',
@@ -32,20 +31,14 @@ export default class extends MonitorAddressCommand {
 
     @metadata
     execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                            'address',
-                            () => profile.account.address.plain(),
-                            'Introduce the address: '));
+        const listener = new Listener(wallet.url);
 
-        const listener = new Listener(profile.url);
-
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        console.log(chalk.green('Monitoring ') + `${wallet.address.pretty()} using ${wallet.url}`);
 
         listener.open().then(() => {
-            listener.cosignatureAdded(address).subscribe((transaction) => {
+            listener.cosignatureAdded(wallet.address).subscribe((transaction) => {
                 const transactionFormatted = '\nCosignatureSignedTransaction: ParentHash:' + transaction.parentHash +
                     ' SignerPublicKey:' + transaction.signerPublicKey +
                     ' Signature:' + transaction.signature;

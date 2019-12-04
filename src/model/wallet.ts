@@ -1,6 +1,6 @@
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Address, EncryptedPrivateKey, NetworkType} from 'nem2-sdk';
+import {Account, Address, Crypto, EncryptedPrivateKey, NetworkType, WalletAlgorithm} from 'nem2-sdk';
 
 export class Wallet {
     private readonly table: HorizontalTable;
@@ -29,5 +29,15 @@ export class Wallet {
 
     toString() {
         return this.table.toString();
+    }
+
+    getAccount(password: string): Account {
+        const { encryptedKey, iv } = this.encryptedPrivateKey;
+        const common = { password, privateKey: '' };
+        const walletInfo = { encrypted: encryptedKey, iv };
+        Crypto.passwordToPrivateKey(common, walletInfo, WalletAlgorithm.Pass_bip32);
+        const privateKey = common.privateKey;
+        const account = Account.createFromPrivateKey(privateKey, this.networkType);
+        return account;
     }
 }

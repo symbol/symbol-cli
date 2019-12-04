@@ -18,11 +18,10 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
+import {command, metadata} from 'clime';
 import {
     AccountHttp,
     AccountInfo,
-    Address,
     MosaicAmountView,
     MosaicHttp,
     MosaicService,
@@ -32,17 +31,10 @@ import {
 } from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-        validator: new AddressValidator(),
-    })
-    address: string;
+export class CommandOptions extends WalletOptions {
+
 }
 
 export class AccountInfoTable {
@@ -160,7 +152,7 @@ export class MultisigInfoTable {
 @command({
     description: 'Get account information',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -170,23 +162,17 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.account.address.plain(),
-                'Introduce the address: '));
-
-        const accountHttp = new AccountHttp(profile.url);
-        const multisigHttp = new MultisigHttp(profile.url);
-        const mosaicHttp = new MosaicHttp(profile.url);
+        const accountHttp = new AccountHttp(wallet.url);
+        const multisigHttp = new MultisigHttp(wallet.url);
+        const mosaicHttp = new MosaicHttp(wallet.url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
 
         forkJoin(
-            accountHttp.getAccountInfo(address),
-            mosaicService.mosaicsAmountViewFromAddress(address).pipe(mergeMap((_) => _), toArray()),
-            multisigHttp.getMultisigAccountInfo(address).pipe(catchError((ignored) => of(null))))
+            accountHttp.getAccountInfo(wallet.address),
+            mosaicService.mosaicsAmountViewFromAddress(wallet.address).pipe(mergeMap((_) => _), toArray()),
+            multisigHttp.getMultisigAccountInfo(wallet.address).pipe(catchError((ignored) => of(null))))
             .subscribe((res) => {
                 const accountInfo = res[0];
                 const mosaicsInfo = res[1];

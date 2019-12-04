@@ -21,10 +21,10 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -60,7 +60,7 @@ export class MosaicGlobalRestrictionsTable {
 @command({
     description: 'Fetch global restrictions assigned to a mosaic',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -69,14 +69,14 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
             'Introduce the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const restrictionHttp = new RestrictionMosaicHttp(wallet.url);
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);

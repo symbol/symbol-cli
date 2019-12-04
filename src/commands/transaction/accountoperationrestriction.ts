@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Account, AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {RestrictionService} from '../../service/restriction.service';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
-import {TransactionTypeValidator} from '../../validators/transactionType.validator';
+import { command, metadata, option } from 'clime';
+import { AccountRestrictionTransaction, Deadline, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { RestrictionService } from '../../service/restriction.service';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { AccountRestrictionTypeValidator } from '../../validators/restrictionType.validator';
+import { TransactionTypeValidator } from '../../validators/transactionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -45,6 +45,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new TransactionTypeValidator(),
     })
     value: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -80,7 +85,11 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+        const wallet = this.getDefaultWallet(options);
         const value = parseInt(options.value, 16);
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
@@ -88,11 +97,11 @@ export default class extends AnnounceTransactionsCommand {
             this.restrictionService.getAccountOperationRestrictionFlags(options.restrictionFlag),
             (options.modificationAction === 1) ? [value] : [],
             (options.modificationAction === 0) ? [value] : [],
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const account = Account.createFromPrivateKey(profile.account.privateKey, profile.networkType);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const account = wallet.getAccount(options.password.trim());
+        const signedTransaction = account.sign(transaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

@@ -16,33 +16,40 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata} from 'clime';
+import {command, metadata, option} from 'clime';
 import {AccountHttp, PublicAccount} from 'nem2-sdk';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {WalletTransactionCommand, WalletTransactionOptions} from '../../wallet.transactions.command';
+
+export class CommandOptions extends WalletTransactionOptions {
+    @option({
+        description: 'Wallet password',
+    })
+    password: string;
+}
 
 @command({
     description: 'Fetch unconfirmed transactions from account',
 })
-export default class extends AccountTransactionsCommand {
+export default class extends WalletTransactionCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: AccountTransactionsOptions) {
+    execute(options: CommandOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+        const account = wallet.getAccount(options.password.trim());
+        const publicAccount = account.publicAccount;
 
-        const publicAccount = PublicAccount.createFromPublicKey(
-            OptionsResolver(options,
-                'publicKey',
-                () => profile.account.publicKey,
-                'Introduce the public key: '), profile.account.address.networkType);
-
-        const accountHttp = new AccountHttp(profile.url);
+        const accountHttp = new AccountHttp(wallet.url);
 
         accountHttp.getAccountUnconfirmedTransactions(publicAccount.address, options.getQueryParams())
             .subscribe((transactions) => {

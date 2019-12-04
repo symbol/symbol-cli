@@ -17,9 +17,8 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {Address, Listener} from 'nem2-sdk';
+import {Listener} from 'nem2-sdk';
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transaction.command';
-import {OptionsResolver} from '../../options-resolver';
 
 @command({
     description: 'Monitor unconfirmed transactions added',
@@ -32,20 +31,14 @@ export default class extends MonitorAddressCommand {
 
     @metadata
     execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                            'address',
-                            () => profile.account.address.plain(),
-                            'Introduce the address: '));
+        const listener = new Listener(wallet.url);
 
-        const listener = new Listener(profile.url);
-
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        console.log(chalk.green('Monitoring ') + `${wallet.address.pretty()} using ${wallet.url}`);
 
         listener.open().then(() => {
-            listener.unconfirmedAdded(address).subscribe((transaction) => {
+            listener.unconfirmedAdded(wallet.address).subscribe((transaction) => {
                 console.log('\n' + this.transactionService.formatTransactionToFilter(transaction));
             }, (err) => {
                 this.spinner.stop(true);

@@ -20,10 +20,10 @@ import {option} from 'clime';
 import {Address, Listener, SignedTransaction, TransactionHttp} from 'nem2-sdk';
 import {merge} from 'rxjs';
 import {filter, mergeMap} from 'rxjs/operators';
-import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
+import {WalletCommand, WalletOptions} from './wallet.command';
 
-export abstract class AnnounceAggregateTransactionsCommand extends ProfileCommand {
+export abstract class AnnounceAggregateTransactionsCommand extends WalletCommand {
 
     constructor() {
         super();
@@ -53,7 +53,7 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
 
 }
 
-export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
+export class AnnounceAggregateTransactionsOptions extends WalletOptions {
     @option({
         flag: 'f',
         description: 'Maximum fee you want to pay to announce the transaction.',

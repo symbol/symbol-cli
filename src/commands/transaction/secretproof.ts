@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, SecretProofTransaction, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AccountService} from '../../service/account.service';
-import {AddressAliasValidator} from '../../validators/address.validator';
-import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
+import { command, metadata, option } from 'clime';
+import { Deadline, SecretProofTransaction, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { AccountService } from '../../service/account.service';
+import { AddressAliasValidator } from '../../validators/address.validator';
+import { HashAlgorithmValidator } from '../../validators/hashAlgorithm.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
@@ -49,6 +49,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -86,7 +91,13 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const wallet = this.getDefaultWallet(options);
+        const account = wallet.getAccount(options.password.trim());
 
         const recipientAddress = AccountService.getRecipient(options.recipientAddress);
         const secretProofTransaction = SecretProofTransaction.create(
@@ -95,10 +106,10 @@ export default class extends AnnounceTransactionsCommand {
             options.secret,
             recipientAddress,
             options.proof,
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(secretProofTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(secretProofTransaction, wallet.networkGenerationHash);
 
-        this.announceTransaction(signedTransaction, profile.url);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

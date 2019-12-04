@@ -19,12 +19,12 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
-import { Account, BlockHttp, NetworkHttp, NetworkType } from 'nem2-sdk';
+import { Account, BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import { forkJoin } from 'rxjs';
 import { OptionsResolver } from '../../options-resolver';
-import { ProfileRepository } from '../../respository/profile.repository';
-import { ProfileService } from '../../service/profile.service';
+import { WalletRepository } from '../../respository/wallet.repository';
+import { WalletService } from '../../service/wallet.service';
 import { NetworkValidator } from '../../validators/network.validator';
 
 export class CommandOptions extends Options {
@@ -40,11 +40,6 @@ export class CommandOptions extends Options {
         description: '(Optional) When saving profile, provide a NEM2 Node URL. Example: http://localhost:3000',
     })
     url: string;
-
-    @option({
-        description: '(Optional) Profile name.',
-    })
-    profile: string;
 
     @option({
         flag: 'n',
@@ -94,12 +89,12 @@ export class AccountCredentialsTable {
     description: 'Generate new accounts',
 })
 export default class extends Command {
-    private readonly profileService: ProfileService;
+    private readonly walletService: WalletService;
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
+        const walletRepository = new WalletRepository('.nem2rc-wallet.json');
+        this.walletService = new WalletService(walletRepository);
     }
 
     @metadata
@@ -117,18 +112,9 @@ export default class extends Command {
         }
 
         if (options.save) {
-            const url = OptionsResolver(options,
-                'url',
-                () => undefined,
-                'Introduce the NEM2 node URL. (Example: http://localhost:3000): ').trim();
-
-            let profile: string;
-            if (options.profile) {
-                profile = options.profile;
-            } else {
-                profile = readlineSync.question('Insert the profile name: ');
-            }
-            profile.trim();
+            const walletName = readlineSync.question('Introduce the wallet name: ').trim();
+            const password = new Password(readlineSync.question('Introduce the wallet password: ').trim());
+            const url = readlineSync.question('Introduce the NEM2 node URL. (Example: http://localhost:3000): ').trim();
 
             const networkHttp = new NetworkHttp(url);
             const blockHttp = new BlockHttp(url);
@@ -138,14 +124,13 @@ export default class extends Command {
                     if (res[0] !== networkType) {
                         console.log('The network provided and node network don\'t match.');
                     } else {
-                        this.profileService.createNewProfile(account,
-                            url as string,
-                            profile,
-                            res[1].generationHash);
-                        if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
-                            this.profileService.setDefaultProfile(profile);
+                        const wallet = SimpleWallet.create(walletName, password, networkType);
+                        this.walletService.createWallet(wallet, url, res[1].generationHash);
+
+                        if (readlineSync.keyInYN('Do you want to set the account as the default wallet?')) {
+                            this.walletService.setDefaultWallet(walletName);
                         }
-                        text += chalk.green('\nStored ' + profile + ' profile');
+                        text += chalk.green('\nStored ' + walletName + ' wallet');
                         console.log(text);
                     }
                 }, (ignored) => {

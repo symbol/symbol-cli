@@ -17,11 +17,11 @@
  */
 import {option} from 'clime';
 import {Address} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from './profile.command';
+import {WalletCommand, WalletOptions} from './wallet.command';
 import {TransactionService} from './service/transaction.service';
 import {AddressValidator} from './validators/address.validator';
 
-export abstract class MonitorAddressCommand extends ProfileCommand {
+export abstract class MonitorAddressCommand extends WalletCommand {
     public readonly transactionService: TransactionService;
 
     constructor() {
@@ -30,7 +30,7 @@ export abstract class MonitorAddressCommand extends ProfileCommand {
     }
 }
 
-export class MonitorAddressOptions extends ProfileOptions {
+export class MonitorAddressOptions extends WalletOptions {
     @option({
         flag: 'a',
         description: 'Account address.',

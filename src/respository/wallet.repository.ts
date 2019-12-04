@@ -44,7 +44,8 @@ export class WalletRepository {
     public findAll(): Wallet[] {
         const wallets = this.getWallets();
         const result: Wallet[] = [];
-        for (const item of wallets) {
+        Object.keys(wallets).map((key: any) => {
+            const item = wallets[key];
             const tempWallet = new Wallet(
                 item.name,
                 item.network,
@@ -54,7 +55,7 @@ export class WalletRepository {
                 item.encryptedPrivateKey,
             );
             result.push(tempWallet);
-        }
+        });
         return result;
     }
 
@@ -103,15 +104,15 @@ export class WalletRepository {
 
     public getDefaultWallet(): Wallet | undefined {
         const wallets = this.getWallets();
-        for (const item of wallets) {
-            if ('1' === item.default) {
+        for (const key in wallets) {
+            if ('1' === wallets[key].default) {
                 const wallet = new Wallet(
-                    item.name,
-                    item.network,
-                    item.url,
-                    item.networkGenerationHash,
-                    Address.createFromRawAddress(item.address),
-                    item.encryptedPrivateKey,
+                    wallets[key].name,
+                    wallets[key].network,
+                    wallets[key].url,
+                    wallets[key].networkGenerationHash,
+                    Address.createFromRawAddress(wallets[key].address),
+                    wallets[key].encryptedPrivateKey,
                 );
                 return wallet;
             }

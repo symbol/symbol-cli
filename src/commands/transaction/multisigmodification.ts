@@ -15,7 +15,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
     AggregateTransaction,
     Deadline,
@@ -25,10 +25,10 @@ import {
     PublicAccount,
     UInt64,
 } from 'nem2-sdk';
-import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
+import { AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions } from '../../announce.aggregatetransactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { PublicKeyValidator } from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -65,6 +65,11 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
         validator: new PublicKeyValidator(),
     })
     multisigAccountPublicKey: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -103,14 +108,19 @@ export default class extends AnnounceAggregateTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
 
-        const profile = this.getProfile(options);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
 
+        const wallet = this.getDefaultWallet(options);
+        const account = wallet.getAccount(options.password.trim());
         const cosignatoryPublicKeys = options.cosignatoryPublicKey.split(',');
         const cosignatories: PublicAccount[] = [];
         cosignatoryPublicKeys.map((cosignatory: string) => {
-            cosignatories.push(PublicAccount.createFromPublicKey(cosignatory, profile.networkType));
+            cosignatories.push(PublicAccount.createFromPublicKey(cosignatory, wallet.networkType));
         });
-        const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, profile.networkType);
+        const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, wallet.networkType);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
@@ -118,15 +128,15 @@ export default class extends AnnounceAggregateTransactionsCommand {
             options.minRemovalDelta,
             (options.action === 1) ? cosignatories : [],
             (options.action === 0) ? cosignatories : [],
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
             [multisigAccountModificationTransaction.toAggregate(multisigAccount)],
-            profile.networkType);
+            wallet.networkType);
 
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(aggregateTransaction, wallet.networkGenerationHash);
         console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash);
 
         const hashLockTransaction = HashLockTransaction.create(
@@ -134,15 +144,15 @@ export default class extends AnnounceAggregateTransactionsCommand {
             NetworkCurrencyMosaic.createRelative(UInt64.fromNumericString(options.amount)),
             UInt64.fromNumericString(options.duration),
             signedTransaction,
-            profile.networkType,
+            wallet.networkType,
             options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedHashLockTransaction = profile.account.sign(hashLockTransaction, profile.networkGenerationHash);
+        const signedHashLockTransaction = account.sign(hashLockTransaction, wallet.networkGenerationHash);
         console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 
         this.announceAggregateTransaction(
             signedHashLockTransaction,
             signedTransaction,
-            profile.account.address,
-            profile.url);
+            wallet.address,
+            wallet.url);
     }
 }

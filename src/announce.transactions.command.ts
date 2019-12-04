@@ -19,10 +19,10 @@ import chalk from 'chalk';
 import {option} from 'clime';
 import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {ProfileCommand, ProfileOptions} from './profile.command';
+import {WalletCommand, WalletOptions} from './wallet.command';
 import {NumericStringValidator} from './validators/numericString.validator';
 
-export abstract class AnnounceTransactionsCommand extends ProfileCommand {
+export abstract class AnnounceTransactionsCommand extends WalletCommand {
 
     constructor() {
         super();
@@ -52,7 +52,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
     }
 }
 
-export class AnnounceTransactionsOptions extends ProfileOptions {
+export class AnnounceTransactionsOptions extends WalletOptions {
     @option({
         flag: 'f',
         description: 'Maximum fee (absolute amount).',

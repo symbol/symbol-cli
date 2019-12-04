@@ -21,18 +21,11 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {Address, MosaicId, RestrictionMosaicHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-        validator: new AddressValidator(),
-    })
-    address: string;
-
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -69,7 +62,7 @@ export class MosaicAddressRestrictionsTable {
 @command({
     description: 'Fetch mosaic restrictions assigned to an address',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -78,7 +71,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
@@ -86,14 +79,8 @@ export default class extends ProfileCommand {
             'Introduce the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        options.address =  OptionsResolver(options,
-            'address',
-            () => profile.account.address.plain(),
-            'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
-
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
-        restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
+        const restrictionHttp = new RestrictionMosaicHttp(wallet.url);
+        restrictionHttp.getMosaicAddressRestriction(mosaicId, wallet.address)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
                 if (mosaicRestrictions.restrictions.size > 0) {

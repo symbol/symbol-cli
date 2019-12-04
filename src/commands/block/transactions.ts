@@ -19,11 +19,11 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
 import {HeightValidator} from '../../validators/block.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
@@ -54,7 +54,7 @@ export class CommandOptions extends ProfileOptions {
     description: 'Get transactions for a given block height',
 })
 
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
     private readonly transactionService: TransactionService;
 
     constructor() {
@@ -85,8 +85,8 @@ export default class extends ProfileCommand {
         }
 
         this.spinner.start();
-        const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
+        const wallet = this.getDefaultWallet(options);
+        const blockHttp = new BlockHttp(wallet.url);
 
         blockHttp.getBlockTransactions(options.height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {

@@ -19,11 +19,11 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Metadata, MetadataHttp, MosaicId} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 import {MetadataEntryTable} from './account';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
@@ -35,7 +35,7 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Fetch metadata entries from an mosaic',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -44,7 +44,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
@@ -52,7 +52,7 @@ export default class extends ProfileCommand {
             'Introduce the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = new MetadataHttp(wallet.url);
         metadataHttp.getMosaicMetadata(mosaicId)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);

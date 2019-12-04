@@ -14,12 +14,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import { command, metadata, option } from 'clime';
+import { Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { MosaicIdValidator } from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -41,6 +41,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Namespace name.',
     })
     namespace: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -48,15 +53,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 
 export default class extends AnnounceTransactionsCommand {
-
     constructor() {
         super();
     }
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.namespace = OptionsResolver(options,
             'namespace',
@@ -70,9 +73,9 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce alias action (1: Link, 0: Unlink): ');
 
         options.mosaicId = OptionsResolver(options,
-                'mosaicId',
-                () => undefined,
-                'Introduce mosaic in hexadecimal format: ');
+            'mosaicId',
+            () => undefined,
+            'Introduce mosaic in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
         options.maxFee = OptionsResolver(options,
@@ -80,15 +83,21 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const account = wallet.getAccount(options.password.trim());
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
             options.action,
             namespaceId,
             mosaicId,
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(mosaicAliasTransaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

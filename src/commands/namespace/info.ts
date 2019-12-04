@@ -21,10 +21,10 @@ import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {NamespaceHttp, NamespaceId, NamespaceInfo, UInt64} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'n',
         description: 'Namespace name. Example: cat.currency',
@@ -84,7 +84,7 @@ export class NamespaceInfoTable {
 @command({
     description: 'Fetch namespace info',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -93,7 +93,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         let namespaceId: NamespaceId;
         if (options.name) {
@@ -111,7 +111,7 @@ export default class extends ProfileCommand {
             namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         }
 
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = new NamespaceHttp(wallet.url);
         namespaceHttp.getNamespace(namespaceId)
             .subscribe((namespaceInfo) => {
                 this.spinner.stop(true);

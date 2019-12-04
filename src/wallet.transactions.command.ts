@@ -15,27 +15,42 @@
  * limitations under the License.
  *
  */
-import {option} from 'clime';
+import {Spinner} from 'cli-spinner';
+import {Command, ExpectedError, option, Options} from 'clime';
 import {QueryParams} from 'nem2-sdk';
+import {Wallet} from './model/wallet';
+import {WalletRepository} from './respository/wallet.repository';
 import {TransactionService} from './service/transaction.service';
-import {PublicKeyValidator} from './validators/publicKey.validator';
+import {WalletService} from './service/wallet.service';
 import {WalletCommand, WalletOptions} from './wallet.command';
 
-export abstract class AccountTransactionsCommand extends WalletCommand {
+export class WalletTransactionOptions extends WalletOptions {
+    @option({
+        flag: 'n',
+        description: '(Optional) Number of transactions.',
+        default: 10,
+    })
+    numTransactions: number;
+
+    @option({
+        flag: 'i',
+        description: '(Optional) Identifier of the transaction after which we want the transactions to be returned.',
+    })
+    id: string;
+
+    getQueryParams(): QueryParams {
+        if (this.id === undefined) {
+            return new QueryParams(this.numTransactions);
+        }
+        return new QueryParams(this.numTransactions, this.id);
+    }
+}
+
+export abstract class WalletTransactionCommand extends WalletCommand {
     public readonly transactionService: TransactionService;
 
     constructor() {
         super();
         this.transactionService = new TransactionService();
     }
-}
-
-export class AccountTransactionsOptions extends WalletOptions {
-    @option({
-        flag: 'p',
-        description: 'Account public key.',
-        validator: new PublicKeyValidator(),
-    })
-    publicKey: string;
-
 }

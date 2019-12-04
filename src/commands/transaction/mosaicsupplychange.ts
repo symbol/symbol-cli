@@ -14,13 +14,13 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, MosaicId, MosaicSupplyChangeTransaction, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {NumericStringValidator} from '../../validators/numericString.validator';
+import { command, metadata, option } from 'clime';
+import { Deadline, MosaicId, MosaicSupplyChangeTransaction, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { MosaicIdValidator } from '../../validators/mosaicId.validator';
+import { NumericStringValidator } from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -43,6 +43,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new NumericStringValidator(),
     })
     delta: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -57,7 +62,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
@@ -80,15 +85,22 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const account = wallet.getAccount(options.password.trim());
+
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             options.action,
             UInt64.fromNumericString(options.delta),
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(mosaicSupplyChangeTransaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

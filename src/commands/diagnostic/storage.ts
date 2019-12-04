@@ -20,7 +20,7 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata} from 'clime';
 import {BlockchainStorageInfo, DiagnosticHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
 export class StorageTable {
     private readonly table: HorizontalTable;
@@ -47,19 +47,19 @@ export class StorageTable {
 @command({
     description: 'Returns diagnostic information about the node storage',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: ProfileOptions) {
+    execute(options: WalletOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const diagnosticHttp = new DiagnosticHttp(profile.url);
+        const diagnosticHttp = new DiagnosticHttp(wallet.url);
 
         diagnosticHttp.getDiagnosticStorage()
             .subscribe((storage) => {

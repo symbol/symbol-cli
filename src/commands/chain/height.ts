@@ -18,24 +18,24 @@
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {ChainHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
 @command({
     description: 'Get the current height of the chain',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: ProfileOptions) {
+    execute(options: WalletOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = new ChainHttp(wallet.url);
         chainHttp.getBlockchainHeight().subscribe((height) => {
             this.spinner.stop(true);
             console.log(height.compact());

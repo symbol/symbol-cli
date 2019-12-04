@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/mosaic.service';
-import {RestrictionService} from '../../service/restriction.service';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
+import { command, metadata, option } from 'clime';
+import { AccountRestrictionTransaction, Deadline, UInt64 } from 'nem2-sdk';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { MosaicService } from '../../service/mosaic.service';
+import { RestrictionService } from '../../service/restriction.service';
+import { BinaryValidator } from '../../validators/binary.validator';
+import { MosaicIdValidator } from '../../validators/mosaicId.validator';
+import { AccountRestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -46,6 +46,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new MosaicIdValidator(),
     })
     value: string;
+
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
 }
 
 @command({
@@ -80,18 +85,23 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
-        const mosaic = MosaicService.getMosaicId(options.value);
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
 
+        const wallet = this.getDefaultWallet(options);
+        const mosaic = MosaicService.getMosaicId(options.value);
+        const account = wallet.getAccount(options.password.trim());
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             this.restrictionService.getAccountMosaicRestrictionFlags(options.restrictionFlag),
             (options.modificationAction === 1) ? [mosaic] : [],
             (options.modificationAction === 0) ? [mosaic] : [],
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(transaction, wallet.networkGenerationHash);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

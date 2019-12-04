@@ -19,10 +19,10 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Metadata, MetadataHttp, NamespaceId} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 import {MetadataEntryTable} from './account';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
@@ -33,7 +33,7 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Fetch metadata entries from an namespace',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
@@ -42,7 +42,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
         options.namespaceName = OptionsResolver(options,
             'namespaceId',
@@ -50,7 +50,7 @@ export default class extends ProfileCommand {
             'Introduce the namespace name: ');
         const namespaceId = new NamespaceId(options.namespaceName);
 
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = new MetadataHttp(wallet.url);
         metadataHttp.getNamespaceMetadata(namespaceId)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);

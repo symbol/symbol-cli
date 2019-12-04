@@ -17,13 +17,13 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp, ReceiptHttp} from 'nem2-sdk';
+import {ReceiptHttp} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {ReceiptService} from '../../service/receipt.service';
 import {HeightValidator} from '../../validators/block.validator';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends WalletOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
@@ -35,7 +35,7 @@ export class CommandOptions extends ProfileOptions {
 @command({
     description: 'Get the receipts triggered for a given block height',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
     private readonly receiptService: ReceiptService;
 
     constructor() {
@@ -51,8 +51,8 @@ export default class extends ProfileCommand {
             'Introduce the block height: ');
 
         this.spinner.start();
-        const profile = this.getProfile(options);
-        const receiptHttp = new ReceiptHttp(profile.url);
+        const wallet = this.getDefaultWallet(options);
+        const receiptHttp = new ReceiptHttp(wallet.url);
 
         receiptHttp.getBlockReceipts(options.height)
             .subscribe((statement: any) => {

@@ -18,20 +18,9 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {Address, Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
-
-export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-        validator: new AddressValidator(),
-    })
-    address: string;
-}
+import {command, metadata} from 'clime';
+import {Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
+import {WalletCommand, WalletOptions} from '../../wallet.command';
 
 export class MetadataEntryTable {
     private readonly table: HorizontalTable;
@@ -63,25 +52,19 @@ export class MetadataEntryTable {
 @command({
     description: 'Fetch metadata entries from an account',
 })
-export default class extends ProfileCommand {
+export default class extends WalletCommand {
 
     constructor() {
         super();
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    execute(options: WalletOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
 
-        options.address = OptionsResolver(options,
-                'address',
-                () => profile.account.address.plain(),
-                'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
-
-        const metadataHttp = new MetadataHttp(profile.url);
-        metadataHttp.getAccountMetadata(address)
+        const metadataHttp = new MetadataHttp(wallet.url);
+        metadataHttp.getAccountMetadata(wallet.address)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
                 if (metadataEntries.length > 0) {

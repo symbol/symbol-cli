@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import { command, metadata, option } from 'clime';
 import {
     AggregateTransaction,
     Deadline,
@@ -29,9 +29,9 @@ import {
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {NumericStringValidator} from '../../validators/numericString.validator';
+import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { OptionsResolver } from '../../options-resolver';
+import { NumericStringValidator } from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -82,6 +82,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     })
     nonExpiring: any;
 
+    @option({
+        description: 'Wallet password.',
+    })
+    password: string;
+
 }
 
 @command({
@@ -96,8 +101,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile(options);
+        const wallet = this.getDefaultWallet(options);
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.nonExpiring) {
@@ -128,14 +132,20 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
+        options.password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Introduce the wallet password: ');
+
+        const account = wallet.getAccount(options.password.trim());
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, profile.account.publicAccount),
+            MosaicId.createFromNonce(nonce, account.publicAccount),
             mosaicFlags,
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
-            profile.networkType,
+            wallet.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         options.amount = OptionsResolver(options,
@@ -148,20 +158,20 @@ export default class extends AnnounceTransactionsCommand {
             mosaicDefinitionTransaction.mosaicId,
             MosaicSupplyChangeAction.Increase,
             UInt64.fromNumericString(options.amount),
-            profile.networkType,
+            wallet.networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [
-                mosaicDefinitionTransaction.toAggregate(profile.account.publicAccount),
-                mosaicSupplyChangeTransaction.toAggregate(profile.account.publicAccount),
+                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicSupplyChangeTransaction.toAggregate(account.publicAccount),
             ],
-            profile.networkType,
+            wallet.networkType,
             [],
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(aggregateTransaction, wallet.networkGenerationHash);
         console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
-        this.announceTransaction(signedTransaction, profile.url);
+        this.announceTransaction(signedTransaction, wallet.url);
     }
 }

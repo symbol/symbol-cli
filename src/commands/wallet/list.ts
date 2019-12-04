@@ -16,16 +16,12 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {OptionsResolver} from '../../options-resolver';
-import {ProfileOptions, WalletCommand} from '../../profile.command';
-
-export class CommandOptions extends ProfileOptions {
-
-}
+import { command, metadata } from 'clime';
+import { Wallet } from '../../model/wallet';
+import { WalletCommand } from '../../wallet.command';
 
 @command({
-    description: 'Change the default wallet',
+    description: 'Display the list of stored wallets',
 })
 export default class extends WalletCommand {
     constructor() {
@@ -33,14 +29,19 @@ export default class extends WalletCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        options.wallet = OptionsResolver(options,
-            'wallet',
-            () => undefined,
-            'New default wallet: ');
-        if (options.wallet) {
-            this.setDefaultWallet(options);
-            console.log(chalk.green('\nDefault wallet changed to [' + options.wallet + ']'));
+    execute() {
+        let message = '';
+        this.walletService.getAllWallet().map((wallet: Wallet) => {
+            message += '\n\n' + wallet.toString();
+        });
+        console.log(message);
+        try {
+            const currentWallet = this.walletService.getDefaultWallet();
+            if (currentWallet) {
+                console.log(chalk.green('\n\n Default profile:', currentWallet.name));
+            }
+        } catch {
+            console.log(chalk.green('\n\n Default profile: None'));
         }
     }
 }
