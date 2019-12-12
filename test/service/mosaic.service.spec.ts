@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {Address, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 import {MosaicService} from '../../src/service/mosaic.service';
 
 describe('Mosaic service', () => {
@@ -39,16 +39,6 @@ describe('Mosaic service', () => {
         expect(mosaics[0].amount.toHex()).to.be.equal(UInt64.fromUint(1).toHex());
         expect(mosaics[1].id.toHex()).to.be.equal(new NamespaceId('foo2').toHex());
         expect(mosaics[1].amount.toHex()).to.be.equal(UInt64.fromUint(2).toHex());
-    });
-
-    it('getRecipient should return an alias', () => {
-        const rawRecipient = '@foo';
-        expect(MosaicService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
-    });
-
-    it('getRecipient should return an address', () => {
-        const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRAM';
-        expect(MosaicService.getRecipient(rawRecipient)).to.be.instanceOf(Address);
     });
 
     it('validate should not throw exception (alias)', () => {

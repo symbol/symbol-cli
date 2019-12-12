@@ -16,11 +16,12 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Address, Deadline, UInt64} from 'nem2-sdk';
+import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {AccountService} from '../../service/account.service';
 import {RestrictionService} from '../../service/restriction.service';
-import {AddressValidator} from '../../validators/address.validator';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {AccountRestrictionDirectionValidator, AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 
@@ -48,8 +49,8 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'v',
-        description: 'Address to allow / block.',
-        validator: new AddressValidator(),
+        description: 'Address or @alias to allow/block.',
+        validator: new AddressAliasValidator(),
     })
     value: string;
 }
@@ -59,7 +60,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     private readonly restrictionService: RestrictionService;
-
     constructor() {
         super();
         this.restrictionService = new RestrictionService();
@@ -93,7 +93,7 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce the maximum fee (absolute amount): ');
 
         const profile = this.getProfile(options);
-        const address = Address.createFromRawAddress(options.value);
+        const address = AccountService.getRecipient(options.value);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
