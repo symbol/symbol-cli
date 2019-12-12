@@ -9,8 +9,8 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 
 - ``transaction multisigmodification`` command accepts more than one cosignatory.
-- ``transacition`` commands support aliased accounts and mosaics.
-- Enable offline signing through two step transaction announcement.
+- ``transaction`` commands support aliased accounts and mosaics.
+- Enable offline signing (two step transaction announcement).
 
 ### Changed
 
