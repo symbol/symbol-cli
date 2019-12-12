@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] - 12-Dec-2019
+
+### Added
+
+- ``transaction multisigmodification`` command accepts more than one cosignatory.
+- ``transacition`` commands support aliased accounts and mosaics.
+- Enable offline signing through two step transaction announcement.
+
+### Changed
+
+- ``nem2-sdk`` dependency to 0.16.0.
+
 ## [0.14.0] - 21-Nov-2019
 
 ### Added
@@ -13,7 +25,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.15.0
+- ``nem2-sdk`` dependency to 0.15.0.
 
 ## [0.13.4] - 28-Oct-2019
 
@@ -64,7 +76,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.13.3
+- ``nem2-sdk`` dependency to 0.13.3.
 - ``account info`` and ``mosaic info`` commands returns mosaic in absolute and relative amounts.
 - ``account info`` and ``mosaic info`` commands returns the block expiration height of the returned mosaics.
 - Command parameters are now in camelCase.
@@ -81,13 +93,13 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.13.0
+- ``nem2-sdk`` dependency to 0.13.0.
 
 ## [0.12.1] - 05-Jun-2019
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.12.1
+- ``nem2-sdk`` dependency to 0.12.1.
 
 ## [0.12.0] - 04-Jun-2019
 
