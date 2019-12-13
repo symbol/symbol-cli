@@ -28,7 +28,7 @@ import {
 import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
+import {PublicKeysValidator, PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -54,8 +54,8 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 
     @option({
         flag: 'p',
-        description: 'Cosignatory account public key (separated by a comma).',
-        validator: new PublicKeyValidator(),
+        description: 'Cosignatory accounts public keys (separated by a comma).',
+        validator: new PublicKeysValidator(),
     })
     cosignatoryPublicKey: string;
 
@@ -86,7 +86,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
         options.cosignatoryPublicKey = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            'Introduce the cosignatory account public key (separated by a comma): ');
+            'Introduce the cosignatory accounts public keys (separated by a comma): ');
 
         options.multisigAccountPublicKey = OptionsResolver(options,
             'multisigAccountPublicKey',
