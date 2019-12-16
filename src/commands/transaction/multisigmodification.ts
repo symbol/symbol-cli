@@ -118,13 +118,14 @@ export default class extends AnnounceAggregateTransactionsCommand {
             options.minRemovalDelta,
             (options.action === 1) ? cosignatories : [],
             (options.action === 0) ? cosignatories : [],
-            profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            profile.networkType);
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
             [multisigAccountModificationTransaction.toAggregate(multisigAccount)],
-            profile.networkType);
+            profile.networkType,
+            [],
+            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
         const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash);
@@ -135,7 +136,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
             UInt64.fromNumericString(options.duration),
             signedTransaction,
             profile.networkType,
-            options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFeeHashLock) : UInt64.fromUint(0));
         const signedHashLockTransaction = profile.account.sign(hashLockTransaction, profile.networkGenerationHash);
         console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 
