@@ -142,6 +142,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 - Initial code release.
 
+[0.15.1]: https://github.com/nemtech/nem2-cli/compare/v0.14.0...v0.15.1
 [0.14.0]: https://github.com/nemtech/nem2-cli/compare/v0.13.4...v0.14.0
 [0.13.4]: https://github.com/nemtech/nem2-cli/compare/v0.13.2...v0.13.4
 [0.13.2]: https://github.com/nemtech/nem2-cli/compare/v0.13.1...v0.13.2

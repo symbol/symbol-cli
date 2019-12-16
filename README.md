@@ -9,7 +9,7 @@ Command Line Interface (CLI) to interact with the Catapult.
 
 ## Important Notes
 
-- [0.15.1](CHANGELOG.md#0151-13-Dec-2019) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
+- [0.15.2](CHANGELOG.md#0151-13-Dec-2019) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
 - [0.14.0](CHANGELOG.md#0140-21-Nov-2019) - **Fushicho2 Network Compatibility (catapult-server@0.9.0.1)**
 - [0.13.4](CHANGELOG.md#0134-28-Oct-2019) - **Fushicho1 Network Compatibility (catapult-server@0.8.0.3)**
 
