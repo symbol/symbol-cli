@@ -42,10 +42,8 @@ Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTR
 
 ## Getting help
 
-We use GitHub issues for tracking bugs and have limited bandwidth to address them.
-Please, use the following available resources to get help:
-
 - [nem2-cli documentation][docs]
+- Join the community [slack group (#sig-client)][slack] 
 - If you found a bug, [open a new issue][issues]
 
 ## License
@@ -57,3 +55,4 @@ Licensed under the [Apache License 2.0](LICENSE)
 [self]: https://github.com/nemtech/nem2-cli
 [docs]: https://nemtech.github.io/cli.html
 [issues]: https://github.com/nemtech/nem2-cli/issues
+[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
