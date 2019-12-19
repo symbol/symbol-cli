@@ -39,13 +39,11 @@ describe('Configure service', () => {
         const profile = new Profile(simpleWallet, url, networkGenerationHash);
 
         const mockProfileRepository = mock(ProfileRepository);
-        when(mockProfileRepository.save(simpleWallet, url, 'default'))
+        when(mockProfileRepository.save(simpleWallet, url,  networkGenerationHash))
             .thenReturn(profile);
 
         const profileService = new ProfileService(instance(mockProfileRepository));
-        const createdProfile = profileService
-            .createNewProfile(simpleWallet, url, networkGenerationHash);
-
+        const createdProfile = profileService.createNewProfile(simpleWallet, url, networkGenerationHash);
         expect(createdProfile.simpleWallet).to.be.equal(simpleWallet);
         expect(createdProfile.url).to.be.equal(url);
         expect(createdProfile.name).to.be.equal('default');

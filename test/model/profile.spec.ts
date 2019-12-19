@@ -23,9 +23,9 @@ import {Profile} from '../../src/model/profile';
 describe('Profile', () => {
     it('should contain the fields', () => {
         const profile = new Profile(
-            SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST),
+            SimpleWallet.create('default', new Password('password'), NetworkType.MIJIN_TEST),
             'url',
-            'test',
+            'generationHash',
         );
         expect(profile['name']).to.be.equal('default');
     });

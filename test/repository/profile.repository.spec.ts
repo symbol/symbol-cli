@@ -47,7 +47,7 @@ describe('ProfileRepository', () => {
 
     it('should save new account', () => {
         const simpleWallet = SimpleWallet
-            .create('test', new Password('default'), NetworkType.MIJIN_TEST);
+            .create('test', new Password('password'), NetworkType.MIJIN_TEST);
 
         const url = 'http://localhost:3000';
         const networkGenerationHash = 'test';
@@ -58,7 +58,7 @@ describe('ProfileRepository', () => {
 
     it('should save new account and find it', () => {
         const simpleWallet = SimpleWallet
-            .create('test', new Password('default'), NetworkType.MIJIN_TEST);
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
 
         const url = 'http://localhost:3000';
         const profileRepository = new ProfileRepository(repositoryFileUrl);
@@ -117,14 +117,14 @@ describe('ProfileRepository', () => {
         }
     });
 
-    it('should save two accounts and find default', () => {
+    it('should save two accounts and find default',  () => {
         const simpleWallet1 = SimpleWallet
-            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
+            .create('simpleWallet1', new Password('password'), NetworkType.MIJIN_TEST);
 
         const url = 'http://localhost:3000';
 
         const simpleWallet2 = SimpleWallet
-            .create('simpleWallet2', new Password('password'), NetworkType.MIJIN_TEST);
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
 
         const url2 = 'http://localhost:3000';
 
