@@ -15,14 +15,16 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {AccountRestrictionTransaction, Deadline, Password, UInt64} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AccountService} from '../../service/account.service';
 import {RestrictionService} from '../../service/restriction.service';
 import {AddressAliasValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 import {AccountRestrictionDirectionValidator, AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -53,6 +55,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new AddressAliasValidator(),
     })
     value: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -67,6 +76,18 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
+
         options.restrictionFlag = OptionsResolver(options,
             'restrictionFlag',
             () => undefined,
@@ -92,7 +113,6 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
         const address = AccountService.getRecipient(options.value);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
@@ -103,7 +123,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 

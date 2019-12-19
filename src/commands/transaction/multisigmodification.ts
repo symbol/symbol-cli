@@ -15,19 +15,22 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {
     AggregateTransaction,
     Deadline,
     HashLockTransaction,
     MultisigAccountModificationTransaction,
     NetworkCurrencyMosaic,
+    Password,
     PublicAccount,
     UInt64,
 } from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 import {PublicKeysValidator, PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
@@ -65,6 +68,13 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
         validator: new PublicKeyValidator(),
     })
     multisigAccountPublicKey: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -78,6 +88,18 @@ export default class extends AnnounceAggregateTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
+
         options.action = +OptionsResolver(options,
             'action',
             () => undefined,
@@ -103,8 +125,6 @@ export default class extends AnnounceAggregateTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
 
-        const profile = this.getProfile(options);
-
         const cosignatoryPublicKeys = options.cosignatoryPublicKey.split(',');
         const cosignatories: PublicAccount[] = [];
         cosignatoryPublicKeys.map((cosignatory: string) => {
@@ -127,7 +147,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
             [],
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash);
 
         const hashLockTransaction = HashLockTransaction.create(
@@ -137,13 +157,13 @@ export default class extends AnnounceAggregateTransactionsCommand {
             signedTransaction,
             profile.networkType,
             options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFeeHashLock) : UInt64.fromUint(0));
-        const signedHashLockTransaction = profile.account.sign(hashLockTransaction, profile.networkGenerationHash);
+        const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
         console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 
         this.announceAggregateTransaction(
             signedHashLockTransaction,
             signedTransaction,
-            profile.account.address,
+            account.address,
             profile.url);
     }
 }

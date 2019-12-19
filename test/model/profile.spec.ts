@@ -17,16 +17,14 @@
  */
 
 import {expect} from 'chai';
-import {Account, NetworkType} from 'nem2-sdk';
+import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../../src/model/profile';
 
 describe('Profile', () => {
     it('should contain the fields', () => {
         const profile = new Profile(
-            Account.createFromPrivateKey('706B22AF6E95541A2AEE209DD635FABB06AD2D6D4FB6ECFB59AD1AA4E9C2F1DB', NetworkType.MIJIN_TEST),
-            NetworkType.MIJIN_TEST,
+            SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST),
             'url',
-            'default',
             'test',
         );
         expect(profile['name']).to.be.equal('default');

@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, NamespaceRegistrationTransaction, UInt64} from 'nem2-sdk';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {Deadline, NamespaceRegistrationTransaction, Password, UInt64} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -49,10 +50,17 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     duration: string;
 
     @option({
-        flag: 'p',
+        flag: 'a',
         description: 'Parent namespace name (use it with --subnamespace).',
     })
     parentName: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -68,6 +76,16 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
+
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
@@ -105,7 +123,7 @@ export default class extends AnnounceTransactionsCommand {
                 options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         }
 
-        const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

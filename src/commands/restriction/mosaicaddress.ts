@@ -18,12 +18,14 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {Address, MosaicId, RestrictionMosaicHttp} from 'nem2-sdk';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {Address, MosaicId, Password, RestrictionMosaicHttp} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -39,6 +41,13 @@ export class CommandOptions extends ProfileOptions {
         validator: new MosaicIdValidator(),
     })
     mosaicId: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 export class MosaicAddressRestrictionsTable {
@@ -80,6 +89,16 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const profile = this.getProfile(options);
 
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
+
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
@@ -88,7 +107,7 @@ export default class extends ProfileCommand {
 
         options.address =  OptionsResolver(options,
             'address',
-            () => profile.account.address.plain(),
+            () => account.address.plain(),
             'Introduce an address: ');
         const address = Address.createFromRawAddress(options.address);
 

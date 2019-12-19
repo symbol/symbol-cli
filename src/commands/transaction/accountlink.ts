@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {command, ExpectedError, metadata, option} from 'clime';
+import {AccountLinkTransaction, Deadline, Password, UInt64} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'p',
+        flag: 'u',
         description: 'Remote account public key.',
         validator: new PublicKeyValidator(),
     })
@@ -36,6 +38,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new BinaryValidator(),
     })
     action: number;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -49,6 +58,16 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
 
         options.publicKey = OptionsResolver(options,
             'publicKey',
@@ -72,7 +91,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(accountLinkTransaction,
+        const signedTransaction = account.sign(accountLinkTransaction,
             profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }

@@ -21,6 +21,7 @@ import {
     Deadline,
     Message,
     Mosaic,
+    Password,
     PersistentHarvestingDelegationMessage,
     PlainMessage,
     PublicAccount,
@@ -34,6 +35,7 @@ import {AccountService} from '../../service/account.service';
 import {MosaicService} from '../../service/mosaic.service';
 import {AddressAliasValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -78,6 +80,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         toggle: true,
     })
     persistentHarvestingDelegation: any;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -101,6 +110,16 @@ export default class extends AnnounceTransactionsCommand {
         if (recipientAddress instanceof Address && recipientAddress.networkType !== profile.networkType) {
             throw new ExpectedError('The recipient address network doesn\'t match network option.');
         }
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
 
         let mosaics: Mosaic[] = [];
         options.mosaics = OptionsResolver(options,
@@ -133,7 +152,7 @@ export default class extends AnnounceTransactionsCommand {
 
             message = PersistentHarvestingDelegationMessage.create(
                 options.message,
-                profile.account.privateKey,
+                account.privateKey,
                 options.recipientPublicKey,
                 profile.networkType);
 
@@ -143,7 +162,7 @@ export default class extends AnnounceTransactionsCommand {
                 () => undefined,
                 'Introduce the recipient public key: ');
 
-            message = profile.account.encryptMessage(
+            message = account.encryptMessage(
                 options.message,
                 PublicAccount.createFromPublicKey(options.recipientPublicKey,
                     profile.networkType),
@@ -160,7 +179,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(transferTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

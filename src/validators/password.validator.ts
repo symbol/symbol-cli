@@ -16,12 +16,15 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {NetworkType} from 'nem2-sdk';
+import {Password} from 'nem2-sdk';
 
-export class NetworkValidator implements Validator<string> {
-    validate(value: string, context?: ValidationContext): void {
-        if (!(value in NetworkType)) {
-            throw new ExpectedError('Introduce a valid network type');
-        }
-    }
+export class PasswordValidator implements Validator<string> {
+ validate(value: string, context?: ValidationContext): void {
+ try {
+   // tslint:disable-next-line:no-unused-expression
+   new Password(value);
+  } catch (error) {
+   throw new ExpectedError('Invalid password. password should have a minimum of 8 characters');
+  }
+ }
 }

@@ -33,18 +33,9 @@ export default class extends AccountTransactionsCommand {
     @metadata
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
-
         const profile = this.getProfile(options);
-
-        const publicAccount = PublicAccount.createFromPublicKey(
-            OptionsResolver(options,
-                'publicKey',
-                () => profile.account.publicKey,
-                'Introduce the public key: '), profile.account.address.networkType);
-
         const accountHttp = new AccountHttp(profile.url);
-
-        accountHttp.getAccountOutgoingTransactions(publicAccount.address, options.getQueryParams())
+        accountHttp.getAccountOutgoingTransactions(profile.address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';

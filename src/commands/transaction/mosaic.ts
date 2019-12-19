@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {
     AggregateTransaction,
     Deadline,
@@ -26,12 +26,14 @@ import {
     MosaicNonce,
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
+    Password,
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {NumericStringValidator} from '../../validators/numericString.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -82,6 +84,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     })
     nonExpiring: any;
 
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -96,8 +104,18 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
         const profile = this.getProfile(options);
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
+
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.nonExpiring) {
@@ -131,7 +149,7 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, profile.account.publicAccount),
+            MosaicId.createFromNonce(nonce, account.publicAccount),
             mosaicFlags,
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
@@ -154,13 +172,13 @@ export default class extends AnnounceTransactionsCommand {
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [
-                mosaicDefinitionTransaction.toAggregate(profile.account.publicAccount),
-                mosaicSupplyChangeTransaction.toAggregate(profile.account.publicAccount),
+                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicSupplyChangeTransaction.toAggregate(account.publicAccount),
             ],
             profile.networkType,
             [],
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
         this.announceTransaction(signedTransaction, profile.url);
     }

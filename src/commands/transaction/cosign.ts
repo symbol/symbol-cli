@@ -16,21 +16,24 @@
  *
  */
 import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import {command, ExpectedError, metadata, option} from 'clime';
 import {
     AccountHttp,
     AggregateTransaction,
     CosignatureTransaction,
     MultisigAccountInfo, MultisigHttp,
+    Password,
     PublicAccount,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -38,6 +41,13 @@ export class CommandOptions extends ProfileOptions {
         description: 'Aggregate bonded transaction hash to be signed.',
     })
     hash: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Account password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 @command({
@@ -53,6 +63,15 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
 
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        const account = profile.simpleWallet.open(passwordObject);
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
 
@@ -63,7 +82,7 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
 
-        this.getGraphAccounts(profile)
+        this.getGraphAccounts(profile, account.publicAccount)
             .pipe(
                 mergeMap((_) => _),
                 mergeMap((publicAccount) => accountHttp.getAccountPartialTransactions(publicAccount.address, new QueryParams(100))),
@@ -84,7 +103,7 @@ export default class extends ProfileCommand {
                     const transaction = transactions[0];
 
                     const cosignatureTransaction = CosignatureTransaction.create(transaction);
-                    const signedCosignature = profile.account.signCosignatureTransaction(cosignatureTransaction);
+                    const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
 
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
@@ -107,8 +126,11 @@ export default class extends ProfileCommand {
             });
     }
 
-    private getGraphAccounts(profile: Profile): Observable<PublicAccount[]> {
-        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
+    private getGraphAccounts(
+        profile: Profile,
+        publicAccount: PublicAccount,
+    ): Observable<PublicAccount[]> {
+        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.address)
             .pipe(
                 map((_) => {
                     let publicAccounts: PublicAccount[] = [];
@@ -120,6 +142,6 @@ export default class extends ProfileCommand {
                     });
                     return publicAccounts;
                 }),
-                catchError((ignored) => of([profile.account.publicAccount])));
+                catchError((ignored) => of([publicAccount])));
     }
 }
