@@ -17,9 +17,8 @@
  */
 import chalk from 'chalk';
 import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
+import {Account, BlockHttp, NetworkType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {forkJoin} from 'rxjs';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
@@ -106,18 +105,17 @@ export default class extends Command {
         }
         profileName.trim();
 
-        const networkHttp = new NetworkHttp(url);
         const blockHttp = new BlockHttp(url);
 
-        forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight('1'))
-            .subscribe((res) => {
-                if (res[0] !== networkType) {
+        blockHttp.getBlockByHeight('1')
+            .subscribe((block) => {
+                if (block.networkType !== networkType) {
                     console.log('The network provided and the node network don\'t match.');
                 } else {
                     const profile = this.profileService.createNewProfile(account,
                         url as string,
                         profileName,
-                        res[1].generationHash);
+                        block.generationHash);
                     if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
                         this.profileService.setDefaultProfile(profileName);
                     }

@@ -44,7 +44,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Set an alias to a mosaic',
+    description: 'Set an alias to an address',
 })
 
 export default class extends AnnounceTransactionsCommand {
