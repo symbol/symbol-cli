@@ -21,7 +21,6 @@ import {
     Deadline,
     Message,
     Mosaic,
-    Password,
     PersistentHarvestingDelegationMessage,
     PlainMessage,
     PublicAccount,
@@ -35,7 +34,6 @@ import {AccountService} from '../../service/account.service';
 import {MosaicService} from '../../service/mosaic.service';
 import {AddressAliasValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
-import {PasswordValidator} from '../../validators/password.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -68,7 +66,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     encrypted: any;
 
     @option({
-        flag: 'p',
+        flag: 'u',
         description: '(Optional) The recipient public key in an encrypted message.',
         validator: new PublicKeyValidator(),
     })
@@ -80,13 +78,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         toggle: true,
     })
     persistentHarvestingDelegation: any;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 @command({
@@ -101,7 +92,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
+        const { account, profile } = this.getAccountAndProfile(options);
 
         const recipientAddress = AccountService.getRecipient(OptionsResolver(options,
             'recipientAddress',
@@ -110,16 +101,6 @@ export default class extends AnnounceTransactionsCommand {
         if (recipientAddress instanceof Address && recipientAddress.networkType !== profile.networkType) {
             throw new ExpectedError('The recipient address network doesn\'t match network option.');
         }
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
 
         let mosaics: Mosaic[] = [];
         options.mosaics = OptionsResolver(options,

@@ -21,8 +21,7 @@ import {Password} from 'nem2-sdk';
 export class PasswordValidator implements Validator<string> {
  validate(value: string, context?: ValidationContext): void {
  try {
-   // tslint:disable-next-line:no-unused-expression
-   new Password(value);
+   const ignored = new Password(value);
   } catch (error) {
    throw new ExpectedError('Invalid password. password should have a minimum of 8 characters');
   }

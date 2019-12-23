@@ -101,10 +101,9 @@ export class Profile {
     }
 
     public isPasswordValid(password: Password): boolean {
-            try {
-    const account = this.simpleWallet.open(password);
-
-    return true;
+        try {
+            this.simpleWallet.open(password);
+            return true;
         } catch (error) {
             return false;
         }
