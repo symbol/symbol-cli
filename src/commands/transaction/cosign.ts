@@ -19,9 +19,10 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {
     AccountHttp,
+    Address,
     AggregateTransaction,
-    CosignatureTransaction,
-    MultisigAccountInfo, MultisigHttp,
+    CosignatureTransaction, MultisigAccountInfo,
+    MultisigHttp,
     PublicAccount,
     QueryParams,
     TransactionHttp,
@@ -63,7 +64,7 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
 
-        this.getGraphAccounts(profile, account.publicAccount)
+        this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
                 mergeMap((publicAccount) => accountHttp.getAccountPartialTransactions(publicAccount.address, new QueryParams(100))),
@@ -107,22 +108,19 @@ export default class extends ProfileCommand {
             });
     }
 
-    private getGraphAccounts(
-        profile: Profile,
-        publicAccount: PublicAccount,
-    ): Observable<PublicAccount[]> {
+    private getGraphAccounts(profile: Profile): Observable<Address[]> {
         return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.address)
             .pipe(
                 map((_) => {
-                    let publicAccounts: PublicAccount[] = [];
+                    let addresses: Address[] = [];
                     _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
                         if (key <= 0) {
-                            publicAccounts = publicAccounts.concat(
-                                value.map((cosignatory) => cosignatory.account));
+                            addresses = addresses.concat(
+                                value.map((cosignatory) => cosignatory.account.address));
                         }
                     });
-                    return publicAccounts;
+                    return addresses;
                 }),
-                catchError((ignored) => of([publicAccount])));
+                catchError((ignored) => of([profile.address])));
     }
 }
