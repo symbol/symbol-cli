@@ -54,7 +54,7 @@ export class CommandOptions extends Options {
 
     @option({
         flag: 'p',
-        description: '(Optional) Account password',
+        description: '(Optional) Profile password',
         validator: new PasswordValidator(),
     })
     password: string;
