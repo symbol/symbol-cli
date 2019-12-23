@@ -15,13 +15,11 @@
  *
  */
 import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, AddressAliasTransaction, Deadline, NamespaceId, Password, UInt64} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {Address, AddressAliasTransaction, Deadline, NamespaceId, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -43,13 +41,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Namespace name.',
     })
     namespace: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 @command({
@@ -64,17 +55,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
+        const { account, profile } = this.getAccountAndProfile(options);
 
         options.namespace = OptionsResolver(options,
             'namespace',

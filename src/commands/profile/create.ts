@@ -16,8 +16,8 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {Command, command, metadata, option, Options} from 'clime';
+import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
@@ -98,7 +98,11 @@ export default class extends Command {
         }
         profileName.trim();
 
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        const password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Enter your wallet password: ');
+
         new PasswordValidator().validate(password);
         const passwordObject = new Password(password);
 

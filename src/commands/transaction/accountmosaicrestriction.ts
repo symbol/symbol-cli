@@ -15,16 +15,14 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline, Password, UInt64} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {command, metadata, option} from 'clime';
+import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {MosaicService} from '../../service/mosaic.service';
 import {RestrictionService} from '../../service/restriction.service';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {PasswordValidator} from '../../validators/password.validator';
 import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -48,13 +46,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new MosaicIdValidator(),
     })
     value: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 @command({
@@ -69,17 +60,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
+        const { account, profile } = this.getAccountAndProfile(options);
 
         options.restrictionFlag = OptionsResolver(options,
             'restrictionFlag',

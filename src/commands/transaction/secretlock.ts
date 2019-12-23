@@ -14,9 +14,8 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
-import {Deadline, Mosaic, Password, SecretLockTransaction, UInt64} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {command, metadata, option} from 'clime';
+import {Deadline, Mosaic, SecretLockTransaction, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {AccountService} from '../../service/account.service';
@@ -25,7 +24,6 @@ import {AddressAliasValidator} from '../../validators/address.validator';
 import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
 import {NumericStringValidator} from '../../validators/numericString.validator';
-import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -69,13 +67,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 @command({
@@ -88,17 +79,7 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
+        const { account, profile } = this.getAccountAndProfile(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',

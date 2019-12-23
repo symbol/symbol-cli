@@ -33,9 +33,11 @@ export default class extends AccountTransactionsCommand {
     @metadata
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
-        const accountHttp = new AccountHttp(profile.url);
-        accountHttp.getAccountOutgoingTransactions(profile.address, options.getQueryParams())
+
+        const address = this.getAddress(options);
+        const accountHttp = this.getAccountHttp(options);
+
+        accountHttp.getAccountOutgoingTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';

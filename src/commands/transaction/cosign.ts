@@ -16,24 +16,21 @@
  *
  */
 import chalk from 'chalk';
-import {command, ExpectedError, metadata, option} from 'clime';
+import {command, metadata, option} from 'clime';
 import {
     AccountHttp,
     AggregateTransaction,
     CosignatureTransaction,
     MultisigAccountInfo, MultisigHttp,
-    Password,
     PublicAccount,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -41,13 +38,6 @@ export class CommandOptions extends ProfileOptions {
         description: 'Aggregate bonded transaction hash to be signed.',
     })
     hash: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 @command({
@@ -61,17 +51,8 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
+        const { account, profile } = this.getAccountAndProfile(options);
 
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
 

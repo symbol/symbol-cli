@@ -17,9 +17,13 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
+import {Account, Address, Password} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {Profile} from './model/profile';
+import {OptionsResolver} from './options-resolver';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
+import {PasswordValidator} from './validators/password.validator';
 
 export abstract class ProfileCommand extends Command {
     private readonly profileService: ProfileService;
@@ -45,6 +49,36 @@ export abstract class ProfileCommand extends Command {
         }
     }
 
+    public getAccount(options: ProfileOptions): Account {
+        const profile = this.getProfile(options);
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!profile.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        return profile.simpleWallet.open(passwordObject);
+    }
+
+    public getAccountAndProfile(options: ProfileOptions): {account: Account, profile: Profile} {
+        const profile = this.getProfile(options);
+        const account = this.getAccount(options);
+        return { account, profile };
+    }
+
+    public getAddress(options: ProfileOptions): Address {
+        const profile = this.getProfile(options);
+
+        return Address.createFromRawAddress(
+            OptionsResolver(options,
+                'address',
+                () => profile.address.pretty(),
+                'Introduce an address: '));
+    }
+
     protected setDefaultProfile(options: ProfileOptions) {
         try {
             this.profileService.setDefaultProfile(options.profile);
@@ -61,4 +95,11 @@ export class ProfileOptions extends Options {
         description: '(Optional) Select between your profiles, by providing a profile name.',
     })
     profile: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }

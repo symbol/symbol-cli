@@ -15,14 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
-import {Account, AccountRestrictionTransaction, Deadline, Password, UInt64} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {command, metadata, option} from 'clime';
+import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {RestrictionService} from '../../service/restriction.service';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {PasswordValidator} from '../../validators/password.validator';
 import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 import {TransactionTypeValidator} from '../../validators/transactionType.validator';
 
@@ -47,13 +45,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         validator: new TransactionTypeValidator(),
     })
     value: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 @command({
@@ -69,17 +60,8 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
+        const { account, profile } = this.getAccountAndProfile(options);
 
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
         options.restrictionFlag = OptionsResolver(options,
             'restrictionFlag',
             () => undefined,

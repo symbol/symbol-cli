@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {Command, command, metadata, option, Options} from 'clime';
+import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
@@ -55,7 +55,7 @@ export class CommandOptions extends Options {
 
     @option({
         flag: 'p',
-        description: '(Optional) Account password',
+        description: '(Optional) Profile password',
         validator: new PasswordValidator(),
     })
     password: string;

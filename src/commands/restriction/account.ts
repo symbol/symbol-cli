@@ -18,13 +18,10 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
-import { command, ExpectedError, metadata, option } from 'clime';
-import { AccountRestriction, AccountRestrictionFlags, Address, Password, RestrictionAccountHttp } from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
-import { OptionsResolver } from '../../options-resolver';
+import { command, metadata, option } from 'clime';
+import { AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp } from 'nem2-sdk';
 import { ProfileCommand, ProfileOptions } from '../../profile.command';
 import { AddressValidator } from '../../validators/address.validator';
-import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -33,13 +30,6 @@ export class CommandOptions extends ProfileOptions {
         validator: new AddressValidator(),
     })
     address: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Account password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
 
 export class AccountRestrictionsTable {
@@ -80,23 +70,9 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
+
         const profile = this.getProfile(options);
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        const account = profile.simpleWallet.open(passwordObject);
-
-        options.address = OptionsResolver(options,
-            'address',
-            () => account.address.plain(),
-            'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
+        const address = this.getAddress(options);
 
         const restrictionHttp = new RestrictionAccountHttp(profile.url);
         restrictionHttp.getAccountRestrictions(address)
