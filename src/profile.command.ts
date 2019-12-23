@@ -17,8 +17,7 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
-import {Account, Address, Password} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {Address} from 'nem2-sdk';
 import {Profile} from './model/profile';
 import {OptionsResolver} from './options-resolver';
 import {ProfileRepository} from './respository/profile.repository';
@@ -47,26 +46,6 @@ export abstract class ProfileCommand extends Command {
             'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
             'if not, use \'nem2-cli profile create\' to create a new profile.');
         }
-    }
-
-    public getAccount(options: ProfileOptions): Account {
-        const profile = this.getProfile(options);
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        if (!profile.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
-        }
-
-        return profile.simpleWallet.open(passwordObject);
-    }
-
-    public getAccountAndProfile(options: ProfileOptions): {account: Account, profile: Profile} {
-        const profile = this.getProfile(options);
-        const account = this.getAccount(options);
-        return { account, profile };
     }
 
     public getAddress(options: ProfileOptions): Address {

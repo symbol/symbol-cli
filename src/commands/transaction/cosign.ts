@@ -23,7 +23,6 @@ import {
     AggregateTransaction,
     CosignatureTransaction, MultisigAccountInfo,
     MultisigHttp,
-    PublicAccount,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
@@ -52,7 +51,8 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const { account, profile } = this.getAccountAndProfile(options);
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
@@ -67,7 +67,7 @@ export default class extends ProfileCommand {
         this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((publicAccount) => accountHttp.getAccountPartialTransactions(publicAccount.address, new QueryParams(100))),
+                mergeMap((address) => accountHttp.getAccountPartialTransactions(address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
                     _.transactionInfo.hash === options.hash), // Filter transaction

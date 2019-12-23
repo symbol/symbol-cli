@@ -25,7 +25,6 @@ import {
     PublicAccount,
     UInt64,
 } from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
 import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
 import {OptionsResolver} from '../../options-resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
@@ -79,7 +78,8 @@ export default class extends AnnounceAggregateTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const { account, profile } = this.getAccountAndProfile(options);
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.action = +OptionsResolver(options,
             'action',

@@ -17,7 +17,14 @@
  */
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Address, EncryptedPrivateKey, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {ExpectedError} from 'clime';
+import {
+    Account, Address, EncryptedPrivateKey,
+    NetworkType, Password, SimpleWallet,
+} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
+import {ProfileOptions} from '../profile.command';
+import {PasswordValidator} from '../validators/password.validator';
 
 export interface AddressDTO {
     address: string;
@@ -100,12 +107,24 @@ export class Profile {
         return this.table.toString();
     }
 
-    public isPasswordValid(password: Password): boolean {
+    isPasswordValid(password: Password): boolean {
         try {
             this.simpleWallet.open(password);
             return true;
         } catch (error) {
             return false;
         }
+    }
+
+    decrypt(options: ProfileOptions): Account {
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!this.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        return this.simpleWallet.open(passwordObject);
     }
 }

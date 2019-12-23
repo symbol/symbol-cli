@@ -61,7 +61,8 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        const { account, profile } = this.getAccountAndProfile(options);
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.secret = OptionsResolver(options,
             'secret',

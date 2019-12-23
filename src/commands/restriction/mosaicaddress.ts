@@ -79,7 +79,8 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
 
-        const { account, profile } = this.getAccountAndProfile(options);
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
