@@ -55,8 +55,8 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.namespace = OptionsResolver(options,
             'namespace',
@@ -91,7 +91,7 @@ export default class extends AnnounceTransactionsCommand {
             address,
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(addressAliasTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(addressAliasTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

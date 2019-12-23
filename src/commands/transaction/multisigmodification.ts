@@ -60,7 +60,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     cosignatoryPublicKey: string;
 
     @option({
-        flag: 'm',
+        flag: 'u',
         description: 'Multisig account public key.',
         validator: new PublicKeyValidator(),
     })
@@ -78,6 +78,9 @@ export default class extends AnnounceAggregateTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         options.action = +OptionsResolver(options,
             'action',
             () => undefined,
@@ -103,8 +106,6 @@ export default class extends AnnounceAggregateTransactionsCommand {
             () => undefined,
             'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
 
-        const profile = this.getProfile(options);
-
         const cosignatoryPublicKeys = options.cosignatoryPublicKey.split(',');
         const cosignatories: PublicAccount[] = [];
         cosignatoryPublicKeys.map((cosignatory: string) => {
@@ -127,7 +128,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
             [],
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash);
 
         const hashLockTransaction = HashLockTransaction.create(
@@ -137,13 +138,13 @@ export default class extends AnnounceAggregateTransactionsCommand {
             signedTransaction,
             profile.networkType,
             options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFeeHashLock) : UInt64.fromUint(0));
-        const signedHashLockTransaction = profile.account.sign(hashLockTransaction, profile.networkGenerationHash);
+        const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
         console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 
         this.announceAggregateTransaction(
             signedHashLockTransaction,
             signedTransaction,
-            profile.account.address,
+            account.address,
             profile.url);
     }
 }

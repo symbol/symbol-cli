@@ -56,13 +56,13 @@ export class MosaicService {
     }
 
     static getMosaics(rawMosaics: string): Mosaic[] {
-        const mosaics: Mosaic[] = [];
-        const mosaicsData = rawMosaics.split(',');
-        mosaicsData.forEach((mosaicData) => {
+    const mosaics: Mosaic[] = [];
+    const mosaicsData = rawMosaics.split(',');
+    mosaicsData.forEach((mosaicData) => {
             const mosaicParts = mosaicData.split('::');
             mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
                 UInt64.fromNumericString(mosaicParts[1])));
         });
-        return mosaics;
+    return mosaics;
     }
 }

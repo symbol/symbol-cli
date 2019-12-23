@@ -16,10 +16,11 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {NetworkType} from 'nem2-sdk';
 
 export class NetworkValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        if (!(value === 'MIJIN' || value === 'MIJIN_TEST' || value === 'MAIN_NET' || value === 'TEST_NET')) {
+    validate(value: string, context?: ValidationContext): void {
+        if (!(value in NetworkType)) {
             throw new ExpectedError('Introduce a valid network type');
         }
     }

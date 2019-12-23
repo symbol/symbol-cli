@@ -55,8 +55,8 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.namespace = OptionsResolver(options,
             'namespace',
@@ -70,9 +70,9 @@ export default class extends AnnounceTransactionsCommand {
             'Introduce alias action (1: Link, 0: Unlink): ');
 
         options.mosaicId = OptionsResolver(options,
-                'mosaicId',
-                () => undefined,
-                'Introduce mosaic in hexadecimal format: ');
+            'mosaicId',
+            () => undefined,
+            'Introduce mosaic in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
         options.maxFee = OptionsResolver(options,
@@ -88,7 +88,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

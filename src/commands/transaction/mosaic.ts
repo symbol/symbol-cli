@@ -81,7 +81,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         toggle: true,
     })
     nonExpiring: any;
-
 }
 
 @command({
@@ -96,8 +95,9 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.nonExpiring) {
@@ -131,7 +131,7 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, profile.account.publicAccount),
+            MosaicId.createFromNonce(nonce, account.publicAccount),
             mosaicFlags,
             options.divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
@@ -154,13 +154,13 @@ export default class extends AnnounceTransactionsCommand {
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [
-                mosaicDefinitionTransaction.toAggregate(profile.account.publicAccount),
-                mosaicSupplyChangeTransaction.toAggregate(profile.account.publicAccount),
+                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicSupplyChangeTransaction.toAggregate(account.publicAccount),
             ],
             profile.networkType,
             [],
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
         this.announceTransaction(signedTransaction, profile.url);
     }

@@ -49,7 +49,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     duration: string;
 
     @option({
-        flag: 'p',
+        flag: 'a',
         description: 'Parent namespace name (use it with --subnamespace).',
     })
     parentName: string;
@@ -68,6 +68,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
@@ -105,7 +107,7 @@ export default class extends AnnounceTransactionsCommand {
                 options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
         }
 
-        const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }
