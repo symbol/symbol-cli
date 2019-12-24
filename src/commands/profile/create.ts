@@ -18,12 +18,13 @@
 import chalk from 'chalk';
 import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
 import {Account, BlockHttp, NetworkType} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
-import {OptionsResolver} from '../../options-resolver';
+import * as prompts from 'prompts';
+import {PromptsResolver, trimFormatter} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
 import {PrivateKeyValidator} from '../../validators/privateKey.validator';
+import {privateKeyChecker, profileNameChecker, urlChecker} from '../../validators/prompts.validator';
 
 export class CommandOptions extends Options {
     @option({
@@ -71,7 +72,46 @@ export class CommandOptions extends Options {
 
 export default class extends Command {
     private readonly profileService: ProfileService;
-
+    private readonly networkTypePrompts: prompts.PromptObject<string> = {
+        type: 'select',
+        name: 'networkType',
+        message: 'Introduce network type: ',
+        choices: [
+          { title: 'MAIN_NET', value: 'MAIN_NET' },
+          { title: 'TEST_NET', value: 'TEST_NET' },
+          { title: 'MIJIN', value: 'MIJIN' },
+          { title: 'MIJIN_TEST', value: 'MIJIN_TEST' },
+        ],
+    };
+    private readonly privateKeyPrompts: prompts.PromptObject<string> = {
+        type: 'text',
+        name: 'privateKey',
+        message: 'Introduce your private key: ',
+        format: trimFormatter,
+        validate: privateKeyChecker,
+    };
+    private readonly urlPrompts: prompts.PromptObject<string> = {
+        type: 'text',
+        name: 'url',
+        message: 'Introduce NEM 2 Node URL (Example: http://localhost:3000):',
+        format: trimFormatter,
+        validate: urlChecker,
+    };
+    private readonly profilePrompts: prompts.PromptObject<string> = {
+        type: 'text',
+        name: 'profile',
+        message: 'Insert profile name: ',
+        format: trimFormatter,
+        validate: profileNameChecker,
+    };
+    private readonly isSavePrompts: prompts.PromptObject<string> = {
+        type: 'toggle',
+        name: 'isSave',
+        message: 'Do you want to set the account as the default profile?',
+        initial: false,
+        active: 'Yes',
+        inactive: 'No',
+    };
     constructor() {
         super();
         const profileRepository = new ProfileRepository('.nem2rc.json');
@@ -79,36 +119,27 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const networkType = options.getNetwork(OptionsResolver(options,
-            'network',
-            () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+    async execute(options: CommandOptions) {
+        const networkType = options.getNetwork(await PromptsResolver(this.networkTypePrompts, options, 'network'));
 
         const account: Account = Account.createFromPrivateKey(
-            OptionsResolver(options,
-                'privateKey',
-                () => undefined,
-                'Introduce your private key: '),
-            networkType);
+            await PromptsResolver(this.privateKeyPrompts, options, 'privateKey'),
+            networkType,
+        );
 
-        const url = OptionsResolver(options,
-            'url',
-            () => undefined,
-            'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
+        const url = await PromptsResolver(this.urlPrompts, options, 'url');
 
         let profileName: string;
         if (options.profile) {
             profileName = options.profile;
         } else {
-            profileName = readlineSync.question('Insert profile name: ');
+            profileName = await PromptsResolver(this.profilePrompts, options, 'profile');
         }
-        profileName.trim();
 
         const blockHttp = new BlockHttp(url);
 
         blockHttp.getBlockByHeight('1')
-            .subscribe((block) => {
+            .subscribe(async (block) => {
                 if (block.networkType !== networkType) {
                     console.log('The network provided and the node network don\'t match.');
                 } else {
@@ -116,7 +147,8 @@ export default class extends Command {
                         url as string,
                         profileName,
                         block.generationHash);
-                    if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
+                    const isSave: boolean = await PromptsResolver(this.isSavePrompts);
+                    if (isSave) {
                         this.profileService.setDefaultProfile(profileName);
                     }
                     console.log(chalk.green('\nProfile stored correctly\n') + profile.toString() + '\n');

@@ -16,6 +16,7 @@
  *
  */
 
+import * as prompts from 'prompts';
 import * as readlineSync from 'readline-sync';
 
 export const OptionsResolver = (options: any,
@@ -25,4 +26,18 @@ export const OptionsResolver = (options: any,
                                 readlineDependency?: any) => {
     const readline = readlineDependency || readlineSync;
     return options[key] !== undefined ? options[key] : (secondSource() || readline.question(promptText));
+};
+
+export const PromptsResolver = async (promptsParam: prompts.PromptObject<string>,
+                                      options?: any,
+                                      key?: string) => {
+    if (options && key && options[key] !== undefined) {
+        return options[key];
+    }
+    const promptsResult = await prompts(promptsParam);
+    return promptsResult[String(promptsParam.name)];
+};
+
+export const trimFormatter = (argv: string) => {
+    return argv.trim();
 };
