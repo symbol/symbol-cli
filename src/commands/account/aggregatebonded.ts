@@ -17,9 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {AccountHttp, PublicAccount} from 'nem2-sdk';
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
 
 @command({
     description: 'Fetch aggregate bonded transactions from account',
@@ -33,17 +31,11 @@ export default class extends AccountTransactionsCommand {
     @metadata
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
 
-        const publicAccount = PublicAccount.createFromPublicKey(
-            OptionsResolver(options,
-                'publicKey',
-                () => profile.account.publicKey,
-                'Introduce the public key: '), profile.account.address.networkType);
+        const address = this.getAddress(options);
+        const accountHttp = this.getAccountHttp(options);
 
-        const accountHttp = new AccountHttp(profile.url);
-
-        accountHttp.getAccountPartialTransactions(publicAccount.address, options.getQueryParams())
+        accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';

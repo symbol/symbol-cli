@@ -19,8 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { AccountRestriction, AccountRestrictionFlags, Address, RestrictionAccountHttp } from 'nem2-sdk';
-import { OptionsResolver } from '../../options-resolver';
+import { AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp } from 'nem2-sdk';
 import { ProfileCommand, ProfileOptions } from '../../profile.command';
 import { AddressValidator } from '../../validators/address.validator';
 
@@ -71,12 +70,9 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
+
         const profile = this.getProfile(options);
-        options.address = OptionsResolver(options,
-            'address',
-            () => profile.account.address.plain(),
-            'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
+        const address = this.getAddress(options);
 
         const restrictionHttp = new RestrictionAccountHttp(profile.url);
         restrictionHttp.getAccountRestrictions(address)

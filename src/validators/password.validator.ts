@@ -15,18 +15,15 @@
  * limitations under the License.
  *
  */
+import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {Password} from 'nem2-sdk';
 
-import {expect} from 'chai';
-import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../../src/model/profile';
-
-describe('Profile', () => {
-    it('should contain the fields', () => {
-        const profile = new Profile(
-            SimpleWallet.create('default', new Password('password'), NetworkType.MIJIN_TEST),
-            'url',
-            'generationHash',
-        );
-        expect(profile['name']).to.be.equal('default');
-    });
-});
+export class PasswordValidator implements Validator<string> {
+ validate(value: string, context?: ValidationContext): void {
+ try {
+   const ignored = new Password(value);
+  } catch (error) {
+   throw new ExpectedError('Invalid password. password should have a minimum of 8 characters');
+  }
+ }
+}
