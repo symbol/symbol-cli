@@ -24,7 +24,7 @@ import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'p',
+        flag: 'u',
         description: 'Remote account public key.',
         validator: new PublicKeyValidator(),
     })
@@ -49,6 +49,7 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.publicKey = OptionsResolver(options,
             'publicKey',
@@ -72,7 +73,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(accountLinkTransaction,
+        const signedTransaction = account.sign(accountLinkTransaction,
             profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }

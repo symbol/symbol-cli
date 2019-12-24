@@ -58,6 +58,7 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
@@ -88,7 +89,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

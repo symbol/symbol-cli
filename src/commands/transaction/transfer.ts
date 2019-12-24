@@ -66,7 +66,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     encrypted: any;
 
     @option({
-        flag: 'p',
+        flag: 'u',
         description: '(Optional) The recipient public key in an encrypted message.',
         validator: new PublicKeyValidator(),
     })
@@ -93,6 +93,7 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         const recipientAddress = AccountService.getRecipient(OptionsResolver(options,
             'recipientAddress',
@@ -133,7 +134,7 @@ export default class extends AnnounceTransactionsCommand {
 
             message = PersistentHarvestingDelegationMessage.create(
                 options.message,
-                profile.account.privateKey,
+                account.privateKey,
                 options.recipientPublicKey,
                 profile.networkType);
 
@@ -143,7 +144,7 @@ export default class extends AnnounceTransactionsCommand {
                 () => undefined,
                 'Introduce the recipient public key: ');
 
-            message = profile.account.encryptMessage(
+            message = account.encryptMessage(
                 options.message,
                 PublicAccount.createFromPublicKey(options.recipientPublicKey,
                     profile.networkType),
@@ -160,7 +161,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(transferTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

@@ -16,13 +16,15 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkType} from 'nem2-sdk';
+import {Command, command, metadata, option, Options} from 'clime';
+import {Account, BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import * as prompts from 'prompts';
 import {PromptsResolver, trimFormatter} from '../../options-resolver';
+import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 import {privateKeyChecker, profileNameChecker, urlChecker} from '../../validators/prompts.validator';
 
@@ -52,17 +54,16 @@ export class CommandOptions extends Options {
     })
     profile: string;
 
-    getNetwork(network: string): NetworkType {
-        if (network === 'MAIN_NET') {
-            return NetworkType.MAIN_NET;
-        } else if (network === 'TEST_NET') {
-            return NetworkType.TEST_NET;
-        } else if (network === 'MIJIN') {
-            return NetworkType.MIJIN;
-        } else if (network === 'MIJIN_TEST') {
-            return NetworkType.MIJIN_TEST;
-        }
-        throw new ExpectedError('Introduce a valid network type');
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
+
+    getNetwork(network: any): NetworkType {
+        new NetworkValidator().validate(network);
+        return parseInt(NetworkType[network], 10);
     }
 }
 
@@ -136,16 +137,32 @@ export default class extends Command {
             profileName = await PromptsResolver(this.profilePrompts, options, 'profile');
         }
 
-        const blockHttp = new BlockHttp(url);
+        const password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Enter your wallet password: ');
 
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        const simpleWallet: SimpleWallet = SimpleWallet.createFromPrivateKey(
+            profileName,
+            passwordObject,
+            OptionsResolver(options,
+                'privateKey',
+                () => undefined,
+                'Introduce your private key: '),
+            networkType,
+        );
+
+        const blockHttp = new BlockHttp(url);
         blockHttp.getBlockByHeight('1')
             .subscribe(async (block) => {
                 if (block.networkType !== networkType) {
                     console.log('The network provided and the node network don\'t match.');
                 } else {
-                    const profile = this.profileService.createNewProfile(account,
+                    const profile = this.profileService.createNewProfile(simpleWallet,
                         url as string,
-                        profileName,
                         block.generationHash);
                     const isSave: boolean = await PromptsResolver(this.isSavePrompts);
                     if (isSave) {

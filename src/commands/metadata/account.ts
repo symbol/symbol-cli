@@ -76,7 +76,7 @@ export default class extends ProfileCommand {
 
         options.address = OptionsResolver(options,
                 'address',
-                () => profile.account.address.plain(),
+                () => profile.address.plain(),
                 'Introduce an address: ');
         const address = Address.createFromRawAddress(options.address);
 

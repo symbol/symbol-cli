@@ -17,9 +17,12 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
+import {Address} from 'nem2-sdk';
 import {Profile} from './model/profile';
+import {OptionsResolver} from './options-resolver';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
+import {PasswordValidator} from './validators/password.validator';
 
 export abstract class ProfileCommand extends Command {
     private readonly profileService: ProfileService;
@@ -45,6 +48,16 @@ export abstract class ProfileCommand extends Command {
         }
     }
 
+    public getAddress(options: ProfileOptions): Address {
+        const profile = this.getProfile(options);
+
+        return Address.createFromRawAddress(
+            OptionsResolver(options,
+                'address',
+                () => profile.address.pretty(),
+                'Introduce an address: '));
+    }
+
     protected setDefaultProfile(options: ProfileOptions) {
         try {
             this.profileService.setDefaultProfile(options.profile);
@@ -61,4 +74,11 @@ export class ProfileOptions extends Options {
         description: '(Optional) Select between your profiles, by providing a profile name.',
     })
     profile: string;
+
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
