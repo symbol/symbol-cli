@@ -36,14 +36,14 @@ describe('numeric string validator', () => {
         const value = 'test';
         expect(() => {
             new NumericStringValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a number.');
+        }).to.throws('Enter a number.');
     });
 
     it('Invalid numeric string (negative)', () => {
         const value = '-1';
         expect(() => {
             new NumericStringValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a number.');
+        }).to.throws('Enter a number.');
     });
 
 });

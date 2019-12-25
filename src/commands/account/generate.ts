@@ -115,7 +115,7 @@ export default class extends Command {
         const networkType = options.getNetwork(OptionsResolver(options,
             'network',
             () => undefined,
-            'Choose a network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Enter a network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
         const profile = options.profile || readlineSync.question('Insert the profile name: ');
         profile.trim();
@@ -136,7 +136,7 @@ export default class extends Command {
             const url = OptionsResolver(options,
                 'url',
                 () => undefined,
-                'Introduce the NEM2 node URL. (Example: http://localhost:3000): ').trim();
+                'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim();
 
             const blockHttp = new BlockHttp(url);
 

@@ -87,7 +87,7 @@ export default class extends ProfileCommand {
         options.height =  OptionsResolver(options,
             'height',
             () => undefined,
-            'Introduce the block height: ');
+            'Enter the block height: ');
         this.spinner.start();
         const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);

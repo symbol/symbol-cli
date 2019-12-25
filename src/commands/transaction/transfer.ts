@@ -98,7 +98,7 @@ export default class extends AnnounceTransactionsCommand {
         const recipientAddress = AccountService.getRecipient(OptionsResolver(options,
             'recipientAddress',
             () => undefined,
-            'Introduce the recipient address: '));
+            'Enter the recipient address: '));
         if (recipientAddress instanceof Address && recipientAddress.networkType !== profile.networkType) {
             throw new ExpectedError('The recipient address network doesn\'t match network option.');
         }
@@ -115,7 +115,7 @@ export default class extends AnnounceTransactionsCommand {
         options.message = OptionsResolver(options,
             'message',
             () => '',
-            'Introduce the message: ');
+            'Enter the message: ');
         if (options.message && !options.persistentHarvestingDelegation) {
             options.encrypted = options.encrypted ? options.encrypted : readlineSync.keyInYN(
                 'Do you want to send an encrypted message?');
@@ -123,14 +123,14 @@ export default class extends AnnounceTransactionsCommand {
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         let message: Message;
         if (options.message && options.persistentHarvestingDelegation) {
             options.recipientPublicKey = OptionsResolver(options,
                 'recipientPublicKey',
                 () => undefined,
-                'Introduce the recipient public key: ');
+                'Enter the recipient public key: ');
 
             message = PersistentHarvestingDelegationMessage.create(
                 options.message,
@@ -142,7 +142,7 @@ export default class extends AnnounceTransactionsCommand {
             options.recipientPublicKey = OptionsResolver(options,
                 'recipientPublicKey',
                 () => undefined,
-                'Introduce the recipient public key: ');
+                'Enter the recipient public key: ');
 
             message = account.encryptMessage(
                 options.message,

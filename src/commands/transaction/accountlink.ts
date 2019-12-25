@@ -54,17 +54,17 @@ export default class extends AnnounceTransactionsCommand {
         options.publicKey = OptionsResolver(options,
             'publicKey',
             () => undefined,
-            'Introduce the public key of the remote account: ');
+            'Enter the public key of the remote account: ');
 
         options.action = +OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce alias action (1: Link, 0: Unlink): ');
+            'Enter alias action (1: Link, 0: Unlink): ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),

@@ -30,7 +30,7 @@ describe('Transaction Type validator', () => {
         const value = 'test';
         expect(() => {
             new TransactionTypeValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a transaction type in hexadecimal. Example: 4154');
+        }).to.throws('Enter a transaction type in hexadecimal. Example: 4154');
     });
 
 });

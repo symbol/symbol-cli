@@ -60,7 +60,7 @@ export default class extends ProfileCommand {
         options.hash = OptionsResolver(options,
             'hash',
             () => undefined,
-            'Introduce aggregate bonded transaction hash to be signed: ');
+            'Enter aggregate bonded transaction hash to be signed: ');
 
         this.spinner.start();
 
