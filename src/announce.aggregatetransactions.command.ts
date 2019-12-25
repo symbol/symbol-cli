@@ -44,13 +44,13 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
                         filter((transaction) => transaction.transactionInfo !== undefined
                             && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
                         mergeMap((ignored) => {
-                            listener.terminate();
+                            listener.close();
                             return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
-                        }))).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
+                        }),
+                        )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
                 (err) => console.log(err));
         });
     }
-
 }
 
 export class AnnounceAggregateTransactionsOptions extends ProfileOptions {

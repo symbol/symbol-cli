@@ -34,7 +34,7 @@ export abstract class AccountTransactionsCommand extends ProfileCommand {
     public getAccountHttp(options: ProfileOptions): AccountHttp {
         const profile = this.getProfile(options);
 
-        return new AccountHttp(profile.url, profile.networkType);
+        return new AccountHttp(profile.url);
     }
 }
 
