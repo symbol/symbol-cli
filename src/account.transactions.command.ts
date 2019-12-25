@@ -16,9 +16,11 @@
  *
  */
 import {option} from 'clime';
-import {QueryParams} from 'nem2-sdk';
+import {AccountHttp, Address, QueryParams} from 'nem2-sdk';
+import {OptionsResolver} from '../src/options-resolver';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
+import {AddressValidator} from './validators/address.validator';
 import {PublicKeyValidator} from './validators/publicKey.validator';
 
 export abstract class AccountTransactionsCommand extends ProfileCommand {
@@ -28,11 +30,24 @@ export abstract class AccountTransactionsCommand extends ProfileCommand {
         super();
         this.transactionService = new TransactionService();
     }
+
+    public getAccountHttp(options: ProfileOptions): AccountHttp {
+        const profile = this.getProfile(options);
+
+        return new AccountHttp(profile.url);
+    }
 }
 
 export class AccountTransactionsOptions extends ProfileOptions {
     @option({
-        flag: 'p',
+        flag: 'a',
+        description: 'Account address.',
+        validator: new AddressValidator(),
+    })
+    address: string;
+
+    @option({
+        flag: 'u',
         description: 'Account public key.',
         validator: new PublicKeyValidator(),
     })

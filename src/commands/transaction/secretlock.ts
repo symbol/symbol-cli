@@ -79,6 +79,9 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
@@ -114,8 +117,6 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Enter the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
-
         const mosaicId = MosaicService.getMosaicId(options.mosaicId);
         const recipientAddress = AccountService.getRecipient(options.recipientAddress);
 
@@ -129,7 +130,7 @@ export default class extends AnnounceTransactionsCommand {
             recipientAddress,
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(secretLockTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(secretLockTransaction, profile.networkGenerationHash);
 
         this.announceTransaction(signedTransaction, profile.url);
     }

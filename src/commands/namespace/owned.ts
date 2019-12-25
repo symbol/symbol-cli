@@ -49,8 +49,9 @@ export default class extends ProfileCommand {
         const address: Address = Address.createFromRawAddress(
             OptionsResolver(options,
                 'address',
-                () => profile.account.address.plain(),
+                () => profile.address.plain(),
                 'Enter the address: '));
+        
         const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)

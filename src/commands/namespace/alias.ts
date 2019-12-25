@@ -53,8 +53,8 @@ export default class extends ProfileCommand {
 
         const namespaceHttp = new NamespaceHttp(profile.url);
         forkJoin(
-            namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError((ignored) => of(null))),
-            namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError((ignored) => of(null))),
+            namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),
+            namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),
         ).subscribe((res) => {
                 this.spinner.stop(true);
                 if (res[0]) {

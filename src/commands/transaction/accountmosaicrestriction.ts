@@ -60,6 +60,9 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         options.restrictionFlag = OptionsResolver(options,
             'restrictionFlag',
             () => undefined,
@@ -80,7 +83,6 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Enter the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
         const mosaic = MosaicService.getMosaicId(options.value);
 
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
@@ -91,7 +93,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
 
-        const signedTransaction = profile.account.sign(transaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

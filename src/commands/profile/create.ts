@@ -16,13 +16,14 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkType} from 'nem2-sdk';
+import {Command, command, metadata, option, Options} from 'clime';
+import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 
 export class CommandOptions extends Options {
@@ -51,17 +52,16 @@ export class CommandOptions extends Options {
     })
     profile: string;
 
-    getNetwork(network: string): NetworkType {
-        if (network === 'MAIN_NET') {
-            return NetworkType.MAIN_NET;
-        } else if (network === 'TEST_NET') {
-            return NetworkType.TEST_NET;
-        } else if (network === 'MIJIN') {
-            return NetworkType.MIJIN;
-        } else if (network === 'MIJIN_TEST') {
-            return NetworkType.MIJIN_TEST;
-        }
-        throw new ExpectedError('Enter a valid network type');
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
+
+    getNetwork(network: any): NetworkType {
+        new NetworkValidator().validate(network);
+        return parseInt(NetworkType[network], 10);
     }
 }
 
@@ -85,13 +85,6 @@ export default class extends Command {
             () => undefined,
             'Enter network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
-        const account: Account = Account.createFromPrivateKey(
-            OptionsResolver(options,
-                'privateKey',
-                () => undefined,
-                'Enter your private key: '),
-            networkType);
-
         const url = OptionsResolver(options,
             'url',
             () => undefined,
@@ -105,16 +98,32 @@ export default class extends Command {
         }
         profileName.trim();
 
-        const blockHttp = new BlockHttp(url);
+        const password = OptionsResolver(options,
+            'password',
+            () => undefined,
+            'Enter your wallet password: ');
 
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        const simpleWallet: SimpleWallet = SimpleWallet.createFromPrivateKey(
+            profileName,
+            passwordObject,
+            OptionsResolver(options,
+                'privateKey',
+                () => undefined,
+                'Enter your private key: '),
+            networkType,
+        );
+
+        const blockHttp = new BlockHttp(url);
         blockHttp.getBlockByHeight('1')
             .subscribe((block) => {
                 if (block.networkType !== networkType) {
                     console.log('The network provided and the node network don\'t match.');
                 } else {
-                    const profile = this.profileService.createNewProfile(account,
+                    const profile = this.profileService.createNewProfile(simpleWallet,
                         url as string,
-                        profileName,
                         block.generationHash);
                     if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
                         this.profileService.setDefaultProfile(profileName);

@@ -41,7 +41,7 @@ export class TransactionStatusTable {
         }) as HorizontalTable;
         this.table.push(
             ['Group', status.group],
-            ['Status', status.status],
+            ['Status Code', status.code],
             ['Hash', status.hash],
         );
         if (status.deadline) {

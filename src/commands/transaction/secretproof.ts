@@ -61,6 +61,9 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         options.secret = OptionsResolver(options,
             'secret',
             () => undefined,
@@ -86,8 +89,6 @@ export default class extends AnnounceTransactionsCommand {
             () => undefined,
             'Enter the maximum fee (absolute amount): ');
 
-        const profile = this.getProfile(options);
-
         const recipientAddress = AccountService.getRecipient(options.recipientAddress);
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
@@ -97,7 +98,7 @@ export default class extends AnnounceTransactionsCommand {
             options.proof,
             profile.networkType,
             options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(secretProofTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(secretProofTransaction, profile.networkGenerationHash);
 
         this.announceTransaction(signedTransaction, profile.url);
     }

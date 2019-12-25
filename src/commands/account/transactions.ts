@@ -34,17 +34,10 @@ export default class extends AccountTransactionsCommand {
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
 
-        const profile = this.getProfile(options);
+        const address = this.getAddress(options);
+        const accountHttp = this.getAccountHttp(options);
 
-        const publicAccount = PublicAccount.createFromPublicKey(
-            OptionsResolver(options,
-                'publicKey',
-                () => profile.account.publicKey,
-                'Enter the public key: '), profile.account.address.networkType);
-
-        const accountHttp = new AccountHttp(profile.url);
-
-        accountHttp.getAccountTransactions(publicAccount.address, options.getQueryParams())
+        accountHttp.getAccountTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';

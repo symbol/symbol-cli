@@ -37,9 +37,8 @@ export default class extends MonitorAddressCommand {
         const address = Address.createFromRawAddress(
             OptionsResolver(options,
                             'address',
-                            () => profile.account.address.plain(),
+                            () => profile.address.plain(),
                             'Enter the address: '));
-
         const listener = new Listener(profile.url);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);

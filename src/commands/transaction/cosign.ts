@@ -19,10 +19,10 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {
     AccountHttp,
+    Address,
     AggregateTransaction,
-    CosignatureTransaction,
-    MultisigAccountInfo, MultisigHttp,
-    PublicAccount,
+    CosignatureTransaction, MultisigAccountInfo,
+    MultisigHttp,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
@@ -52,6 +52,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
@@ -66,7 +67,7 @@ export default class extends ProfileCommand {
         this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((publicAccount) => accountHttp.getAccountPartialTransactions(publicAccount.address, new QueryParams(100))),
+                mergeMap((address) => accountHttp.getAccountPartialTransactions(address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
                     _.transactionInfo.hash === options.hash), // Filter transaction
@@ -84,7 +85,7 @@ export default class extends ProfileCommand {
                     const transaction = transactions[0];
 
                     const cosignatureTransaction = CosignatureTransaction.create(transaction);
-                    const signedCosignature = profile.account.signCosignatureTransaction(cosignatureTransaction);
+                    const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
 
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
@@ -107,19 +108,19 @@ export default class extends ProfileCommand {
             });
     }
 
-    private getGraphAccounts(profile: Profile): Observable<PublicAccount[]> {
-        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
+    private getGraphAccounts(profile: Profile): Observable<Address[]> {
+        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.address)
             .pipe(
                 map((_) => {
-                    let publicAccounts: PublicAccount[] = [];
+                    let addresses: Address[] = [];
                     _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
                         if (key <= 0) {
-                            publicAccounts = publicAccounts.concat(
-                                value.map((cosignatory) => cosignatory.account));
+                            addresses = addresses.concat(
+                                value.map((cosignatory) => cosignatory.account.address));
                         }
                     });
-                    return publicAccounts;
+                    return addresses;
                 }),
-                catchError((ignored) => of([profile.account.publicAccount])));
+                catchError((ignored) => of([profile.address])));
     }
 }

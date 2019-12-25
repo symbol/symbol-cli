@@ -18,13 +18,14 @@
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Command, command, ExpectedError, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, NetworkHttp, NetworkType} from 'nem2-sdk';
+import {Command, command, metadata, option, Options} from 'clime';
+import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
+import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends Options {
     @option({
@@ -52,29 +53,37 @@ export class CommandOptions extends Options {
     })
     network: string;
 
-    getNetwork(network: string): NetworkType {
-        if (network === 'MAIN_NET') {
-            return NetworkType.MAIN_NET;
-        } else if (network === 'TEST_NET') {
-            return NetworkType.TEST_NET;
-        } else if (network === 'MIJIN') {
-            return NetworkType.MIJIN;
-        } else if (network === 'MIJIN_TEST') {
-            return NetworkType.MIJIN_TEST;
-        }
-        throw new ExpectedError('Enter a valid network type. Example: MIJIN_TEST');
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
+
+    getNetwork(network: any): NetworkType {
+        new NetworkValidator().validate(network);
+        return parseInt(NetworkType[network], 10);
     }
 }
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly account: Account) {
+    constructor(
+        public readonly simpleWallet: SimpleWallet,
+        public readonly password: Password,
+    ) {
+        const account = simpleWallet.open(password);
+        const passwordString = password.value;
+        const {name} = simpleWallet;
+
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
+            ['Name', name],
+            ['Password', passwordString],
             ['Address', account.address.pretty()],
             ['Public Key', account.publicKey],
             ['Private Key', account.privateKey],
@@ -106,10 +115,18 @@ export default class extends Command {
         const networkType = options.getNetwork(OptionsResolver(options,
             'network',
             () => undefined,
-            'Enter the network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Enter a network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
-        const account = Account.generateNewAccount(networkType);
-        let text = new AccountCredentialsTable(account).toString();
+        const profile = options.profile || readlineSync.question('Insert the profile name: ');
+        profile.trim();
+
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        const simpleWallet = SimpleWallet.create(profile, passwordObject, networkType);
+
+        let text = new AccountCredentialsTable(simpleWallet, passwordObject).toString();
 
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;
@@ -121,15 +138,6 @@ export default class extends Command {
                 () => undefined,
                 'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim();
 
-            let profile: string;
-            if (options.profile) {
-                profile = options.profile;
-            } else {
-                profile = readlineSync.question('Insert the profile name: ');
-            }
-            profile.trim();
-
-            const networkHttp = new NetworkHttp(url);
             const blockHttp = new BlockHttp(url);
 
             blockHttp.getBlockByHeight('1')
@@ -137,9 +145,8 @@ export default class extends Command {
                     if (block.networkType !== networkType) {
                         console.log('The network provided and node network don\'t match.');
                     } else {
-                        this.profileService.createNewProfile(account,
+                        this.profileService.createNewProfile(simpleWallet,
                             url as string,
-                            profile,
                             block.generationHash);
                         if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
                             this.profileService.setDefaultProfile(profile);

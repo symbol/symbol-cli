@@ -16,7 +16,7 @@
  *
  */
 import * as fs from 'fs';
-import {Account} from 'nem2-sdk';
+import {Address, SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 
 export class ProfileRepository {
@@ -28,12 +28,7 @@ export class ProfileRepository {
     public find(name: string): Profile {
         const profiles = this.getProfiles();
         if (profiles[name]) {
-            return new Profile(
-                Account.createFromPrivateKey(profiles[name].privateKey, profiles[name].networkType),
-                profiles[name].networkType,
-                profiles[name].url,
-                name,
-                profiles[name].networkGenerationHash);
+            return Profile.createFromDTO(profiles[name]);
         }
         throw new Error(`${name} not found`);
     }
@@ -43,26 +38,24 @@ export class ProfileRepository {
         const list: Profile[] = [];
         for (const name in profiles) {
             if (profiles.hasOwnProperty(name)) {
-                list.push(new Profile(
-                    Account.createFromPrivateKey(profiles[name].privateKey, profiles[name].networkType),
-                    profiles[name].networkType,
-                    profiles[name].url,
-                    name,
-                    profiles[name].networkGenerationHash));
+                list.push(Profile.createFromDTO(profiles[name]));
             }
         }
         return list;
     }
 
-    public save(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
+    public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
-        profiles[name] = {privateKey: account.privateKey,
-            networkType: account.address.networkType,
+        const {name, network} = simpleWallet;
+        profiles[name] = {
+            networkType: network,
+            simpleWallet,
             url,
             networkGenerationHash,
-            default: '0'};
+            default: '0',
+        };
         this.saveProfiles(profiles);
-        return new Profile(account, account.address.networkType, url, name, networkGenerationHash);
+        return new Profile(simpleWallet, url, networkGenerationHash);
     }
 
     public setDefaultProfile(name: string) {

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {Account} from 'nem2-sdk';
+import {Account, SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {ProfileRepository} from '../respository/profile.repository';
 
@@ -26,8 +26,8 @@ export class ProfileService {
         this.profileRepository = profileRepository;
     }
 
-    createNewProfile(account: Account, url: string, name: string, networkGenerationHash: string): Profile {
-        return this.profileRepository.save(account, url, name, networkGenerationHash);
+    createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
+        return this.profileRepository.save(simpleWallet, url, networkGenerationHash);
     }
 
     findProfileNamed(name: string): Profile {

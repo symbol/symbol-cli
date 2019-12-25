@@ -78,7 +78,9 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
+
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
@@ -88,7 +90,7 @@ export default class extends ProfileCommand {
 
         options.address =  OptionsResolver(options,
             'address',
-            () => profile.account.address.plain(),
+            () => account.address.plain(),
             'Enter an address: ');
         const address = Address.createFromRawAddress(options.address);
 

@@ -17,32 +17,114 @@
  */
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Account, NetworkType} from 'nem2-sdk';
+import {ExpectedError} from 'clime';
+import {
+    Account, Address, EncryptedPrivateKey,
+    NetworkType, Password, SimpleWallet,
+} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
+import {ProfileOptions} from '../profile.command';
+import {PasswordValidator} from '../validators/password.validator';
+
+export interface AddressDTO {
+    address: string;
+    networkType: number;
+}
+
+export interface EncryptedPrivateKeyDTO {
+    encryptedKey: string;
+    iv: string;
+}
+
+export interface SimpleWalletDTO {
+    name: string;
+    network: number;
+    address: AddressDTO;
+    creationDate: string;
+    schema: string;
+    encryptedPrivateKey: EncryptedPrivateKeyDTO;
+}
+
+export interface AccountDTO {
+    simpleWallet: SimpleWalletDTO;
+    url: string;
+    networkGenerationHash: string;
+}
 
 export class Profile {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly account: Account,
-                public readonly networkType: NetworkType,
+    public static createFromDTO(DTO: AccountDTO): Profile {
+        const simpleWallet = new SimpleWallet(
+            DTO.simpleWallet.name,
+            DTO.simpleWallet.network,
+            Address.createFromRawAddress(DTO.simpleWallet.address.address),
+            // @ts-ignore
+            DTO.simpleWallet.creationDate,
+            new EncryptedPrivateKey(
+                DTO.simpleWallet.encryptedPrivateKey.encryptedKey,
+                DTO.simpleWallet.encryptedPrivateKey.iv,
+            ),
+        );
+
+        return new Profile(
+            simpleWallet,
+            DTO.url,
+            DTO.networkGenerationHash,
+        );
+    }
+
+    constructor(public readonly simpleWallet: SimpleWallet,
                 public readonly url: string,
-                public readonly name: string,
                 public readonly networkGenerationHash: string) {
+
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Name', this.name],
-            ['Network', NetworkType[this.networkType]],
+            ['Name', this.simpleWallet.name],
+            ['Network', NetworkType[this.simpleWallet.network]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
-            ['Address', this.account.address.pretty()],
-            ['Public Key', this.account.publicKey],
-            ['Private Key', this.account.privateKey],
+            ['Address', this.simpleWallet.address.pretty()],
         );
-
     }
+
+    get address(): Address {
+        return this.simpleWallet.address;
+    }
+
+    get networkType(): NetworkType {
+        return this.simpleWallet.network;
+    }
+
+    get name(): string {
+        return this.simpleWallet.name;
+    }
+
     toString(): string {
         return this.table.toString();
+    }
+
+    isPasswordValid(password: Password): boolean {
+        try {
+            this.simpleWallet.open(password);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    decrypt(options: ProfileOptions): Account {
+        const password = options.password || readlineSync.question('Enter your wallet password: ');
+        new PasswordValidator().validate(password);
+        const passwordObject = new Password(password);
+
+        if (!this.isPasswordValid(passwordObject)) {
+            throw new ExpectedError('The password you provided does not match your account password');
+        }
+
+        return this.simpleWallet.open(passwordObject);
     }
 }
