@@ -24,7 +24,7 @@ export class NamespaceIdValidator implements Validator<string> {
             const namespaceIdUInt64 = UInt64.fromHex(value);
             const ignored = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         } catch (err) {
-            throw new ExpectedError('Introduce a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
+            throw new ExpectedError('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
         }
     }
 }

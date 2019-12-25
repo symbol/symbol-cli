@@ -30,7 +30,7 @@ describe('mosaic id validator', () => {
         const value = 'test';
         expect(() => {
             new NamespaceIdValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
+        }).to.throws('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
     });
 
 });

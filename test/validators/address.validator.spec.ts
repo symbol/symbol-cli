@@ -42,7 +42,7 @@ describe('address validator', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
             new AddressValidator().validate(address, {name: 'address', source: address});
-        }).to.throws('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 
 });
@@ -70,7 +70,7 @@ describe('address and alias validator', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
             new AddressAliasValidator().validate(address, {name: 'address', source: address});
-        }).to.throws('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 
     it('Valid alias', () => {
@@ -83,7 +83,7 @@ describe('address and alias validator', () => {
         const alias = '@myOwnAlias';
         expect(() => {
             new AddressAliasValidator().validate(alias, {name: 'address', source: alias});
-        }).to.throws('Introduce a valid alias. Example: @xem');
+        }).to.throws('Enter a valid alias. Example: @xem');
     });
 
 });

@@ -49,7 +49,7 @@ export default class extends ProfileCommand {
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
-            'Introduce the mosaic id in hexadecimal format: ');
+            'Enter the mosaic id in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
         const metadataHttp = new MetadataHttp(profile.url);

@@ -73,7 +73,7 @@ export default class extends AnnounceTransactionsCommand {
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
-            'Introduce namespace name: ');
+            'Enter namespace name: ');
 
         if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
             options.rootnamespace = true;
@@ -84,17 +84,17 @@ export default class extends AnnounceTransactionsCommand {
             options.parentName = OptionsResolver(options,
                 'parentName',
                 () => undefined,
-                'Introduce the parent namespace name: ');
+                'Enter the parent namespace name: ');
         } else {
             options.duration = OptionsResolver(options,
                 'duration',
                 () => undefined,
-                'Introduce the namespace rental duration: ');
+                'Enter the namespace rental duration: ');
         }
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {

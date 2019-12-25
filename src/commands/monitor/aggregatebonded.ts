@@ -38,7 +38,7 @@ export default class extends MonitorAddressCommand {
             OptionsResolver(options,
                             'address',
                             () => profile.address.plain(),
-                            'Introduce the address: '));
+                            'Enter the address: '));
 
         const listener = new Listener(profile.url);
 

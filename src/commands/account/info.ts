@@ -176,7 +176,7 @@ export default class extends ProfileCommand {
             OptionsResolver(options,
                 'address',
                 () => profile.address.plain(),
-                'Introduce the address: '));
+                'Enter the address: '));
 
         const accountHttp = new AccountHttp(profile.url);
         const multisigHttp = new MultisigHttp(profile.url);

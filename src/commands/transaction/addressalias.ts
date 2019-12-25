@@ -61,13 +61,13 @@ export default class extends AnnounceTransactionsCommand {
         options.namespace = OptionsResolver(options,
             'namespace',
             () => undefined,
-            'Introduce namespace name: ');
+            'Enter namespace name: ');
         const namespaceId = new NamespaceId(options.namespace);
 
         options.address = OptionsResolver(options,
             'address',
             () => undefined,
-            'Introduce the address: ');
+            'Enter the address: ');
 
         const address = Address.createFromRawAddress(options.address);
         if (address.networkType !== profile.networkType) {
@@ -77,12 +77,12 @@ export default class extends AnnounceTransactionsCommand {
         options.action = +OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce alias action (1: Link, 0: Unlink): ');
+            'Enter alias action (1: Link, 0: Unlink): ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),

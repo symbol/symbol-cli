@@ -63,23 +63,23 @@ export default class extends AnnounceTransactionsCommand {
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
-            'Introduce mosaic in hexadecimal format: ');
+            'Enter mosaic in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
         options.action = +OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce supply change action (1: Increase, 0: Decrease): ');
+            'Enter supply change action (1: Increase, 0: Decrease): ');
 
         options.delta = OptionsResolver(options,
             'delta',
             () => undefined,
-            'Introduce atomic amount of supply change: ');
+            'Enter atomic amount of supply change: ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),

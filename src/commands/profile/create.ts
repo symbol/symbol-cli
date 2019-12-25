@@ -83,12 +83,12 @@ export default class extends Command {
         const networkType = options.getNetwork(OptionsResolver(options,
             'network',
             () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Enter network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
         const url = OptionsResolver(options,
             'url',
             () => undefined,
-            'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
+            'Enter NEM 2 Node URL. (Example: http://localhost:3000): ');
 
         let profileName: string;
         if (options.profile) {
@@ -112,7 +112,7 @@ export default class extends Command {
             OptionsResolver(options,
                 'privateKey',
                 () => undefined,
-                'Introduce your private key: '),
+                'Enter your private key: '),
             networkType,
         );
 

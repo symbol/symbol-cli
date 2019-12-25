@@ -85,37 +85,37 @@ export default class extends AnnounceTransactionsCommand {
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
-            'Introduce locked mosaic identifier: ');
+            'Enter locked mosaic identifier: ');
 
         options.amount = OptionsResolver(options,
             'amount',
             () => undefined,
-            'Introduce amount of mosaic units to lock: ');
+            'Enter amount of mosaic units to lock: ');
 
         options.recipientAddress = OptionsResolver(options,
             'recipientAddress',
             () => undefined,
-            'Introduce address that receives the funds once unlocked: ');
+            'Enter address that receives the funds once unlocked: ');
 
         options.duration = OptionsResolver(options,
             'duration',
             () => undefined,
-            'Introduce number of blocks for which a lock should be valid: ');
+            'Enter number of blocks for which a lock should be valid: ');
 
         options.secret = OptionsResolver(options,
             'secret',
             () => undefined,
-            'Introduce proof hashed in hexadecimal format: ');
+            'Enter proof hashed in hexadecimal format: ');
 
         options.hashAlgorithm = +OptionsResolver(options,
             'hashAlgorithm',
             () => undefined,
-            'Introduce algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
+            'Enter algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const mosaicId = MosaicService.getMosaicId(options.mosaicId);
         const recipientAddress = AccountService.getRecipient(options.recipientAddress);

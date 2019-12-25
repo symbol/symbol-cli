@@ -61,24 +61,24 @@ export default class extends AnnounceTransactionsCommand {
         options.namespace = OptionsResolver(options,
             'namespace',
             () => undefined,
-            'Introduce namespace name: ');
+            'Enter namespace name: ');
         const namespaceId = new NamespaceId(options.namespace);
 
         options.action = OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce alias action (1: Link, 0: Unlink): ');
+            'Enter alias action (1: Link, 0: Unlink): ');
 
         options.mosaicId = OptionsResolver(options,
             'mosaicId',
             () => undefined,
-            'Introduce mosaic in hexadecimal format: ');
+            'Enter mosaic in hexadecimal format: ');
         const mosaicId = new MosaicId(options.mosaicId);
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),

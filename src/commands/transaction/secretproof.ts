@@ -67,27 +67,27 @@ export default class extends AnnounceTransactionsCommand {
         options.secret = OptionsResolver(options,
             'secret',
             () => undefined,
-            'Introduce proof hashed in hexadecimal: ');
+            'Enter proof hashed in hexadecimal: ');
 
         options.proof = OptionsResolver(options,
             'proof',
             () => undefined,
-            'Introduce original random set of bytes in hexadecimal: ');
+            'Enter original random set of bytes in hexadecimal: ');
 
         options.hashAlgorithm = +OptionsResolver(options,
             'hashAlgorithm',
             () => undefined,
-            'Introduce algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
+            'Enter algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
 
         options.recipientAddress = OptionsResolver(options,
             'recipientAddress',
             () => undefined,
-            'Introduce address that receives the funds once unlocked: ');
+            'Enter address that receives the funds once unlocked: ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const recipientAddress = AccountService.getRecipient(options.recipientAddress);
         const secretProofTransaction = SecretProofTransaction.create(

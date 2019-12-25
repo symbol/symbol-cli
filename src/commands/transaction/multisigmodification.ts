@@ -84,27 +84,27 @@ export default class extends AnnounceAggregateTransactionsCommand {
         options.action = +OptionsResolver(options,
             'action',
             () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove): ');
+            'Enter the modification action (1: Add, 0: Remove): ');
 
         options.cosignatoryPublicKey = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            'Introduce the cosignatory accounts public keys (separated by a comma): ');
+            'Enter the cosignatory accounts public keys (separated by a comma): ');
 
         options.multisigAccountPublicKey = OptionsResolver(options,
             'multisigAccountPublicKey',
             () => undefined,
-            'Introduce the multisig account public key: ');
+            'Enter the multisig account public key: ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee you want to spend to announce the multisig modification transaction: ');
+            'Enter the maximum fee you want to spend to announce the multisig modification transaction: ');
 
         options.maxFeeHashLock = OptionsResolver(options,
             'maxFeeHashLock',
             () => undefined,
-            'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
+            'Enter the maximum fee you want to spend to announce the hashlock transaction: ');
 
         const cosignatoryPublicKeys = options.cosignatoryPublicKey.split(',');
         const cosignatories: PublicAccount[] = [];

@@ -77,7 +77,8 @@ export default class extends ProfileCommand {
         options.address = OptionsResolver(options,
                 'address',
                 () => profile.address.plain(),
-                'Introduce an address: ');
+                'Enter an address: ');
+
         const address = Address.createFromRawAddress(options.address);
 
         const metadataHttp = new MetadataHttp(profile.url);

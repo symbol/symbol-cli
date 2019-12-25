@@ -30,7 +30,7 @@ describe('mosaic id validator', () => {
         const value = 'test';
         expect(() => {
             new MosaicIdValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+        }).to.throws('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
     });
 
 });
@@ -46,7 +46,7 @@ describe('mosaic alias validator', () => {
         const value = 'test';
         expect(() => {
             new MosaicIdAliasValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+        }).to.throws('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
     });
 
     it('Valid mosaic alias', () => {
@@ -59,6 +59,6 @@ describe('mosaic alias validator', () => {
         const value = '@myOwnAlias.name';
         expect(() => {
             new MosaicIdAliasValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce valid mosaic alias. Example: @nem.xem');
+        }).to.throws('Enter valid mosaic alias. Example: @nem.xem');
     });
 });
