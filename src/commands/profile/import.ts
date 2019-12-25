@@ -24,8 +24,16 @@ import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 import {NetworkValidator} from '../../validators/network.validator';
 import {PasswordValidator} from '../../validators/password.validator';
+import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 
 export class CommandOptions extends Options {
+    @option({
+        flag: 'P',
+        description: 'Account private key.',
+        validator: new PrivateKeyValidator(),
+    })
+    privateKey: string;
+
     @option({
         flag: 'n',
         description: 'Network Type. Example: MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST.',
@@ -58,9 +66,8 @@ export class CommandOptions extends Options {
 }
 
 @command({
-    description: 'Create a new profile',
+    description: 'Create a new profile with existing private key',
 })
-
 export default class extends Command {
     private readonly profileService: ProfileService;
 
@@ -98,9 +105,13 @@ export default class extends Command {
         new PasswordValidator().validate(password);
         const passwordObject = new Password(password);
 
-        const simpleWallet: SimpleWallet = SimpleWallet.create(
+        const simpleWallet: SimpleWallet = SimpleWallet.createFromPrivateKey(
             profileName,
             passwordObject,
+            OptionsResolver(options,
+                'privateKey',
+                () => undefined,
+                'Introduce your private key'),
             networkType,
         );
 
