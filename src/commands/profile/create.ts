@@ -101,10 +101,6 @@ export default class extends Command {
         const simpleWallet: SimpleWallet = SimpleWallet.create(
             profileName,
             passwordObject,
-            OptionsResolver(options,
-                'privateKey',
-                () => undefined,
-                'Enter your private key: '),
             networkType,
         );
 
