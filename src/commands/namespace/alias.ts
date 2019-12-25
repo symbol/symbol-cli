@@ -48,7 +48,7 @@ export default class extends ProfileCommand {
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
-            'Introduce the namespace name: ');
+            'Enter the namespace name: ');
         const namespaceId = new NamespaceId(options.name);
 
         const namespaceHttp = new NamespaceHttp(profile.url);

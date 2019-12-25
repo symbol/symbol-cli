@@ -50,7 +50,7 @@ export default class extends ProfileCommand {
             OptionsResolver(options,
                 'address',
                 () => profile.account.address.plain(),
-                'Introduce the address: '));
+                'Enter the address: '));
         const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)

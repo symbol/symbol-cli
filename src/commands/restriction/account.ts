@@ -75,7 +75,7 @@ export default class extends ProfileCommand {
         options.address = OptionsResolver(options,
             'address',
             () => profile.account.address.plain(),
-            'Introduce an address: ');
+            'Enter an address: ');
         const address = Address.createFromRawAddress(options.address);
 
         const restrictionHttp = new RestrictionAccountHttp(profile.url);

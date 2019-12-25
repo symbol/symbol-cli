@@ -100,13 +100,13 @@ export default class extends ProfileCommand {
             options.name = OptionsResolver(options,
                 'name',
                 () => undefined,
-                'Introduce the namespace name: ');
+                'Enter the namespace name: ');
             namespaceId = new NamespaceId(options.name);
         } else {
             options.hex = OptionsResolver(options,
                 'hex',
                 () => undefined,
-                'Introduce the namespace id in hexadecimal: ');
+                'Enter the namespace id in hexadecimal: ');
             const namespaceIdUInt64 = UInt64.fromHex(options.hex);
             namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         }

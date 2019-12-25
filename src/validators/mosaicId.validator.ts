@@ -23,7 +23,7 @@ export class MosaicIdValidator implements Validator<string> {
         try {
             const ignored = new MosaicId(value);
         } catch (err) {
-            throw new ExpectedError('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+            throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
         }
     }
 }
@@ -35,14 +35,14 @@ export class MosaicIdAliasValidator implements Validator<string> {
             try {
                 const mosaic = new MosaicId(value);
             } catch (err) {
-                throw new ExpectedError('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+                throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
             }
         } else {
             const alias = value.substring(1);
             try {
                 const mosaic = new NamespaceId(alias);
             } catch (err) {
-                throw new ExpectedError('Introduce valid mosaic alias. Example: @nem.xem');
+                throw new ExpectedError('Enter valid mosaic alias. Example: @nem.xem');
             }
         }
     }

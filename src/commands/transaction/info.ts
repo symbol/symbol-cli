@@ -50,7 +50,7 @@ export default class extends ProfileCommand {
         const hash = OptionsResolver(options,
             'hash',
             () => undefined,
-            'Introduce the transaction hash: ');
+            'Enter the transaction hash: ');
 
         this.spinner.start();
 

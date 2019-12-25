@@ -35,7 +35,7 @@ export class AccountService {
             try {
                 recipient = Address.createFromRawAddress(rawRecipient);
             } catch (err) {
-                throw new ExpectedError('Introduce a valid address');
+                throw new ExpectedError('Enter a valid address');
             }
         }
         return recipient;

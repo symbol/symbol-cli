@@ -23,7 +23,7 @@ export class AddressValidator implements Validator<string> {
         try {
             Address.createFromRawAddress(value);
         } catch (err) {
-            throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
         }
     }
 }
@@ -35,14 +35,14 @@ export class AddressAliasValidator implements Validator<string> {
             try {
                 Address.createFromRawAddress(value);
             } catch (error) {
-                throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+                throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
             }
         } else {
             const alias = value.substring(1);
             try {
                 const ignored = new NamespaceId(alias);
             } catch (error) {
-                throw new ExpectedError('Introduce a valid alias. Example: @xem');
+                throw new ExpectedError('Enter a valid alias. Example: @xem');
             }
         }
     }

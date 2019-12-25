@@ -68,7 +68,7 @@ export default class extends ProfileCommand {
         options.height =  OptionsResolver(options,
             'height',
             () => undefined,
-            'Introduce the block height: ');
+            'Enter the block height: ');
 
         let pageSize = options.pageSize || 10;
         if (pageSize < 10) {

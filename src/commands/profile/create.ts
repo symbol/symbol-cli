@@ -61,7 +61,7 @@ export class CommandOptions extends Options {
         } else if (network === 'MIJIN_TEST') {
             return NetworkType.MIJIN_TEST;
         }
-        throw new ExpectedError('Introduce a valid network type');
+        throw new ExpectedError('Enter a valid network type');
     }
 }
 
@@ -83,19 +83,19 @@ export default class extends Command {
         const networkType = options.getNetwork(OptionsResolver(options,
             'network',
             () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Enter network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
 
         const account: Account = Account.createFromPrivateKey(
             OptionsResolver(options,
                 'privateKey',
                 () => undefined,
-                'Introduce your private key: '),
+                'Enter your private key: '),
             networkType);
 
         const url = OptionsResolver(options,
             'url',
             () => undefined,
-            'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
+            'Enter NEM 2 Node URL. (Example: http://localhost:3000): ');
 
         let profileName: string;
         if (options.profile) {

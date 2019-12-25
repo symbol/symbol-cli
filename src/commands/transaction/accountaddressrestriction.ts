@@ -70,27 +70,27 @@ export default class extends AnnounceTransactionsCommand {
         options.restrictionFlag = OptionsResolver(options,
             'restrictionFlag',
             () => undefined,
-            'Introduce the restriction flag (allow, block):');
+            'Enter the restriction flag (allow, block):');
 
         options.modificationAction = +OptionsResolver(options,
             'modificationAction',
             () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove): ');
+            'Enter the modification action (1: Add, 0: Remove): ');
 
         options.restrictionDirection = OptionsResolver(options,
             'restrictionDirection',
             () => undefined,
-            'Introduce the restriction direction (incoming, outgoing): ');
+            'Enter the restriction direction (incoming, outgoing): ');
 
         options.value = OptionsResolver(options,
             'value',
             () => undefined,
-            'Introduce the address: ');
+            'Enter the address: ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const profile = this.getProfile(options);
         const address = AccountService.getRecipient(options.value);

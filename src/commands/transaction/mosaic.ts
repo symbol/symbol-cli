@@ -105,14 +105,14 @@ export default class extends AnnounceTransactionsCommand {
                 blocksDuration = UInt64.fromNumericString(OptionsResolver(options,
                     'duration',
                     () => undefined,
-                    'Introduce the duration in blocks: '));
+                    'Enter the duration in blocks: '));
             }
         }
 
         options.divisibility = +OptionsResolver(options,
             'divisibility',
             () => undefined,
-            'Introduce mosaic divisibility: ');
+            'Enter mosaic divisibility: ');
 
         const mosaicFlags = MosaicFlags.create(
             options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
@@ -126,7 +126,7 @@ export default class extends AnnounceTransactionsCommand {
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
@@ -141,7 +141,7 @@ export default class extends AnnounceTransactionsCommand {
         options.amount = OptionsResolver(options,
             'amount',
             () => undefined,
-            'Introduce amount of tokens: ');
+            'Enter amount of tokens: ');
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),

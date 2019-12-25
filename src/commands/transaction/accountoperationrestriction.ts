@@ -63,22 +63,22 @@ export default class extends AnnounceTransactionsCommand {
         options.restrictionFlag = OptionsResolver(options,
             'restrictionFlag',
             () => undefined,
-            'Introduce the restriction flag (allow, block):');
+            'Enter the restriction flag (allow, block):');
 
         options.modificationAction = +OptionsResolver(options,
             'modificationAction',
             () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove): ');
+            'Enter the modification action (1: Add, 0: Remove): ');
 
         options.value = OptionsResolver(options,
             'value',
             () => undefined,
-            'Introduce the transaction type. Example: 4154 (Transfer): ');
+            'Enter the transaction type. Example: 4154 (Transfer): ');
 
         options.maxFee = OptionsResolver(options,
             'maxFee',
             () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
+            'Enter the maximum fee (absolute amount): ');
 
         const profile = this.getProfile(options);
         const value = parseInt(options.value, 16);

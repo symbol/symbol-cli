@@ -32,7 +32,7 @@ export class TransactionTypeValidator implements Validator<string> {
             success = false;
         }
         if (!success) {
-            throw new ExpectedError('Introduce a transaction type in hexadecimal. Example: 4154');
+            throw new ExpectedError('Enter a transaction type in hexadecimal. Example: 4154');
         }
     }
 }
