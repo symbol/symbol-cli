@@ -7,6 +7,7 @@
         "pretest": "npm run build",
         "test": "mocha --ui bdd --recursive ./build/test",
         "build": "rm -rf build/ && tsc",
+        "dev": "nodemon --config \"./nodemon-config.json\"/",
         "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
         "test:coveralls": "npm run test:cov | coveralls"
     },
@@ -52,6 +53,7 @@
         "chai": "^4.1.2",
         "coveralls": "^3.0.0",
         "mocha": "^4.0.1",
+        "nodemon": "^2.0.2",
         "nyc": "^11.3.0",
         "ts-mockito": "^2.2.8",
         "ts-node": "^5.0.1",
