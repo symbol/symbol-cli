@@ -18,35 +18,14 @@
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {ExpectedError} from 'clime';
-import {
-    Account, Address, EncryptedPrivateKey,
-    NetworkType, Password, SimpleWallet,
-} from 'nem2-sdk';
+import {Account, Address, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {ISimpleWalletDTO} from 'nem2-sdk/dist/src/infrastructure/wallet/simpleWalletDTO';
 import * as readlineSync from 'readline-sync';
 import {ProfileOptions} from '../profile.command';
 import {PasswordValidator} from '../validators/password.validator';
 
-export interface AddressDTO {
-    address: string;
-    networkType: number;
-}
-
-export interface EncryptedPrivateKeyDTO {
-    encryptedKey: string;
-    iv: string;
-}
-
-export interface SimpleWalletDTO {
-    name: string;
-    network: number;
-    address: AddressDTO;
-    creationDate: string;
-    schema: string;
-    encryptedPrivateKey: EncryptedPrivateKeyDTO;
-}
-
-export interface AccountDTO {
-    simpleWallet: SimpleWalletDTO;
+interface ProfileDTO {
+    simpleWallet: ISimpleWalletDTO;
     url: string;
     networkGenerationHash: string;
 }
@@ -54,23 +33,11 @@ export interface AccountDTO {
 export class Profile {
     private readonly table: HorizontalTable;
 
-    public static createFromDTO(DTO: AccountDTO): Profile {
-        const simpleWallet = new SimpleWallet(
-            DTO.simpleWallet.name,
-            DTO.simpleWallet.network,
-            Address.createFromRawAddress(DTO.simpleWallet.address.address),
-            // @ts-ignore
-            DTO.simpleWallet.creationDate,
-            new EncryptedPrivateKey(
-                DTO.simpleWallet.encryptedPrivateKey.encryptedKey,
-                DTO.simpleWallet.encryptedPrivateKey.iv,
-            ),
-        );
-
+    public static createFromDTO(profileDTO: ProfileDTO): Profile {
         return new Profile(
-            simpleWallet,
-            DTO.url,
-            DTO.networkGenerationHash,
+            SimpleWallet.createFromDTO(profileDTO.simpleWallet),
+            profileDTO.url,
+            profileDTO.networkGenerationHash,
         );
     }
 
