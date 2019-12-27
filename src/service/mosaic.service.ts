@@ -33,8 +33,8 @@ export class MosaicService {
 
     /**
      * Validates a mosaic object from a string.
-     * @param {String} value - Mosaic in the form mosaicId::amount.
-     * @throws ExpectedError if the mosaic object is not valid.
+     * @param {string} value - Mosaic in the form mosaicId::amount.
+     * @throws {ExpectedError}
      */
     static validate(value: string) {
         const mosaicParts = value.split('::');
@@ -56,8 +56,8 @@ export class MosaicService {
 
     /**
      * Creates a MosaicId object from a string.
-     * @param {String} rawMosaicId - Mosaic identifier. If starts with "@", it is a namespace name.
-     * @return {MosaicId | NamespaceId}
+     * @param {string} rawMosaicId - Mosaic identifier. If starts with "@", it is a namespace name.
+     * @returns {MosaicId | NamespaceId}
      */
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
         let mosaicId: MosaicId | NamespaceId;
@@ -71,8 +71,8 @@ export class MosaicService {
 
     /**
      * Creates an array of mosaics from a string.
-     * @param {String} rawMosaics - Mosaics in the form mosaicId::amount, separated by commas.
-     * @return {Mosaic[]}
+     * @param {string} rawMosaics - Mosaics in the form mosaicId::amount, separated by commas.
+     * @returns {Mosaic[]}
      */
     static getMosaics(rawMosaics: string): Mosaic[] {
         const mosaics: Mosaic[] = [];

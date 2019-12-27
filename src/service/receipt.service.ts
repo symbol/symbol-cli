@@ -40,8 +40,8 @@ export class ReceiptService {
     constructor() {}
 
     /**
-     * Formats transaction statements as an string.
-     * @param {Statement} statement - statement
+     * Formats transaction statements as a string.
+     * @param {Statement} statement
      * @returns {string}
      */
     public formatTransactionStatements(statement: Statement): string {
@@ -86,8 +86,8 @@ export class ReceiptService {
     }
 
     /**
-     * Formats address resolution statements as an string.
-     * @param {Statement} statement - statement
+     * Formats address resolution statements as a string.
+     * @param {Statement} statement
      * @returns {string}
      */
     public formatAddressResolutionStatements(statement: Statement): string {
@@ -108,8 +108,8 @@ export class ReceiptService {
     }
 
     /**
-     * Formats mosaic resolution statements as an string.
-     * @param {Statement} statement - statement
+     * Formats mosaic resolution statements as a string.
+     * @param {Statement} statement
      * @returns {string}
      */
     public formatMosaicResolutionStatements(statement: Statement): string {

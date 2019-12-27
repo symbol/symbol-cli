@@ -38,7 +38,7 @@ export class ProfileService {
      * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
      * @param {string} url - Node URL by default.
      * @param {string} networkGenerationHash - Network's generation hash.
-     * @return {Profile}.
+     * @returns {Profile}
      */
     createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
         return this.profileRepository.save(simpleWallet, url, networkGenerationHash);
@@ -47,15 +47,15 @@ export class ProfileService {
     /**
      * Find profile by name.
      * @param {string} name - Profile name.
-     * @return {Profile}.
+     * @returns {Profile}
      */
     findProfileNamed(name: string): Profile {
         return this.profileRepository.find(name);
     }
 
     /**
-     * Get all profiles.
-     * @return {Profile[]}.
+     * Gets all profiles.
+     * @returns {Profile[]}
      */
     findAll(): Profile[] {
         return this.profileRepository.all();
@@ -71,7 +71,7 @@ export class ProfileService {
 
     /**
      * Gets the profile set as default.
-     * @return {Profile}.
+     * @returns {Profile}
      */
     getDefaultProfile(): Profile {
         return this.profileRepository.getDefaultProfile();

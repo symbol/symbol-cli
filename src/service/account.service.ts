@@ -33,9 +33,9 @@ export class AccountService {
 
     /**
      * Gets the address given a raw address.
-     * @param {String} rawRecipient -  Address or namespace name. If starts with "@", it is a namespace name.
-     * @throws ExpectedError if rawAddress is not a valid namespace name or address.
-     * @return {Address | NamespaceId}
+     * @param {string} rawRecipient -  Address or namespace name. If starts with "@", it is a namespace name.
+     * @throws {ExpectedError}
+     * @returns {Address | NamespaceId}
      */
     static getRecipient(rawRecipient: string): Address | NamespaceId {
         let recipient: Address | NamespaceId;
