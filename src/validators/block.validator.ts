@@ -18,7 +18,17 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {UInt64} from 'nem2-sdk';
 
+/**
+ * Height validator
+ */
 export class HeightValidator implements Validator<string> {
+
+    /**
+     * Validates if height value is bigger than 0.
+     * @param {string} value - Height.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
     validate(value: string, context: ValidationContext): void {
         let valid = true;
         if (value === '0') {

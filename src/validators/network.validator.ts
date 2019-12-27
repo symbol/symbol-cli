@@ -18,7 +18,17 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {NetworkType} from 'nem2-sdk';
 
+/**
+ * Network validator
+ */
 export class NetworkValidator implements Validator<string> {
+
+    /**
+     * Validates if a network is supported.
+     * @param {String} value - Network type friendly name.
+     * @param {ValidationContext} context
+     * @throws ExpectedError if the network is not valid.
+     */
     validate(value: string, context?: ValidationContext): void {
         if (!(value in NetworkType)) {
             throw new ExpectedError('Enter a valid network type');

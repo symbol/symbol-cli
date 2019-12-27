@@ -17,7 +17,17 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 
+/**
+ * Binary validator
+ */
 export class BinaryValidator implements Validator<number> {
+
+    /**
+     * Validates if value is 0 or 1.
+     * @param {number} value .
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
     validate(value: number, context: ValidationContext): void {
         if (value !== 0 && value !== 1) {
             throw new ExpectedError('The value must be 0 or 1.');

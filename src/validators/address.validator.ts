@@ -18,7 +18,17 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {Address, NamespaceId} from 'nem2-sdk';
 
+/**
+ * Address validator
+ */
 export class AddressValidator implements Validator<string> {
+
+    /**
+     * Validates if an address object can be created from a string.
+     * @param {string} value - Raw address.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
     validate(value: string, context: ValidationContext): void {
         try {
             Address.createFromRawAddress(value);
@@ -28,7 +38,17 @@ export class AddressValidator implements Validator<string> {
     }
 }
 
+/**
+ * Address alias validator
+ */
 export class AddressAliasValidator implements Validator<string> {
+
+    /**
+     * Validates if an address object can be created from a string.
+     * @param {string} value - Raw address. If starts with '@', then it is an alias.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
     validate(value: string, context: ValidationContext): void {
         const aliasTag = '@';
         if (value.charAt(0) !== aliasTag) {

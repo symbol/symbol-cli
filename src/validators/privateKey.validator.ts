@@ -17,7 +17,17 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 
+/**
+ * Private key validator
+ */
 export class PrivateKeyValidator implements Validator<string> {
+
+    /**
+     * Validates a private key format.
+     * @param {String} value - Private key.
+     * @param {ValidationContext} context
+     * @throws ExpectedError if value is not a valid private key.
+     */
     validate(value: string, context: ValidationContext): void {
         if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
             throw new ExpectedError('private key should be a 64 characters hexadecimal string');

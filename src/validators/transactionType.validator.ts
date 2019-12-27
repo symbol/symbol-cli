@@ -18,7 +18,17 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {TransactionType} from 'nem2-sdk';
 
+/**
+ * Transaction type validator
+ */
 export class TransactionTypeValidator implements Validator<string> {
+
+    /**
+     * Validates if transaction type is known.
+     * @param {String} value - Transaction type.
+     * @param {ValidationContext} context
+     * @throws ExpectedError if value is not a known transaction type.
+     */
     validate(value: string, context: ValidationContext): void {
         let success = true;
         try {

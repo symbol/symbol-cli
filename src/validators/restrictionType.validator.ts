@@ -15,9 +15,19 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime';
+import {ExpectedError, ValidationContext, Validator} from 'clime';
 
+/**
+ * Account restriction direction validator
+ */
 export class AccountRestrictionDirectionValidator implements Validator<string> {
+
+    /**
+     * Validates if direction is outgoing or incoming.
+     * @param {String} value - Direction (Incoming or outgoing).
+     * @param {ValidationContext} context
+     * @throws ExpectedError if value is not a valid direction.
+     */
     validate(value: string, context: ValidationContext): void {
         value = value.toLowerCase();
         if ('incoming' !== value && 'outgoing' !== value) {
@@ -26,7 +36,17 @@ export class AccountRestrictionDirectionValidator implements Validator<string> {
     }
 }
 
+/**
+ * Account restriction type validator
+ */
 export class AccountRestrictionTypeValidator implements Validator<string> {
+
+    /**
+     * Validates if restriction type is allow or block.
+     * @param {String} value - Restriction type (allow or block).
+     * @param {ValidationContext} context
+     * @throws ExpectedError if value is not a valid restriction type.
+     */
     validate(value: string, context: ValidationContext): void {
         value = value.toLowerCase();
         if ('allow' !== value && 'block' !== value) {

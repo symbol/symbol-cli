@@ -17,7 +17,17 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 
+/**
+ * Private key validator
+ */
 export class PublicKeyValidator implements Validator<string> {
+
+    /**
+     * Validates a public key format.
+     * @param {String} value - Public key.
+     * @param {ValidationContext} context
+     * @throws ExpectedError if value is not a valid public key.
+     */
     validate(value: string, context: ValidationContext): void {
         if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
             throw new ExpectedError('public key should be a 64 characters hexadecimal string');
@@ -25,7 +35,17 @@ export class PublicKeyValidator implements Validator<string> {
     }
 }
 
+/**
+ * Private keys validator
+ */
 export class PublicKeysValidator implements Validator<string> {
+
+    /**
+     * Validates multiple public key format.
+     * @param {String} value - Public keys, separated by a comma.
+     * @param {ValidationContext} context
+     * @throws ExpectedError if value contains an invalid public key.
+     */
     validate(value: string, context: ValidationContext): void {
         const publicKeys = value.split(',');
         publicKeys.map((publicKey: string) => {
