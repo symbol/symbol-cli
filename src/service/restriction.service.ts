@@ -18,10 +18,22 @@
 
 import {AccountRestrictionFlags} from 'nem2-sdk';
 
+/**
+ * Restriction service
+ */
 export class RestrictionService {
 
+    /**
+     * Constructor
+     */
     constructor() {}
 
+    /**
+     * Gets account address restriction flag given a restriction type and direction.
+     * @param {string} restrictionType -  Allow or Block.
+     * @param {string} restrictionType - Outgoing or Incoming.
+     * @returns {AccountRestrictionFlags}
+     */
     public getAccountAddressRestrictionFlags(restrictionType: string, restrictionDirection: string): AccountRestrictionFlags {
         const lowerRestrictionFlags = restrictionType.toLowerCase();
         const lowerRestrictionDirection = restrictionDirection.toLowerCase();
@@ -38,6 +50,11 @@ export class RestrictionService {
         return accountRestrictionFlags;
     }
 
+    /**
+     * Gets account mosaic restriction flag given a restriction type.
+     * @param {string} restrictionType -  Allow or Block.
+     * @returns {AccountRestrictionFlags}
+     */
     public getAccountMosaicRestrictionFlags(restrictionType: string): AccountRestrictionFlags {
         let accountRestrictionFlags;
         if ('allow' === restrictionType.toLowerCase()) {
@@ -48,17 +65,18 @@ export class RestrictionService {
         return accountRestrictionFlags;
     }
 
+    /**
+     * Gets account operation restriction flag given a restriction type.
+     * @param {string} restrictionType -  Allow or Block.
+     * @returns {AccountRestrictionFlags}
+     */
     public getAccountOperationRestrictionFlags(restrictionType: string) {
         const lowerRestrictionFlags = restrictionType.toLowerCase();
         let accountRestrictionFlags;
         if ('allow' === lowerRestrictionFlags) {
             accountRestrictionFlags = AccountRestrictionFlags.AllowOutgoingTransactionType;
-        } else if ('allow' === lowerRestrictionFlags) {
-            accountRestrictionFlags = AccountRestrictionFlags.AllowIncomingTransactionType;
-        } else if ('block' === lowerRestrictionFlags) {
+        }  else {
             accountRestrictionFlags = AccountRestrictionFlags.BlockOutgoingTransactionType;
-        } else {
-            accountRestrictionFlags = AccountRestrictionFlags.BlockIncomingTransactionType;
         }
         return accountRestrictionFlags;
     }

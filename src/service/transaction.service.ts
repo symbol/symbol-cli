@@ -51,12 +51,21 @@ import {
     TransferTransaction,
 } from 'nem2-sdk';
 
+/**
+ * Transaction service
+ */
 export class TransactionService {
 
-    constructor() {
+    /**
+     * Constructor
+     */
+    constructor() {}
 
-    }
-
+    /**
+     * Format a transaction to string.
+     * @param {transaction} transaction -  Transaction object to format.
+     * @returns {string}
+     */
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {

@@ -25,20 +25,26 @@ import {
     ReceiptType,
     ResolutionEntry,
     ResolutionStatement,
+    Statement,
     TransactionStatement,
 } from 'nem2-sdk';
 
+/**
+ * Receipt service
+ */
 export class ReceiptService {
-    constructor() {
-
-    }
 
     /**
-     * @description The logic of formatting transactionStatements
-     * @param statement
+     * Constructor
+     */
+    constructor() {}
+
+    /**
+     * Formats transaction statements as an string.
+     * @param {Statement} statement - statement
      * @returns {string}
      */
-    public formatTransactionStatements(statement: any): string {
+    public formatTransactionStatements(statement: Statement): string {
         let txt = '';
         txt += chalk.green('transactionStatements:\t') + '\n';
         txt += '-'.repeat('transactionStatements:\t'.length) + '\n\n';
@@ -80,11 +86,11 @@ export class ReceiptService {
     }
 
     /**
-     * @description The logic of formatting addressResolutionStatements
-     * @param statement
+     * Formats address resolution statements as an string.
+     * @param {Statement} statement - statement
      * @returns {string}
      */
-    public formatAddressResolutionStatements(statement: any): string {
+    public formatAddressResolutionStatements(statement: Statement): string {
         let txt = '';
         txt += chalk.green('addressResolutionStatements:\t') + '\n';
         txt += '-'.repeat('addressResolutionStatements:\t'.length) + '\n\n';
@@ -102,11 +108,11 @@ export class ReceiptService {
     }
 
     /**
-     * @description The logic of formatting mosaicResolutionStatements
-     * @param statement
-     * @return {string}
+     * Formats mosaic resolution statements as an string.
+     * @param {Statement} statement - statement
+     * @returns {string}
      */
-    public formatMosaicResolutionStatements(statement: any): string {
+    public formatMosaicResolutionStatements(statement: Statement): string {
         let txt = '';
         txt += chalk.green('mosaicResolutionStatements:\t') + '\n';
         txt += '-'.repeat('mosaicResolutionStatements:\t'.length) + '\n\n';

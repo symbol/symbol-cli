@@ -15,35 +15,65 @@
  * limitations under the License.
  *
  */
-import {Account, SimpleWallet} from 'nem2-sdk';
+import {SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {ProfileRepository} from '../respository/profile.repository';
 
+/**
+ * Profile service
+ */
 export class ProfileService {
     private readonly profileRepository: ProfileRepository;
 
+    /**
+     * Constructor
+     * @param {ProfileRepository} profileRepository
+     */
     constructor(profileRepository: ProfileRepository) {
         this.profileRepository = profileRepository;
     }
 
+    /**
+     * Creates a new profile from a SimpleWallet.
+     * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
+     * @param {string} url - Node URL by default.
+     * @param {string} networkGenerationHash - Network's generation hash.
+     * @return {Profile}.
+     */
     createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
         return this.profileRepository.save(simpleWallet, url, networkGenerationHash);
     }
 
+    /**
+     * Find profile by name.
+     * @param {string} name - Profile name.
+     * @return {Profile}.
+     */
     findProfileNamed(name: string): Profile {
         return this.profileRepository.find(name);
     }
 
+    /**
+     * Get all profiles.
+     * @return {Profile[]}.
+     */
     findAll(): Profile[] {
         return this.profileRepository.all();
     }
 
+    /**
+     * Sets a profile as the default one.
+     * @param {string} name - Profile name.
+     */
     setDefaultProfile(name: string) {
         this.profileRepository.setDefaultProfile(name);
     }
 
+    /**
+     * Gets the profile set as default.
+     * @return {Profile}.
+     */
     getDefaultProfile(): Profile {
         return this.profileRepository.getDefaultProfile();
     }
-
 }
