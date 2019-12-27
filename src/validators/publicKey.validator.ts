@@ -24,9 +24,9 @@ export class PublicKeyValidator implements Validator<string> {
 
     /**
      * Validates a public key format.
-     * @param {String} value - Public key.
+     * @param {string} value - Public key.
      * @param {ValidationContext} context
-     * @throws ExpectedError if value is not a valid public key.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
@@ -42,9 +42,9 @@ export class PublicKeysValidator implements Validator<string> {
 
     /**
      * Validates multiple public key format.
-     * @param {String} value - Public keys, separated by a comma.
+     * @param {string} value - Public keys, separated by a comma.
      * @param {ValidationContext} context
-     * @throws ExpectedError if value contains an invalid public key.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         const publicKeys = value.split(',');

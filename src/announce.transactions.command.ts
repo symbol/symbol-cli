@@ -22,18 +22,27 @@ import * as readlineSync from 'readline-sync';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
 
+/**
+ * Base command class to announce transactions.
+ */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
-    constructor() {
-        super();
-    }
-
-    private formatPayload(payload: string) {
+    /**
+     * Formats a payload to fit in the command line.
+     * @param {string} payload.
+     * @returns {String[]}
+     */
+     static formatPayload(payload: string) {
         return payload.match(/.{1,64}/g) || [];
     }
 
-     protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        const payload = this.formatPayload(signedTransaction.payload).join('\n');
+    /**
+     * Announces a transaction.
+     * @param {SignedTransaction} signedTransaction
+     * @param {string} url - Node URL.
+     */
+    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
+        const payload = AnnounceTransactionsCommand.formatPayload(signedTransaction.payload).join('\n');
         const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ' +
              'Payload:\n' + payload);
         if (shouldAnnounceTransaction) {
@@ -52,6 +61,9 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
     }
 }
 
+/**
+ * Announce transactions options
+ */
 export class AnnounceTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'f',

@@ -25,9 +25,9 @@ export class NumericStringValidator implements Validator<string> {
 
     /**
      * Validates if a string is composed by numbers.
-     * @param {String} value - Numeric string.
+     * @param {string} value - Numeric string.
      * @param {ValidationContext} context
-     * @throws ExpectedError if string is not a number.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         try {

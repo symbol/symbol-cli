@@ -24,10 +24,16 @@ import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
 import {PasswordValidator} from './validators/password.validator';
 
+/**
+ * Base command class to use the stored profile.
+ */
 export abstract class ProfileCommand extends Command {
-    private readonly profileService: ProfileService;
     public spinner = new Spinner('processing.. %s');
+    private readonly profileService: ProfileService;
 
+    /**
+     * Constructor.
+     */
     constructor() {
         super();
         const profileRepository = new ProfileRepository('.nem2rc.json');
@@ -35,6 +41,12 @@ export abstract class ProfileCommand extends Command {
         this.spinner.setSpinnerString('|/-\\');
     }
 
+    /**
+     * Get profile by name.
+     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
+     * @throws {ExpectedError}
+     * @returns {Profile}
+     */
     public getProfile(options: ProfileOptions): Profile {
         try {
             if (options.profile) {
@@ -48,6 +60,11 @@ export abstract class ProfileCommand extends Command {
         }
     }
 
+    /**
+     * Get address from a profile name.
+     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
+     * @returns {Address}
+     */
     public getAddress(options: ProfileOptions): Address {
         const profile = this.getProfile(options);
 
@@ -58,6 +75,11 @@ export abstract class ProfileCommand extends Command {
                 'Introduce an address: '));
     }
 
+    /**
+     * Set a profile by default.
+     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
+     * @throws {ExpectedError}
+     */
     protected setDefaultProfile(options: ProfileOptions) {
         try {
             this.profileService.setDefaultProfile(options.profile);
@@ -69,6 +91,9 @@ export abstract class ProfileCommand extends Command {
     }
 }
 
+/**
+ * Monitor profile options.
+ */
 export class ProfileOptions extends Options {
     @option({
         description: '(Optional) Select between your profiles, by providing a profile name.',

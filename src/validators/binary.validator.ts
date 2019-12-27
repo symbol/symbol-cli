@@ -24,7 +24,7 @@ export class BinaryValidator implements Validator<number> {
 
     /**
      * Validates if value is 0 or 1.
-     * @param {number} value .
+     * @param {number} value
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */

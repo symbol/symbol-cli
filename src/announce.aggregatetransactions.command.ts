@@ -23,12 +23,18 @@ import {filter, mergeMap} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
 
+/**
+ * Base command class to announce aggregate transactions.
+ */
 export abstract class AnnounceAggregateTransactionsCommand extends ProfileCommand {
 
-    constructor() {
-        super();
-    }
-
+    /**
+     * Announces a hash lock transaction. Once this is confirmed, announces an aggregate transaction.
+     * @param {SignedTransaction} signedHashLockTransaction
+     * @param {SignedTransaction} signedAggregateTransaction
+     * @param {Address} senderAddress - Address of the account sending the transaction.
+     * @param {string} url - Node URL.
+     */
     protected announceAggregateTransaction(signedHashLockTransaction: SignedTransaction,
                                            signedAggregateTransaction: SignedTransaction,
                                            senderAddress: Address,
@@ -52,7 +58,9 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
         });
     }
 }
-
+/**
+ * Announce aggregate transactions options
+ */
 export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'f',

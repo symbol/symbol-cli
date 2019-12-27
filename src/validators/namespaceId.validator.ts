@@ -25,9 +25,9 @@ export class NamespaceIdValidator implements Validator<string> {
 
     /**
      * Validates a namespace id.
-     * @param {String} value - NamespaceId in hexadecimal.
+     * @param {string} value - NamespaceId in hexadecimal.
      * @param {ValidationContext} context
-     * @throws ExpectedError if the namespace id is not valid.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         try {

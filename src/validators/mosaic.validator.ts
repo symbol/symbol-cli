@@ -22,9 +22,9 @@ export class MosaicValidator implements Validator<string> {
 
     /**
      * Validates if a mosaic object can be created from a string.
-     * @param {String} value - Mosaic in the form mosaicId::amount.
+     * @param {string} value - Mosaic in the form mosaicId::amount.
      * @param {ValidationContext} context
-     * @throws ExpectedError if the mosaic object is not valid.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         MosaicService.validate(value);
@@ -35,9 +35,9 @@ export class MosaicsValidator implements Validator<string> {
 
     /**
      * Validates if an array of mosaic objects can be created from a string.
-     * @param {String} value - Mosaics in the form mosaicId::amount, separated by commas.
+     * @param {string} value - Mosaics in the form mosaicId::amount, separated by commas.
      * @param {ValidationContext} context
-     * @throws ExpectedError if one of the mosaic objects is not valid.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         const mosaics = value.split(',');

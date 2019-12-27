@@ -25,9 +25,9 @@ export class NetworkValidator implements Validator<string> {
 
     /**
      * Validates if a network is supported.
-     * @param {String} value - Network type friendly name.
+     * @param {string} value - Network type friendly name.
      * @param {ValidationContext} context
-     * @throws ExpectedError if the network is not valid.
+     * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
         if (!(value in NetworkType)) {

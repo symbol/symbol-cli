@@ -24,23 +24,27 @@ import * as readlineSync from 'readline-sync';
 import {ProfileOptions} from '../profile.command';
 import {PasswordValidator} from '../validators/password.validator';
 
+/**
+ * Profile data transfer object.
+ */
 interface ProfileDTO {
     simpleWallet: ISimpleWalletDTO;
     url: string;
     networkGenerationHash: string;
 }
 
+/**
+ * Profile model.
+ */
 export class Profile {
     private readonly table: HorizontalTable;
 
-    public static createFromDTO(profileDTO: ProfileDTO): Profile {
-        return new Profile(
-            SimpleWallet.createFromDTO(profileDTO.simpleWallet),
-            profileDTO.url,
-            profileDTO.networkGenerationHash,
-        );
-    }
-
+    /**
+     * Constructor.
+     * @param {SimpleWallet} simpleWallet - Wallet credentials.
+     * @param {string} url - Node URL.
+     * @param {string} networkGenerationHash - Network generation hash.
+     */
     constructor(public readonly simpleWallet: SimpleWallet,
                 public readonly url: string,
                 public readonly networkGenerationHash: string) {
@@ -58,22 +62,56 @@ export class Profile {
         );
     }
 
+    /**
+     * Gets profile address.
+     * @returns {Address}
+     */
     get address(): Address {
         return this.simpleWallet.address;
     }
 
+    /**
+     * Gets profile network type.
+     * @returns {NetworkType}
+     */
     get networkType(): NetworkType {
         return this.simpleWallet.network;
     }
 
+    /**
+     * Gets profile name.
+     * @returns {string}
+     */
     get name(): string {
         return this.simpleWallet.name;
     }
 
+    /**
+     * Creates a profile object.
+     * @param {ProfileDTO} profileDTO
+     * @returns {Profile}
+     */
+    public static createFromDTO(profileDTO: ProfileDTO): Profile {
+        return new Profile(
+            SimpleWallet.createFromDTO(profileDTO.simpleWallet),
+            profileDTO.url,
+            profileDTO.networkGenerationHash,
+        );
+    }
+
+    /**
+     * Formats profile as a string.
+     * @returns {string}
+     */
     toString(): string {
         return this.table.toString();
     }
 
+    /**
+     * Returns true if the password is valid.
+     * @param {Password} password.
+     * @returns {boolean}
+     */
     isPasswordValid(password: Password): boolean {
         try {
             this.simpleWallet.open(password);
@@ -83,15 +121,19 @@ export class Profile {
         }
     }
 
+    /**
+     * Opens a wallet.
+     * @param {ProfileOptions} options - The  attribute "password" should contain the profile's password.
+     * @throws {ExpectedError}
+     * @returns {Account}
+     */
     decrypt(options: ProfileOptions): Account {
         const password = options.password || readlineSync.question('Enter your wallet password: ');
         new PasswordValidator().validate(password);
         const passwordObject = new Password(password);
-
         if (!this.isPasswordValid(passwordObject)) {
-            throw new ExpectedError('The password you provided does not match your account password');
+            throw new ExpectedError('The password provided does not match your account password');
         }
-
         return this.simpleWallet.open(passwordObject);
     }
 }

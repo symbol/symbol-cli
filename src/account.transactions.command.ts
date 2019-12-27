@@ -23,21 +23,34 @@ import {TransactionService} from './service/transaction.service';
 import {AddressValidator} from './validators/address.validator';
 import {PublicKeyValidator} from './validators/publicKey.validator';
 
+/**
+ * Base command class to retrieve transactions from an account.
+ */
 export abstract class AccountTransactionsCommand extends ProfileCommand {
     public readonly transactionService: TransactionService;
 
-    constructor() {
+    /**
+     * Constructor.
+     */
+    protected constructor() {
         super();
         this.transactionService = new TransactionService();
     }
 
+    /**
+     * Creates an account repository given a profile.
+     * @param {ProfileOptions} options.
+     * @returns {AccountHttp}
+     */
     public getAccountHttp(options: ProfileOptions): AccountHttp {
         const profile = this.getProfile(options);
-
         return new AccountHttp(profile.url);
     }
 }
 
+/**
+ * Account transactions options
+ */
 export class AccountTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'a',
@@ -66,6 +79,10 @@ export class AccountTransactionsOptions extends ProfileOptions {
     })
     id: string;
 
+    /**
+     * Creates QueryParams object based on options.
+     * @returns {QueryParams}
+     */
     getQueryParams(): QueryParams {
         if (this.id === undefined) {
             return new QueryParams(this.numTransactions);

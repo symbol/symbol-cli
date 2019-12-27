@@ -24,9 +24,9 @@ export class PrivateKeyValidator implements Validator<string> {
 
     /**
      * Validates a private key format.
-     * @param {String} value - Private key.
+     * @param {string} value - Private key.
      * @param {ValidationContext} context
-     * @throws ExpectedError if value is not a valid private key.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {

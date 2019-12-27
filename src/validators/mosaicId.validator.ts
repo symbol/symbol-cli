@@ -25,9 +25,9 @@ export class MosaicIdValidator implements Validator<string> {
 
     /**
      * Validates if a mosaic id object can be created from a string.
-     * @param {String} value - MosaicId in hexadecimal.
+     * @param {string} value - MosaicId in hexadecimal.
      * @param {ValidationContext} context
-     * @throws ExpectedError if the mosaic id is not valid.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         try {
@@ -45,9 +45,9 @@ export class MosaicIdAliasValidator implements Validator<string> {
 
     /**
      * Validates if a mosaic id object can be created from a string.
-     * @param {String} value - MosaicId in hexadecimal or Namespace name. If starts with '@', it is a namespace name.
+     * @param {string} value - MosaicId in hexadecimal or Namespace name. If starts with '@', it is a namespace name.
      * @param {ValidationContext} context
-     * @throws ExpectedError if the mosaic id is not valid.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         const aliasTag = '@';

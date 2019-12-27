@@ -25,9 +25,9 @@ export class PasswordValidator implements Validator<string> {
 
  /**
   * Validates if a password has at least 8 chars.
-  * @param {String} value - Password.
+  * @param {string} value - Password.
   * @param {ValidationContext} context
-  * @throws ExpectedError if string is has less than 8 chars.
+  * @throws {ExpectedError}
   */
  validate(value: string, context?: ValidationContext): void {
  try {

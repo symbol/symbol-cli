@@ -25,9 +25,9 @@ export class TransactionTypeValidator implements Validator<string> {
 
     /**
      * Validates if transaction type is known.
-     * @param {String} value - Transaction type.
+     * @param {string} value - Transaction type.
      * @param {ValidationContext} context
-     * @throws ExpectedError if value is not a known transaction type.
+     * @throws {ExpectedError}
      */
     validate(value: string, context: ValidationContext): void {
         let success = true;
