@@ -17,8 +17,9 @@
  */
 
 import {expect} from 'chai';
-import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../../src/model/profile';
+import {ProfileOptions} from '../../src/profile.command';
 
 describe('Profile', () => {
     it('should contain the fields', () => {
@@ -27,6 +28,55 @@ describe('Profile', () => {
             'url',
             'generationHash',
         );
-        expect(profile['name']).to.be.equal('default');
+        expect(profile.name).to.be.equal('default');
+        expect(profile.networkGenerationHash).to.be.equal('generationHash');
+        expect(profile.url).to.be.equal('url');
+        expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
     });
+
+    it('should be created from DTO', () => {
+        const profile = Profile.createFromDTO(
+            {
+                simpleWallet: {
+                    name: 'default',
+                    network: NetworkType.MIJIN_TEST,
+                    address: {
+                        address: Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain(),
+                        networkType: NetworkType.MIJIN_TEST,
+                    },
+                    creationDate: 'test',
+                    schema: 'test',
+                    encryptedPrivateKey: {
+                        encryptedKey: 'test',
+                        iv: 'test',
+                    },
+                },
+                networkGenerationHash: 'generationHash',
+                url: 'url',
+            });
+        expect(profile.name).to.be.equal('default');
+        expect(profile.networkGenerationHash).to.be.equal('generationHash');
+        expect(profile.url).to.be.equal('url');
+        expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+    });
+
+    it('should decrypt profile', () => {
+        const privateKey =  '0'.repeat(64);
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
+            'default',
+           password,
+            privateKey,
+            NetworkType.MIJIN_TEST);
+        const profile = new Profile(
+            simpleWallet,
+            'url',
+            'generationHash',
+        );
+        const profileOptions = new ProfileOptions();
+        profileOptions.password = 'password';
+        expect(profile.decrypt(profileOptions).privateKey).to.be.equal(privateKey);
+        expect(profile.address).to.be.equal(simpleWallet.address);
+    });
+
 });
