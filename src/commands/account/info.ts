@@ -64,7 +64,7 @@ export class AccountInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Account Information') + '\n';
+        text += '\n' + chalk.green('Account Information') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -95,7 +95,7 @@ export class BalanceInfoTable {
     toString(): string {
         let text = '';
         if (this.table) {
-            text += '\n\n' + chalk.green('Balance Information') + '\n';
+            text += '\n' + chalk.green('Balance Information') + '\n';
             text += this.table.toString();
         }
         return text;
@@ -144,13 +144,13 @@ export class MultisigInfoTable {
     toString(): string {
         let text = '';
         if (this.multisigTable) {
-            text += chalk.green('\n\n' + 'Multisig Account Information') + '\n';
+            text += chalk.green('\n' + 'Multisig Account Information') + '\n';
             text += this.multisigTable.toString();
-            text += chalk.green('\n\n' + 'Cosignatories') + '\n';
+            text += chalk.green('\n' + 'Cosignatories') + '\n';
             text += this.cosignatoriesTable.toString();
         }
         if (this.cosignatoryOfTable) {
-            text += chalk.green('\n\n' + 'Is cosignatory of') + '\n';
+            text += chalk.green('\n' + 'Is cosignatory of') + '\n';
             text += this.cosignatoryOfTable.toString();
         }
         return text;

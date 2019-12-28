@@ -37,7 +37,7 @@ export class ServerInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Server Information') + '\n';
+        text += '\n' + chalk.green('Server Information') + '\n';
         text += this.table.toString();
         return text;
     }

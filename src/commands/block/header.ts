@@ -67,7 +67,7 @@ export class BlockHeaderTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Block Header') + '\n';
+        text += '\n' + chalk.green('Block Header') + '\n';
         text += this.table.toString();
         return text;
     }

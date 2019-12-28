@@ -41,24 +41,33 @@ export class TransactionStatusTable {
         }) as HorizontalTable;
         this.table.push(
             ['Group', status.group],
-            ['Status Code', status.code],
             ['Hash', status.hash],
         );
+        if (status.code) {
+            this.table.push(
+                ['Status Code', status.code],
+            );
+        }
         if (status.deadline) {
             this.table.push(
                 ['Deadline', status.deadline.value.toString()],
             );
         }
-        if (status.height && status.height.compact() > 0) {
+        if (status.deadline) {
             this.table.push(
-                ['Height', status.height.compact().toString()],
+                ['Deadline', status.deadline.value.toString()],
+            );
+        }
+        if (status.height) {
+            this.table.push(
+                ['Height', status.height.toString()],
             );
         }
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Transaction Status') + '\n';
+        text += '\n' + chalk.green('Transaction Status') + '\n';
         text += this.table.toString();
         return text;
     }

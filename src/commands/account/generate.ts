@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {Command, command, metadata, option, Options} from 'clime';
-import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {Account, BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
@@ -70,29 +70,27 @@ export class AccountCredentialsTable {
     private readonly table: HorizontalTable;
 
     constructor(
-        public readonly simpleWallet: SimpleWallet,
-        public readonly password: Password,
+        public readonly account: Account,
+        public readonly password?: Password,
     ) {
-        const account = simpleWallet.open(password);
-        const passwordString = password.value;
-        const {name} = simpleWallet;
 
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Name', name],
-            ['Password', passwordString],
             ['Address', account.address.pretty()],
             ['Public Key', account.publicKey],
             ['Private Key', account.privateKey],
         );
+        if (password) {
+            this.table.push(['Password', password.value]);
+        }
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('New Account') + '\n';
+        text += '\n' + chalk.green('Account') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -123,10 +121,9 @@ export default class extends Command {
         const password = options.password || readlineSync.question('Enter your wallet password: ');
         new PasswordValidator().validate(password);
         const passwordObject = new Password(password);
-
         const simpleWallet = SimpleWallet.create(profile, passwordObject, networkType);
 
-        let text = new AccountCredentialsTable(simpleWallet, passwordObject).toString();
+        let text = new AccountCredentialsTable(simpleWallet.open(passwordObject), passwordObject).toString();
 
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;

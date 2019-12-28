@@ -60,7 +60,7 @@ export class MosaicAddressRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Mosaic Address Restrictions') + '\n';
+        text += '\n' + chalk.green('Mosaic Address Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }

@@ -52,7 +52,7 @@ export class AccountRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Account Restrictions') + '\n';
+        text += '\n' + chalk.green('Account Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }

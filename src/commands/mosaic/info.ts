@@ -57,7 +57,7 @@ export class MosaicViewTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Mosaic Information') + '\n';
+        text += '\n' + chalk.green('Mosaic Information') + '\n';
         text += this.table.toString();
         return text;
     }
