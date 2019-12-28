@@ -21,7 +21,8 @@ import {
     AccountHttp,
     Address,
     AggregateTransaction,
-    CosignatureTransaction, MultisigAccountInfo,
+    CosignatureTransaction,
+    MultisigAccountInfo,
     MultisigHttp,
     QueryParams,
     TransactionHttp,
@@ -29,8 +30,8 @@ import {
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HashResolver} from '../../resolvers/hash.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -51,18 +52,14 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        this.spinner.start();
+
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
-
-        options.hash = OptionsResolver(options,
-            'hash',
-            () => undefined,
-            'Enter aggregate bonded transaction hash to be signed: ');
-
-        this.spinner.start();
+        const hash = new HashResolver()
+            .resolve(options, undefined, '\'Enter aggregate bonded transaction hash to be signed: ');
 
         this.getGraphAccounts(profile)
             .pipe(
@@ -70,7 +67,7 @@ export default class extends ProfileCommand {
                 mergeMap((address) => accountHttp.getAccountPartialTransactions(address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-                    _.transactionInfo.hash === options.hash), // Filter transaction
+                    _.transactionInfo.hash === hash), // Filter transaction
                 toArray(),
             )
             .subscribe((transactions: AggregateTransaction[]) => {

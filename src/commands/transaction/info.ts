@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HashResolver} from '../../resolvers/hash.resolver';
 import {TransactionService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
@@ -43,16 +43,11 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile(options);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-        const hash = OptionsResolver(options,
-            'hash',
-            () => undefined,
-            'Enter the transaction hash: ');
-
         this.spinner.start();
+        const profile = this.getProfile(options);
+        const transactionHttp = new TransactionHttp(profile.url);
+        const hash = new HashResolver()
+            .resolve(options);
 
         transactionHttp.getTransaction(hash)
             .subscribe((transaction) => {

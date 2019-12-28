@@ -1,8 +1,7 @@
-import {Address, UInt64} from 'nem2-sdk';
+import {UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {AddressValidator} from '../validators/address.validator';
 import {HeightValidator} from '../validators/block.validator';
 import {Resolver} from './resolver';
 

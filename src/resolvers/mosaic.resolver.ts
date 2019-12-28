@@ -1,10 +1,11 @@
-import {MosaicId, NamespaceId} from 'nem2-sdk';
+import {Mosaic, MosaicId, NamespaceId} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
+import {MosaicService} from '../service/mosaic.service';
+import {MosaicsValidator} from '../validators/mosaic.validator';
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../validators/mosaicId.validator';
 import {Resolver} from './resolver';
-import {MosaicService} from '../service/mosaic.service';
 
 /**
  * MosaicId resolver
@@ -28,7 +29,6 @@ export class MosaicIdResolver implements Resolver {
     }
 }
 
-
 /**
  * MosaicId alias resolver
  */
@@ -48,5 +48,28 @@ export class MosaicIdAliasResolver implements Resolver {
             altText ? altText : 'Enter the mosaic id or alias: ').trim();
         new MosaicIdAliasValidator().validate(resolution, {name: 'mosaicIdAlias', source: resolution});
         return MosaicService.getMosaicId(resolution);
+    }
+}
+
+/**
+ * Mosaics resolver
+ */
+export class MosaicsResolver implements Resolver {
+
+    /**
+     * Resolves a set of mosaics provided by the user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @returns {Mosaic[]}
+     */
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+        const resolution = OptionsResolver(options,
+            'mosaics',
+            () =>  undefined,
+            altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ').trim();
+        new MosaicsValidator().validate(resolution, {name: 'mosaics', source: resolution});
+        return resolution ? MosaicService.getMosaics(resolution) : [];
     }
 }

@@ -1,10 +1,8 @@
-import {MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {MosaicIdValidator} from '../validators/mosaicId.validator';
 import {Resolver} from './resolver';
-import {MosaicService} from '../service/mosaic.service';
 import {NumericStringValidator} from '../validators/numericString.validator';
 
 /**
@@ -23,7 +21,7 @@ export class DurationResolver implements Resolver {
         const resolution = OptionsResolver(options,
         'duration',
         () =>  undefined,
-        altText ? altText : 'Enter an duration: ').trim();
+        altText ? altText : 'Enter the duration in number of blocks: ').trim();
         new NumericStringValidator().validate(resolution, {name: 'duration', source: resolution});
         return UInt64.fromNumericString(resolution);
     }

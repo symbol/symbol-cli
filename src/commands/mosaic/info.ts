@@ -19,11 +19,10 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {AccountHttp, MosaicHttp, MosaicService, MosaicView} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
+import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({

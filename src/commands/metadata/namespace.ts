@@ -17,8 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Metadata, MetadataHttp, NamespaceId} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {Metadata, MetadataHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MetadataEntryTable} from './account';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';

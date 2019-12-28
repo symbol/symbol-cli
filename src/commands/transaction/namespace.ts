@@ -16,10 +16,12 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, NamespaceRegistrationTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, NamespaceRegistrationTransaction} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {DurationResolver} from '../../resolvers/duration.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -78,7 +80,7 @@ export default class extends AnnounceTransactionsCommand {
         if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
             options.rootnamespace = true;
         }
-
+        let duration;
         if (!options.rootnamespace) {
             options.subnamespace = true;
             options.parentName = OptionsResolver(options,
@@ -86,27 +88,18 @@ export default class extends AnnounceTransactionsCommand {
                 () => undefined,
                 'Enter the parent namespace name: ');
         } else {
-            options.duration = OptionsResolver(options,
-                'duration',
-                () => undefined,
-                'Enter the namespace rental duration: ');
+            duration = new DurationResolver().resolve(options);
         }
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromNumericString(options.duration), profile.networkType,
-                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(), options.name, duration, profile.networkType, maxFee);
         } else {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentName, profile.networkType,
-                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(
+                Deadline.create(), options.name, options.parentName, profile.networkType, maxFee);
         }
-
         const signedTransaction = account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }

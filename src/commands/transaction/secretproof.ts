@@ -66,9 +66,8 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
         const recipientAddress = new RecipientAddressResolver()
-            .resolve(options, undefined, 'Enter address or @alias that receives the funds once unlocked: ');
+            .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
         const secret = new SecretResolver().resolve(options);
         const proof = new ProofResolver().resolve(options);
         const hashAlgorithm = new HashAlgorithmResolver().resolve(options);

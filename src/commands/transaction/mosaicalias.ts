@@ -58,11 +58,10 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
         const namespaceId = new NamespaceNameResolver().resolve(options);
         const mosaicId = new MosaicIdResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
         const action = new LinkActionResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),

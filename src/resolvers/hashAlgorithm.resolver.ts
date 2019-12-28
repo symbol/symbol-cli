@@ -1,8 +1,8 @@
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {Resolver} from './resolver';
 import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator';
+import {Resolver} from './resolver';
 
 /**
  * Link hashAlgorithm resolver

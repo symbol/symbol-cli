@@ -17,12 +17,12 @@
 import {command, metadata, option} from 'clime';
 import {AddressAliasTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {AddressValidator} from '../../validators/address.validator';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
+import {LinkActionResolver} from '../../resolvers/action.resolver';
 import {AddressResolver} from '../../resolvers/address.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
+import {AddressValidator} from '../../validators/address.validator';
+import {BinaryValidator} from '../../validators/binary.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -60,11 +60,10 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
         const namespaceId = new NamespaceNameResolver().resolve(options);
         const address = new AddressResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
         const action = new LinkActionResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),

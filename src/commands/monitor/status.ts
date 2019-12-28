@@ -17,9 +17,8 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {Address, Listener} from 'nem2-sdk';
+import {Listener} from 'nem2-sdk';
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transaction.command';
-import {OptionsResolver} from '../../options-resolver';
 import {AddressResolver} from '../../resolvers/address.resolver';
 
 @command({
