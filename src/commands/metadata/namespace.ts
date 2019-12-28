@@ -19,8 +19,8 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Metadata, MetadataHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {MetadataEntryTable} from './account';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
+import {MetadataEntryTable} from './account';
 
 export class CommandOptions extends ProfileOptions {
     @option({

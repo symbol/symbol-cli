@@ -2,8 +2,8 @@ import {Password} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {Resolver} from './resolver';
 import {PrivateKeyValidator} from '../validators/privateKey.validator';
+import {Resolver} from './resolver';
 
 /**
  * Private key resolver

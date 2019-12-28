@@ -33,8 +33,8 @@ import {
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
-import {AddressValidator} from '../../validators/address.validator';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({

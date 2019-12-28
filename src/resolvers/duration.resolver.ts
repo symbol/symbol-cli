@@ -2,8 +2,8 @@ import {UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {Resolver} from './resolver';
 import {NumericStringValidator} from '../validators/numericString.validator';
+import {Resolver} from './resolver';
 
 /**
  * Duration resolver
