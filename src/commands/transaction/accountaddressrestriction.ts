@@ -31,7 +31,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Restriction flags.' +
             '(0: AllowOutgoingAddress, 1: AllowIncomingAddress, 2: BlockOutgoingAddress, 3: BlockIncomingAddress)',
     })
-    flags: string;
+    flags: number;
 
     @option({
         flag: 'a',

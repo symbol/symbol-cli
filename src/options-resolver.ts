@@ -35,3 +35,12 @@ export const OptionsChoiceResolver = (options: any,
     const readline = readlineDependency || readlineSync;
     return options[key] !== undefined ? options[key] : (readline.keyInSelect(choices, promptText));
 };
+
+export const OptionsPasswordResolver = (options: any,
+                                        key: string,
+                                        secondSource: () => string | undefined,
+                                        promptText: string,
+                                        readlineDependency?: any) => {
+    const readline = readlineDependency || readlineSync;
+    return options[key] !== undefined ? options[key] : (secondSource() || readline.questionNewPassword(promptText));
+};

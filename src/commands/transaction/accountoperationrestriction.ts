@@ -32,7 +32,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Restriction flag. (0: AllowOutgoingTransactionType, 1: BlockOutgoingTransactionType)',
         validator: new AccountRestrictionTypeValidator(),
     })
-    flags: string;
+    flags: number;
 
     @option({
         flag: 'a',

@@ -23,6 +23,7 @@ import {ISimpleWalletDTO} from 'nem2-sdk/dist/src/infrastructure/wallet/simpleWa
 import * as readlineSync from 'readline-sync';
 import {ProfileOptions} from '../profile.command';
 import {PasswordValidator} from '../validators/password.validator';
+import {PasswordResolver} from '../resolvers/password.resolver';
 
 /**
  * Profile data transfer object.
@@ -128,12 +129,10 @@ export class Profile {
      * @returns {Account}
      */
     decrypt(options: ProfileOptions): Account {
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-        if (!this.isPasswordValid(passwordObject)) {
+        const password = new PasswordResolver().resolve(options);
+        if (!this.isPasswordValid(password)) {
             throw new ExpectedError('The password provided does not match your account password');
         }
-        return this.simpleWallet.open(passwordObject);
+        return this.simpleWallet.open(password);
     }
 }

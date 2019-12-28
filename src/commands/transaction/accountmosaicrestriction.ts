@@ -31,7 +31,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Restriction flags.' +
             '(0: AllowMosaic, 1: BlockMosaic)',
     })
-    flags: string;
+    flags: number;
 
     @option({
         flag: 'a',
