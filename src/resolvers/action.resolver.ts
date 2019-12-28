@@ -23,7 +23,7 @@ export class ActionResolver implements Resolver {
             altText ? altText : 'Select an action: ',
             choices,
         );
-        new BinaryValidator().validate(index, {name: 'action', source: index.toString()});
+        new BinaryValidator().validate(index);
         return index;
     }
 }
@@ -47,7 +47,7 @@ export class LinkActionResolver implements Resolver {
             altText ? altText : 'Select an action: ',
         choices,
         );
-        new BinaryValidator().validate(index, {name: 'action', source: index.toString()});
+        new BinaryValidator().validate(index);
         return index;
     }
 }
@@ -68,7 +68,7 @@ export class SupplyActionResolver implements Resolver {
             altText ? altText : 'Select an action: ',
             choices,
         );
-        new BinaryValidator().validate(index, {name: 'action', source: index.toString()});
+        new BinaryValidator().validate(index);
         return index;
     }
 }

@@ -17,7 +17,7 @@
  */
 
 import {expect} from 'chai';
-import {OptionsResolver} from '../src/options-resolver';
+import {OptionsChoiceResolver, OptionsResolver} from '../src/options-resolver';
 
 describe('OptionsResolver', () => {
     it('should return the value if contains the commands option is passed', () => {
@@ -42,5 +42,21 @@ describe('OptionsResolver', () => {
     it('should return the secondSource value if command options object have not it and secondValue is not undefined', () => {
         const value = OptionsResolver({}, 'name', () => 'nem', 'Insert your name');
         expect(value).to.be.equal('nem');
+    });
+});
+
+describe('OptionsChoicesResolver', () => {
+    it('should return the value if contains the commands option is passed', () => {
+        const value = OptionsChoiceResolver({name: 'nem'}, 'name', 'Select name: ', ['nem', 'mijin']);
+        expect(value).to.be.equal('nem');
+    });
+
+    it('should return the value inserted via console if it is not in the command options object', () => {
+        const choices = ['nem', 'mijin'];
+        const readlineSyncMock = {
+            keyInSelect : (ignored: number) => 0,
+        };
+        const index = OptionsChoiceResolver({}, 'name', 'Select name: ', choices, readlineSyncMock);
+        expect(choices[index]).to.be.equal('nem');
     });
 });

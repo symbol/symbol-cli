@@ -29,7 +29,7 @@ export class TransactionTypeValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         let success = true;
         try {
             const h = parseInt(value, 16);

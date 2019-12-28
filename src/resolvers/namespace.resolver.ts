@@ -43,7 +43,7 @@ export class NamespaceIdResolver implements Resolver {
             'namespaceId',
             () =>  undefined,
             altText ? altText : 'Enter the namespace id in hexadecimal: ').trim();
-        new NamespaceIdValidator().validate(resolution, {name: 'namespaceId', source: resolution});
+        new NamespaceIdValidator().validate(resolution);
         const namespaceIdUInt64 = UInt64.fromHex(resolution);
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
     }

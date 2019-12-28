@@ -22,7 +22,7 @@ export class AmountResolver implements Resolver {
         'amount',
         () =>  undefined,
         altText ? altText : 'Enter an absolute amount: ').trim();
-        new NumericStringValidator().validate(resolution, {name: 'amount', source: resolution});
+        new NumericStringValidator().validate(resolution);
         return UInt64.fromNumericString(resolution);
     }
 }

@@ -23,7 +23,7 @@ export class HashAlgorithmResolver implements Resolver {
             altText ? altText : 'Select the algorithm used to hash the proof: ',
         choices,
         );
-        new HashAlgorithmValidator().validate(index, {name: 'hashAlgorithm', source: index.toString()});
+        new HashAlgorithmValidator().validate(index);
         return index;
     }
 }

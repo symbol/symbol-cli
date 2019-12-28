@@ -28,7 +28,7 @@ export class AccountRestrictionDirectionValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         value = value.toLowerCase();
         if ('incoming' !== value && 'outgoing' !== value) {
             throw new ExpectedError('restrictionDirection must be one of \'incoming\' or \'outgoing\'');
@@ -47,7 +47,7 @@ export class AccountRestrictionTypeValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         value = value.toLowerCase();
         if ('allow' !== value && 'block' !== value) {
             throw new ExpectedError('restrictionType must be one of \'allow\' or \'block\'');

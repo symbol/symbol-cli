@@ -1,8 +1,7 @@
 import {Password} from 'nem2-sdk';
 import {Profile} from '../model/profile';
-import {OptionsPasswordResolver} from '../options-resolver';
+import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {PasswordValidator} from '../validators/password.validator';
 import {Resolver} from './resolver';
 import {PrivateKeyValidator} from '../validators/privateKey.validator';
 
@@ -19,10 +18,12 @@ export class PrivateKeyResolver implements Resolver {
      * @returns {Password}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsPasswordResolver(options,
+        const resolution = OptionsResolver(options,
             'privateKey',
             () => undefined,
-            'Enter your private key: ').trim();
+            'Enter your private key: ',
+            undefined,
+            true).trim();
         new PrivateKeyValidator().validate(resolution);
         return resolution;
     }

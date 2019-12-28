@@ -23,7 +23,7 @@ export class AddressResolver implements Resolver {
         'address',
         () => secondSource ? secondSource.address.pretty() : undefined,
         altText ? altText : 'Enter an address: ').trim();
-        new AddressValidator().validate(resolution, {name: 'address', source: resolution});
+        new AddressValidator().validate(resolution);
         return Address.createFromRawAddress(resolution);
     }
 }
@@ -45,7 +45,7 @@ export class RecipientAddressResolver implements Resolver {
             'recipientAddress',
             () => undefined,
             altText ? altText : 'Enter the recipient address or alias: ').trim();
-        new AddressAliasValidator().validate(resolution, {name: 'recipientAddress', source: resolution});
+        new AddressAliasValidator().validate(resolution);
         return AccountService.getRecipient(resolution);
     }
 }

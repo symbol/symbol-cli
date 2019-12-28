@@ -22,7 +22,7 @@ export class HeightResolver implements Resolver {
         'height',
         () =>  undefined,
         altText ? altText : 'Enter the block height: ').trim();
-        new HeightValidator().validate(resolution, {name: 'height', source: resolution});
+        new HeightValidator().validate(resolution);
         return  UInt64.fromNumericString(resolution);
     }
 }

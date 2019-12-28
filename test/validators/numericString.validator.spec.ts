@@ -22,27 +22,27 @@ describe('numeric string validator', () => {
 
     it('Valid numeric string (0)', () => {
         const value = '0';
-        expect(new NumericStringValidator().validate(value, {name: 'value', source: value}))
+        expect(new NumericStringValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('Valid numeric string (large positive number)', () => {
         const value = '10000000000000000000000000';
-        expect(new NumericStringValidator().validate(value, {name: 'value', source: value}))
+        expect(new NumericStringValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('Invalid numeric string (string)', () => {
         const value = 'test';
         expect(() => {
-            new NumericStringValidator().validate(value, {name: 'value', source: value});
+            new NumericStringValidator().validate(value);
         }).to.throws('Enter a number.');
     });
 
     it('Invalid numeric string (negative)', () => {
         const value = '-1';
         expect(() => {
-            new NumericStringValidator().validate(value, {name: 'value', source: value});
+            new NumericStringValidator().validate(value);
         }).to.throws('Enter a number.');
     });
 

@@ -22,7 +22,7 @@ export class PublicKeyResolver implements Resolver {
             'publicKey',
             () => undefined,
             altText ? altText : 'Enter the public key: ').trim();
-        new PublicKeyValidator().validate(resolution, {name: 'publicKey', source: resolution});
+        new PublicKeyValidator().validate(resolution);
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
 }
@@ -44,7 +44,7 @@ export class MultisigAccountPublicKeyResolver implements Resolver {
             'multisigAccountPublicKey',
             () => undefined,
             altText ? altText : 'Enter the multisig account public key: ').trim();
-        new PublicKeyValidator().validate(resolution, {name: 'multisigAccountPublicKey', source: resolution});
+        new PublicKeyValidator().validate(resolution);
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
 }
@@ -66,7 +66,7 @@ export class CosignatoryPublicKeyResolver implements Resolver {
             'cosignatoryPublicKey',
             () => undefined,
             altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ').trim();
-        new PublicKeysValidator().validate(resolution, {name: 'cosignatoryPublicKey', source: resolution});
+        new PublicKeysValidator().validate(resolution);
         const cosignatoryPublicKeys = resolution.split(',');
         const cosignatories: PublicAccount[] = [];
         cosignatoryPublicKeys.map((cosignatory: string) => {

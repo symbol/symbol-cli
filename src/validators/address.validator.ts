@@ -29,7 +29,7 @@ export class AddressValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         try {
             Address.createFromRawAddress(value);
         } catch (err) {
@@ -49,7 +49,7 @@ export class AddressAliasValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         const aliasTag = '@';
         if (value.charAt(0) !== aliasTag) {
             try {

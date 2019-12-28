@@ -1,6 +1,6 @@
 import {Password} from 'nem2-sdk';
 import {Profile} from '../model/profile';
-import {OptionsPasswordResolver} from '../options-resolver';
+import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
 import {PasswordValidator} from '../validators/password.validator';
 import {Resolver} from './resolver';
@@ -18,10 +18,12 @@ export class PasswordResolver implements Resolver {
      * @returns {Password}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsPasswordResolver(options,
+        const resolution = OptionsResolver(options,
             'password',
             () => undefined,
-            'Enter your wallet password: ');
+            'Enter your wallet password: ',
+            undefined,
+            true);
         new PasswordValidator().validate(resolution);
         return new Password(resolution);
     }

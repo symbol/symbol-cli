@@ -43,7 +43,7 @@ export class RecipientPublicKeyResolver implements Resolver {
             'recipientPublicKey',
             () => undefined,
             'Enter the recipient public key: ');
-        new PublicKeyValidator().validate(recipientPublicKey, {name: 'recipientPublicKey', source: recipientPublicKey});
+        new PublicKeyValidator().validate(recipientPublicKey);
         return PublicAccount
             .createFromPublicKey(recipientPublicKey, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }

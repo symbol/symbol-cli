@@ -22,26 +22,26 @@ describe('address validator', () => {
 
     it('Valid address (uppercase)', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        expect(new AddressValidator().validate(address, {name: 'address', source: address}))
+        expect(new AddressValidator().validate(address))
             .to.be.equal(undefined);
     });
 
     it('Valid address (lowercase)', () => {
         const address = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
-        expect(new AddressValidator().validate(address, {name: 'address', source: address}))
+        expect(new AddressValidator().validate(address))
             .to.be.equal(undefined);
     });
 
     it('Valid address (dash)', () => {
         const address = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
-        expect(new AddressValidator().validate(address, {name: 'address', source: address}))
+        expect(new AddressValidator().validate(address))
             .to.be.equal(undefined);
     });
 
     it('Invalid address（length）', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
-            new AddressValidator().validate(address, {name: 'address', source: address});
+            new AddressValidator().validate(address);
         }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 
@@ -50,39 +50,39 @@ describe('address validator', () => {
 describe('address and alias validator', () => {
     it('Valid address (uppercase)', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        expect(new AddressAliasValidator().validate(address, {name: 'address', source: address}))
+        expect(new AddressAliasValidator().validate(address))
             .to.be.equal(undefined);
     });
 
     it('Valid address (lowercase)', () => {
         const address = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
-        expect(new AddressAliasValidator().validate(address, {name: 'address', source: address}))
+        expect(new AddressAliasValidator().validate(address))
             .to.be.equal(undefined);
     });
 
     it('Valid address (dash)', () => {
         const address = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
-        expect(new AddressAliasValidator().validate(address, {name: 'address', source: address}))
+        expect(new AddressAliasValidator().validate(address))
             .to.be.equal(undefined);
     });
 
     it('Invalid address（length）', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
-            new AddressAliasValidator().validate(address, {name: 'address', source: address});
+            new AddressAliasValidator().validate(address);
         }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 
     it('Valid alias', () => {
         const alias = '@nem';
-        expect(new AddressAliasValidator().validate(alias, {name: 'address', source: alias}))
+        expect(new AddressAliasValidator().validate(alias))
             .to.be.equal(undefined);
     });
 
     it('Invalid alias', () => {
         const alias = '@myOwnAlias';
         expect(() => {
-            new AddressAliasValidator().validate(alias, {name: 'address', source: alias});
+            new AddressAliasValidator().validate(alias);
         }).to.throws('Enter a valid alias. Example: @xem');
     });
 

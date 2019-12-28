@@ -22,27 +22,27 @@ describe('binary validator', () => {
 
     it('1', () => {
         const value = 1;
-        expect(new BinaryValidator().validate(value, {name: 'value', source: value.toString()}))
+        expect(new BinaryValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('0', () => {
         const value = 0;
-        expect(new BinaryValidator().validate(value, {name: 'value', source: value.toString()}))
+        expect(new BinaryValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('negative', () => {
         const value = -1;
         expect(() => {
-            new BinaryValidator().validate(value, {name: 'value', source: value.toString()});
+            new BinaryValidator().validate(value);
         }).to.throws('The value must be 0 or 1.');
     });
 
     it('decimal', () => {
         const value = 1.1;
         expect(() => {
-            new BinaryValidator().validate(value, {name: 'value', source: value.toString()});
+            new BinaryValidator().validate(value);
         }).to.throws('The value must be 0 or 1.');
     });
 });

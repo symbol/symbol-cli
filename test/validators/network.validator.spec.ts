@@ -22,14 +22,14 @@ describe('network type validator', () => {
 
     it('Valid network type', () => {
         const networkType = 'MIJIN_TEST';
-        expect(new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType}))
+        expect(new NetworkValidator().validate(networkType))
             .to.be.equal(undefined);
     });
 
     it('Invalid network type', () => {
         const networkType = 'TEST';
         expect(() => {
-            new NetworkValidator().validate(networkType, {name: 'networkType', source: networkType});
+            new NetworkValidator().validate(networkType);
         }).to.throws('Enter a valid network type');
     });
 

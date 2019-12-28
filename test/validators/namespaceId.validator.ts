@@ -22,14 +22,14 @@ describe('mosaic id validator', () => {
 
     it('Valid namespace id ', () => {
         const value = '85BBEA6CC462B244';
-        expect(new NamespaceIdValidator().validate(value, {name: 'value', source: value}))
+        expect(new NamespaceIdValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('Invalid namespace id (string)', () => {
         const value = 'test';
         expect(() => {
-            new NamespaceIdValidator().validate(value, {name: 'value', source: value});
+            new NamespaceIdValidator().validate(value);
         }).to.throws('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
     });
 

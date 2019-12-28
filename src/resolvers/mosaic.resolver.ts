@@ -24,7 +24,7 @@ export class MosaicIdResolver implements Resolver {
         'mosaicId',
         () =>  undefined,
         altText ? altText : 'Enter the mosaic id in hexadecimal format: ').trim();
-        new MosaicIdValidator().validate(resolution, {name: 'mosaicId', source: resolution});
+        new MosaicIdValidator().validate(resolution);
         return new MosaicId(resolution);
     }
 }
@@ -46,7 +46,7 @@ export class MosaicIdAliasResolver implements Resolver {
             'mosaicId',
             () =>  undefined,
             altText ? altText : 'Enter the mosaic id or alias: ').trim();
-        new MosaicIdAliasValidator().validate(resolution, {name: 'mosaicIdAlias', source: resolution});
+        new MosaicIdAliasValidator().validate(resolution);
         return MosaicService.getMosaicId(resolution);
     }
 }
@@ -69,7 +69,7 @@ export class MosaicsResolver implements Resolver {
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
                 ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ').trim();
-        new MosaicsValidator().validate(resolution, {name: 'mosaics', source: resolution});
+        new MosaicsValidator().validate(resolution);
         return resolution ? MosaicService.getMosaics(resolution) : [];
     }
 }

@@ -1,8 +1,6 @@
-import {Password} from 'nem2-sdk';
 import {Profile} from '../model/profile';
-import {OptionsPasswordResolver, OptionsResolver} from '../options-resolver';
+import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {PasswordValidator} from '../validators/password.validator';
 import {Resolver} from './resolver';
 
 /**
@@ -18,10 +16,9 @@ export class ProfileNameResolver implements Resolver {
      * @returns {string}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+        return OptionsResolver(options,
             'profile',
             () => undefined,
             'Enter profile name: ').trim();
-        return resolution;
     }
 }

@@ -21,7 +21,7 @@ export class TransactionTypeResolver implements Resolver {
             'transactionType',
             () => undefined,
             altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ').trim();
-        new TransactionTypeValidator().validate(resolution, {name: 'transactionType', source: resolution});
+        new TransactionTypeValidator().validate(resolution);
         return parseInt(resolution, 16);
     }
 }

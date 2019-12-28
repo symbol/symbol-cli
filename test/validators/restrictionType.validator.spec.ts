@@ -24,20 +24,20 @@ import {
 describe('Account restriction direction validator', () => {
     it('valid direction incoming', () => {
         const value = 'incoming';
-        expect(new AccountRestrictionDirectionValidator().validate(value, {name: 'value', source: value}))
+        expect(new AccountRestrictionDirectionValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('valid direction outgoing', () => {
         const value = 'outgoing';
-        expect(new AccountRestrictionDirectionValidator().validate(value, {name: 'value', source: value}))
+        expect(new AccountRestrictionDirectionValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('invalid value', () => {
         const value = '123';
         expect(() => {
-            new AccountRestrictionDirectionValidator().validate(value, {name: 'value', source: value});
+            new AccountRestrictionDirectionValidator().validate(value);
         }).to.throws('restrictionDirection must be one of \'incoming\' or \'outgoing\'');
     });
 });
@@ -45,20 +45,20 @@ describe('Account restriction direction validator', () => {
 describe('Account Restriction type validator', () => {
     it('valid value allow', () => {
         const value = 'allow';
-        expect(new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value}))
+        expect(new AccountRestrictionTypeValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('valid value block', () => {
         const value = 'block';
-        expect(new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value}))
+        expect(new AccountRestrictionTypeValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('invalid value', () => {
         const value = '1';
         expect(() => {
-            new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value});
+            new AccountRestrictionTypeValidator().validate(value);
         }).to.throws('restrictionType must be one of \'allow\' or \'block\'');
     });
 });

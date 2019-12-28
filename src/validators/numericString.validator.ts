@@ -29,7 +29,7 @@ export class NumericStringValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         try {
             UInt64.fromNumericString(value);
         } catch (err) {

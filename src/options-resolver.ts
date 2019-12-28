@@ -22,9 +22,11 @@ export const OptionsResolver = (options: any,
                                 key: string,
                                 secondSource: () => string | undefined,
                                 promptText: string,
-                                readlineDependency?: any) => {
+                                readlineDependency?: any,
+                                hide?: boolean) => {
     const readline = readlineDependency || readlineSync;
-    return options[key] !== undefined ? options[key] : (secondSource() || readline.question(promptText));
+    return options[key] !== undefined ? options[key] : (secondSource() ||
+        (hide ? readline.questionNewPassword(promptText) : readline.question(promptText)));
 };
 
 export const OptionsChoiceResolver = (options: any,
@@ -34,13 +36,4 @@ export const OptionsChoiceResolver = (options: any,
                                       readlineDependency?: any) => {
     const readline = readlineDependency || readlineSync;
     return options[key] !== undefined ? options[key] : (readline.keyInSelect(choices, promptText));
-};
-
-export const OptionsPasswordResolver = (options: any,
-                                        key: string,
-                                        secondSource: () => string | undefined,
-                                        promptText: string,
-                                        readlineDependency?: any) => {
-    const readline = readlineDependency || readlineSync;
-    return options[key] !== undefined ? options[key] : (secondSource() || readline.questionNewPassword(promptText));
 };

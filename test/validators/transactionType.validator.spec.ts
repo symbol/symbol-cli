@@ -22,14 +22,14 @@ describe('Transaction Type validator', () => {
 
     it('Valid transaction type', () => {
         const value = '414C';
-        expect(new TransactionTypeValidator().validate(value, {name: 'value', source: value}))
+        expect(new TransactionTypeValidator().validate(value))
             .to.be.equal(undefined);
     });
 
     it('Invalid transaction type', () => {
         const value = 'test';
         expect(() => {
-            new TransactionTypeValidator().validate(value, {name: 'value', source: value});
+            new TransactionTypeValidator().validate(value);
         }).to.throws('Enter a transaction type in hexadecimal. Example: 4154');
     });
 

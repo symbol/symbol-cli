@@ -29,7 +29,7 @@ export class NamespaceIdValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         try {
             const namespaceIdUInt64 = UInt64.fromHex(value);
             const ignored = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);

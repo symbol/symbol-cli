@@ -28,7 +28,7 @@ export class PublicKeyValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
             throw new ExpectedError('public key should be a 64 characters hexadecimal string');
         }
@@ -46,7 +46,7 @@ export class PublicKeysValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         const publicKeys = value.split(',');
         publicKeys.map((publicKey: string) => {
             if (publicKey.length !== 64 || !/^[0-9a-fA-F]+$/.test(publicKey)) {

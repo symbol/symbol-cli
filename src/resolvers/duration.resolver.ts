@@ -22,7 +22,7 @@ export class DurationResolver implements Resolver {
         'duration',
         () =>  undefined,
         altText ? altText : 'Enter the duration in number of blocks: ').trim();
-        new NumericStringValidator().validate(resolution, {name: 'duration', source: resolution});
+        new NumericStringValidator().validate(resolution);
         return UInt64.fromNumericString(resolution);
     }
 }
