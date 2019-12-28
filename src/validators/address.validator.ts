@@ -17,6 +17,7 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {Address, NamespaceId} from 'nem2-sdk';
+import {AccountService} from '../service/account.service';
 
 /**
  * Address validator
@@ -50,20 +51,10 @@ export class AddressAliasValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        const aliasTag = '@';
-        if (value.charAt(0) !== aliasTag) {
-            try {
-                Address.createFromRawAddress(value);
-            } catch (error) {
-                throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-            }
-        } else {
-            const alias = value.substring(1);
-            try {
-                const ignored = new NamespaceId(alias);
-            } catch (error) {
-                throw new ExpectedError('Enter a valid alias. Example: @xem');
-            }
+        try {
+            const ignored = AccountService.getRecipient(value);
+        } catch {
+            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
         }
     }
 }

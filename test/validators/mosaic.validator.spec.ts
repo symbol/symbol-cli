@@ -18,21 +18,21 @@
 import {expect} from 'chai';
 import {MosaicValidator} from '../../src/validators/mosaic.validator';
 
-describe('mosaic  validator', () => {
+describe('Mosaic validator', () => {
 
-    it('Valid mosaic (@aliasName)', () => {
+    it('default case (@aliasName)', () => {
         const mosaic = '@cat.currency::1000000';
         expect(new MosaicValidator().validate(mosaic))
             .to.be.equal(undefined);
     });
 
-    it('Valid mosaic (hex)', () => {
+    it('default case (hex)', () => {
         const mosaic = '85BBEA6CC462B244::1000000';
         expect(new MosaicValidator().validate(mosaic))
             .to.be.equal(undefined);
     });
 
-    it('Invalid mosaic', () => {
+    it('should throw error if alias does not start with @ symbol', () => {
         const mosaic = 'cat.currencxy::1000000';
         expect(() => {
             new MosaicValidator().validate(mosaic);
@@ -40,7 +40,7 @@ describe('mosaic  validator', () => {
             '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
     });
 
-    it('Invalid format', () => {
+    it('should throw error if format is invalid', () => {
         const mosaic = 'cat.currencxy:1000000';
         expect(() => {
             new MosaicValidator().validate(mosaic);

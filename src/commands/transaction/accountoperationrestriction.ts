@@ -23,14 +23,12 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
 import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 import {TransactionTypeValidator} from '../../validators/transactionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 't',
         description: 'Restriction flag. (0: AllowOutgoingTransactionType, 1: BlockOutgoingTransactionType)',
-        validator: new AccountRestrictionTypeValidator(),
     })
     flags: number;
 

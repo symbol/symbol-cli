@@ -20,9 +20,9 @@ export class AddressResolver implements Resolver {
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const resolution = OptionsResolver(options,
-        'address',
-        () => secondSource ? secondSource.address.pretty() : undefined,
-        altText ? altText : 'Enter an address: ').trim();
+            'address',
+            () => secondSource ? secondSource.address.pretty() : undefined,
+            altText ? altText : 'Enter an address: ').trim();
         new AddressValidator().validate(resolution);
         return Address.createFromRawAddress(resolution);
     }
@@ -49,4 +49,3 @@ export class RecipientAddressResolver implements Resolver {
         return AccountService.getRecipient(resolution);
     }
 }
-

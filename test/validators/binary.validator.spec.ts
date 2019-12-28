@@ -20,26 +20,23 @@ import {BinaryValidator} from '../../src/validators/binary.validator';
 
 describe('binary validator', () => {
 
-    it('1', () => {
-        const value = 1;
-        expect(new BinaryValidator().validate(value))
+    it('default case', () => {
+        const positiveValue = 1;
+        const zeroValue = 0;
+        expect(new BinaryValidator().validate(positiveValue))
+            .to.be.equal(undefined);
+        expect(new BinaryValidator().validate(zeroValue))
             .to.be.equal(undefined);
     });
 
-    it('0', () => {
-        const value = 0;
-        expect(new BinaryValidator().validate(value))
-            .to.be.equal(undefined);
-    });
-
-    it('negative', () => {
+    it('should throw error if value is negative', () => {
         const value = -1;
         expect(() => {
             new BinaryValidator().validate(value);
         }).to.throws('The value must be 0 or 1.');
     });
 
-    it('decimal', () => {
+    it('should throw error if value is decimal', () => {
         const value = 1.1;
         expect(() => {
             new BinaryValidator().validate(value);

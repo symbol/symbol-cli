@@ -21,12 +21,12 @@ import {AccountService} from '../../src/service/account.service';
 
 describe('Account service', () => {
 
-    it('getRecipient should return an alias', () => {
+    it('should return an alias', () => {
         const rawRecipient = '@foo';
         expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
     });
 
-    it('getRecipient should return an address', () => {
+    it('should return an address', () => {
         const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRAM';
         expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(Address);
     });

@@ -18,15 +18,15 @@
 import {expect} from 'chai';
 import {NetworkValidator} from '../../src/validators/network.validator';
 
-describe('network type validator', () => {
+describe('Network type validator', () => {
 
-    it('Valid network type', () => {
+    it('default case', () => {
         const networkType = 'MIJIN_TEST';
         expect(new NetworkValidator().validate(networkType))
             .to.be.equal(undefined);
     });
 
-    it('Invalid network type', () => {
+    it('should throw error if network type is unknown', () => {
         const networkType = 'TEST';
         expect(() => {
             new NetworkValidator().validate(networkType);

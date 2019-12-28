@@ -18,28 +18,25 @@
 import {expect} from 'chai';
 import {NumericStringValidator} from '../../src/validators/numericString.validator';
 
-describe('numeric string validator', () => {
+describe('Numeric string validator', () => {
 
-    it('Valid numeric string (0)', () => {
-        const value = '0';
-        expect(new NumericStringValidator().validate(value))
+    it('default case', () => {
+        const zeroValue = '0';
+        const largePositiveValue = '10000000000000000000000000';
+        expect(new NumericStringValidator().validate(zeroValue))
+            .to.be.equal(undefined);
+        expect(new NumericStringValidator().validate(largePositiveValue))
             .to.be.equal(undefined);
     });
 
-    it('Valid numeric string (large positive number)', () => {
-        const value = '10000000000000000000000000';
-        expect(new NumericStringValidator().validate(value))
-            .to.be.equal(undefined);
-    });
-
-    it('Invalid numeric string (string)', () => {
+    it('should throw error if not a numeric string', () => {
         const value = 'test';
         expect(() => {
             new NumericStringValidator().validate(value);
         }).to.throws('Enter a number.');
     });
 
-    it('Invalid numeric string (negative)', () => {
+    it('should throw error if numeric string is negative', () => {
         const value = '-1';
         expect(() => {
             new NumericStringValidator().validate(value);

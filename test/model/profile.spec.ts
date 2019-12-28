@@ -60,6 +60,23 @@ describe('Profile', () => {
         expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
     });
 
+    it('should validate if password opens wallet', () => {
+        const privateKey =  '0'.repeat(64);
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
+            'default',
+            password,
+            privateKey,
+            NetworkType.MIJIN_TEST);
+        const profile = new Profile(
+            simpleWallet,
+            'url',
+            'generationHash',
+        );
+        expect(profile.isPasswordValid(new Password('12345678'))).to.be.equal(false);
+        expect(profile.isPasswordValid(password)).to.be.equal(true);
+    });
+
     it('should decrypt profile', () => {
         const privateKey =  '0'.repeat(64);
         const password = new Password('password');
@@ -79,4 +96,22 @@ describe('Profile', () => {
         expect(profile.address).to.be.equal(simpleWallet.address);
     });
 
+    it('should throw error if trying to decrypt profile with an invalid password', () => {
+        const privateKey =  '0'.repeat(64);
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
+            'default',
+            password,
+            privateKey,
+            NetworkType.MIJIN_TEST);
+        const profile = new Profile(
+            simpleWallet,
+            'url',
+            'generationHash',
+        );
+        const profileOptions = new ProfileOptions();
+        profileOptions.password = 'test12345678';
+        expect(() => profile.decrypt(profileOptions))
+            .to.throws('The password provided does not match your account password');
+    });
 });

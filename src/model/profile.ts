@@ -20,9 +20,7 @@ import {HorizontalTable} from 'cli-table3';
 import {ExpectedError} from 'clime';
 import {Account, Address, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {ISimpleWalletDTO} from 'nem2-sdk/dist/src/infrastructure/wallet/simpleWalletDTO';
-import * as readlineSync from 'readline-sync';
 import {ProfileOptions} from '../profile.command';
-import {PasswordValidator} from '../validators/password.validator';
 import {PasswordResolver} from '../resolvers/password.resolver';
 
 /**
