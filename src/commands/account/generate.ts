@@ -113,7 +113,7 @@ export default class extends Command {
         const networkType = options.getNetwork(OptionsResolver(options,
             'network',
             () => undefined,
-            'Enter a network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
+            'Enter a network type: '));
 
         const profile = options.profile || readlineSync.question('Insert the profile name: ');
         profile.trim();

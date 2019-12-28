@@ -19,7 +19,7 @@ import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {MosaicId, NamespaceId} from 'nem2-sdk';
 
 /**
- * Mosaic id validator
+ * Mosaic id validatorm
  */
 export class MosaicIdValidator implements Validator<string> {
 

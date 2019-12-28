@@ -23,6 +23,7 @@ import {AccountHttp, MosaicHttp, MosaicId, MosaicService, MosaicView} from 'nem2
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -76,11 +77,7 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Enter the mosaic id in hexadecimal format: ');
-        const mosaicId = new MosaicId(options.mosaicId);
+        const mosaicId = new MosaicIdResolver().resolve(options);
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),

@@ -19,9 +19,9 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceInfo, UInt64} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {NamespaceHttp, NamespaceInfo} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -29,14 +29,14 @@ export class CommandOptions extends ProfileOptions {
         flag: 'n',
         description: 'Namespace name. Example: cat.currency',
     })
-    name: string;
+    namespaceName: string;
 
     @option({
         flag: 'h',
         description: 'Namespace id in hexadecimal.',
         validator: new NamespaceIdValidator(),
     })
-    hex: string;
+    namespaceId: string;
 }
 
 export class NamespaceInfoTable {
@@ -94,24 +94,11 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        let namespaceId: NamespaceId;
-        if (options.name) {
-            options.name = OptionsResolver(options,
-                'name',
-                () => undefined,
-                'Enter the namespace name: ');
-            namespaceId = new NamespaceId(options.name);
-        } else {
-            options.hex = OptionsResolver(options,
-                'hex',
-                () => undefined,
-                'Enter the namespace id in hexadecimal: ');
-            const namespaceIdUInt64 = UInt64.fromHex(options.hex);
-            namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
-        }
-
         const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceId = options.namespaceName ?
+            new NamespaceNameResolver().resolve(options) :
+            new NamespaceIdResolver().resolve(options);
+
         namespaceHttp.getNamespace(namespaceId)
             .subscribe((namespaceInfo) => {
                 this.spinner.stop(true);

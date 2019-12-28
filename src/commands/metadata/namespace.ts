@@ -21,6 +21,7 @@ import {Metadata, MetadataHttp, NamespaceId} from 'nem2-sdk';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MetadataEntryTable} from './account';
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -43,14 +44,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        options.namespaceName = OptionsResolver(options,
-            'namespaceId',
-            () => undefined,
-            'Enter the namespace name: ');
-        const namespaceId = new NamespaceId(options.namespaceName);
-
         const metadataHttp = new MetadataHttp(profile.url);
+        const namespaceId = new NamespaceNameResolver().resolve(options);
+
         metadataHttp.getNamespaceMetadata(namespaceId)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);

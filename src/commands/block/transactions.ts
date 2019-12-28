@@ -18,10 +18,10 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {TransactionService} from '../../service/transaction.service';
 import {HeightValidator} from '../../validators/block.validator';
+import {HeightResolver} from '../../resolvers/height.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -65,10 +65,10 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        options.height =  OptionsResolver(options,
-            'height',
-            () => undefined,
-            'Enter the block height: ');
+        this.spinner.start();
+        const profile = this.getProfile(options);
+        const blockHttp = new BlockHttp(profile.url);
+        const height = new HeightResolver().resolve(options);
 
         let pageSize = options.pageSize || 10;
         if (pageSize < 10) {
@@ -84,11 +84,7 @@ export default class extends ProfileCommand {
             order = 'DESC';
         }
 
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
-
-        blockHttp.getBlockTransactions(options.height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
+        blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
                 this.spinner.stop(true);
                 let txt = '\n';

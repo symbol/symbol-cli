@@ -17,9 +17,9 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp, ReceiptHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {ReceiptHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HeightResolver} from '../../resolvers/height.resolver';
 import {ReceiptService} from '../../service/receipt.service';
 import {HeightValidator} from '../../validators/block.validator';
 
@@ -45,16 +45,11 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.height =  OptionsResolver(options,
-            'height',
-            () => undefined,
-            'Enter the block height: ');
-
         this.spinner.start();
         const profile = this.getProfile(options);
         const receiptHttp = new ReceiptHttp(profile.url);
-
-        receiptHttp.getBlockReceipts(options.height)
+        const height =  new HeightResolver().resolve(options);
+        receiptHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
                 let txt = '';

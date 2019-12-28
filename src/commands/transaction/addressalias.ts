@@ -14,16 +14,19 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
-import {Address, AddressAliasTransaction, Deadline, NamespaceId, UInt64} from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {AddressAliasTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
 import {AddressValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
+import {AddressResolver} from '../../resolvers/address.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {LinkActionResolver} from '../../resolvers/action.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'a',
+        flag: 'k',
         description: 'Alias action (1: Link, 0: Unlink).',
         validator: new BinaryValidator(),
     })
@@ -40,7 +43,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespace: string;
+    namespaceName: string;
 }
 
 @command({
@@ -58,39 +61,18 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
 
-        options.namespace = OptionsResolver(options,
-            'namespace',
-            () => undefined,
-            'Enter namespace name: ');
-        const namespaceId = new NamespaceId(options.namespace);
-
-        options.address = OptionsResolver(options,
-            'address',
-            () => undefined,
-            'Enter the address: ');
-
-        const address = Address.createFromRawAddress(options.address);
-        if (address.networkType !== profile.networkType) {
-            throw new ExpectedError('The address network doesn\'t match network option.');
-        }
-
-        options.action = +OptionsResolver(options,
-            'action',
-            () => undefined,
-            'Enter alias action (1: Link, 0: Unlink): ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
+        const namespaceId = new NamespaceNameResolver().resolve(options);
+        const address = new AddressResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
+        const action = new LinkActionResolver().resolve(options);
 
         const addressAliasTransaction = AddressAliasTransaction.create(
             Deadline.create(),
-            options.action,
+            action,
             namespaceId,
             address,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
         const signedTransaction = account.sign(addressAliasTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }

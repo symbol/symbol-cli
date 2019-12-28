@@ -17,7 +17,9 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
+import {AccountHttp} from 'nem2-sdk';
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
 
 @command({
     description: 'Fetch aggregate bonded transactions from account',
@@ -31,9 +33,9 @@ export default class extends AccountTransactionsCommand {
     @metadata
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
-
-        const address = this.getAddress(options);
-        const accountHttp = this.getAccountHttp(options);
+        const profile = this.getProfile(options);
+        const accountHttp =  new AccountHttp(profile.url);
+        const address = new AddressResolver().resolve(options, profile);
 
         accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {

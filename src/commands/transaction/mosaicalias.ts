@@ -15,19 +15,20 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, MosaicAliasTransaction, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {Deadline, MosaicAliasTransaction} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
+import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'a',
+        flag: 'k',
         description: 'Alias action (1: Link, 0: Unlink).',
-        validator: new BinaryValidator(),
     })
-    action: number;
+    action: string;
 
     @option({
         flag: 'm',
@@ -40,7 +41,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespace: string;
+    namespaceName: string;
 }
 
 @command({
@@ -58,35 +59,18 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
 
-        options.namespace = OptionsResolver(options,
-            'namespace',
-            () => undefined,
-            'Enter namespace name: ');
-        const namespaceId = new NamespaceId(options.namespace);
-
-        options.action = OptionsResolver(options,
-            'action',
-            () => undefined,
-            'Enter alias action (1: Link, 0: Unlink): ');
-
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Enter mosaic in hexadecimal format: ');
-        const mosaicId = new MosaicId(options.mosaicId);
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
+        const namespaceId = new NamespaceNameResolver().resolve(options);
+        const mosaicId = new MosaicIdResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
+        const action = new LinkActionResolver().resolve(options);
 
         const mosaicAliasTransaction = MosaicAliasTransaction.create(
             Deadline.create(),
-            options.action,
+            action,
             namespaceId,
             mosaicId,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
         const signedTransaction = account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

@@ -26,3 +26,12 @@ export const OptionsResolver = (options: any,
     const readline = readlineDependency || readlineSync;
     return options[key] !== undefined ? options[key] : (secondSource() || readline.question(promptText));
 };
+
+export const OptionsChoiceResolver = (options: any,
+                                      key: string,
+                                      promptText: string,
+                                      choices: string[],
+                                      readlineDependency?: any) => {
+    const readline = readlineDependency || readlineSync;
+    return options[key] !== undefined ? options[key] : (readline.keyInSelect(choices, promptText));
+};

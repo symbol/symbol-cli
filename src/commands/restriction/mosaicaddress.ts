@@ -19,9 +19,10 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {Address, MosaicId, RestrictionMosaicHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {RestrictionMosaicHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {AddressValidator} from '../../validators/address.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
@@ -80,21 +81,10 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Enter the mosaic id in hexadecimal format: ');
-        const mosaicId = new MosaicId(options.mosaicId);
-
-        options.address =  OptionsResolver(options,
-            'address',
-            () => account.address.plain(),
-            'Enter an address: ');
-        const address = Address.createFromRawAddress(options.address);
-
         const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const address = new AddressResolver().resolve(options, profile);
+        const mosaicId = new MosaicIdResolver().resolve(options, profile);
+
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);

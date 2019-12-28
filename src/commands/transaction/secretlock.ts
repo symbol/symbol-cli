@@ -15,11 +15,15 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, Mosaic, SecretLockTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AccountService} from '../../service/account.service';
-import {MosaicService} from '../../service/mosaic.service';
+import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AmountResolver} from '../../resolvers/amount.resolver';
+import {DurationResolver} from '../../resolvers/duration.resolver';
+import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
+import {SecretResolver} from '../../resolvers/secret.resolver';
 import {AddressAliasValidator} from '../../validators/address.validator';
 import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
@@ -82,54 +86,27 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
 
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Enter locked mosaic identifier: ');
-
-        options.amount = OptionsResolver(options,
-            'amount',
-            () => undefined,
-            'Enter amount of mosaic units to lock: ');
-
-        options.recipientAddress = OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            'Enter address that receives the funds once unlocked: ');
-
-        options.duration = OptionsResolver(options,
-            'duration',
-            () => undefined,
-            'Enter number of blocks for which a lock should be valid: ');
-
-        options.secret = OptionsResolver(options,
-            'secret',
-            () => undefined,
-            'Enter proof hashed in hexadecimal format: ');
-
-        options.hashAlgorithm = +OptionsResolver(options,
-            'hashAlgorithm',
-            () => undefined,
-            'Enter algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
-
-        const mosaicId = MosaicService.getMosaicId(options.mosaicId);
-        const recipientAddress = AccountService.getRecipient(options.recipientAddress);
+        const mosaicId = new MosaicIdAliasResolver()
+            .resolve(options, undefined, 'Enter locked mosaic identifier or alias: ');
+        const amount = new AmountResolver()
+            .resolve(options, undefined, 'Enter absolute amount of mosaic units to lock: ');
+        const recipientAddress = new RecipientAddressResolver()
+            .resolve(options, undefined, 'Enter address or @alias that receives the funds once unlocked: ');
+        const duration = new DurationResolver()
+            .resolve(options, undefined, 'Enter number of blocks for which a lock should be valid: ');
+        const secret = new SecretResolver().resolve(options);
+        const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            new Mosaic(mosaicId,
-                UInt64.fromNumericString(options.amount)),
-            UInt64.fromNumericString(options.duration),
-            options.hashAlgorithm,
-            options.secret,
+            new Mosaic(mosaicId, amount),
+            duration,
+            hashAlgorithm,
+            secret,
             recipientAddress,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
         const signedTransaction = account.sign(secretLockTransaction, profile.networkGenerationHash);
 
         this.announceTransaction(signedTransaction, profile.url);

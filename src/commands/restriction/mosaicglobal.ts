@@ -19,9 +19,9 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -70,13 +70,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Enter the mosaic id in hexadecimal format: ');
-        const mosaicId = new MosaicId(options.mosaicId);
-
         const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const mosaicId = new MosaicIdResolver().resolve(options, profile);
+
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);

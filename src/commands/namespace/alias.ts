@@ -17,18 +17,18 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {NamespaceHttp, NamespaceId} from 'nem2-sdk';
+import {NamespaceHttp} from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    name: string;
+    namespaceName: string;
 }
 
 @command({
@@ -44,14 +44,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        options.name = OptionsResolver(options,
-            'name',
-            () => undefined,
-            'Enter the namespace name: ');
-        const namespaceId = new NamespaceId(options.name);
-
         const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceId = new NamespaceNameResolver().resolve(options);
+
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),

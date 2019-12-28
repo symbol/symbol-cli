@@ -17,9 +17,7 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
-import {Address} from 'nem2-sdk';
 import {Profile} from './model/profile';
-import {OptionsResolver} from './options-resolver';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
 import {PasswordValidator} from './validators/password.validator';
@@ -58,21 +56,6 @@ export abstract class ProfileCommand extends Command {
             'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
             'if not, use \'nem2-cli profile create\' to create a new profile.');
         }
-    }
-
-    /**
-     * Get address from a profile name.
-     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
-     * @returns {Address}
-     */
-    public getAddress(options: ProfileOptions): Address {
-        const profile = this.getProfile(options);
-
-        return Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.address.pretty(),
-                'Introduce an address: '));
     }
 
     /**

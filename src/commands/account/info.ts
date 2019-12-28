@@ -32,9 +32,9 @@ import {
 } from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressValidator} from '../../validators/address.validator';
+import {AddressResolver} from '../../resolvers/address.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -171,17 +171,11 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         const profile = this.getProfile(options);
-
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.address.plain(),
-                'Enter the address: '));
-
         const accountHttp = new AccountHttp(profile.url);
         const multisigHttp = new MultisigHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
+        const address = new AddressResolver().resolve(options, profile);
 
         forkJoin(
             accountHttp.getAccountInfo(address),

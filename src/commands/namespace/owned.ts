@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Address, NamespaceHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
 import {AddressValidator} from '../../validators/address.validator';
 import {NamespaceInfoTable} from './info';
 
@@ -46,11 +46,7 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.address.plain(),
-                'Enter the address: '));
+        const address = new AddressResolver().resolve(options, profile);
 
         const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();

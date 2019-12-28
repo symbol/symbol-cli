@@ -36,16 +36,6 @@ export abstract class AccountTransactionsCommand extends ProfileCommand {
         super();
         this.transactionService = new TransactionService();
     }
-
-    /**
-     * Creates an account repository given a profile.
-     * @param {ProfileOptions} options.
-     * @returns {AccountHttp}
-     */
-    public getAccountHttp(options: ProfileOptions): AccountHttp {
-        const profile = this.getProfile(options);
-        return new AccountHttp(profile.url);
-    }
 }
 
 /**
