@@ -29,7 +29,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
         description: 'Restriction flags.' +
-            '(0: AllowOutgoingAddress, 1: AllowIncomingAddress, 2: BlockOutgoingAddress, 3: BlockIncomingAddress)',
+            '(0: AllowOutgoingAddress, 1: BlockOutgoingAddress, 2: AllowIncomingAddress, 3: BlockIncomingAddress)',
     })
     flags: number;
 
@@ -45,7 +45,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Address or @alias to allow/block.',
         validator: new AddressAliasValidator(),
     })
-    address: string;
+    recipientAddress: string;
 }
 
 @command({

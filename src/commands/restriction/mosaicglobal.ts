@@ -71,7 +71,7 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const profile = this.getProfile(options);
         const restrictionHttp = new RestrictionMosaicHttp(profile.url);
-        const mosaicId = new MosaicIdResolver().resolve(options, profile);
+        const mosaicId = new MosaicIdResolver().resolve(options);
 
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {

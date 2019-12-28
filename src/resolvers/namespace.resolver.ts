@@ -48,4 +48,3 @@ export class NamespaceIdResolver implements Resolver {
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
     }
 }
-

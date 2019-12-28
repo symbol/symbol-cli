@@ -1,7 +1,9 @@
+import {ExpectedError} from 'clime';
 import {AccountRestrictionFlags} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
+import {BinaryValidator} from '../validators/binary.validator';
 import {Resolver} from './resolver';
 
 /**
@@ -17,12 +19,15 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
      * @returns {number}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['AllowOutgoingAddress', 'AllowIncomingAddress', 'BlockOutgoingAddress', 'BlockIncomingAddress'];
+        const choices = ['AllowOutgoingAddress', 'BlockOutgoingAddress', 'AllowIncomingAddress', 'BlockIncomingAddress'];
         const index = +OptionsChoiceResolver(options,
             'flags',
             altText ? altText : 'Select the restriction flags: ',
             choices,
         );
+        if (index < 0 || index > 3) {
+            throw new ExpectedError('Unknown restriction flag.');
+        }
         return AccountRestrictionFlags[choices[index] as any];
     }
 }
@@ -46,6 +51,7 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
             altText ? altText : 'Select the restriction flags: ',
             choices,
         );
+        new BinaryValidator().validate(index);
         return AccountRestrictionFlags[choices[index] as any];
     }
 }
@@ -69,6 +75,7 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
             altText ? altText : 'Select the restriction flags: ',
             choices,
         );
+        new BinaryValidator().validate(index);
         return AccountRestrictionFlags[choices[index] as any];
     }
 }

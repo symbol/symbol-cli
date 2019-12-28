@@ -26,7 +26,7 @@ import {BinaryValidator} from '../../validators/binary.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'k',
+        flag: 'a',
         description: 'Alias action (1: Link, 0: Unlink).',
         validator: new BinaryValidator(),
     })

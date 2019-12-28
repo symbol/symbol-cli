@@ -20,7 +20,7 @@ export class HashResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'hash',
             () => undefined,
-            altText ? altText : 'Enter transaction hash: ').trim();
+            altText ? altText : 'Enter a transaction hash: ').trim();
         return resolution;
     }
 }

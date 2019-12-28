@@ -33,13 +33,9 @@ describe('Address validator', () => {
     });
 
     it('should throw an error if the address is invalid', () => {
-        const invalidAddressLength = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        const invalidAddressChar = 'SB3KUB-HATFCP-V7UZQZ-WAQ2EU-R6SIHB-SBEOED-DDF3';
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
-            new AddressValidator().validate(invalidAddressLength);
-        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-        expect(() => {
-            new AddressValidator().validate(invalidAddressChar);
+            new AddressValidator().validate(address);
         }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 
@@ -65,13 +61,9 @@ describe('Address alias validator', () => {
     });
 
     it('should throw an error if the address is invalid', () => {
-        const invalidAddressLength = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        const invalidAddressChar = 'SB3KUB-HATFCP-V7UZQZ-WAQ2EU-R6SIHB-SBEOED-DDF3';
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
         expect(() => {
-            new AddressAliasValidator().validate(invalidAddressLength);
-        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-        expect(() => {
-            new AddressAliasValidator().validate(invalidAddressChar);
+            new AddressAliasValidator().validate(address);
         }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
     });
 

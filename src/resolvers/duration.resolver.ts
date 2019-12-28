@@ -11,7 +11,7 @@ import {NumericStringValidator} from '../validators/numericString.validator';
 export class DurationResolver implements Resolver {
 
     /**
-     * Resolves an absolute duration by the user.
+     * Resolves a duration by the user.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.

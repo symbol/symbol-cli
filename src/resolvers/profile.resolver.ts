@@ -19,6 +19,6 @@ export class ProfileNameResolver implements Resolver {
         return OptionsResolver(options,
             'profile',
             () => undefined,
-            'Enter profile name: ').trim();
+            'Enter a profile name: ').trim();
     }
 }

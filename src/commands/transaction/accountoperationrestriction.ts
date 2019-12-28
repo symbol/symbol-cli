@@ -27,7 +27,7 @@ import {TransactionTypeValidator} from '../../validators/transactionType.validat
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 't',
+        flag: 'f',
         description: 'Restriction flag. (0: AllowOutgoingTransactionType, 1: BlockOutgoingTransactionType)',
     })
     flags: number;

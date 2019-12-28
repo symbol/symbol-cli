@@ -23,7 +23,7 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -43,7 +43,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'v',
         description: 'Mosaic or @alias to allow / block.',
-        validator: new MosaicIdValidator(),
+        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 }

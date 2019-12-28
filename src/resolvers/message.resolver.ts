@@ -32,11 +32,11 @@ export class MessageResolver implements Resolver {
 export class RecipientPublicKeyResolver implements Resolver {
 
     /**
-     * Resolves an encrypted message provided by the user.
+     * Resolves an public key provided by the user.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {Message}
+     * @returns {PublicAccount}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const recipientPublicKey = OptionsResolver(options,

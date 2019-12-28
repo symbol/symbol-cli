@@ -21,7 +21,7 @@ export class PrivateKeyResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'privateKey',
             () => undefined,
-            'Enter your private key: ',
+            'Enter your account private key: ',
             undefined,
             true).trim();
         new PrivateKeyValidator().validate(resolution);

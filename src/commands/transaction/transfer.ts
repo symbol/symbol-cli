@@ -90,14 +90,14 @@ export default class extends AnnounceTransactionsCommand {
         let message = EmptyMessage;
         if (rawMessage) {
             if (options.persistentHarvestingDelegation) {
-                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options);
+                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
                 message = PersistentHarvestingDelegationMessage.create(
                     rawMessage,
                     account.privateKey,
                     recipientPublicAccount.publicKey,
                     profile.networkType);
             } else if (options.encrypted) {
-                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options);
+                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
                 message = account.encryptMessage(
                     rawMessage,
                     recipientPublicAccount,

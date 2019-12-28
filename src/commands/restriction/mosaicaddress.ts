@@ -83,7 +83,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
         const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         const address = new AddressResolver().resolve(options, profile);
-        const mosaicId = new MosaicIdResolver().resolve(options, profile);
+        const mosaicId = new MosaicIdResolver().resolve(options);
 
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
             .subscribe((mosaicRestrictions) => {

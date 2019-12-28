@@ -21,7 +21,7 @@ export class PublicKeyResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the public key: ').trim();
+            altText ? altText : 'Enter the account public key: ').trim();
         new PublicKeyValidator().validate(resolution);
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
@@ -33,7 +33,7 @@ export class PublicKeyResolver implements Resolver {
 export class MultisigAccountPublicKeyResolver implements Resolver {
 
     /**
-     * Resolves a multisig public key provided by the user.
+     * Resolves a multisig account public key provided by the user.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.

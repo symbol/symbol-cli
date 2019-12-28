@@ -19,7 +19,7 @@ export class ProofResolver implements Resolver {
         const resolution = OptionsResolver(options,
         'proof',
         () => undefined,
-        altText ? altText : 'Enter original random set of bytes in hexadecimal: ').trim();
+        altText ? altText : 'Enter the original random set of bytes in hexadecimal: ').trim();
         return resolution;
     }
 }
