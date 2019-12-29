@@ -53,11 +53,6 @@ export class TransactionStatusTable {
                 ['Deadline', status.deadline.value.toString()],
             );
         }
-        if (status.deadline) {
-            this.table.push(
-                ['Deadline', status.deadline.value.toString()],
-            );
-        }
         if (status.height) {
             this.table.push(
                 ['Height', status.height.toString()],
@@ -94,12 +89,14 @@ export default class extends ProfileCommand {
 
         transactionHttp.getTransactionStatus(hash)
             .subscribe((status) => {
+                this.spinner.stop(true);
                 console.log(new TransactionStatusTable(status).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }
