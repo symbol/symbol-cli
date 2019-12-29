@@ -33,7 +33,7 @@ export class NumericStringValidator implements Validator<string> {
         try {
             UInt64.fromNumericString(value);
         } catch (err) {
-            throw new ExpectedError('Enter a number.');
+            throw new ExpectedError('Enter a number');
         }
     }
 }

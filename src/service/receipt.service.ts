@@ -46,8 +46,10 @@ export class ReceiptService {
      */
     public formatTransactionStatements(statement: Statement): string {
         let txt = '';
-        txt += chalk.green('transactionStatements:\t') + '\n';
-        txt += '-'.repeat('transactionStatements:\t'.length) + '\n\n';
+        if (statement.transactionStatements.length > 0) {
+            txt += chalk.green('transactionStatements:\t') + '\n';
+            txt += '-'.repeat('transactionStatements:\t'.length) + '\n\n';
+        }
         statement.transactionStatements.map((transaction: TransactionStatement, transactionIndex: number) => {
             txt += 'height:\t\t' + transaction.height + '\n';
             transaction.receipts.map((receipt: any, receiptIndex: number) => {
@@ -59,26 +61,23 @@ export class ReceiptService {
                         (receipt.recipientAddress instanceof Address ?
                             receipt.recipientAddress.pretty() : receipt.recipientAddress.toHex()) + '\n';
                     txt += '\t\tsenderPublickey:\t' + receipt.sender.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receipt.mosaicId.id.lower + ', ' + receipt.mosaicId.id.higher + ' ]\n\n';
-                    txt += '\t\tamount:\t\t' + receipt.amount.compact() + '\n';
+                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n';
+                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n';
                 } else if (receipt instanceof BalanceChangeReceipt) {
                     txt += 'version:\t' + receipt.version + '\n';
                     txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n';
                     txt += '\t\ttargetPublicKey:\t' + receipt.targetPublicAccount.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receipt.mosaicId.id.lower + ', '
-                        + receipt.mosaicId.id.higher + ' ]\n\n';
-                    txt += '\t\tamount:\t\t' + receipt.amount.compact() + '\n';
+                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n';
+                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n';
                 }  else if (receipt instanceof ArtifactExpiryReceipt) {
                     txt += 'version:\t' + receipt.version + '\n';
                     txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receipt.artifactId.id.lower + ', '
-                        + receipt.artifactId.id.higher + ' ]\n\n';
+                    txt += '\t\tartifactId:\t' + receipt.artifactId.toHex() + '\n';
                 }  else if (receipt instanceof InflationReceipt) {
                     txt += 'version:\t' + receipt.version + '\n';
                     txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
-                    txt += '\t\tamount:\t\t' + receipt.amount.compact() + '\n';
-                    txt += '\t\tmosaicId:\t[ ' + receipt.mosaicId.id.lower + ', '
-                        + receipt.mosaicId.id.higher + ' ]\n\n';
+                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n';
+                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n';
                 }
             });
         });
@@ -92,8 +91,10 @@ export class ReceiptService {
      */
     public formatAddressResolutionStatements(statement: Statement): string {
         let txt = '';
-        txt += chalk.green('addressResolutionStatements:\t') + '\n';
-        txt += '-'.repeat('addressResolutionStatements:\t'.length) + '\n\n';
+        if (statement.addressResolutionStatements.length > 0) {
+            txt += chalk.green('addressResolutionStatements:\t') + '\n';
+            txt += '-'.repeat('addressResolutionStatements:\t'.length) + '\n\n';
+        }
         statement.addressResolutionStatements.map((addressResolution: ResolutionStatement, addressResolutionIndex: number) => {
             txt += 'height:\t\t' + addressResolution.height + '\n';
             txt += 'unresolved:\t' + addressResolution.unresolved + '\n\n';
@@ -114,8 +115,10 @@ export class ReceiptService {
      */
     public formatMosaicResolutionStatements(statement: Statement): string {
         let txt = '';
-        txt += chalk.green('mosaicResolutionStatements:\t') + '\n';
-        txt += '-'.repeat('mosaicResolutionStatements:\t'.length) + '\n\n';
+        if (statement.mosaicResolutionStatements.length > 0) {
+            txt += chalk.green('mosaicResolutionStatements:\t') + '\n';
+            txt += '-'.repeat('mosaicResolutionStatements:\t'.length) + '\n\n';
+        }
         statement.mosaicResolutionStatements.map((mosaicResolution: ResolutionStatement, mosaicResolutionIndex: number) => {
             txt += 'height:\t\t' + mosaicResolution.height + '\n';
             txt += 'unresolved:\t' + mosaicResolution.unresolved + '\n\n';

@@ -55,7 +55,7 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
 
                 if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces');
+                    console.log('The address ' + address.pretty() + ' does not own any namespaces.');
                 }
                 namespaces.map((namespace) => {
                     console.log(new NamespaceInfoTable(namespace).toString());
@@ -65,7 +65,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                text += chalk.red('Error');
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

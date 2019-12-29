@@ -50,8 +50,8 @@ export class NamespaceInfoTable {
             ['Id', namespaceInfo.id.toHex()],
             ['Registration Type', namespaceInfo.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
             ['Owner', namespaceInfo.owner.address.pretty()],
-            ['Start Height',  namespaceInfo.startHeight.compact()],
-            ['End Height', namespaceInfo.endHeight.compact()],
+            ['Start Height',  namespaceInfo.startHeight.toString()],
+            ['End Height', namespaceInfo.endHeight.toString()],
         );
         if (namespaceInfo.isSubnamespace()) {
             this.table.push(
@@ -107,7 +107,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

@@ -33,7 +33,7 @@ describe('Numeric string validator', () => {
         const value = 'test';
         expect(() => {
             new NumericStringValidator().validate(value);
-        }).to.throws('Enter a number.');
+        }).to.throws('Enter a number');
     });
 
     it('should throw error if numeric string is negative', () => {

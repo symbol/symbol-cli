@@ -39,9 +39,9 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
                                            signedAggregateTransaction: SignedTransaction,
                                            senderAddress: Address,
                                            url: string) {
-            const transactionHttp = new TransactionHttp(url);
-            const listener = new Listener(url);
-            listener.open().then(() => {
+        const transactionHttp = new TransactionHttp(url);
+        const listener = new Listener(url);
+        listener.open().then(() => {
             merge(
                 transactionHttp.announce(signedHashLockTransaction),
                 listener
@@ -53,8 +53,13 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
                             listener.close();
                             return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
                         }),
-                        )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
-                (err) => console.log(err));
+                    )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
+                (err) => {
+                    let text = '';
+                    text += chalk.red('Error');
+                    err = err.message ? JSON.parse(err.message) : err;
+                    console.log(text, err.body && err.body.message ? err.body.message : err);
+                });
         });
     }
 }

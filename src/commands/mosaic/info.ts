@@ -45,11 +45,11 @@ export class MosaicViewTable {
             ['Divisibility', mosaicView.mosaicInfo.divisibility],
             ['Transferable', mosaicView.mosaicInfo.isTransferable()],
             ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
-            ['Height', mosaicView.mosaicInfo.height.compact()],
+            ['Height', mosaicView.mosaicInfo.height.toString()],
             ['Expiration', mosaicView.mosaicInfo.duration.compact() === 0 ?
-                'Never' : (mosaicView.mosaicInfo.height.compact() + mosaicView.mosaicInfo.duration.compact()).toString()],
+                'Never' : (mosaicView.mosaicInfo.height.add(mosaicView.mosaicInfo.duration)).toString()],
             ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
-            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.compact()],
+            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.toString()],
             ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
                 : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
         );
@@ -94,7 +94,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 

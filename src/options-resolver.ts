@@ -25,8 +25,9 @@ export const OptionsResolver = (options: any,
                                 readlineDependency?: any,
                                 hide?: boolean) => {
     const readline = readlineDependency || readlineSync;
+    const hideEchoBack = hide ? true : false;
     return options[key] !== undefined ? options[key] : (secondSource() ||
-        (hide ? readline.questionNewPassword(promptText) : readline.question(promptText)));
+        readline.question(promptText, {hideEchoBack}));
 };
 
 export const OptionsChoiceResolver = (options: any,

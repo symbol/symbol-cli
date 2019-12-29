@@ -33,14 +33,14 @@ describe('Private key validator', () => {
         const privateKey = '770DE78BF2AD0531BB7589C8839AB43F5764064785AB1E28160AEF7D3A4C2D4';
         expect(() => {
             new PrivateKeyValidator().validate(privateKey);
-        }).to.throws('private key should be a 64 characters hexadecimal string');
+        }).to.throws('Private key should be a 64 characters hexadecimal string');
     });
 
     it('should throw error if private key has special chars', () => {
         const privateKey = '770DE78BF2AD0531BB7589C8839AB43F5764!64785AB1E28160AEF7D3A4C2D4';
         expect(() => {
             new PrivateKeyValidator().validate(privateKey);
-        }).to.throws('private key should be a 64 characters hexadecimal string');
+        }).to.throws('Private key should be a 64 characters hexadecimal string');
     });
 
 });

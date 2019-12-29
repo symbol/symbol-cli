@@ -49,7 +49,8 @@ export default class extends ProfileCommand {
         }, (err) => {
             let text = '';
             text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
+            err = err.message ? JSON.parse(err.message) : err;
+            console.log(text, err.body && err.body.message ? err.body.message : err);
         });
     }
 }

@@ -30,8 +30,8 @@ export class ChainScoreTable {
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Score Low', score.scoreLow.compact()],
-            ['Score High', score.scoreHigh.compact()],
+            ['Score Low', score.scoreLow.toString()],
+            ['Score High', score.scoreHigh.toString()],
         );
     }
 

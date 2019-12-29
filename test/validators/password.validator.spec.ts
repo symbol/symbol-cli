@@ -16,30 +16,22 @@
  *
  */
 import {expect} from 'chai';
-import {BinaryValidator} from '../../src/validators/binary.validator';
+import {PublicKeysValidator, PublicKeyValidator} from '../../src/validators/publicKey.validator';
+import {PasswordValidator} from '../../src/validators/password.validator';
 
-describe('binary validator', () => {
+describe('Public key validator', () => {
 
     it('default case', () => {
-        const positiveValue = 1;
-        const zeroValue = 0;
-        expect(new BinaryValidator().validate(positiveValue))
-            .to.be.equal(undefined);
-        expect(new BinaryValidator().validate(zeroValue))
+        const password = '12345678';
+        expect(new PasswordValidator().validate(password))
             .to.be.equal(undefined);
     });
 
-    it('should throw error if value is negative', () => {
-        const value = -1;
+    it('should throw error if password has less than 8 chars', () => {
+        const password = '123';
         expect(() => {
-            new BinaryValidator().validate(value);
-        }).to.throws('The value must be 0 or 1');
+            new PasswordValidator().validate(password);
+        }).to.throws('Password should have a minimum of 8 characters');
     });
 
-    it('should throw error if value is decimal', () => {
-        const value = 1.1;
-        expect(() => {
-            new BinaryValidator().validate(value);
-        }).to.throws('The value must be 0 or 1');
-    });
 });

@@ -33,14 +33,14 @@ describe('Public key validator', () => {
         const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34';
         expect(() => {
             new PublicKeyValidator().validate(publicKey, { name: 'publicKey', source: publicKey });
-        }).to.throws('public key should be a 64 characters hexadecimal string');
+        }).to.throws('Public key should be a 64 characters hexadecimal string');
     });
 
     it('should throw error if public key has a special char', () => {
         const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079!72738DD3B3C6DF400DE796D7C34';
         expect(() => {
             new PublicKeyValidator().validate(publicKey, { name: 'publicKey', source: publicKey });
-        }).to.throws('public key should be a 64 characters hexadecimal string');
+        }).to.throws('Public key should be a 64 characters hexadecimal string');
     });
 
 });
@@ -61,7 +61,7 @@ describe('Public key validator', () => {
             '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34';
         expect(() => {
             new PublicKeysValidator().validate(publicKeys, { name: 'publicKeys', source: publicKeys });
-        }).to.throws('public key should be a 64 characters hexadecimal string');
+        }).to.throws('Public key should be a 64 characters hexadecimal string');
     });
 
 });
