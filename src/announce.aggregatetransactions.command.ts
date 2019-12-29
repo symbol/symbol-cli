@@ -22,6 +22,7 @@ import {merge} from 'rxjs';
 import {filter, mergeMap} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
+import {PasswordValidator} from './validators/password.validator';
 
 /**
  * Base command class to announce aggregate transactions.
@@ -67,6 +68,13 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
  * Announce aggregate transactions options
  */
 export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
+
     @option({
         flag: 'f',
         description: 'Maximum fee you want to pay to announce the transaction.',

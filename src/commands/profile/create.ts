@@ -73,15 +73,12 @@ export default class extends Command {
         const url = new URLResolver().resolve(options);
         const profileName = new ProfileNameResolver().resolve(options);
         const password = new PasswordResolver().resolve(options);
-        const privateKey = new PrivateKeyResolver().resolve(options);
         const blockHttp = new BlockHttp(url);
 
         const simpleWallet: SimpleWallet = SimpleWallet.create(
             profileName,
             password,
-            privateKey,
-            networkType,
-        );
+            networkType);
 
         blockHttp.getBlockByHeight('1')
             .subscribe((block) => {

@@ -19,7 +19,6 @@
 import {expect} from 'chai';
 import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../../src/model/profile';
-import {ProfileOptions} from '../../src/profile.command';
 
 describe('Profile', () => {
     it('should contain the fields', () => {
@@ -82,7 +81,7 @@ describe('Profile', () => {
         const password = new Password('password');
         const simpleWallet = SimpleWallet.createFromPrivateKey(
             'default',
-           password,
+            password,
             privateKey,
             NetworkType.MIJIN_TEST);
         const profile = new Profile(
@@ -90,8 +89,7 @@ describe('Profile', () => {
             'url',
             'generationHash',
         );
-        const profileOptions = new ProfileOptions();
-        profileOptions.password = 'password';
+        const profileOptions = {password: 'password'} as any;
         expect(profile.decrypt(profileOptions).privateKey).to.be.equal(privateKey);
         expect(profile.address).to.be.equal(simpleWallet.address);
     });
@@ -109,8 +107,7 @@ describe('Profile', () => {
             'url',
             'generationHash',
         );
-        const profileOptions = new ProfileOptions();
-        profileOptions.password = 'test12345678';
+        const profileOptions = {password: 'test12345678'} as any;
         expect(() => profile.decrypt(profileOptions))
             .to.throws('The password provided does not match your account password');
     });

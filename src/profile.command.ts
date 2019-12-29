@@ -20,7 +20,6 @@ import {Command, ExpectedError, option, Options} from 'clime';
 import {Profile} from './model/profile';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
-import {PasswordValidator} from './validators/password.validator';
 
 /**
  * Base command class to use the stored profile.
@@ -82,11 +81,4 @@ export class ProfileOptions extends Options {
         description: '(Optional) Select between your profiles, by providing a profile name.',
     })
     profile: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Profile password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }
