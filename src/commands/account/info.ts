@@ -35,7 +35,6 @@ import {catchError, mergeMap, toArray} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
 import {AddressValidator} from '../../validators/address.validator';
-import {type} from 'os';
 
 export class CommandOptions extends ProfileOptions {
     @option({

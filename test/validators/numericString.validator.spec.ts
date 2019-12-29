@@ -40,7 +40,7 @@ describe('Numeric string validator', () => {
         const value = '-1';
         expect(() => {
             new NumericStringValidator().validate(value);
-        }).to.throws('Enter a number.');
+        }).to.throws('Enter a number');
     });
 
 });

@@ -16,7 +16,6 @@
  *
  */
 import {expect} from 'chai';
-import {PublicKeysValidator, PublicKeyValidator} from '../../src/validators/publicKey.validator';
 import {PasswordValidator} from '../../src/validators/password.validator';
 
 describe('Public key validator', () => {
