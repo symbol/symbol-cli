@@ -53,11 +53,6 @@ export class TransactionStatusTable {
                 ['Deadline', status.deadline.value.toString()],
             );
         }
-        if (status.deadline) {
-            this.table.push(
-                ['Deadline', status.deadline.value.toString()],
-            );
-        }
         if (status.height) {
             this.table.push(
                 ['Height', status.height.toString()],
