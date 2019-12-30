@@ -16,15 +16,27 @@
  *
  */
 import * as fs from 'fs';
-import {Address, SimpleWallet} from 'nem2-sdk';
+import {SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 
+/**
+ * Profile repository
+ */
 export class ProfileRepository {
 
+    /**
+     * Constructor
+     * @param {string} fileUrl - File path where profiles are saved.
+     */
     constructor(private readonly fileUrl: string) {
-
     }
 
+    /**
+     * Find profile by name.
+     * @param {string} name - Profile name.
+     * @throws {Error}
+     * @returns {Profile}
+     */
     public find(name: string): Profile {
         const profiles = this.getProfiles();
         if (profiles[name]) {
@@ -33,6 +45,10 @@ export class ProfileRepository {
         throw new Error(`${name} not found`);
     }
 
+    /**
+     * Gets all profiles.
+     * @returns {Profile[]}
+     */
     public all(): Profile[] {
         const profiles = this.getProfiles();
         const list: Profile[] = [];
@@ -44,6 +60,13 @@ export class ProfileRepository {
         return list;
     }
 
+    /**
+     * Saves a new profile from a SimpleWallet.
+     * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
+     * @param {string} url - Node URL by default.
+     * @param {string} networkGenerationHash - Network's generation hash.
+     * @returns {Profile}
+     */
     public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
         const {name, network} = simpleWallet;
@@ -58,6 +81,11 @@ export class ProfileRepository {
         return new Profile(simpleWallet, url, networkGenerationHash);
     }
 
+    /**
+     * Sets a profile as the default one.
+     * @param {string} name - Profile name.
+     * @throws {Error}
+     */
     public setDefaultProfile(name: string) {
         const profiles = this.getProfiles();
         if (profiles[name]) {
@@ -74,6 +102,10 @@ export class ProfileRepository {
         }
     }
 
+    /**
+     * Gets the default profile.
+     * @returns {Profile}
+     */
     public getDefaultProfile(): Profile {
         const profiles = this.getProfiles();
         let defaultProfile = '';
@@ -85,6 +117,10 @@ export class ProfileRepository {
         return this.find(defaultProfile);
     }
 
+    /**
+     * Get all profiles as JSON objects.
+     * @returns {object}
+     */
     private getProfiles(): any {
         let accounts = {};
         try {
@@ -95,6 +131,10 @@ export class ProfileRepository {
         return accounts;
     }
 
+    /**
+     * Save profiles from JSON.
+     * @param {JSON} profiles
+     */
     private saveProfiles(profiles: JSON) {
         fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, JSON.stringify(profiles), 'utf-8');
     }

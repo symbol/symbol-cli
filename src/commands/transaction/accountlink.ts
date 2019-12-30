@@ -16,9 +16,11 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {AccountLinkTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
@@ -50,28 +52,16 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
-        options.publicKey = OptionsResolver(options,
-            'publicKey',
-            () => undefined,
-            'Enter the public key of the remote account: ');
-
-        options.action = +OptionsResolver(options,
-            'action',
-            () => undefined,
-            'Enter alias action (1: Link, 0: Unlink): ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
+        const publicKey = new PublicKeyResolver().resolve(options, profile, 'Enter the public key of the remote account: ');
+        const action = new LinkActionResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
-            options.publicKey,
-            options.action,
+            publicKey,
+            action,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
         const signedTransaction = account.sign(accountLinkTransaction,
             profile.networkGenerationHash);

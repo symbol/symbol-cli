@@ -19,24 +19,29 @@
 import {ExpectedError} from 'clime';
 import {Address, NamespaceId} from 'nem2-sdk';
 
+/**
+ * Account service
+ */
 export class AccountService {
 
     public static ALIAS_TAG = '@';
 
-    constructor() {
+    /**
+     * Constructor
+     */
+    constructor() {}
 
-    }
-
+    /**
+     * Gets the address given a raw address.
+     * @param {string} rawRecipient -  Address or namespace name. If starts with "@", it is a namespace name.
+     * @returns {Address | NamespaceId}
+     */
     static getRecipient(rawRecipient: string): Address | NamespaceId {
         let recipient: Address | NamespaceId;
         if (rawRecipient.charAt(0) === AccountService.ALIAS_TAG) {
             recipient =  new NamespaceId(rawRecipient.substring(1));
         } else  {
-            try {
-                recipient = Address.createFromRawAddress(rawRecipient);
-            } catch (err) {
-                throw new ExpectedError('Enter a valid address');
-            }
+            recipient = Address.createFromRawAddress(rawRecipient);
         }
         return recipient;
     }

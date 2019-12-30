@@ -20,8 +20,8 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {TransactionHttp, TransactionStatus} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HashResolver} from '../../resolvers/hash.resolver';
 import {TransactionService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
@@ -41,24 +41,28 @@ export class TransactionStatusTable {
         }) as HorizontalTable;
         this.table.push(
             ['Group', status.group],
-            ['Status Code', status.code],
             ['Hash', status.hash],
         );
+        if (status.code) {
+            this.table.push(
+                ['Status Code', status.code],
+            );
+        }
         if (status.deadline) {
             this.table.push(
                 ['Deadline', status.deadline.value.toString()],
             );
         }
-        if (status.height && status.height.compact() > 0) {
+        if (status.height) {
             this.table.push(
-                ['Height', status.height.compact().toString()],
+                ['Height', status.height.toString()],
             );
         }
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Transaction Status') + '\n';
+        text += '\n' + chalk.green('Transaction Status') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -77,25 +81,22 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile(options);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-        const hash = OptionsResolver(options,
-            'hash',
-            () => undefined,
-            'Enter the transaction hash: ');
-
         this.spinner.start();
+        const profile = this.getProfile(options);
+        const transactionHttp = new TransactionHttp(profile.url);
+        const hash = new HashResolver()
+            .resolve(options);
 
         transactionHttp.getTransactionStatus(hash)
             .subscribe((status) => {
+                this.spinner.stop(true);
                 console.log(new TransactionStatusTable(status).toString());
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

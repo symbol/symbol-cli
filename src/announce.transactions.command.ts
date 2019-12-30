@@ -21,19 +21,29 @@ import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
+import {PasswordValidator} from './validators/password.validator';
 
+/**
+ * Base command class to announce transactions.
+ */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
-    constructor() {
-        super();
-    }
-
-    private formatPayload(payload: string) {
+    /**
+     * Formats a payload to fit in the command line.
+     * @param {string} payload.
+     * @returns {String[]}
+     */
+     static formatPayload(payload: string) {
         return payload.match(/.{1,64}/g) || [];
     }
 
-     protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        const payload = this.formatPayload(signedTransaction.payload).join('\n');
+    /**
+     * Announces a transaction.
+     * @param {SignedTransaction} signedTransaction
+     * @param {string} url - Node URL.
+     */
+    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
+        const payload = AnnounceTransactionsCommand.formatPayload(signedTransaction.payload).join('\n');
         const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ' +
              'Payload:\n' + payload);
         if (shouldAnnounceTransaction) {
@@ -43,16 +53,26 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 console.log(chalk.green('Hash:   '), signedTransaction.hash);
                 console.log(chalk.green('SignerPublicKey: '), signedTransaction.signerPublicKey);
             }, (err) => {
-                this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
          }
     }
 }
 
+/**
+ * Announce transactions options
+ */
 export class AnnounceTransactionsOptions extends ProfileOptions {
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
+
     @option({
         flag: 'f',
         description: 'Maximum fee (absolute amount).',

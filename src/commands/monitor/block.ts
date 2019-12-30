@@ -32,7 +32,6 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: ProfileOptions) {
         const profile = this.getProfile(options);
-
         const listener = new Listener(profile.url);
 
         console.log(`Using ${profile.url}`);
@@ -42,15 +41,16 @@ export default class extends ProfileCommand {
                 console.log('\n');
                 console.log(block);
             }, (err) => {
-                this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
             let text = '';
             text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
+            err = err.message ? JSON.parse(err.message) : err;
+            console.log(text, err.body && err.body.message ? err.body.message : err);
         });
     }
 }

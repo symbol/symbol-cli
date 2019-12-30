@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HashResolver} from '../../resolvers/hash.resolver';
 import {TransactionService} from '../../service/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
@@ -43,27 +43,22 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
-        const profile = this.getProfile(options);
-
-        const transactionHttp = new TransactionHttp(profile.url);
-        const hash = OptionsResolver(options,
-            'hash',
-            () => undefined,
-            'Enter the transaction hash: ');
-
         this.spinner.start();
+        const profile = this.getProfile(options);
+        const transactionHttp = new TransactionHttp(profile.url);
+        const hash = new HashResolver()
+            .resolve(options);
 
         transactionHttp.getTransaction(hash)
             .subscribe((transaction) => {
                 this.spinner.stop(true);
-
                 console.log('\n' + this.transactionService.formatTransactionToFilter(transaction) + '\n');
             }, (err) => {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

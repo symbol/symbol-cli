@@ -16,82 +16,62 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/mosaic.service';
-import {RestrictionService} from '../../service/restriction.service';
+import {ActionResolver} from '../../resolvers/action.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
+import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
+import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 't',
-        description: 'Restriction flag (allow, block).',
-        validator: new AccountRestrictionTypeValidator(),
+        flag: 'f',
+        description: 'Restriction flags.' +
+            '(0: AllowMosaic, 1: BlockMosaic)',
     })
-    restrictionFlag: string;
+    flags: number;
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
         validator: new BinaryValidator(),
     })
-    modificationAction: number;
+    action: number;
 
     @option({
         flag: 'v',
         description: 'Mosaic or @alias to allow / block.',
-        validator: new MosaicIdValidator(),
+        validator: new MosaicIdAliasValidator(),
     })
-    value: string;
+    mosaicId: string;
 }
 
 @command({
     description: 'Allow or block incoming transactions containing a given set of mosaics',
 })
 export default class extends AnnounceTransactionsCommand {
-    private readonly restrictionService: RestrictionService;
     constructor() {
         super();
-        this.restrictionService = new RestrictionService();
     }
 
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
-        options.restrictionFlag = OptionsResolver(options,
-            'restrictionFlag',
-            () => undefined,
-            'Enter the restriction flag (allow, block):');
-
-        options.modificationAction = +OptionsResolver(options,
-            'modificationAction',
-            () => undefined,
-            'Enter the modification action (1: Add, 0: Remove): ');
-
-        options.value = OptionsResolver(options,
-            'value',
-            () => undefined,
-            'Enter the mosaic identifier: ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
-
-        const mosaic = MosaicService.getMosaicId(options.value);
+        const action = new ActionResolver().resolve(options);
+        const flags = new RestrictionAccountMosaicFlagsResolver().resolve(options);
+        const mosaic = new MosaicIdAliasResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
-            this.restrictionService.getAccountMosaicRestrictionFlags(options.restrictionFlag),
-            (options.modificationAction === 1) ? [mosaic] : [],
-            (options.modificationAction === 0) ? [mosaic] : [],
+            flags,
+            (action === 1) ? [mosaic] : [],
+            (action === 0) ? [mosaic] : [],
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

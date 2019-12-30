@@ -18,18 +18,18 @@
 import {expect} from 'chai';
 import {NamespaceIdValidator} from '../../src/validators/namespaceId.validator';
 
-describe('mosaic id validator', () => {
+describe('Mosaic id validator', () => {
 
-    it('Valid namespace id ', () => {
+    it('default case ', () => {
         const value = '85BBEA6CC462B244';
-        expect(new NamespaceIdValidator().validate(value, {name: 'value', source: value}))
+        expect(new NamespaceIdValidator().validate(value))
             .to.be.equal(undefined);
     });
 
-    it('Invalid namespace id (string)', () => {
+    it('should throw error if namespaceId is not a valid UInt64 value', () => {
         const value = 'test';
         expect(() => {
-            new NamespaceIdValidator().validate(value, {name: 'value', source: value});
+            new NamespaceIdValidator().validate(value);
         }).to.throws('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
     });
 

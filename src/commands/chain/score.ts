@@ -30,14 +30,14 @@ export class ChainScoreTable {
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Score Low', score.scoreLow.compact()],
-            ['Score High', score.scoreHigh.compact()],
+            ['Score Low', score.scoreLow.toString()],
+            ['Score High', score.scoreHigh.toString()],
         );
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Storage Information') + '\n';
+        text += '\n' + chalk.green('Storage Information') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -55,7 +55,6 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: ProfileOptions) {
         this.spinner.start();
-
         const profile = this.getProfile(options);
 
         const chainHttp = new ChainHttp(profile.url);
@@ -66,7 +65,8 @@ export default class extends ProfileCommand {
             this.spinner.stop(true);
             let text = '';
             text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
+            err = err.message ? JSON.parse(err.message) : err;
+            console.log(text, err.body && err.body.message ? err.body.message : err);
         });
     }
 }

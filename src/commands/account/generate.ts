@@ -19,12 +19,14 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {Command, command, metadata, option, Options} from 'clime';
-import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {Account, BlockHttp, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {OptionsResolver} from '../../options-resolver';
+import {NetworkTypeResolver} from '../../resolvers/networkType.resolver';
+import {PasswordResolver} from '../../resolvers/password.resolver';
+import {ProfileNameResolver} from '../../resolvers/profile.resolver';
+import {URLResolver} from '../../resolvers/url.resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
-import {NetworkValidator} from '../../validators/network.validator';
 import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends Options {
@@ -48,10 +50,9 @@ export class CommandOptions extends Options {
 
     @option({
         flag: 'n',
-        description: 'Network Type (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST).',
-        validator: new NetworkValidator(),
+        description: 'Network Type. (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)',
     })
-    network: string;
+    network: number;
 
     @option({
         flag: 'p',
@@ -59,40 +60,33 @@ export class CommandOptions extends Options {
         validator: new PasswordValidator(),
     })
     password: string;
-
-    getNetwork(network: any): NetworkType {
-        new NetworkValidator().validate(network);
-        return parseInt(NetworkType[network], 10);
-    }
 }
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable;
 
     constructor(
-        public readonly simpleWallet: SimpleWallet,
-        public readonly password: Password,
+        public readonly account: Account,
+        public readonly password?: Password,
     ) {
-        const account = simpleWallet.open(password);
-        const passwordString = password.value;
-        const {name} = simpleWallet;
 
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Name', name],
-            ['Password', passwordString],
             ['Address', account.address.pretty()],
             ['Public Key', account.publicKey],
             ['Private Key', account.privateKey],
         );
+        if (password) {
+            this.table.push(['Password', password.value]);
+        }
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('New Account') + '\n';
+        text += '\n' + chalk.green('Account') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -112,32 +106,18 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        const networkType = options.getNetwork(OptionsResolver(options,
-            'network',
-            () => undefined,
-            'Enter a network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
-
-        const profile = options.profile || readlineSync.question('Insert the profile name: ');
-        profile.trim();
-
-        const password = options.password || readlineSync.question('Enter your wallet password: ');
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        const simpleWallet = SimpleWallet.create(profile, passwordObject, networkType);
-
-        let text = new AccountCredentialsTable(simpleWallet, passwordObject).toString();
+        const networkType = new NetworkTypeResolver().resolve(options);
+        const profile = new ProfileNameResolver().resolve(options);
+        const password = new PasswordResolver().resolve(options);
+        const simpleWallet = SimpleWallet.create(profile, password, networkType);
+        let text = new AccountCredentialsTable(simpleWallet.open(password), password).toString();
 
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;
         }
 
         if (options.save) {
-            const url = OptionsResolver(options,
-                'url',
-                () => undefined,
-                'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim();
-
+            const url = new URLResolver().resolve(options);
             const blockHttp = new BlockHttp(url);
 
             blockHttp.getBlockByHeight('1')

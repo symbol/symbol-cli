@@ -19,14 +19,23 @@
 import {ExpectedError} from 'clime';
 import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
 
+/**
+ * Mosaic service
+ */
 export class MosaicService {
 
     public static ALIAS_TAG = '@';
 
-    constructor() {
+    /**
+     * Constructor
+     */
+    constructor() {}
 
-    }
-
+    /**
+     * Validates a mosaic object from a string.
+     * @param {string} value - Mosaic in the form mosaicId::amount.
+     * @throws {ExpectedError}
+     */
     static validate(value: string) {
         const mosaicParts = value.split('::');
         let valid = true;
@@ -45,6 +54,11 @@ export class MosaicService {
         }
     }
 
+    /**
+     * Creates a MosaicId object from a string.
+     * @param {string} rawMosaicId - Mosaic identifier. If starts with "@", it is a namespace name.
+     * @returns {MosaicId | NamespaceId}
+     */
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
         let mosaicId: MosaicId | NamespaceId;
         if (rawMosaicId.charAt(0) === MosaicService.ALIAS_TAG) {
@@ -55,14 +69,19 @@ export class MosaicService {
         return mosaicId;
     }
 
+    /**
+     * Creates an array of mosaics from a string.
+     * @param {string} rawMosaics - Mosaics in the form mosaicId::amount, separated by commas.
+     * @returns {Mosaic[]}
+     */
     static getMosaics(rawMosaics: string): Mosaic[] {
-    const mosaics: Mosaic[] = [];
-    const mosaicsData = rawMosaics.split(',');
-    mosaicsData.forEach((mosaicData) => {
-            const mosaicParts = mosaicData.split('::');
-            mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
-                UInt64.fromNumericString(mosaicParts[1])));
-        });
-    return mosaics;
+        const mosaics: Mosaic[] = [];
+        const mosaicsData = rawMosaics.split(',');
+        mosaicsData.forEach((mosaicData) => {
+                const mosaicParts = mosaicData.split('::');
+                mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
+                    UInt64.fromNumericString(mosaicParts[1])));
+            });
+        return mosaics;
     }
 }

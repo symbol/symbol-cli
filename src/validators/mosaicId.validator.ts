@@ -16,10 +16,20 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {MosaicId, NamespaceId} from 'nem2-sdk';
 
+/**
+ * Mosaic id validator
+ */
 export class MosaicIdValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if a mosaic id object can be created from a string.
+     * @param {string} value - MosaicId in hexadecimal.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         try {
             const ignored = new MosaicId(value);
         } catch (err) {
@@ -28,19 +38,29 @@ export class MosaicIdValidator implements Validator<string> {
     }
 }
 
+/**
+ * Mosaic id alias validator
+ */
 export class MosaicIdAliasValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if a mosaic id object can be created from a string.
+     * @param {string} value - MosaicId in hexadecimal or Namespace name. If starts with '@', it is a namespace name.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         const aliasTag = '@';
         if (value.charAt(0) !== aliasTag) {
             try {
-                const mosaic = new MosaicId(value);
+                const ignored = new MosaicId(value);
             } catch (err) {
                 throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
             }
         } else {
             const alias = value.substring(1);
             try {
-                const mosaic = new NamespaceId(alias);
+                const ignored = new NamespaceId(alias);
             } catch (err) {
                 throw new ExpectedError('Enter valid mosaic alias. Example: @nem.xem');
             }
