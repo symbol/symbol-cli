@@ -29,7 +29,7 @@ export class HeightValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         let valid = true;
         if (value === '0') {
             valid = false;

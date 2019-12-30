@@ -17,11 +17,12 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import { HorizontalTable } from 'cli-table3';
-import { command, metadata, option } from 'clime';
-import { AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp } from 'nem2-sdk';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { AddressValidator } from '../../validators/address.validator';
+import {HorizontalTable} from 'cli-table3';
+import {command, metadata, option} from 'clime';
+import {AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp} from 'nem2-sdk';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -72,9 +73,9 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         const profile = this.getProfile(options);
-        const address = this.getAddress(options);
-
         const restrictionHttp = new RestrictionAccountHttp(profile.url);
+        const address = new AddressResolver().resolve(options, profile);
+
         restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions: any) => {
                 this.spinner.stop(true);
@@ -87,7 +88,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

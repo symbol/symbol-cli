@@ -26,7 +26,7 @@ export class MosaicValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         MosaicService.validate(value);
     }
 }
@@ -39,7 +39,7 @@ export class MosaicsValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         const mosaics = value.split(',');
         mosaics.forEach((mosaic) => {
             MosaicService.validate(mosaic);

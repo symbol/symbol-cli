@@ -21,6 +21,7 @@ import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
+import {PasswordValidator} from './validators/password.validator';
 
 /**
  * Base command class to announce transactions.
@@ -52,10 +53,10 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 console.log(chalk.green('Hash:   '), signedTransaction.hash);
                 console.log(chalk.green('SignerPublicKey: '), signedTransaction.signerPublicKey);
             }, (err) => {
-                this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
          }
     }
@@ -65,6 +66,13 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
  * Announce transactions options
  */
 export class AnnounceTransactionsOptions extends ProfileOptions {
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
+
     @option({
         flag: 'f',
         description: 'Maximum fee (absolute amount).',

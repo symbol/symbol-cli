@@ -29,7 +29,7 @@ export class MosaicIdValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         try {
             const ignored = new MosaicId(value);
         } catch (err) {
@@ -49,7 +49,7 @@ export class MosaicIdAliasValidator implements Validator<string> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         const aliasTag = '@';
         if (value.charAt(0) !== aliasTag) {
             try {

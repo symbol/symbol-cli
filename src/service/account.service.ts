@@ -34,7 +34,6 @@ export class AccountService {
     /**
      * Gets the address given a raw address.
      * @param {string} rawRecipient -  Address or namespace name. If starts with "@", it is a namespace name.
-     * @throws {ExpectedError}
      * @returns {Address | NamespaceId}
      */
     static getRecipient(rawRecipient: string): Address | NamespaceId {
@@ -42,11 +41,7 @@ export class AccountService {
         if (rawRecipient.charAt(0) === AccountService.ALIAS_TAG) {
             recipient =  new NamespaceId(rawRecipient.substring(1));
         } else  {
-            try {
-                recipient = Address.createFromRawAddress(rawRecipient);
-            } catch (err) {
-                throw new ExpectedError('Enter a valid address');
-            }
+            recipient = Address.createFromRawAddress(rawRecipient);
         }
         return recipient;
     }

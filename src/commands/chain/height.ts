@@ -32,18 +32,18 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: ProfileOptions) {
         this.spinner.start();
-
         const profile = this.getProfile(options);
-
         const chainHttp = new ChainHttp(profile.url);
+
         chainHttp.getBlockchainHeight().subscribe((height) => {
             this.spinner.stop(true);
-            console.log(height.compact());
+            console.log(height.toString());
         }, (err) => {
             this.spinner.stop(true);
             let text = '';
             text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
+            err = err.message ? JSON.parse(err.message) : err;
+            console.log(text, err.body && err.body.message ? err.body.message : err);
         });
     }
 }

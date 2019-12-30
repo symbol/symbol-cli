@@ -17,12 +17,9 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
-import {Address} from 'nem2-sdk';
 import {Profile} from './model/profile';
-import {OptionsResolver} from './options-resolver';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
-import {PasswordValidator} from './validators/password.validator';
 
 /**
  * Base command class to use the stored profile.
@@ -54,25 +51,10 @@ export abstract class ProfileCommand extends Command {
             }
             return this.profileService.getDefaultProfile();
         } catch (err) {
-            throw new ExpectedError('Can\'t retrieve the current profile.\n' +
+            throw new ExpectedError('Can\'t retrieve the current profile.' +
             'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-            'if not, use \'nem2-cli profile create\' to create a new profile.');
+            'if not, use \'nem2-cli profile create\' to create a new profile');
         }
-    }
-
-    /**
-     * Get address from a profile name.
-     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
-     * @returns {Address}
-     */
-    public getAddress(options: ProfileOptions): Address {
-        const profile = this.getProfile(options);
-
-        return Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.address.pretty(),
-                'Introduce an address: '));
     }
 
     /**
@@ -84,9 +66,9 @@ export abstract class ProfileCommand extends Command {
         try {
             this.profileService.setDefaultProfile(options.profile);
         } catch (err) {
-            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile\n.' +
+            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile.' +
                 'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile.');
+                'if not, use \'nem2-cli profile create\' to create a profile');
         }
     }
 }
@@ -99,11 +81,4 @@ export class ProfileOptions extends Options {
         description: '(Optional) Select between your profiles, by providing a profile name.',
     })
     profile: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Profile password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
 }

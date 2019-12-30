@@ -23,17 +23,17 @@ import {Password} from 'nem2-sdk';
  */
 export class PasswordValidator implements Validator<string> {
 
- /**
-  * Validates if a password has at least 8 chars.
-  * @param {string} value - Password.
-  * @param {ValidationContext} context
-  * @throws {ExpectedError}
-  */
- validate(value: string, context?: ValidationContext): void {
- try {
-   const ignored = new Password(value);
-  } catch (error) {
-   throw new ExpectedError('Invalid password. password should have a minimum of 8 characters');
-  }
- }
+     /**
+      * Validates if a password has at least 8 chars.
+      * @param {string} value - Password.
+      * @param {ValidationContext} context
+      * @throws {ExpectedError}
+      */
+     validate(value: string, context?: ValidationContext): void {
+        try {
+             const ignored = new Password(value);
+         } catch (error) {
+              throw new ExpectedError('Password should have a minimum of 8 characters');
+         }
+     }
 }

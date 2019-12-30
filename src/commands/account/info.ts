@@ -32,8 +32,8 @@ import {
 } from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
 import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -54,11 +54,11 @@ export class AccountInfoTable {
         }) as HorizontalTable;
         this.table.push(
             ['Address', accountInfo.address.pretty()],
-            ['Address Height', accountInfo.addressHeight.compact().toString()],
+            ['Address Height', accountInfo.addressHeight.toString()],
             ['Public Key', accountInfo.publicKey],
-            ['Public Key Height', accountInfo.publicKeyHeight.compact()],
-            ['Importance', accountInfo.importance.compact()],
-            ['Importance Height', accountInfo.importanceHeight.compact()],
+            ['Public Key Height', accountInfo.publicKeyHeight.toString()],
+            ['Importance', accountInfo.importance.toString()],
+            ['Importance Height', accountInfo.importanceHeight.toString()],
         );
     }
 
@@ -83,9 +83,9 @@ export class BalanceInfoTable {
                 this.table.push(
                     [mosaic.fullName(),
                         mosaic.relativeAmount().toLocaleString(),
-                        mosaic.amount.compact().toString(),
+                        mosaic.amount.toString(),
                         (mosaic.mosaicInfo.duration.compact() === 0 ?
-                            'Never' : ((mosaic.mosaicInfo.height.compact() + mosaic.mosaicInfo.duration.compact()).toString())),
+                            'Never' : ((mosaic.mosaicInfo.height.add(mosaic.mosaicInfo.duration).toString()))),
                     ],
                 );
             });
@@ -171,17 +171,11 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         const profile = this.getProfile(options);
-
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.address.plain(),
-                'Enter the address: '));
-
         const accountHttp = new AccountHttp(profile.url);
         const multisigHttp = new MultisigHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
+        const address = new AddressResolver().resolve(options, profile);
 
         forkJoin(
             accountHttp.getAccountInfo(address),
@@ -200,7 +194,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

@@ -16,94 +16,62 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AccountService} from '../../service/account.service';
-import {RestrictionService} from '../../service/restriction.service';
+import {ActionResolver} from '../../resolvers/action.resolver';
+import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
 import {AddressAliasValidator} from '../../validators/address.validator';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {AccountRestrictionDirectionValidator, AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 't',
-        description: 'Restriction flag (allow, block).',
-        validator: new AccountRestrictionTypeValidator(),
+        flag: 'f',
+        description: 'Restriction flags.' +
+            '(0: AllowOutgoingAddress, 1: BlockOutgoingAddress, 2: AllowIncomingAddress, 3: BlockIncomingAddress)',
     })
-    restrictionFlag: string;
-
-    @option({
-        flag: 'd',
-        description: 'Restriction direction (incoming, outgoing).',
-        validator: new AccountRestrictionDirectionValidator(),
-    })
-    restrictionDirection: string;
+    flags: number;
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
         validator: new BinaryValidator(),
     })
-    modificationAction: number;
+    action: number;
 
     @option({
         flag: 'v',
         description: 'Address or @alias to allow/block.',
         validator: new AddressAliasValidator(),
     })
-    value: string;
+    recipientAddress: string;
 }
 
 @command({
     description: 'Allow or block incoming and outgoing transactions for a given a set of addresses',
 })
 export default class extends AnnounceTransactionsCommand {
-    private readonly restrictionService: RestrictionService;
     constructor() {
         super();
-        this.restrictionService = new RestrictionService();
     }
 
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
-        options.restrictionFlag = OptionsResolver(options,
-            'restrictionFlag',
-            () => undefined,
-            'Enter the restriction flag (allow, block):');
-
-        options.modificationAction = +OptionsResolver(options,
-            'modificationAction',
-            () => undefined,
-            'Enter the modification action (1: Add, 0: Remove): ');
-
-        options.restrictionDirection = OptionsResolver(options,
-            'restrictionDirection',
-            () => undefined,
-            'Enter the restriction direction (incoming, outgoing): ');
-
-        options.value = OptionsResolver(options,
-            'value',
-            () => undefined,
-            'Enter the address: ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Enter the maximum fee (absolute amount): ');
-
-        const address = AccountService.getRecipient(options.value);
+        const action = new ActionResolver().resolve(options);
+        const flags = new RestrictionAccountAddressFlagsResolver().resolve(options);
+        const address = new RecipientAddressResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
-            this.restrictionService.getAccountAddressRestrictionFlags(options.restrictionFlag, options.restrictionDirection),
-            (options.modificationAction === 1) ? [address] : [],
-            (options.modificationAction === 0) ? [address] : [],
+            flags,
+            (action === 1) ? [address] : [],
+            (action === 0) ? [address] : [],
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
