@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.0] - 30-Dec-2019
+
+:warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.
+Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.json``.
+
+### Added
+
+- ``profile create`` encrypts profiles.
+- ``transaction`` commands ask for wallet password.
+- ``profile import`` command.
+- ``profile decrypt`` command.
+- Prompts validation.
+- Command for dev build.
+- Command for windows build.
+
+### Changed
+
+- Command descriptions and prompts texts.
+- Resolvers detached from commands.
+
+### Fixed
+
+- ``transaction multisigmodification`` command uses correct max_fee.
+
 ## [0.15.1] - 13-Dec-2019
 
 ### Added
@@ -142,6 +166,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 - Initial code release.
 
+[0.16.0]: https://github.com/nemtech/nem2-cli/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/nemtech/nem2-cli/compare/v0.14.0...v0.15.1
 [0.14.0]: https://github.com/nemtech/nem2-cli/compare/v0.13.4...v0.14.0
 [0.13.4]: https://github.com/nemtech/nem2-cli/compare/v0.13.2...v0.13.4

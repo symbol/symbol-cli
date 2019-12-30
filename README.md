@@ -5,13 +5,18 @@
 [![Coverage Status](https://coveralls.io/repos/github/nemtech/nem2-cli/badge.svg?branch=master)](https://coveralls.io/github/nemtech/nem2-cli?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-Command Line Interface (CLI) to interact with the Catapult.
+Command Line Interface (CLI) to interact with Catapult.
+
+:information_source: Use the software for testing/development purposes.
 
 ## Important Notes
 
+- [0.16.0](CHANGELOG.md#0160-30-Dec-2019) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
+
+:warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.
+Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.json``.
+
 - [0.15.2](CHANGELOG.md#0151-13-Dec-2019) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
-- [0.14.0](CHANGELOG.md#0140-21-Nov-2019) - **Fushicho2 Network Compatibility (catapult-server@0.9.0.1)**
-- [0.13.4](CHANGELOG.md#0134-28-Oct-2019) - **Fushicho1 Network Compatibility (catapult-server@0.8.0.3)**
 
 The release notes for the nem2-cli can be found [here](CHANGELOG.md).
 
@@ -27,7 +32,6 @@ The nem2-cli is distributed using the node package manager npm.
 npm install nem2-cli -g
 ```
 
-:warning: nem2-cli does not encrypt the profiles yet. Use it just on test environments.
 
 ## Usage
 
