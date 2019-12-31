@@ -16,8 +16,10 @@
  *
  */
 import chalk from 'chalk';
+import {HorizontalTable} from 'cli-table3';
+import * as Table from 'cli-table3';
 import {option} from 'clime';
-import {SignedTransaction, TransactionHttp} from 'nem2-sdk';
+import {SignedTransaction, TransactionHttp, TransactionType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {NumericStringValidator} from './validators/numericString.validator';
@@ -27,7 +29,14 @@ import {PasswordValidator} from './validators/password.validator';
  * Base command class to announce transactions.
  */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
-
+    private table: HorizontalTable;
+    constructor() {
+        super();
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+    }
     /**
      * Formats a payload to fit in the command line.
      * @param {string} payload.
@@ -44,8 +53,15 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      */
     protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
         const payload = AnnounceTransactionsCommand.formatPayload(signedTransaction.payload).join('\n');
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ' +
-             'Payload:\n' + payload);
+        this.table.push(
+            ['Payload', payload],
+            ['Hash', signedTransaction.hash],
+            ['Signer PublicKey', signedTransaction.signerPublicKey],
+            ['Type', TransactionType[signedTransaction.type]],
+            ['Network Type', signedTransaction.networkType]
+        );
+        console.log(this.table.toString());
+        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
         if (shouldAnnounceTransaction) {
             const transactionHttp = new TransactionHttp(url);
             transactionHttp.announce(signedTransaction).subscribe(() => {
