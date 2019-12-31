@@ -58,7 +58,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
             ['Hash', signedTransaction.hash],
             ['Signer PublicKey', signedTransaction.signerPublicKey],
             ['Type', TransactionType[signedTransaction.type]],
-            ['Network Type', signedTransaction.networkType]
+            ['Network Type', signedTransaction.networkType],
         );
         console.log(this.table.toString());
         const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
