@@ -1,12 +1,14 @@
 {
     "name": "nem2-cli",
-    "version": "0.13.4",
-    "description": "",
+    "version": "0.16.0",
+    "description": "Command Line Interface (CLI) to interact with Catapult",
     "main": "index.js",
     "scripts": {
         "pretest": "npm run build",
         "test": "mocha --ui bdd --recursive ./build/test",
         "build": "rm -rf build/ && tsc",
+        "build:win": "del build && tsc",
+        "dev": "nodemon --config \"./nodemon-config.json\"/",
         "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
         "test:coveralls": "npm run test:cov | coveralls"
     },
@@ -35,16 +37,16 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@types/cli-spinner": "^0.2.0",
-        "@types/node": "^9.3.0",
+        "@types/node": "^9.6.55",
         "@types/readline-sync": "^1.4.3",
         "chalk": "^2.3.0",
         "cli-spinner": "^0.2.7",
         "cli-table3": "^0.5.1",
         "clime": "^0.5.9",
-        "nem2-sdk": "^0.14.4",
+        "nem2-sdk": "^0.16.1",
         "path": "^0.12.7",
         "readline-sync": "^1.4.9",
-        "rxjs": "^6.2.1"
+        "rxjs": "^6.5.3"
     },
     "devDependencies": {
         "@types/chai": "^4.0.4",
@@ -52,11 +54,12 @@
         "chai": "^4.1.2",
         "coveralls": "^3.0.0",
         "mocha": "^4.0.1",
+        "nodemon": "^2.0.2",
         "nyc": "^11.3.0",
         "ts-mockito": "^2.2.8",
         "ts-node": "^5.0.1",
         "tslint": "^5.8.0",
-        "typescript": "^3.3.3333"
+        "typescript": "^3.7.2"
     },
     "nyc": {
         "exclude": [

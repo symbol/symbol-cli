@@ -17,9 +17,9 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {AccountHttp, PublicAccount} from 'nem2-sdk';
+import {AccountHttp} from 'nem2-sdk';
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../account.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import {AddressResolver} from '../../resolvers/address.resolver';
 
 @command({
     description: 'Fetch aggregate bonded transactions from account',
@@ -34,16 +34,10 @@ export default class extends AccountTransactionsCommand {
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
+        const accountHttp =  new AccountHttp(profile.url);
+        const address = new AddressResolver().resolve(options, profile);
 
-        const publicAccount = PublicAccount.createFromPublicKey(
-            OptionsResolver(options,
-                'publicKey',
-                () => profile.account.publicKey,
-                'Introduce the public key: '), profile.account.address.networkType);
-
-        const accountHttp = new AccountHttp(profile.url);
-
-        accountHttp.aggregateBondedTransactions(publicAccount.address, options.getQueryParams())
+        accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
                 let text = '';
@@ -55,7 +49,8 @@ export default class extends AccountTransactionsCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

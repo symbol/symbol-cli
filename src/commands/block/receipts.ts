@@ -17,9 +17,9 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {ReceiptHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HeightResolver} from '../../resolvers/height.resolver';
 import {ReceiptService} from '../../service/receipt.service';
 import {HeightValidator} from '../../validators/block.validator';
 
@@ -29,7 +29,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Block height.',
         validator: new HeightValidator(),
     })
-    height: number;
+    height: string;
 }
 
 @command({
@@ -45,16 +45,11 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.height =  OptionsResolver(options,
-            'height',
-            () => undefined,
-            'Introduce the block height: ');
-
         this.spinner.start();
         const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
-
-        blockHttp.getBlockReceipts(options.height)
+        const receiptHttp = new ReceiptHttp(profile.url);
+        const height =  new HeightResolver().resolve(options);
+        receiptHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
                 let txt = '';
@@ -69,7 +64,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

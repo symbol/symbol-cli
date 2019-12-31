@@ -17,15 +17,17 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import { HorizontalTable } from 'cli-table3';
-import { Command, command, ExpectedError, metadata, option, Options } from 'clime';
-import { Account, BlockHttp, NetworkHttp, NetworkType } from 'nem2-sdk';
+import {HorizontalTable} from 'cli-table3';
+import {Command, command, metadata, option, Options} from 'clime';
+import {Account, BlockHttp, Password, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import { forkJoin } from 'rxjs';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileRepository } from '../../respository/profile.repository';
-import { ProfileService } from '../../service/profile.service';
-import { NetworkValidator } from '../../validators/network.validator';
+import {NetworkTypeResolver} from '../../resolvers/networkType.resolver';
+import {PasswordResolver} from '../../resolvers/password.resolver';
+import {ProfileNameResolver} from '../../resolvers/profile.resolver';
+import {URLResolver} from '../../resolvers/url.resolver';
+import {ProfileRepository} from '../../respository/profile.repository';
+import {ProfileService} from '../../service/profile.service';
+import {PasswordValidator} from '../../validators/password.validator';
 
 export class CommandOptions extends Options {
     @option({
@@ -48,29 +50,26 @@ export class CommandOptions extends Options {
 
     @option({
         flag: 'n',
-        description: 'Network Type (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST).',
-        validator: new NetworkValidator(),
+        description: 'Network Type. (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)',
     })
-    network: string;
+    network: number;
 
-    getNetwork(network: string): NetworkType {
-        if (network === 'MAIN_NET') {
-            return NetworkType.MAIN_NET;
-        } else if (network === 'TEST_NET') {
-            return NetworkType.TEST_NET;
-        } else if (network === 'MIJIN') {
-            return NetworkType.MIJIN;
-        } else if (network === 'MIJIN_TEST') {
-            return NetworkType.MIJIN_TEST;
-        }
-        throw new ExpectedError('Introduce a valid network type. Example: MIJIN_TEST');
-    }
+    @option({
+        flag: 'p',
+        description: '(Optional) Profile password',
+        validator: new PasswordValidator(),
+    })
+    password: string;
 }
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly account: Account) {
+    constructor(
+        public readonly account: Account,
+        public readonly password?: Password,
+    ) {
+
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
@@ -80,11 +79,14 @@ export class AccountCredentialsTable {
             ['Public Key', account.publicKey],
             ['Private Key', account.privateKey],
         );
+        if (password) {
+            this.table.push(['Password', password.value]);
+        }
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('New Account') + '\n';
+        text += '\n' + chalk.green('Account') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -104,44 +106,28 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        const networkType = options.getNetwork(OptionsResolver(options,
-            'network',
-            () => undefined,
-            'Introduce the network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
-
-        const account = Account.generateNewAccount(networkType);
-        let text = new AccountCredentialsTable(account).toString();
+        const networkType = new NetworkTypeResolver().resolve(options);
+        const profile = new ProfileNameResolver().resolve(options);
+        const password = new PasswordResolver().resolve(options);
+        const simpleWallet = SimpleWallet.create(profile, password, networkType);
+        let text = new AccountCredentialsTable(simpleWallet.open(password), password).toString();
 
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;
         }
 
         if (options.save) {
-            const url = OptionsResolver(options,
-                'url',
-                () => undefined,
-                'Introduce the NEM2 node URL. (Example: http://localhost:3000): ').trim();
-
-            let profile: string;
-            if (options.profile) {
-                profile = options.profile;
-            } else {
-                profile = readlineSync.question('Insert the profile name: ');
-            }
-            profile.trim();
-
-            const networkHttp = new NetworkHttp(url);
+            const url = new URLResolver().resolve(options);
             const blockHttp = new BlockHttp(url);
 
-            forkJoin(networkHttp.getNetworkType(), blockHttp.getBlockByHeight(1))
-                .subscribe((res) => {
-                    if (res[0] !== networkType) {
+            blockHttp.getBlockByHeight('1')
+                .subscribe((block) => {
+                    if (block.networkType !== networkType) {
                         console.log('The network provided and node network don\'t match.');
                     } else {
-                        this.profileService.createNewProfile(account,
+                        this.profileService.createNewProfile(simpleWallet,
                             url as string,
-                            profile,
-                            res[1].generationHash);
+                            block.generationHash);
                         if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
                             this.profileService.setDefaultProfile(profile);
                         }

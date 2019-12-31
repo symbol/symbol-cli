@@ -107,6 +107,7 @@ export default class extends AnnounceTransactionsCommand {
         }
 
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
@@ -121,7 +122,7 @@ export default class extends AnnounceTransactionsCommand {
         );
 
         const networkGenerationHash = profile.networkGenerationHash;
-        const signedTransaction = profile.account.sign(mosaicAddressRestrictionTransaction, networkGenerationHash);
+        const signedTransaction = account.sign(mosaicAddressRestrictionTransaction, networkGenerationHash);
         console.log(chalk.green('signed transaction hash: \n'));
         console.log(signedTransaction.hash + '\n');
         this.announceTransaction(signedTransaction, profile.url);

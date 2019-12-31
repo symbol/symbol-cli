@@ -16,10 +16,30 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {UInt64} from 'nem2-sdk';
 
-export class HeightValidator implements Validator<number> {
-    validate(value: number, context: ValidationContext): void {
-        if (!(Number.isInteger(value) && value > 0)) {
+/**
+ * Height validator
+ */
+export class HeightValidator implements Validator<string> {
+
+    /**
+     * Validates if height value is bigger than 0.
+     * @param {string} value - Height.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
+        let valid = true;
+        if (value === '0') {
+            valid = false;
+        }
+        try {
+            UInt64.fromNumericString(value);
+        } catch (e) {
+            valid = false;
+        }
+        if (!valid) {
             throw new ExpectedError('The block height must be a positive integer');
         }
     }

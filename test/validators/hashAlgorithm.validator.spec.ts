@@ -1,31 +1,20 @@
 import {expect} from 'chai';
 import {HashAlgorithmValidator} from '../../src/validators/hashAlgorithm.validator';
 
-describe('hashAlgorithm value', () => {
-    it('Valid value: 0', () => {
-        const value = 0;
-        expect(new HashAlgorithmValidator().validate(value, {name: 'value', source: value.toString()})).to.be.equal(undefined);
+describe('hashAlgorithm validator', () => {
+
+    it('default case', () => {
+        expect(new HashAlgorithmValidator().validate(0)).to.be.equal(undefined);
+        expect(new HashAlgorithmValidator().validate(1)).to.be.equal(undefined);
+        expect(new HashAlgorithmValidator().validate(2)).to.be.equal(undefined);
+        expect(new HashAlgorithmValidator().validate(3)).to.be.equal(undefined);
     });
 
-    it('Valid value: 1', () => {
-        const value = 1;
-        expect(new HashAlgorithmValidator().validate(value, {name: 'value', source: String(value)})).to.be.equal(undefined);
-    });
-
-    it('Valid value: 2', () => {
-        const value = 2;
-        expect(new HashAlgorithmValidator().validate(value, {name: 'value', source: String(value)})).to.be.equal(undefined);
-    });
-
-    it('Valid value: 3', () => {
-        const value = 3;
-        expect(new HashAlgorithmValidator().validate(value, {name: 'value', source: String(value)})).to.be.equal(undefined);
-    });
-
-    it('Invalid value: 10', () => {
+    it('should throw error if hashAlgorithm is unknown', () => {
         const value = 10;
         expect(() => {
-            new HashAlgorithmValidator().validate(value, {name: 'value', source: String(value)});
-        }).to.throws('hashAlgorithm must be one of (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256)');
+            new HashAlgorithmValidator().validate(value);
+        }).to.throws('Hash algorithm must be one of ' +
+            '(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256)');
     });
 });

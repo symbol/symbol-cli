@@ -16,15 +16,17 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountLinkTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {AccountLinkTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 'p',
+        flag: 'u',
         description: 'Remote account public key.',
         validator: new PublicKeyValidator(),
     })
@@ -49,30 +51,19 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-
-        options.publicKey = OptionsResolver(options,
-            'publicKey',
-            () => undefined,
-            'Introduce the public key of the remote account: ');
-
-        options.action = +OptionsResolver(options,
-            'action',
-            () => undefined,
-            'Introduce alias action (1: Link, 0: Unlink): ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+        const account = profile.decrypt(options);
+        const publicKey = new PublicKeyResolver().resolve(options, profile, 'Enter the public key of the remote account: ');
+        const action = new LinkActionResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),
-            options.publicKey,
-            options.action,
+            publicKey,
+            action,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
-        const signedTransaction = profile.account.sign(accountLinkTransaction,
+        const signedTransaction = account.sign(accountLinkTransaction,
             profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }

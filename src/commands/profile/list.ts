@@ -23,7 +23,7 @@ import {ProfileService} from '../../service/profile.service';
 export class CommandOptions extends Options {
     @option({
         flag: 'a',
-        description: 'Account address',
+        description: 'Account address.',
     })
     address: string;
 }
@@ -44,14 +44,14 @@ export default class extends Command {
     execute(options: CommandOptions) {
         let message = '';
         this.profileService.findAll().map((profile) => {
-            message += '\n\n' + profile.toString();
+            message += '\n' + profile.toString();
         });
         console.log(message);
         try {
             const currentProfile = this.profileService.getDefaultProfile();
-            console.log(chalk.green('\n\n Default profile:', currentProfile.name));
+            console.log(chalk.green('\n Default profile:', currentProfile.name));
         } catch {
-            console.log(chalk.green('\n\n Default profile: None'));
+            console.log(chalk.green('\n Default profile: None'));
         }
     }
 }

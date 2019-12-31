@@ -17,12 +17,12 @@
  */
 import chalk from 'chalk';
 import * as Table from 'cli-table3';
-import { HorizontalTable } from 'cli-table3';
-import { command, metadata, option } from 'clime';
-import { AccountRestriction, AccountRestrictionType, Address, RestrictionHttp } from 'nem2-sdk';
-import { OptionsResolver } from '../../options-resolver';
-import { ProfileCommand, ProfileOptions } from '../../profile.command';
-import { AddressValidator } from '../../validators/address.validator';
+import {HorizontalTable} from 'cli-table3';
+import {command, metadata, option} from 'clime';
+import {AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp} from 'nem2-sdk';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
+import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -39,21 +39,21 @@ export class AccountRestrictionsTable {
     constructor(public readonly accountRestrictions: AccountRestriction[]) {
         this.table = new Table({
             style: { head: ['cyan'] },
-            head: ['Type', 'Value'],
+            head: ['Flags', 'Value'],
         }) as HorizontalTable;
 
         accountRestrictions
             .filter((accountRestriction) => accountRestriction.values.length > 0)
             .map((accountRestriction) => {
                 this.table.push(
-                    [AccountRestrictionType[accountRestriction.restrictionType], accountRestriction.values.toString()],
+                    [AccountRestrictionFlags[accountRestriction.restrictionFlags], accountRestriction.values.toString()],
                 );
             });
     }
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Account Restrictions') + '\n';
+        text += '\n' + chalk.green('Account Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -71,14 +71,11 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         this.spinner.start();
-        const profile = this.getProfile(options);
-        options.address = OptionsResolver(options,
-            'address',
-            () => profile.account.address.plain(),
-            'Introduce an address: ');
-        const address = Address.createFromRawAddress(options.address);
 
-        const restrictionHttp = new RestrictionHttp(profile.url);
+        const profile = this.getProfile(options);
+        const restrictionHttp = new RestrictionAccountHttp(profile.url);
+        const address = new AddressResolver().resolve(options, profile);
+
         restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions: any) => {
                 this.spinner.stop(true);
@@ -91,7 +88,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

@@ -15,23 +15,14 @@
  * limitations under the License.
  *
  */
-import {command, ExpectedError, metadata, option} from 'clime';
-import {
-    Address,
-    Deadline,
-    Message,
-    Mosaic,
-    NamespaceId,
-    PersistentHarvestingDelegationMessage,
-    PlainMessage,
-    PublicAccount,
-    TransferTransaction,
-    UInt64,
-} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {command, metadata, option} from 'clime';
+import {Deadline, EmptyMessage, PersistentHarvestingDelegationMessage, PlainMessage, TransferTransaction} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {MosaicService} from '../../service/mosaic.service';
+import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MessageResolver, RecipientPublicKeyResolver} from '../../resolvers/message.resolver';
+import {MosaicsResolver} from '../../resolvers/mosaic.resolver';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {MosaicsValidator} from '../../validators/mosaic.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
@@ -39,6 +30,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 
@@ -64,7 +56,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     encrypted: any;
 
     @option({
-        flag: 'p',
+        flag: 'u',
         description: '(Optional) The recipient public key in an encrypted message.',
         validator: new PublicKeyValidator(),
     })
@@ -91,64 +83,30 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-
-        const recipientAddress: Address | NamespaceId = MosaicService.getRecipient(OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            'Introduce the recipient address: '));
-        if (recipientAddress instanceof Address && recipientAddress.networkType !== profile.networkType) {
-            throw new ExpectedError('The recipient address network doesn\'t match network option.');
-        }
-
-        let mosaics: Mosaic[] = [];
-        options.mosaics = OptionsResolver(options,
-            'mosaics',
-            () => undefined,
-            'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-            ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: > ');
-        if (options.mosaics) {
-            mosaics = MosaicService.getMosaics(options.mosaics);
-        }
-        options.message = OptionsResolver(options,
-            'message',
-            () => '',
-            'Introduce the message: ');
-        if (options.message && !options.persistentHarvestingDelegation) {
-            options.encrypted = options.encrypted ? options.encrypted : readlineSync.keyInYN(
-                'Do you want to send an encrypted message?');
-        }
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
-
-        let message: Message;
-        if (options.message && options.persistentHarvestingDelegation) {
-            options.recipientPublicKey = OptionsResolver(options,
-                'recipientPublicKey',
-                () => undefined,
-                'Introduce the recipient public key: ');
-
-            message = PersistentHarvestingDelegationMessage.create(
-                options.message,
-                profile.account.privateKey,
-                options.recipientPublicKey,
-                profile.networkType);
-
-        } else if (options.message && options.encrypted) {
-                options.recipientPublicKey = OptionsResolver(options,
-                    'recipientPublicKey',
-                    () => undefined,
-                    'Introduce the recipient public key: ');
-
-                message = profile.account.encryptMessage(
-                    options.message,
-                    PublicAccount.createFromPublicKey(options.recipientPublicKey,
-                        profile.networkType),
+        const account = profile.decrypt(options);
+        const recipientAddress = new RecipientAddressResolver().resolve(options);
+        const mosaics = new MosaicsResolver().resolve(options);
+        const rawMessage = new MessageResolver().resolve(options);
+        let message = EmptyMessage;
+        if (rawMessage) {
+            if (options.persistentHarvestingDelegation) {
+                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
+                message = PersistentHarvestingDelegationMessage.create(
+                    rawMessage,
+                    account.privateKey,
+                    recipientPublicAccount.publicKey,
                     profile.networkType);
-        } else {
-            message = PlainMessage.create(options.message);
+            } else if (options.encrypted) {
+                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
+                message = account.encryptMessage(
+                    rawMessage,
+                    recipientPublicAccount,
+                    profile.networkType);
+            } else {
+                message = PlainMessage.create(rawMessage);
+            }
         }
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),
@@ -156,9 +114,9 @@ export default class extends AnnounceTransactionsCommand {
             mosaics,
             message,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
-        const signedTransaction = profile.account.sign(transferTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(transferTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

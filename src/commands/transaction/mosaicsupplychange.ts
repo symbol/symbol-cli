@@ -15,9 +15,12 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, MosaicId, MosaicSupplyChangeTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, MosaicSupplyChangeTransaction} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import {SupplyActionResolver} from '../../resolvers/action.resolver';
+import {AmountResolver} from '../../resolvers/amount.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 import {NumericStringValidator} from '../../validators/numericString.validator';
@@ -42,7 +45,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Atomic amount of supply change.',
         validator: new NumericStringValidator(),
     })
-    delta: string;
+    amount: string;
 }
 
 @command({
@@ -58,37 +61,22 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Introduce mosaic in hexadecimal format: ');
-        const mosaicId = new MosaicId(options.mosaicId);
-
-        options.action = +OptionsResolver(options,
-            'action',
-            () => undefined,
-            'Introduce supply change action (1: Increase, 0: Decrease): ');
-
-        options.delta = OptionsResolver(options,
-            'delta',
-            () => undefined,
-            'Introduce atomic amount of supply change: ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+        const account = profile.decrypt(options);
+        const mosaicId = new MosaicIdResolver().resolve(options);
+        const action = new SupplyActionResolver().resolve(options);
+        const amount = new AmountResolver()
+            .resolve(options, undefined, 'Enter absolute amount of supply change: ');
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
-            options.action,
-            UInt64.fromNumericString(options.delta),
+            action,
+            amount,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
-        const signedTransaction = profile.account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }
