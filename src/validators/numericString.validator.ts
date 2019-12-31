@@ -18,12 +18,22 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {UInt64} from 'nem2-sdk';
 
+/**
+ * Numeric string
+ */
 export class NumericStringValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if a string is composed by numbers.
+     * @param {string} value - Numeric string.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         try {
             UInt64.fromNumericString(value);
         } catch (err) {
-            throw new ExpectedError('Introduce a number.');
+            throw new ExpectedError('Enter a number');
         }
     }
 }

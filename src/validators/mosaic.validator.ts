@@ -19,13 +19,27 @@ import {ValidationContext, Validator} from 'clime';
 import {MosaicService} from '../service/mosaic.service';
 
 export class MosaicValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if a mosaic object can be created from a string.
+     * @param {string} value - Mosaic in the form mosaicId::amount.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         MosaicService.validate(value);
     }
 }
 
 export class MosaicsValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if an array of mosaic objects can be created from a string.
+     * @param {string} value - Mosaics in the form mosaicId::amount, separated by commas.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         const mosaics = value.split(',');
         mosaics.forEach((mosaic) => {
             MosaicService.validate(mosaic);

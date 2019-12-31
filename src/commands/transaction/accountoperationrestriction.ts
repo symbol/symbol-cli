@@ -16,82 +16,62 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline, UInt64} from 'nem2-sdk';
+import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {RestrictionService} from '../../service/restriction.service';
+import {ActionResolver} from '../../resolvers/action.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
+import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
-import {AccountRestrictionTypeValidator} from '../../validators/restrictionType.validator';
 import {TransactionTypeValidator} from '../../validators/transactionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 't',
-        description: 'Restriction flag (allow, block).',
-        validator: new AccountRestrictionTypeValidator(),
+        flag: 'f',
+        description: 'Restriction flag. (0: AllowOutgoingTransactionType, 1: BlockOutgoingTransactionType)',
     })
-    restrictionFlag: string;
+    flags: number;
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
         validator: new BinaryValidator(),
     })
-    modificationAction: number;
+    action: number;
 
     @option({
         flag: 'v',
         description: 'Transaction type formatted as hex.',
         validator: new TransactionTypeValidator(),
     })
-    value: string;
+    transactionType: string;
 }
 
 @command({
     description: 'Allow or block outgoing transactions by transaction type',
 })
 export default class extends AnnounceTransactionsCommand {
-    private readonly restrictionService: RestrictionService;
 
     constructor() {
         super();
-        this.restrictionService = new RestrictionService();
     }
 
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
-        options.restrictionFlag = OptionsResolver(options,
-            'restrictionFlag',
-            () => undefined,
-            'Introduce the restriction flag (allow, block):');
-
-        options.modificationAction = +OptionsResolver(options,
-            'modificationAction',
-            () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove): ');
-
-        options.value = OptionsResolver(options,
-            'value',
-            () => undefined,
-            'Introduce the transaction type. Example: 4154 (Transfer): ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee (absolute amount): ');
-
-        const value = parseInt(options.value, 16);
+        const action = new ActionResolver().resolve(options);
+        const flags = new RestrictionAccountOperationFlagsResolver().resolve(options);
+        const transactionType = new TransactionTypeResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
-            this.restrictionService.getAccountOperationRestrictionFlags(options.restrictionFlag),
-            (options.modificationAction === 1) ? [value] : [],
-            (options.modificationAction === 0) ? [value] : [],
+            flags,
+            (action === 1) ? [transactionType] : [],
+            (action === 0) ? [transactionType] : [],
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

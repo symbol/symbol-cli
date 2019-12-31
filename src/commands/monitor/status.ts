@@ -17,9 +17,9 @@
  */
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {Address, Listener} from 'nem2-sdk';
+import {Listener} from 'nem2-sdk';
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transaction.command';
-import {OptionsResolver} from '../../options-resolver';
+import {AddressResolver} from '../../resolvers/address.resolver';
 
 @command({
     description: 'Monitor transaction status error',
@@ -33,14 +33,8 @@ export default class extends MonitorAddressCommand {
     @metadata
     execute(options: MonitorAddressOptions) {
         const profile = this.getProfile(options);
-
-        const address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.address.plain(),
-                'Introduce the address: '));
-
         const listener = new Listener(profile.url);
+        const address = new AddressResolver().resolve(options, profile);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
 
@@ -52,15 +46,16 @@ export default class extends MonitorAddressCommand {
                     transactionStatusError.deadline.value.toLocalTime().toString();
                 console.log(text);
             }, (err) => {
-                this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
             let text = '';
             text += chalk.red('Error');
-            console.log(text, err.response !== undefined ? err.response.text : err);
+            err = err.message ? JSON.parse(err.message) : err;
+            console.log(text, err.body && err.body.message ? err.body.message : err);
         });
     }
 }

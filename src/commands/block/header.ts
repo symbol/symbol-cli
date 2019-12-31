@@ -20,8 +20,8 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {BlockHttp, BlockInfo, NetworkType} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HeightResolver} from '../../resolvers/height.resolver';
 import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -67,7 +67,7 @@ export class BlockHeaderTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Block Header') + '\n';
+        text += '\n' + chalk.green('Block Header') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -84,15 +84,12 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.height =  OptionsResolver(options,
-            'height',
-            () => undefined,
-            'Introduce the block height: ');
         this.spinner.start();
         const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
+        const height = new HeightResolver().resolve(options);
 
-        blockHttp.getBlockByHeight(options.height)
+        blockHttp.getBlockByHeight(height)
             .subscribe((blockInfo) => {
                 this.spinner.stop(true);
                 console.log(new BlockHeaderTable(blockInfo).toString());
@@ -100,7 +97,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

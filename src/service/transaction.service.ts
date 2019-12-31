@@ -51,12 +51,21 @@ import {
     TransferTransaction,
 } from 'nem2-sdk';
 
+/**
+ * Transaction service
+ */
 export class TransactionService {
 
-    constructor() {
+    /**
+     * Constructor
+     */
+    constructor() {}
 
-    }
-
+    /**
+     * Format a transaction to string.
+     * @param {transaction} transaction -  Transaction object to format.
+     * @returns {string}
+     */
     public formatTransactionToFilter(transaction: Transaction): string {
         let transactionFormatted = '';
         if (transaction instanceof TransferTransaction) {
@@ -75,14 +84,14 @@ export class TransactionService {
                     } else {
                         transactionFormatted += 'NamespaceId:';
                     }
-                    transactionFormatted += mosaic.id.toHex() + '::' + mosaic.amount.compact() + ',';
+                    transactionFormatted += mosaic.id.toHex() + '::' + mosaic.amount.toString() + ',';
                 });
                 transactionFormatted = transactionFormatted.substr(0, transactionFormatted.length - 1);
             }
         } else if (transaction instanceof NamespaceRegistrationTransaction) {
             transactionFormatted += 'NamespaceRegistrationTransaction: NamespaceName:' + transaction.namespaceName;
             if (transaction.registrationType === NamespaceRegistrationType.RootNamespace && transaction.duration !== undefined) {
-                transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.compact();
+                transactionFormatted += ' NamespaceRegistrationType:RootNamespace Duration:' + transaction.duration.toString();
             } else if (transaction.parentId !== undefined) {
                 transactionFormatted += ' NamespaceRegistrationType:SubNamespace ParentId:' + transaction.parentId.toHex();
             }
@@ -90,7 +99,7 @@ export class TransactionService {
             transactionFormatted += 'MosaicDefinitionTransaction: ' +
                 'MosaicId:' + transaction.mosaicId.toHex();
             if (transaction.duration) {
-                transactionFormatted += ' Duration:' + transaction.duration.compact();
+                transactionFormatted += ' Duration:' + transaction.duration.toString();
             }
             transactionFormatted += ' Divisibility:' + transaction.divisibility +
                 ' SupplyMutable:' + transaction.flags.supplyMutable +
@@ -101,7 +110,7 @@ export class TransactionService {
                 'MosaicId:' + transaction.mosaicId.toHex();
             transactionFormatted += ' Direction:' + (transaction.action === MosaicSupplyChangeAction.Increase ?
                 'IncreaseSupply' : 'DecreaseSupply');
-            transactionFormatted += ' Delta:' + transaction.delta.compact();
+            transactionFormatted += ' Delta:' + transaction.delta.toString();
 
         } else if (transaction instanceof MultisigAccountModificationTransaction) {
             transactionFormatted += 'MultisigAccountModificationTransaction:' +
@@ -132,13 +141,13 @@ export class TransactionService {
             }
         } else if (transaction instanceof LockFundsTransaction) {
             transactionFormatted += 'LockFundsTransaction: ' +
-                'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
-                ' Duration:' + transaction.duration.compact() +
+                'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.toString() +
+                ' Duration:' + transaction.duration.toString() +
                 ' Hash:' + transaction.hash;
         } else if (transaction instanceof SecretLockTransaction) {
             transactionFormatted += 'SecretLockTransaction: ' +
-                'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.compact() +
-                ' Duration:' + transaction.duration.compact() +
+                'Mosaic:' + transaction.mosaic.id.toHex() + ':' + transaction.mosaic.amount.toString() +
+                ' Duration:' + transaction.duration.toString() +
                 ' HashType:' + transaction.hashType +
                 ' Secret:' + transaction.secret +
                 ' RecipientAddress:' +

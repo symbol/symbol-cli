@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HeightResolver} from '../../resolvers/height.resolver';
 import {TransactionService} from '../../service/transaction.service';
 import {HeightValidator} from '../../validators/block.validator';
 
@@ -65,10 +65,10 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
 
-        options.height =  OptionsResolver(options,
-            'height',
-            () => undefined,
-            'Introduce the block height: ');
+        this.spinner.start();
+        const profile = this.getProfile(options);
+        const blockHttp = new BlockHttp(profile.url);
+        const height = new HeightResolver().resolve(options);
 
         let pageSize = options.pageSize || 10;
         if (pageSize < 10) {
@@ -84,17 +84,13 @@ export default class extends ProfileCommand {
             order = 'DESC';
         }
 
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
-
-        blockHttp.getBlockTransactions(options.height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
+        blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
                 this.spinner.stop(true);
                 let txt = '\n';
                 if (transactions.length > 0) {
                     transactions.map((transaction: any, index: number) => {
-                        txt += '(${index + 1}). ';
+                        txt += `(${index + 1}) - `;
                         txt +=  this.transactionService.formatTransactionToFilter(transaction) + '\n\n';
                     });
                 } else {
@@ -105,7 +101,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

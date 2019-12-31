@@ -17,29 +17,23 @@
  */
 import chalk from 'chalk';
 import {Command, command, metadata, option, Options} from 'clime';
-import {BlockHttp, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {BlockHttp, SimpleWallet} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {OptionsResolver} from '../../options-resolver';
+import {NetworkTypeResolver} from '../../resolvers/networkType.resolver';
+import {PasswordResolver} from '../../resolvers/password.resolver';
+import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
+import {ProfileNameResolver} from '../../resolvers/profile.resolver';
+import {URLResolver} from '../../resolvers/url.resolver';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
-import {NetworkValidator} from '../../validators/network.validator';
 import {PasswordValidator} from '../../validators/password.validator';
-import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 
 export class CommandOptions extends Options {
     @option({
-        flag: 'p',
-        description: 'Account private key.',
-        validator: new PrivateKeyValidator(),
-    })
-    privateKey: string;
-
-    @option({
         flag: 'n',
-        description: 'Network Type. Example: MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST.',
-        validator: new NetworkValidator(),
+        description: 'Network Type. (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)',
     })
-    network: string;
+    network: number;
 
     @option({
         flag: 'u',
@@ -58,11 +52,6 @@ export class CommandOptions extends Options {
         validator: new PasswordValidator(),
     })
     password: string;
-
-    getNetwork(network: any): NetworkType {
-        new NetworkValidator().validate(network);
-        return parseInt(NetworkType[network], 10);
-    }
 }
 
 @command({
@@ -80,43 +69,17 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        const networkType = options.getNetwork(OptionsResolver(options,
-            'network',
-            () => undefined,
-            'Introduce network type (MIJIN_TEST, MIJIN, MAIN_NET, TEST_NET): '));
-
-        const url = OptionsResolver(options,
-            'url',
-            () => undefined,
-            'Introduce NEM 2 Node URL. (Example: http://localhost:3000): ');
-
-        let profileName: string;
-        if (options.profile) {
-            profileName = options.profile;
-        } else {
-            profileName = readlineSync.question('Insert profile name: ');
-        }
-        profileName.trim();
-
-        const password = OptionsResolver(options,
-            'password',
-            () => undefined,
-            'Enter your wallet password: ');
-
-        new PasswordValidator().validate(password);
-        const passwordObject = new Password(password);
-
-        const simpleWallet: SimpleWallet = SimpleWallet.createFromPrivateKey(
-            profileName,
-            passwordObject,
-            OptionsResolver(options,
-                'privateKey',
-                () => undefined,
-                'Introduce your private key: '),
-            networkType,
-        );
-
+        const networkType = new NetworkTypeResolver().resolve(options);
+        const url = new URLResolver().resolve(options);
+        const profileName = new ProfileNameResolver().resolve(options);
+        const password = new PasswordResolver().resolve(options);
         const blockHttp = new BlockHttp(url);
+
+        const simpleWallet: SimpleWallet = SimpleWallet.create(
+            profileName,
+            password,
+            networkType);
+
         blockHttp.getBlockByHeight('1')
             .subscribe((block) => {
                 if (block.networkType !== networkType) {

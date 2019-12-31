@@ -22,11 +22,12 @@ import {
     HashLockTransaction,
     MultisigAccountModificationTransaction,
     NetworkCurrencyMosaic,
-    PublicAccount,
     UInt64,
 } from 'nem2-sdk';
 import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import {ActionResolver} from '../../resolvers/action.resolver';
+import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {CosignatoryPublicKeyResolver, MultisigAccountPublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {BinaryValidator} from '../../validators/binary.validator';
 import {PublicKeysValidator, PublicKeyValidator} from '../../validators/publicKey.validator';
 
@@ -80,45 +81,18 @@ export default class extends AnnounceAggregateTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-
-        options.action = +OptionsResolver(options,
-            'action',
-            () => undefined,
-            'Introduce the modification action (1: Add, 0: Remove): ');
-
-        options.cosignatoryPublicKey = OptionsResolver(options,
-            'cosignatoryPublicKey',
-            () => undefined,
-            'Introduce the cosignatory accounts public keys (separated by a comma): ');
-
-        options.multisigAccountPublicKey = OptionsResolver(options,
-            'multisigAccountPublicKey',
-            () => undefined,
-            'Introduce the multisig account public key: ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the multisig modification transaction: ');
-
-        options.maxFeeHashLock = OptionsResolver(options,
-            'maxFeeHashLock',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the hashlock transaction: ');
-
-        const cosignatoryPublicKeys = options.cosignatoryPublicKey.split(',');
-        const cosignatories: PublicAccount[] = [];
-        cosignatoryPublicKeys.map((cosignatory: string) => {
-            cosignatories.push(PublicAccount.createFromPublicKey(cosignatory, profile.networkType));
-        });
-        const multisigAccount = PublicAccount.createFromPublicKey(options.multisigAccountPublicKey, profile.networkType);
+        const action = new ActionResolver().resolve(options);
+        const multisigAccount = new MultisigAccountPublicKeyResolver().resolve(options, profile);
+        const cosignatories = new CosignatoryPublicKeyResolver().resolve(options, profile);
+        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFeeHashLock = new MaxFeeHashLockResolver().resolve(options);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
             options.minApprovalDelta,
             options.minRemovalDelta,
-            (options.action === 1) ? cosignatories : [],
-            (options.action === 0) ? cosignatories : [],
+            (action === 1) ? cosignatories : [],
+            (action === 0) ? cosignatories : [],
             profile.networkType);
 
         const aggregateTransaction = AggregateTransaction.createBonded(
@@ -126,7 +100,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
             [multisigAccountModificationTransaction.toAggregate(multisigAccount)],
             profile.networkType,
             [],
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            maxFee);
 
         const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash);
@@ -137,7 +111,7 @@ export default class extends AnnounceAggregateTransactionsCommand {
             UInt64.fromNumericString(options.duration),
             signedTransaction,
             profile.networkType,
-            options.maxFeeHashLock ? UInt64.fromNumericString(options.maxFeeHashLock) : UInt64.fromUint(0));
+            maxFeeHashLock);
         const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
         console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 

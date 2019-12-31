@@ -17,33 +17,44 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {Address, NamespaceId} from 'nem2-sdk';
+import {AccountService} from '../service/account.service';
 
+/**
+ * Address validator
+ */
 export class AddressValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if an address object can be created from a string.
+     * @param {string} value - Raw address.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         try {
             Address.createFromRawAddress(value);
         } catch (err) {
-            throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
         }
     }
 }
 
+/**
+ * Address alias validator
+ */
 export class AddressAliasValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        const aliasTag = '@';
-        if (value.charAt(0) !== aliasTag) {
-            try {
-                Address.createFromRawAddress(value);
-            } catch (error) {
-                throw new ExpectedError('Introduce a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-            }
-        } else {
-            const alias = value.substring(1);
-            try {
-                const ignored = new NamespaceId(alias);
-            } catch (error) {
-                throw new ExpectedError('Introduce a valid alias. Example: @xem');
-            }
+
+    /**
+     * Validates if an address object can be created from a string.
+     * @param {string} value - Raw address. If starts with '@', then it is an alias.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
+        try {
+            const ignored = AccountService.getRecipient(value);
+        } catch {
+            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
         }
     }
 }
