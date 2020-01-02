@@ -1,20 +1,19 @@
 import chalk from 'chalk';
-import { command, ExpectedError, metadata, option } from 'clime';
+import { command, metadata, option } from 'clime';
 import {
-    Address,
     Deadline,
     MosaicAddressRestrictionTransaction,
-    MosaicId,
     UInt64,
 } from 'nem2-sdk';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { OptionsResolver } from '../../options-resolver';
+import { TargetAddressResolver } from '../../resolvers/address.resolver';
+import { DurationResolver } from '../../resolvers/duration.resolver';
+import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
+import { RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
 import { MosaicRestrictionTypeValidator } from '../../validators/mosaic.validator';
 import { NumericStringValidator } from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
-    public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
-
     @option({
         flag: 'i',
         description: 'Identifier of the mosaic being restricted.',
@@ -66,55 +65,26 @@ export default class extends AnnounceTransactionsCommand {
     }
     @metadata
     execute(options: CommandOptions) {
-        options.mosaicId = OptionsResolver(
-            options,
-            'mosaicId',
-            () => undefined,
-            'Introduce mosaic identifier being restricted: ',
-        );
-
-        options.targetAddress = OptionsResolver(
-            options,
-            'targetAddress',
-            () => undefined,
-            'Introduce address being restricted: ',
-        );
-
-        options.restrictionKey = OptionsResolver(
-            options,
-            'restrictionkey',
-            () => undefined,
-            'Introduce restriction key relative to the reference mosaic identifier: ',
-        );
-
-        options.newRestrictionValue = OptionsResolver(
-            options,
-            'newRestrictionValue',
-            () => undefined,
-            'Introduce new restriction value: ',
-        );
-
-        options.newRestrictionType = OptionsResolver(
-            options,
-            'newRestrictionType',
-            () => undefined,
-            'Introduce new restriction type: (NONE: no restriction, EQ: equal, NE: not equal, LT: less than, LE: less than or equal,' +
-            'GT: greater than, GE: greater than or equal).',
-        );
-
-        if (!CommandOptions.limitType.includes(options.newRestrictionType)) {
-            throw new ExpectedError('Wrong mosaic restriction type.');
-        }
-
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
+        const mosaicId = new MosaicIdAliasResolver().resolve(options);
+        const targetAddress = new TargetAddressResolver().resolve(options);
+        const restrictionKey = new DurationResolver().resolve(
+            options,
+            undefined,
+            'Enter restriction key relative to the reference mosaic identifier: ');
+        const newRestrictionValue = new DurationResolver().resolve(
+            options,
+            undefined,
+            'Enter new restriction value: ');
+        const newRestrictionType = new RestrictionTypeResolver().resolve(options);
 
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),
-            new MosaicId(options.mosaicId),
-            UInt64.fromNumericString(options.restrictionKey),
-            Address.createFromRawAddress(options.targetAddress),
-            UInt64.fromNumericString(options.newRestrictionValue),
+            mosaicId,
+            restrictionKey,
+            targetAddress,
+            newRestrictionValue,
             profile.networkType,
             /[a-f|A-F]/.test(options.previousRestrictionValue) ?
                 UInt64.fromHex(options.previousRestrictionValue) : UInt64.fromNumericString(options.previousRestrictionValue),

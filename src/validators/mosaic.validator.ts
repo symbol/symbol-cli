@@ -49,7 +49,7 @@ export class MosaicsValidator implements Validator<string> {
 }
 
 export class MosaicRestrictionTypeValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         const limitValue = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
         if (!limitValue.includes(value.toUpperCase())) {
             throw new ExpectedError('Wrong mosaic restriction type');
