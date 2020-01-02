@@ -26,41 +26,56 @@ import {NumericStringValidator} from './validators/numericString.validator';
 import {PasswordValidator} from './validators/password.validator';
 
 /**
- * Base command class to announce transactions.
+ * A separate class to display the information of the announcing transaction.
  */
-export abstract class AnnounceTransactionsCommand extends ProfileCommand {
-    private table: HorizontalTable;
-    constructor() {
-        super();
-        this.table = new Table({
-            style: { head: ['cyan'] },
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-    }
+export class AnnounceTransactionFieldsTable {
+    private readonly table: HorizontalTable;
+
     /**
      * Formats a payload to fit in the command line.
      * @param {string} payload.
      * @returns {String[]}
      */
-     static formatPayload(payload: string) {
+    static formatPayload(payload: string) {
         return payload.match(/.{1,64}/g) || [];
     }
 
-    /**
-     * Announces a transaction.
-     * @param {SignedTransaction} signedTransaction
-     * @param {string} url - Node URL.
-     */
-    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        const payload = AnnounceTransactionsCommand.formatPayload(signedTransaction.payload).join('\n');
+    constructor(public readonly signedTransaction: SignedTransaction, url: string) {
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+
+        const payload = AnnounceTransactionFieldsTable.formatPayload(signedTransaction.payload).join('\n');
         this.table.push(
             ['Payload', payload],
             ['Hash', signedTransaction.hash],
             ['Signer PublicKey', signedTransaction.signerPublicKey],
             ['Type', TransactionType[signedTransaction.type]],
             ['Network Type', signedTransaction.networkType],
+            ['Url', url],
         );
-        console.log(this.table.toString());
+    }
+
+    toString(): string {
+        let text = '';
+        text += '\n' + chalk.green('Transaction Information') + '\n';
+        text += this.table.toString();
+        return text;
+    }
+}
+
+/**
+ * Base command class to announce transactions.
+ */
+export abstract class AnnounceTransactionsCommand extends ProfileCommand {
+    /**
+     * Announces a transaction.
+     * @param {SignedTransaction} signedTransaction
+     * @param {string} url - Node URL.
+     */
+    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, url).toString());
         const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
         if (shouldAnnounceTransaction) {
             const transactionHttp = new TransactionHttp(url);
