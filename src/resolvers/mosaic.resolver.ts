@@ -41,7 +41,7 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId | NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): MosaicId | NamespaceId {
         const resolution = OptionsResolver(options,
             'mosaicId',
             () =>  undefined,

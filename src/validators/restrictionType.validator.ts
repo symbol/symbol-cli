@@ -37,7 +37,7 @@ export class AccountRestrictionTypeValidator implements Validator<string> {
 }
 
 export class MosaicRestrictionTypeValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         const limitValue = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
         console.log(value + typeof value);
         if (!limitValue.includes(value.toUpperCase())) {
