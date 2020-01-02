@@ -17,7 +17,7 @@ export class DurationResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): UInt64 {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const resolution = OptionsResolver(options,
         'duration',
         () =>  undefined,
