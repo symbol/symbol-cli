@@ -25,9 +25,6 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
             altText ? altText : 'Select the restriction flags: ',
             choices,
         );
-        if (index < 0 || index > 3) {
-            throw new ExpectedError('Unknown restriction flag.');
-        }
         return AccountRestrictionFlags[choices[index] as any];
     }
 }
