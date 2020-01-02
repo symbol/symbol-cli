@@ -21,10 +21,16 @@ import {Profile} from './model/profile';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
 
+/**
+ * Base command class to use the stored profile.
+ */
 export abstract class ProfileCommand extends Command {
-    private readonly profileService: ProfileService;
     public spinner = new Spinner('processing.. %s');
+    private readonly profileService: ProfileService;
 
+    /**
+     * Constructor.
+     */
     constructor() {
         super();
         const profileRepository = new ProfileRepository('.nem2rc.json');
@@ -32,6 +38,12 @@ export abstract class ProfileCommand extends Command {
         this.spinner.setSpinnerString('|/-\\');
     }
 
+    /**
+     * Get profile by name.
+     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
+     * @throws {ExpectedError}
+     * @returns {Profile}
+     */
     public getProfile(options: ProfileOptions): Profile {
         try {
             if (options.profile) {
@@ -39,23 +51,31 @@ export abstract class ProfileCommand extends Command {
             }
             return this.profileService.getDefaultProfile();
         } catch (err) {
-            throw new ExpectedError('Can\'t retrieve the current profile.\n' +
+            throw new ExpectedError('Can\'t retrieve the current profile.' +
             'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-            'if not, use \'nem2-cli profile create\' to create a new profile.');
+            'if not, use \'nem2-cli profile create\' to create a new profile');
         }
     }
 
+    /**
+     * Set a profile by default.
+     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
+     * @throws {ExpectedError}
+     */
     protected setDefaultProfile(options: ProfileOptions) {
         try {
             this.profileService.setDefaultProfile(options.profile);
         } catch (err) {
-            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile\n.' +
+            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile.' +
                 'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile.');
+                'if not, use \'nem2-cli profile create\' to create a profile');
         }
     }
 }
 
+/**
+ * Monitor profile options.
+ */
 export class ProfileOptions extends Options {
     @option({
         description: '(Optional) Select between your profiles, by providing a profile name.',

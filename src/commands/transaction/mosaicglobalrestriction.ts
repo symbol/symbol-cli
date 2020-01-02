@@ -120,6 +120,7 @@ export default class extends AnnounceTransactionsCommand {
         }
 
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
 
         const transaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
@@ -136,7 +137,7 @@ export default class extends AnnounceTransactionsCommand {
         );
 
         const networkGenerationHash = profile.networkGenerationHash;
-        const signedTransaction = profile.account.sign(transaction, networkGenerationHash);
+        const signedTransaction = account.sign(transaction, networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

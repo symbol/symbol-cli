@@ -17,18 +17,98 @@
  */
 
 import {expect} from 'chai';
-import {Account, NetworkType} from 'nem2-sdk';
+import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {Profile} from '../../src/model/profile';
 
 describe('Profile', () => {
     it('should contain the fields', () => {
         const profile = new Profile(
-            Account.createFromPrivateKey('706B22AF6E95541A2AEE209DD635FABB06AD2D6D4FB6ECFB59AD1AA4E9C2F1DB', NetworkType.MIJIN_TEST),
-            NetworkType.MIJIN_TEST,
+            SimpleWallet.create('default', new Password('password'), NetworkType.MIJIN_TEST),
             'url',
-            'default',
-            'test',
+            'generationHash',
         );
-        expect(profile['name']).to.be.equal('default');
+        expect(profile.name).to.be.equal('default');
+        expect(profile.networkGenerationHash).to.be.equal('generationHash');
+        expect(profile.url).to.be.equal('url');
+        expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+    });
+
+    it('should be created from DTO', () => {
+        const profile = Profile.createFromDTO(
+            {
+                simpleWallet: {
+                    name: 'default',
+                    network: NetworkType.MIJIN_TEST,
+                    address: {
+                        address: Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain(),
+                        networkType: NetworkType.MIJIN_TEST,
+                    },
+                    creationDate: 'test',
+                    schema: 'test',
+                    encryptedPrivateKey: {
+                        encryptedKey: 'test',
+                        iv: 'test',
+                    },
+                },
+                networkGenerationHash: 'generationHash',
+                url: 'url',
+            });
+        expect(profile.name).to.be.equal('default');
+        expect(profile.networkGenerationHash).to.be.equal('generationHash');
+        expect(profile.url).to.be.equal('url');
+        expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+    });
+
+    it('should validate if password opens wallet', () => {
+        const privateKey =  '0'.repeat(64);
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
+            'default',
+            password,
+            privateKey,
+            NetworkType.MIJIN_TEST);
+        const profile = new Profile(
+            simpleWallet,
+            'url',
+            'generationHash',
+        );
+        expect(profile.isPasswordValid(new Password('12345678'))).to.be.equal(false);
+        expect(profile.isPasswordValid(password)).to.be.equal(true);
+    });
+
+    it('should decrypt profile', () => {
+        const privateKey =  '0'.repeat(64);
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
+            'default',
+            password,
+            privateKey,
+            NetworkType.MIJIN_TEST);
+        const profile = new Profile(
+            simpleWallet,
+            'url',
+            'generationHash',
+        );
+        const profileOptions = {password: 'password'} as any;
+        expect(profile.decrypt(profileOptions).privateKey).to.be.equal(privateKey);
+        expect(profile.address).to.be.equal(simpleWallet.address);
+    });
+
+    it('should throw error if trying to decrypt profile with an invalid password', () => {
+        const privateKey =  '0'.repeat(64);
+        const password = new Password('password');
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
+            'default',
+            password,
+            privateKey,
+            NetworkType.MIJIN_TEST);
+        const profile = new Profile(
+            simpleWallet,
+            'url',
+            'generationHash',
+        );
+        const profileOptions = {password: 'test12345678'} as any;
+        expect(() => profile.decrypt(profileOptions))
+            .to.throws('The password provided does not match your account password');
     });
 });

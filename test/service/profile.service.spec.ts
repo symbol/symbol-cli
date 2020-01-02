@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {Account, NetworkType} from 'nem2-sdk';
+import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {instance, mock, when} from 'ts-mockito';
 import {Profile} from '../../src/model/profile';
 import {ProfileRepository} from '../../src/respository/profile.repository';
@@ -31,19 +31,20 @@ describe('Configure service', () => {
     });
 
     it('should create a new profile', () => {
-        const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
-            NetworkType.MIJIN_TEST);
+        const simpleWallet = SimpleWallet
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
+
         const url = 'http://localhost:1234';
         const networkGenerationHash = 'test';
-        const profile = new Profile(account, NetworkType.MIJIN_TEST, url, 'default', networkGenerationHash);
+        const profile = new Profile(simpleWallet, url, networkGenerationHash);
 
         const mockProfileRepository = mock(ProfileRepository);
-        when(mockProfileRepository.save(account, url, 'default', networkGenerationHash))
+        when(mockProfileRepository.save(simpleWallet, url,  networkGenerationHash))
             .thenReturn(profile);
 
         const profileService = new ProfileService(instance(mockProfileRepository));
-        const createdProfile = profileService.createNewProfile(account, url, 'default', networkGenerationHash);
-        expect(createdProfile.account).to.be.equal(account);
+        const createdProfile = profileService.createNewProfile(simpleWallet, url, networkGenerationHash);
+        expect(createdProfile.simpleWallet).to.be.equal(simpleWallet);
         expect(createdProfile.url).to.be.equal(url);
         expect(createdProfile.name).to.be.equal('default');
         expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
@@ -51,12 +52,13 @@ describe('Configure service', () => {
     });
 
     it('should find account account with name', () => {
-        const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
-            NetworkType.MIJIN_TEST);
+        const simpleWallet = SimpleWallet
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
+
         const url = 'http://localhost:1234';
 
         const networkGenerationHash = 'test';
-        const profile = new Profile(account, NetworkType.MIJIN_TEST, url, 'default', networkGenerationHash);
+        const profile = new Profile(simpleWallet, url, networkGenerationHash);
         const mockProfileRepository = mock(ProfileRepository);
         when(mockProfileRepository.find('default'))
             .thenReturn(profile);
@@ -64,7 +66,7 @@ describe('Configure service', () => {
         const profileService = new ProfileService(instance(mockProfileRepository));
         const createdProfile = profileService.findProfileNamed('default');
         if (createdProfile instanceof Profile) {
-            expect(createdProfile.account).to.be.equal(account);
+            expect(createdProfile.simpleWallet).to.be.equal(simpleWallet);
             expect(createdProfile.url).to.be.equal(url);
             expect(createdProfile.name).to.be.equal('default');
             expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
@@ -84,15 +86,14 @@ describe('Configure service', () => {
     });
 
     it('should get current profile', () => {
-        const account = Account.createFromPrivateKey('CEDF9CB6F5D4EF67CA2F2FD4CA993F80E4FC615DFD230E15842B0A6475730B30',
-            NetworkType.MIJIN_TEST);
+        const simpleWallet = SimpleWallet
+            .create('test', new Password('password'), NetworkType.MIJIN_TEST);
+
         const url = 'http://localhost:1234';
 
         const networkGenerationHash = 'test';
-        const profile = new Profile(account,
-            NetworkType.MIJIN_TEST,
+        const profile = new Profile(simpleWallet,
             url,
-            'test',
             networkGenerationHash);
         const mockProfileRepository = mock(ProfileRepository);
         when(mockProfileRepository.find('test'))
@@ -101,7 +102,7 @@ describe('Configure service', () => {
         const profileService = new ProfileService(instance(mockProfileRepository));
         const currentProfile = profileService.getDefaultProfile();
         if (currentProfile instanceof Profile) {
-            expect(currentProfile.account).to.be.equal(account);
+            expect(currentProfile.simpleWallet).to.be.equal(simpleWallet);
         }
     });
 });

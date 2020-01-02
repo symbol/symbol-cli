@@ -16,23 +16,41 @@
  *
  */
 import {option} from 'clime';
-import {QueryParams} from 'nem2-sdk';
+import {AccountHttp, Address, QueryParams} from 'nem2-sdk';
+import {OptionsResolver} from '../src/options-resolver';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
+import {AddressValidator} from './validators/address.validator';
 import {PublicKeyValidator} from './validators/publicKey.validator';
 
+/**
+ * Base command class to retrieve transactions from an account.
+ */
 export abstract class AccountTransactionsCommand extends ProfileCommand {
     public readonly transactionService: TransactionService;
 
-    constructor() {
+    /**
+     * Constructor.
+     */
+    protected constructor() {
         super();
         this.transactionService = new TransactionService();
     }
 }
 
+/**
+ * Account transactions options
+ */
 export class AccountTransactionsOptions extends ProfileOptions {
     @option({
-        flag: 'p',
+        flag: 'a',
+        description: 'Account address.',
+        validator: new AddressValidator(),
+    })
+    address: string;
+
+    @option({
+        flag: 'u',
         description: 'Account public key.',
         validator: new PublicKeyValidator(),
     })
@@ -51,6 +69,10 @@ export class AccountTransactionsOptions extends ProfileOptions {
     })
     id: string;
 
+    /**
+     * Creates QueryParams object based on options.
+     * @returns {QueryParams}
+     */
     getQueryParams(): QueryParams {
         if (this.id === undefined) {
             return new QueryParams(this.numTransactions);

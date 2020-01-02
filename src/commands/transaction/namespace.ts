@@ -16,10 +16,12 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, NamespaceRegistrationTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, NamespaceRegistrationTransaction} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {DurationResolver} from '../../resolvers/duration.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -49,7 +51,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     duration: string;
 
     @option({
-        flag: 'p',
+        flag: 'a',
         description: 'Parent namespace name (use it with --subnamespace).',
     })
     parentName: string;
@@ -68,44 +70,37 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         options.name = OptionsResolver(options,
             'name',
             () => undefined,
-            'Introduce namespace name: ');
+            'Enter namespace name: ');
 
         if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
             options.rootnamespace = true;
         }
-
+        let duration;
         if (!options.rootnamespace) {
             options.subnamespace = true;
             options.parentName = OptionsResolver(options,
                 'parentName',
                 () => undefined,
-                'Introduce the parent namespace name: ');
+                'Enter the parent namespace name: ');
         } else {
-            options.duration = OptionsResolver(options,
-                'duration',
-                () => undefined,
-                'Introduce the namespace rental duration: ');
+            duration = new DurationResolver().resolve(options);
         }
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(Deadline.create(),
-                options.name, UInt64.fromNumericString(options.duration), profile.networkType,
-                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(), options.name, duration, profile.networkType, maxFee);
         } else {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(Deadline.create(),
-                options.name, options.parentName, profile.networkType,
-                options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(
+                Deadline.create(), options.name, options.parentName, profile.networkType, maxFee);
         }
-
-        const signedTransaction = profile.account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);
     }
 }

@@ -18,19 +18,19 @@
 import {expect} from 'chai';
 import {TransactionTypeValidator} from '../../src/validators/transactionType.validator';
 
-describe('Transaction Type validator', () => {
+describe('Transaction type validator', () => {
 
-    it('Valid transaction type', () => {
+    it('default case', () => {
         const value = '414C';
-        expect(new TransactionTypeValidator().validate(value, {name: 'value', source: value}))
+        expect(new TransactionTypeValidator().validate(value))
             .to.be.equal(undefined);
     });
 
-    it('Invalid transaction type', () => {
+    it('should throw error if transaction is unknown', () => {
         const value = 'test';
         expect(() => {
-            new TransactionTypeValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('Introduce a transaction type in hexadecimal. Example: 4154');
+            new TransactionTypeValidator().validate(value);
+        }).to.throws('Enter a transaction type in hexadecimal. Example: 4154');
     });
 
 });

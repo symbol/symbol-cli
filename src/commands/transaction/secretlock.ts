@@ -15,19 +15,25 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Address, Deadline, Mosaic, MosaicId, SecretLockTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AddressValidator} from '../../validators/address.validator';
+import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AmountResolver} from '../../resolvers/amount.resolver';
+import {DurationResolver} from '../../resolvers/duration.resolver';
+import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
+import {SecretResolver} from '../../resolvers/secret.resolver';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
+import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
 import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        description: 'Locked mosaic identifier.',
+        description: 'Locked mosaic identifier or @alias.',
         flag: 'm',
-        validator: new MosaicIdValidator(),
+        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 
@@ -60,9 +66,9 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     hashAlgorithm: number;
 
     @option({
-        description: 'Address that receives the funds once unlocked.',
+        description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
-        validator: new AddressValidator(),
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }
@@ -77,55 +83,30 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Introduce locked mosaic identifier: ');
-
-        options.amount = OptionsResolver(options,
-            'amount',
-            () => undefined,
-            'Introduce amount of mosaic units to lock: ');
-
-        options.recipientAddress = OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            'Introduce address that receives the funds once unlocked: ');
-        const recipientAddress =  Address.createFromRawAddress(options.recipientAddress);
-
-        options.duration = OptionsResolver(options,
-            'duration',
-            () => undefined,
-            'Introduce number of blocks for which a lock should be valid: ');
-
-        options.secret = OptionsResolver(options,
-            'secret',
-            () => undefined,
-            'Introduce proof hashed in hexadecimal format: ');
-
-        options.hashAlgorithm = +OptionsResolver(options,
-            'hashAlgorithm',
-            () => undefined,
-            'Introduce algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
-
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+        const mosaicId = new MosaicIdAliasResolver()
+            .resolve(options, undefined, 'Enter the locked mosaic identifier or alias: ');
+        const amount = new AmountResolver()
+            .resolve(options, undefined, 'Enter the absolute amount of mosaic units to lock: ');
+        const recipientAddress = new RecipientAddressResolver()
+            .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
+        const duration = new DurationResolver()
+            .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid: ');
+        const secret = new SecretResolver().resolve(options);
+        const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),
-            new Mosaic(new MosaicId(options.mosaicId),
-                UInt64.fromNumericString(options.amount)),
-            UInt64.fromNumericString(options.duration),
-            options.hashAlgorithm,
-            options.secret,
+            new Mosaic(mosaicId, amount),
+            duration,
+            hashAlgorithm,
+            secret,
             recipientAddress,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(secretLockTransaction, profile.networkGenerationHash);
+            maxFee);
+        const signedTransaction = account.sign(secretLockTransaction, profile.networkGenerationHash);
 
         this.announceTransaction(signedTransaction, profile.url);
     }

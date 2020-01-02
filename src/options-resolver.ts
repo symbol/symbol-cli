@@ -22,7 +22,19 @@ export const OptionsResolver = (options: any,
                                 key: string,
                                 secondSource: () => string | undefined,
                                 promptText: string,
-                                readlineDependency?: any) => {
+                                readlineDependency?: any,
+                                hide?: boolean) => {
     const readline = readlineDependency || readlineSync;
-    return options[key] !== undefined ? options[key] : (secondSource() || readline.question(promptText));
+    const hideEchoBack = hide ? true : false;
+    return options[key] !== undefined ? options[key] : (secondSource() ||
+        readline.question(promptText, {hideEchoBack}));
+};
+
+export const OptionsChoiceResolver = (options: any,
+                                      key: string,
+                                      promptText: string,
+                                      choices: string[],
+                                      readlineDependency?: any) => {
+    const readline = readlineDependency || readlineSync;
+    return options[key] !== undefined ? options[key] : (readline.keyInSelect(choices, promptText));
 };

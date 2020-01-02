@@ -16,14 +16,54 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {MosaicId} from 'nem2-sdk';
+import {MosaicId, NamespaceId} from 'nem2-sdk';
 
+/**
+ * Mosaic id validator
+ */
 export class MosaicIdValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
+
+    /**
+     * Validates if a mosaic id object can be created from a string.
+     * @param {string} value - MosaicId in hexadecimal.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
         try {
             const ignored = new MosaicId(value);
         } catch (err) {
-            throw new ExpectedError('Introduce a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+            throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+        }
+    }
+}
+
+/**
+ * Mosaic id alias validator
+ */
+export class MosaicIdAliasValidator implements Validator<string> {
+
+    /**
+     * Validates if a mosaic id object can be created from a string.
+     * @param {string} value - MosaicId in hexadecimal or Namespace name. If starts with '@', it is a namespace name.
+     * @param {ValidationContext} context
+     * @throws {ExpectedError}
+     */
+    validate(value: string, context?: ValidationContext): void {
+        const aliasTag = '@';
+        if (value.charAt(0) !== aliasTag) {
+            try {
+                const ignored = new MosaicId(value);
+            } catch (err) {
+                throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+            }
+        } else {
+            const alias = value.substring(1);
+            try {
+                const ignored = new NamespaceId(alias);
+            } catch (err) {
+                throw new ExpectedError('Enter valid mosaic alias. Example: @nem.xem');
+            }
         }
     }
 }

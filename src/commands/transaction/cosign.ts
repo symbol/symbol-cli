@@ -19,18 +19,19 @@ import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {
     AccountHttp,
+    Address,
     AggregateTransaction,
     CosignatureTransaction,
     MultisigAccountInfo,
-    PublicAccount,
+    MultisigHttp,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../model/profile';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {HashResolver} from '../../resolvers/hash.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -51,25 +52,21 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        this.spinner.start();
         const profile = this.getProfile(options);
-
+        const account = profile.decrypt(options);
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
-
-        options.hash = OptionsResolver(options,
-            'hash',
-            () => undefined,
-            'Introduce aggregate bonded transaction hash to be signed: ');
-
-        this.spinner.start();
+        const hash = new HashResolver()
+            .resolve(options, undefined, '\'Enter aggregate bonded transaction hash to be signed: ');
 
         this.getGraphAccounts(profile)
             .pipe(
                 mergeMap((_) => _),
-                mergeMap((publicAccount) => accountHttp.aggregateBondedTransactions(publicAccount.address, new QueryParams(100))),
+                mergeMap((address) => accountHttp.getAccountPartialTransactions(address, new QueryParams(100))),
                 mergeMap((_) => _),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-                    _.transactionInfo.hash === options.hash), // Filter transaction
+                    _.transactionInfo.hash === hash), // Filter transaction
                 toArray(),
             )
             .subscribe((transactions: AggregateTransaction[]) => {
@@ -84,7 +81,7 @@ export default class extends ProfileCommand {
                     const transaction = transactions[0];
 
                     const cosignatureTransaction = CosignatureTransaction.create(transaction);
-                    const signedCosignature = profile.account.signCosignatureTransaction(cosignatureTransaction);
+                    const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
 
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
@@ -95,7 +92,8 @@ export default class extends ProfileCommand {
 
                             let text = '';
                             text += chalk.red('Error');
-                            console.log(text, err.response !== undefined ? err.response.text : err);
+                            err = err.message ? JSON.parse(err.message) : err;
+                            console.log(text, err.body && err.body.message ? err.body.message : err);
                         });
 
                 }
@@ -103,23 +101,24 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 
-    private getGraphAccounts(profile: Profile): Observable<PublicAccount[]> {
-        return new AccountHttp(profile.url).getMultisigAccountGraphInfo(profile.account.address)
+    private getGraphAccounts(profile: Profile): Observable<Address[]> {
+        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.address)
             .pipe(
                 map((_) => {
-                    let publicAccounts: PublicAccount[] = [];
+                    let addresses: Address[] = [];
                     _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
                         if (key <= 0) {
-                            publicAccounts = publicAccounts.concat(
-                                value.map((cosignatory) => cosignatory.account));
+                            addresses = addresses.concat(
+                                value.map((cosignatory) => cosignatory.account.address));
                         }
                     });
-                    return publicAccounts;
+                    return addresses;
                 }),
-                catchError((ignored) => of([profile.account.publicAccount])));
+                catchError((ignored) => of([profile.address])));
     }
 }

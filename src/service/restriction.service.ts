@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountRestrictionType, MosaicRestrictionType} from 'nem2-sdk';
+import {AccountRestrictionFlags, MosaicRestrictionType} from 'nem2-sdk';
 
 export class RestrictionService {
     constructor() {
@@ -38,28 +38,28 @@ export class RestrictionService {
         return restrictionType;
     }
 
-  public getAccountAddressRestrictionType(restrictionType: string, restrictionDirection: string): AccountRestrictionType {
+  public getAccountAddressRestrictionType(restrictionType: string, restrictionDirection: string): AccountRestrictionFlags {
         const lowerRestrictionType = restrictionType.toLowerCase();
         const lowerRestrictionDirection = restrictionDirection.toLowerCase();
         let accountRestrictionType;
         if ('allow' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionType.AllowOutgoingAddress;
+            accountRestrictionType = AccountRestrictionFlags.AllowOutgoingAddress;
         } else if ('allow' === lowerRestrictionType && 'incoming' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionType.AllowIncomingAddress;
+            accountRestrictionType = AccountRestrictionFlags.AllowIncomingAddress;
         } else if ('block' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionType.BlockOutgoingAddress;
+            accountRestrictionType = AccountRestrictionFlags.BlockOutgoingAddress;
         } else {
-            accountRestrictionType = AccountRestrictionType.BlockIncomingAddress;
+            accountRestrictionType = AccountRestrictionFlags.BlockIncomingAddress;
         }
         return accountRestrictionType;
     }
 
-    public getAccountMosaicRestrictionType(restrictionType: string): AccountRestrictionType {
+    public getAccountMosaicRestrictionType(restrictionType: string): AccountRestrictionFlags {
         let accountRestrictionType;
         if ('allow' === restrictionType.toLowerCase()) {
-            accountRestrictionType = AccountRestrictionType.AllowMosaic;
+            accountRestrictionType = AccountRestrictionFlags.AllowMosaic;
         } else {
-            accountRestrictionType = AccountRestrictionType.BlockMosaic;
+            accountRestrictionType = AccountRestrictionFlags.BlockMosaic;
         }
         return accountRestrictionType;
     }
@@ -69,13 +69,13 @@ export class RestrictionService {
         const lowerRestrictionDirection = restrictionDirection.toLowerCase();
         let accountRestrictionType;
         if ('allow' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionType.AllowOutgoingTransactionType;
+            accountRestrictionType = AccountRestrictionFlags.AllowOutgoingTransactionType;
         } else if ('allow' === lowerRestrictionType && 'incoming' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionType.AllowIncomingTransactionType;
+            accountRestrictionType = AccountRestrictionFlags.AllowIncomingTransactionType;
         } else if ('block' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionType.BlockOutgoingTransactionType;
+            accountRestrictionType = AccountRestrictionFlags.BlockOutgoingTransactionType;
         } else {
-            accountRestrictionType = AccountRestrictionType.BlockIncomingTransactionType;
+            accountRestrictionType = AccountRestrictionFlags.BlockIncomingTransactionType;
         }
         return accountRestrictionType;
     }

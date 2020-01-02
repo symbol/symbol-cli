@@ -30,7 +30,10 @@ import {
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
+import {AmountResolver} from '../../resolvers/amount.resolver';
+import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
+import {DurationResolver} from '../../resolvers/duration.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -81,7 +84,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         toggle: true,
     })
     nonExpiring: any;
-
 }
 
 @command({
@@ -96,24 +98,17 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.nonExpiring) {
-            if (!readlineSync.keyInYN('Do you want an non-expiring mosaic?')) {
-                blocksDuration = UInt64.fromNumericString(OptionsResolver(options,
-                    'duration',
-                    () => undefined,
-                    'Introduce the duration in blocks: '));
+            if (!readlineSync.keyInYN('Do you want a non-expiring mosaic?')) {
+                blocksDuration = new DurationResolver().resolve(options);
             }
         }
-
-        options.divisibility = +OptionsResolver(options,
-            'divisibility',
-            () => undefined,
-            'Introduce mosaic divisibility: ');
-
+        const divisibility = new DivisibilityResolver().resolve(options);
         const mosaicFlags = MosaicFlags.create(
             options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
                 'Do you want mosaic to have supply mutable?'),
@@ -122,45 +117,36 @@ export default class extends AnnounceTransactionsCommand {
             options.restrictable ? options.restrictable : readlineSync.keyInYN(
                 'Do you want mosaic to be restrictable?'),
         );
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
+        const amount = new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ');
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, profile.account.publicAccount),
+            MosaicId.createFromNonce(nonce, account.publicAccount),
             mosaicFlags,
-            options.divisibility,
+            divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
-            profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-
-        options.amount = OptionsResolver(options,
-            'amount',
-            () => undefined,
-            'Introduce amount of tokens: ');
+            profile.networkType);
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicDefinitionTransaction.mosaicId,
             MosaicSupplyChangeAction.Increase,
-            UInt64.fromNumericString(options.amount),
+            amount,
             profile.networkType,
         );
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
             [
-                mosaicDefinitionTransaction.toAggregate(profile.account.publicAccount),
-                mosaicSupplyChangeTransaction.toAggregate(profile.account.publicAccount),
+                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
+                mosaicSupplyChangeTransaction.toAggregate(account.publicAccount),
             ],
             profile.networkType,
             [],
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(aggregateTransaction, profile.networkGenerationHash);
+            maxFee);
+        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
         console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
         this.announceTransaction(signedTransaction, profile.url);
     }

@@ -17,32 +17,120 @@
  */
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
-import {Account, NetworkType} from 'nem2-sdk';
+import {ExpectedError} from 'clime';
+import {Account, Address, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {ISimpleWalletDTO} from 'nem2-sdk/dist/src/infrastructure/wallet/simpleWalletDTO';
+import {ProfileOptions} from '../profile.command';
+import {PasswordResolver} from '../resolvers/password.resolver';
 
+/**
+ * Profile data transfer object.
+ */
+interface ProfileDTO {
+    simpleWallet: ISimpleWalletDTO;
+    url: string;
+    networkGenerationHash: string;
+}
+
+/**
+ * Profile model.
+ */
 export class Profile {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly account: Account,
-                public readonly networkType: NetworkType,
+    /**
+     * Constructor.
+     * @param {SimpleWallet} simpleWallet - Wallet credentials.
+     * @param {string} url - Node URL.
+     * @param {string} networkGenerationHash - Network generation hash.
+     */
+    constructor(public readonly simpleWallet: SimpleWallet,
                 public readonly url: string,
-                public readonly name: string,
                 public readonly networkGenerationHash: string) {
+
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Name', this.name],
-            ['Network', NetworkType[this.networkType]],
+            ['Name', this.simpleWallet.name],
+            ['Network', NetworkType[this.simpleWallet.network]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
-            ['Address', this.account.address.pretty()],
-            ['Public Key', this.account.publicKey],
-            ['Private Key', this.account.privateKey],
+            ['Address', this.simpleWallet.address.pretty()],
         );
-
     }
+
+    /**
+     * Gets profile address.
+     * @returns {Address}
+     */
+    get address(): Address {
+        return this.simpleWallet.address;
+    }
+
+    /**
+     * Gets profile network type.
+     * @returns {NetworkType}
+     */
+    get networkType(): NetworkType {
+        return this.simpleWallet.network;
+    }
+
+    /**
+     * Gets profile name.
+     * @returns {string}
+     */
+    get name(): string {
+        return this.simpleWallet.name;
+    }
+
+    /**
+     * Creates a profile object.
+     * @param {ProfileDTO} profileDTO
+     * @returns {Profile}
+     */
+    public static createFromDTO(profileDTO: ProfileDTO): Profile {
+        return new Profile(
+            SimpleWallet.createFromDTO(profileDTO.simpleWallet),
+            profileDTO.url,
+            profileDTO.networkGenerationHash,
+        );
+    }
+
+    /**
+     * Formats profile as a string.
+     * @returns {string}
+     */
     toString(): string {
         return this.table.toString();
+    }
+
+    /**
+     * Returns true if the password is valid.
+     * @param {Password} password.
+     * @returns {boolean}
+     */
+    isPasswordValid(password: Password): boolean {
+        try {
+            this.simpleWallet.open(password);
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
+    /**
+     * Opens a wallet.
+     * @param {ProfileOptions} options - The  attribute "password" should contain the profile's password.
+     * @throws {ExpectedError}
+     * @returns {Account}
+     */
+    decrypt(options: ProfileOptions): Account {
+        const password = new PasswordResolver().resolve(options);
+        if (!this.isPasswordValid(password)) {
+            throw new ExpectedError('The password provided does not match your account password');
+        }
+        return this.simpleWallet.open(password);
     }
 }

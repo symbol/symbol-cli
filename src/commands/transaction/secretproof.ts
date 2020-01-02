@@ -15,10 +15,14 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Address, Deadline, SecretProofTransaction, UInt64} from 'nem2-sdk';
+import {Deadline, SecretProofTransaction} from 'nem2-sdk';
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {OptionsResolver} from '../../options-resolver';
-import {AddressValidator} from '../../validators/address.validator';
+import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {ProofResolver} from '../../resolvers/proof.resolver';
+import {SecretResolver} from '../../resolvers/secret.resolver';
+import {AddressAliasValidator} from '../../validators/address.validator';
 import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -43,9 +47,9 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     hashAlgorithm: number;
 
     @option({
-        description: 'Address that receives the funds once unlocked.',
+        description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
-        validator: new AddressValidator(),
+        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }
@@ -60,43 +64,24 @@ export default class extends AnnounceTransactionsCommand {
 
     @metadata
     execute(options: CommandOptions) {
-        options.secret = OptionsResolver(options,
-            'secret',
-            () => undefined,
-            'Introduce proof hashed in hexadecimal: ');
-
-        options.proof = OptionsResolver(options,
-            'proof',
-            () => undefined,
-            'Introduce original random set of bytes in hexadecimal: ');
-
-        options.hashAlgorithm = +OptionsResolver(options,
-            'hashAlgorithm',
-            () => undefined,
-            'Introduce algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256): ');
-
-        options.recipientAddress = OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            'Introduce address that receives the funds once unlocked: ');
-        const recipientAddress = Address.createFromRawAddress(options.recipientAddress);
-
-        options.maxFee = OptionsResolver(options,
-            'maxFee',
-            () => undefined,
-            'Introduce the maximum fee you want to spend to announce the transaction: ');
-
         const profile = this.getProfile(options);
+        const account = profile.decrypt(options);
+        const recipientAddress = new RecipientAddressResolver()
+            .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
+        const secret = new SecretResolver().resolve(options);
+        const proof = new ProofResolver().resolve(options);
+        const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),
-            options.hashAlgorithm,
-            options.secret,
+            hashAlgorithm,
+            secret,
             recipientAddress,
-            options.proof,
+            proof,
             profile.networkType,
-            options.maxFee ? UInt64.fromNumericString(options.maxFee) : UInt64.fromUint(0));
-        const signedTransaction = profile.account.sign(secretProofTransaction, profile.networkGenerationHash);
+            maxFee);
+        const signedTransaction = account.sign(secretProofTransaction, profile.networkGenerationHash);
 
         this.announceTransaction(signedTransaction, profile.url);
     }

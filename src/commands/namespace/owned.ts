@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {Address, NamespaceHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AddressResolver} from '../../resolvers/address.resolver';
 import {AddressValidator} from '../../validators/address.validator';
 import {NamespaceInfoTable} from './info';
 
@@ -46,11 +46,8 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const address: Address = Address.createFromRawAddress(
-            OptionsResolver(options,
-                'address',
-                () => profile.account.address.plain(),
-                'Introduce the address: '));
+        const address = new AddressResolver().resolve(options, profile);
+
         const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)
@@ -58,7 +55,7 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
 
                 if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces');
+                    console.log('The address ' + address.pretty() + ' does not own any namespaces.');
                 }
                 namespaces.map((namespace) => {
                     console.log(new NamespaceInfoTable(namespace).toString());
@@ -68,7 +65,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                text += chalk.red('Error');
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

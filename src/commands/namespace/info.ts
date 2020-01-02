@@ -19,9 +19,9 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {NamespaceHttp, NamespaceId, NamespaceInfo, UInt64} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {NamespaceHttp, NamespaceInfo} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -29,14 +29,14 @@ export class CommandOptions extends ProfileOptions {
         flag: 'n',
         description: 'Namespace name. Example: cat.currency',
     })
-    name: string;
+    namespaceName: string;
 
     @option({
         flag: 'h',
         description: 'Namespace id in hexadecimal.',
         validator: new NamespaceIdValidator(),
     })
-    hex: string;
+    namespaceId: string;
 }
 
 export class NamespaceInfoTable {
@@ -50,8 +50,8 @@ export class NamespaceInfoTable {
             ['Id', namespaceInfo.id.toHex()],
             ['Registration Type', namespaceInfo.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
             ['Owner', namespaceInfo.owner.address.pretty()],
-            ['Start Height',  namespaceInfo.startHeight.compact()],
-            ['End Height', namespaceInfo.endHeight.compact()],
+            ['Start Height',  namespaceInfo.startHeight.toString()],
+            ['End Height', namespaceInfo.endHeight.toString()],
         );
         if (namespaceInfo.isSubnamespace()) {
             this.table.push(
@@ -75,7 +75,7 @@ export class NamespaceInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Namespace Information') + '\n';
+        text += '\n' + chalk.green('Namespace Information') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -94,24 +94,11 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-
-        let namespaceId: NamespaceId;
-        if (options.name) {
-            options.name = OptionsResolver(options,
-                'name',
-                () => undefined,
-                'Introduce the namespace name: ');
-            namespaceId = new NamespaceId(options.name);
-        } else {
-            options.hex = OptionsResolver(options,
-                'hex',
-                () => undefined,
-                'Introduce the namespace id in hexadecimal: ');
-            const namespaceIdUInt64 = UInt64.fromHex(options.hex);
-            namespaceId = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
-        }
-
         const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceId = options.namespaceName ?
+            new NamespaceNameResolver().resolve(options) :
+            new NamespaceIdResolver().resolve(options);
+
         namespaceHttp.getNamespace(namespaceId)
             .subscribe((namespaceInfo) => {
                 this.spinner.stop(true);
@@ -120,7 +107,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

@@ -19,9 +19,9 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
-import {MosaicGlobalRestrictionItem, MosaicId, MosaicRestrictionType, RestrictionHttp} from 'nem2-sdk';
-import {OptionsResolver} from '../../options-resolver';
+import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
@@ -51,7 +51,7 @@ export class MosaicGlobalRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n\n' + chalk.green('Mosaic Global Restrictions') + '\n';
+        text += '\n' + chalk.green('Mosaic Global Restrictions') + '\n';
         text += this.table.toString();
         return text;
     }
@@ -70,13 +70,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        options.mosaicId = OptionsResolver(options,
-            'mosaicId',
-            () => undefined,
-            'Introduce the mosaic id in hexadecimal format: ');
-        const mosaicId = new MosaicId(options.mosaicId);
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const mosaicId = new MosaicIdResolver().resolve(options);
 
-        const restrictionHttp = new RestrictionHttp(profile.url);
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
@@ -89,7 +85,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
                 let text = '';
                 text += chalk.red('Error');
-                console.log(text, err.response !== undefined ? err.response.text : err);
+                err = err.message ? JSON.parse(err.message) : err;
+                console.log(text, err.body && err.body.message ? err.body.message : err);
             });
     }
 }

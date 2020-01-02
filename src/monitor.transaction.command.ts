@@ -21,15 +21,24 @@ import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
 import {AddressValidator} from './validators/address.validator';
 
+/**
+ * Base command class to listen the blockchain.
+ */
 export abstract class MonitorAddressCommand extends ProfileCommand {
     public readonly transactionService: TransactionService;
 
-    constructor() {
+    /**
+     * Constructor.
+     */
+    protected constructor() {
         super();
         this.transactionService = new TransactionService();
     }
 }
 
+/**
+ * Monitor address options.
+ */
 export class MonitorAddressOptions extends ProfileOptions {
     @option({
         flag: 'a',
