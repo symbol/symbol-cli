@@ -15,15 +15,16 @@
  * limitations under the License.
  *
  */
-
 import { command, metadata, option } from 'clime';
-import { Deadline, MosaicGlobalRestrictionTransaction, MosaicId, UInt64 } from 'nem2-sdk';
+import { Deadline, MosaicGlobalRestrictionTransaction, MosaicId, MosaicRestrictionType, UInt64 } from 'nem2-sdk';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
-import { DurationResolver } from '../../resolvers/duration.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
-import { PreviousRestrictionTypeResolver, RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
+import { RestrictionKeyResolver } from '../../resolvers/restrictionKey.resolver';
+import { RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
+import { RestrictionValueResolver } from '../../resolvers/restrictionValue.resolver';
 import { NumericStringValidator } from '../../validators/numericString.validator';
+import { MosaicRestrictionKeyValidator } from '../../validators/restrictionKey.validator';
 import { MosaicRestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -45,12 +46,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'k',
         description: 'Restriction key relative to the reference mosaic identifier.',
+        validator: new MosaicRestrictionKeyValidator(),
     })
     restrictionKey: string;
 
     @option({
         flag: 'v',
-        default: 'FFFFFFFFFFFFFFFF',
+        default: '0',
         description: '(Optional) Previous restriction value.',
         validator: new NumericStringValidator(),
     })
@@ -59,7 +61,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 't',
         default: 'NONE',
-        description: 'Previous restriction type. (NONE: no restriction, EQ: equal, NE: not equal, LT: less than,' +
+        description: '(Optional) Previous restriction type. (NONE: no restriction, EQ: equal, NE: not equal, LT: less than,' +
             'LE: less than or equal, GT: greater than, GE: greater than or equal)',
         validator: new MosaicRestrictionTypeValidator(),
     })
@@ -68,6 +70,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'V',
         description: 'New restriction value.',
+        validator: new NumericStringValidator(),
     })
     newRestrictionValue: string;
 
@@ -91,26 +94,20 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const mosaicId = new MosaicIdAliasResolver().resolve(options);
-        const restrictionKey = new DurationResolver().resolve(
-            options,
-            undefined,
-            'Enter restriction key relative to the reference mosaic identifier: ');
-        const newRestrictionValue = new DurationResolver().resolve(
-            options,
-            undefined,
-            'Enter restriction new restriction value: ',
-        );
         const newRestrictionType = new RestrictionTypeResolver().resolve(options);
-        const previousRestrictionType = new PreviousRestrictionTypeResolver().resolve(options);
-        const referenceMosaicId = new MosaicIdAliasResolver().resolve(options);
+        const restrictionKey = new RestrictionKeyResolver().resolve(options);
+        const newRestrictionValue = new RestrictionValueResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
+
+        const previousRestrictionType = Number(MosaicRestrictionType[options.previousRestrictionType as any]) as MosaicRestrictionType;
+        const previousRestrictionValue = UInt64.fromNumericString(options.previousRestrictionValue);
+        const referenceMosaicId = options.referenceMosaicId === '0' ? new MosaicId(options.referenceMosaicId) : undefined;
 
         const transaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
             mosaicId,
             restrictionKey,
-            /[a-f|A-F]/.test(options.previousRestrictionValue) ?
-                UInt64.fromHex(options.previousRestrictionValue) : UInt64.fromNumericString(options.previousRestrictionValue),
+            previousRestrictionValue,
             previousRestrictionType,
             newRestrictionValue,
             newRestrictionType,
