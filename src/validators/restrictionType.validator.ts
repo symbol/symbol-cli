@@ -17,15 +17,6 @@
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime';
 
-export class AccountRestrictionDirectionValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        value = value.toLowerCase();
-        if ('incoming' !== value && 'outgoing' !== value) {
-            throw new ExpectedError('restrictionDirection must be one of \'incoming\' or \'outgoing\'');
-        }
-    }
-}
-
 export class AccountRestrictionTypeValidator implements Validator<string> {
     validate(value: string, context: ValidationContext): void {
         value = value.toLowerCase();

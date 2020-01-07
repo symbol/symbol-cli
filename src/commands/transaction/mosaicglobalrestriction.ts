@@ -23,16 +23,16 @@ import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
 import { RestrictionKeyResolver } from '../../resolvers/restrictionKey.resolver';
 import { RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
 import { RestrictionValueResolver } from '../../resolvers/restrictionValue.resolver';
+import { MosaicIdAliasValidator } from '../../validators/mosaicId.validator';
 import { NumericStringValidator } from '../../validators/numericString.validator';
 import { MosaicRestrictionKeyValidator } from '../../validators/restrictionKey.validator';
 import { MosaicRestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
-    public static limitType = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
-
     @option({
-        flag: 'i',
-        description: 'Identifier of the mosaic being restricted.',
+        flag: 'm',
+        description: 'Mosaic identifier or @alias being restricted.',
+        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 

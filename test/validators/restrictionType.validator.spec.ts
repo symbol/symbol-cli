@@ -17,30 +17,8 @@
  */
 import {expect} from 'chai';
 import {
-    AccountRestrictionDirectionValidator,
     AccountRestrictionTypeValidator, MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator';
-
-describe('Account restriction direction validator', () => {
-    it('valid direction incoming', () => {
-        const value = 'incoming';
-        expect(new AccountRestrictionDirectionValidator().validate(value, {name: 'value', source: value}))
-            .to.be.equal(undefined);
-    });
-
-    it('valid direction outgoing', () => {
-        const value = 'outgoing';
-        expect(new AccountRestrictionDirectionValidator().validate(value, {name: 'value', source: value}))
-            .to.be.equal(undefined);
-    });
-
-    it('invalid value', () => {
-        const value = '123';
-        expect(() => {
-            new AccountRestrictionDirectionValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('restrictionDirection must be one of \'incoming\' or \'outgoing\'');
-    });
-});
 
 describe('Account Restriction type validator', () => {
     it('valid value allow', () => {

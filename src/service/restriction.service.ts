@@ -37,46 +37,4 @@ export class RestrictionService {
         }
         return restrictionType;
     }
-
-  public getAccountAddressRestrictionType(restrictionType: string, restrictionDirection: string): AccountRestrictionFlags {
-        const lowerRestrictionType = restrictionType.toLowerCase();
-        const lowerRestrictionDirection = restrictionDirection.toLowerCase();
-        let accountRestrictionType;
-        if ('allow' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionFlags.AllowOutgoingAddress;
-        } else if ('allow' === lowerRestrictionType && 'incoming' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionFlags.AllowIncomingAddress;
-        } else if ('block' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionFlags.BlockOutgoingAddress;
-        } else {
-            accountRestrictionType = AccountRestrictionFlags.BlockIncomingAddress;
-        }
-        return accountRestrictionType;
-    }
-
-    public getAccountMosaicRestrictionType(restrictionType: string): AccountRestrictionFlags {
-        let accountRestrictionType;
-        if ('allow' === restrictionType.toLowerCase()) {
-            accountRestrictionType = AccountRestrictionFlags.AllowMosaic;
-        } else {
-            accountRestrictionType = AccountRestrictionFlags.BlockMosaic;
-        }
-        return accountRestrictionType;
-    }
-
-    public getAccountOperationRestrictionType(restrictionType: string, restrictionDirection: string) {
-        const lowerRestrictionType = restrictionType.toLowerCase();
-        const lowerRestrictionDirection = restrictionDirection.toLowerCase();
-        let accountRestrictionType;
-        if ('allow' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionFlags.AllowOutgoingTransactionType;
-        } else if ('allow' === lowerRestrictionType && 'incoming' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionFlags.AllowIncomingTransactionType;
-        } else if ('block' === lowerRestrictionType && 'outgoing' === lowerRestrictionDirection) {
-            accountRestrictionType = AccountRestrictionFlags.BlockOutgoingTransactionType;
-        } else {
-            accountRestrictionType = AccountRestrictionFlags.BlockIncomingTransactionType;
-        }
-        return accountRestrictionType;
-    }
 }
