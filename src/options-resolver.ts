@@ -36,5 +36,12 @@ export const OptionsChoiceResolver = (options: any,
                                       choices: string[],
                                       readlineDependency?: any) => {
     const readline = readlineDependency || readlineSync;
-    return options[key] !== undefined ? options[key] : (readline.keyInSelect(choices, promptText));
+    if (options[key] !== undefined) {
+        return options[key];
+    }
+    const choiceIndex = readline.keyInSelect(choices, promptText);
+    if (-1 === choiceIndex) {
+        return process.exit();
+    }
+    return choiceIndex;
 };
