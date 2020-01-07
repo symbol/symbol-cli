@@ -16,13 +16,15 @@
  *
  */
 import chalk from 'chalk';
-import {option} from 'clime';
-import {Address, Listener, SignedTransaction, TransactionHttp} from 'nem2-sdk';
-import {merge} from 'rxjs';
-import {filter, mergeMap} from 'rxjs/operators';
-import {ProfileCommand, ProfileOptions} from './profile.command';
-import {NumericStringValidator} from './validators/numericString.validator';
-import {PasswordValidator} from './validators/password.validator';
+import { option } from 'clime';
+import { Address, Listener, SignedTransaction, TransactionHttp, TransactionType } from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
+import { merge } from 'rxjs';
+import { filter, mergeMap } from 'rxjs/operators';
+import { AnnounceTransactionFieldsTable } from './announce.transactions.command';
+import { ProfileCommand, ProfileOptions } from './profile.command';
+import { NumericStringValidator } from './validators/numericString.validator';
+import { PasswordValidator } from './validators/password.validator';
 
 /**
  * Base command class to announce aggregate transactions.
@@ -42,26 +44,31 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
                                            url: string) {
         const transactionHttp = new TransactionHttp(url);
         const listener = new Listener(url);
-        listener.open().then(() => {
-            merge(
-                transactionHttp.announce(signedHashLockTransaction),
-                listener
-                    .confirmed(senderAddress)
-                    .pipe(
-                        filter((transaction) => transaction.transactionInfo !== undefined
-                            && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
-                        mergeMap((ignored) => {
-                            listener.close();
-                            return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
-                        }),
-                    )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
-                (err) => {
-                    let text = '';
-                    text += chalk.red('Error');
-                    err = err.message ? JSON.parse(err.message) : err;
-                    console.log(text, err.body && err.body.message ? err.body.message : err);
-                });
-        });
+        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
+        console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
+        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce these transactions? ');
+        if (shouldAnnounceTransaction) {
+            listener.open().then(() => {
+                merge(
+                    transactionHttp.announce(signedHashLockTransaction),
+                    listener
+                        .confirmed(senderAddress)
+                        .pipe(
+                            filter((transaction) => transaction.transactionInfo !== undefined
+                                && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
+                            mergeMap((ignored) => {
+                                listener.close();
+                                return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
+                            }),
+                        )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
+                            (err) => {
+                                let text = '';
+                                text += chalk.red('Error');
+                                err = err.message ? JSON.parse(err.message) : err;
+                                console.log(text, err.body && err.body.message ? err.body.message : err);
+                            });
+            });
+        }
     }
 }
 /**
