@@ -16,14 +16,14 @@
  *
  */
 import chalk from 'chalk';
-import {HorizontalTable} from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
 import * as Table from 'cli-table3';
-import {option} from 'clime';
-import {SignedTransaction, TransactionHttp, TransactionType} from 'nem2-sdk';
+import { option } from 'clime';
+import { SignedTransaction, TransactionHttp, TransactionType } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {ProfileCommand, ProfileOptions} from './profile.command';
-import {NumericStringValidator} from './validators/numericString.validator';
-import {PasswordValidator} from './validators/password.validator';
+import { ProfileCommand, ProfileOptions } from './profile.command';
+import { NumericStringValidator } from './validators/numericString.validator';
+import { PasswordValidator } from './validators/password.validator';
 
 /**
  * A separate class to display the information of the announcing transaction.
@@ -57,9 +57,9 @@ export class AnnounceTransactionFieldsTable {
         );
     }
 
-    toString(): string {
+    toString(title: string): string {
         let text = '';
-        text += '\n' + chalk.green('Transaction Information') + '\n';
+        text += '\n' + chalk.green(title) + '\n';
         text += this.table.toString();
         return text;
     }
@@ -75,7 +75,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @param {string} url - Node URL.
      */
     protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, url).toString());
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, url).toString('Transaction Information'));
         const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
         if (shouldAnnounceTransaction) {
             const transactionHttp = new TransactionHttp(url);
@@ -89,7 +89,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 err = err.message ? JSON.parse(err.message) : err;
                 console.log(text, err.body && err.body.message ? err.body.message : err);
             });
-         }
+        }
     }
 }
 
