@@ -46,7 +46,7 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
         const listener = new Listener(url);
         console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
         console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
+        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce these transactions? ');
         if (shouldAnnounceTransaction) {
             listener.open().then(() => {
                 merge(
