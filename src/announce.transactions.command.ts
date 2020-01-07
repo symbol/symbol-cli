@@ -25,9 +25,6 @@ import { ProfileCommand, ProfileOptions } from './profile.command';
 import { NumericStringValidator } from './validators/numericString.validator';
 import { PasswordValidator } from './validators/password.validator';
 
-/**
- * A separate class to display the information of the announcing transaction.
- */
 export class AnnounceTransactionFieldsTable {
     private readonly table: HorizontalTable;
 
