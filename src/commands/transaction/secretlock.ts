@@ -59,7 +59,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     secret: string;
 
     @option({
-        description: 'Algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256).',
+        description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256).',
         flag: 'H',
         validator: new HashAlgorithmValidator(),
     })
