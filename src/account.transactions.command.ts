@@ -50,13 +50,6 @@ export class AccountTransactionsOptions extends ProfileOptions {
     address: string;
 
     @option({
-        flag: 'u',
-        description: 'Account public key.',
-        validator: new PublicKeyValidator(),
-    })
-    publicKey: string;
-
-    @option({
         flag: 'n',
         description: '(Optional) Number of transactions.',
         default: 10,
