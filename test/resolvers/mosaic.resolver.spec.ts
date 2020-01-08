@@ -87,7 +87,7 @@ describe('MosaicFlag resolver', () => {
 
     it('should return mosaic flags', () => {
         const transferable = true;
-        const supplyMutable = false;
+        const supplyMutable = true;
         const restrictable = true;
         const profileOptions = {transferable, supplyMutable, restrictable} as any;
         const resolution = new MosaicFlagsResolver().resolve(profileOptions);
