@@ -16,7 +16,7 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, metadata, option, Options} from 'clime';
+import {Command, command, metadata, Options} from 'clime';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 
