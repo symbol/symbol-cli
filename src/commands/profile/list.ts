@@ -20,13 +20,7 @@ import {Command, command, metadata, option, Options} from 'clime';
 import {ProfileRepository} from '../../respository/profile.repository';
 import {ProfileService} from '../../service/profile.service';
 
-export class CommandOptions extends Options {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-    })
-    address: string;
-}
+export class CommandOptions extends Options {}
 
 @command({
     description: 'Display the list of stored profiles',
