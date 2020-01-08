@@ -93,7 +93,7 @@ export abstract class CreateProfileCommand extends Command {
                     url as string,
                     generationHash);
             } catch (ignored) {
-                throw new ExpectedError('The profile [' + simpleWallet.name + '] already exists.');
+                throw new ExpectedError('The profile [' + simpleWallet.name + '] already exists');
             }
             if (isDefault) {
                 this.setDefaultProfile(simpleWallet.name);
