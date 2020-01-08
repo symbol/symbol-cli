@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai';
 import {NamespaceId} from 'nem2-sdk';
-import {MosaicIdAliasResolver, MosaicIdResolver, MosaicsResolver} from '../../src/resolvers/mosaic.resolver';
+import {MosaicFlagsResolver, MosaicIdAliasResolver, MosaicIdResolver, MosaicsResolver} from '../../src/resolvers/mosaic.resolver';
 
 describe('Mosaic id resolver', () => {
 
@@ -80,6 +80,21 @@ describe('Mosaics resolver', () => {
         const profileOptions = {mosaics} as any;
         expect(() => new MosaicsResolver().resolve(profileOptions))
             .to.throws(Error);
+    });
+});
+
+describe('MosaicFlag resolver', () => {
+
+    it('should return mosaic flags', () => {
+        const transferable = true;
+        const supplyMutable = false;
+        const restrictable = true;
+        const profileOptions = {transferable, supplyMutable, restrictable} as any;
+        const resolution = new MosaicFlagsResolver().resolve(profileOptions);
+
+        expect(resolution.transferable).to.be.equal(transferable);
+        expect(resolution.supplyMutable).to.be.equal(supplyMutable);
+        expect(resolution.restrictable).to.be.equal(restrictable);
     });
 
 });
