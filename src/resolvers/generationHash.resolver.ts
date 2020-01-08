@@ -11,7 +11,7 @@ import {CreateProfileOptions} from '../create.profile.command';
 export class GenerationHashResolver implements Resolver {
 
     /**
-     * Resolves an hashAlgorithm provided by the user.
+     * Resolves generationHash. If not provided by the user, this is asked to the node.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
