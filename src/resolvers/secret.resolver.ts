@@ -15,11 +15,11 @@ export class SecretResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'secret',
         () => undefined,
-        altText ? altText : 'Enter proof hashed in hexadecimal format: ').trim();
+        altText ? altText : 'Enter proof hashed in hexadecimal format: ');
         return resolution;
     }
 }

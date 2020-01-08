@@ -20,10 +20,10 @@ import {PasswordResolver} from '../../src/resolvers/password.resolver';
 
 describe('Password resolver', () => {
 
-    it('should return password', () => {
+    it('should return password', async () => {
         const password = '12345678';
         const profileOptions = {password} as any;
-        expect(new PasswordResolver().resolve(profileOptions).value)
+        expect((await new PasswordResolver().resolve(profileOptions)).value)
             .to.be.equal(password);
     });
 

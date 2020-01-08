@@ -20,10 +20,10 @@ import {CosignatoryPublicKeyResolver, MultisigAccountPublicKeyResolver, PublicKe
 
 describe('Public key resolver', () => {
 
-    it('should return public key', () => {
+    it('should return public key', async () => {
         const publicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const profileOptions = {publicKey} as any;
-        expect(new PublicKeyResolver().resolve(profileOptions).publicKey)
+        expect((await new PublicKeyResolver().resolve(profileOptions)).publicKey)
             .to.be.equal(publicKey);
     });
 
@@ -38,10 +38,10 @@ describe('Public key resolver', () => {
 
 describe('Multisig account public key resolver', () => {
 
-    it('should return public key', () => {
+    it('should return public key', async () => {
         const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const profileOptions = {multisigAccountPublicKey} as any;
-        expect(new MultisigAccountPublicKeyResolver().resolve(profileOptions).publicKey)
+        expect((await new MultisigAccountPublicKeyResolver().resolve(profileOptions)).publicKey)
             .to.be.equal(multisigAccountPublicKey);
     });
 
@@ -56,11 +56,11 @@ describe('Multisig account public key resolver', () => {
 
 describe('Cosignatory public key resolver', () => {
 
-    it('should return public key', () => {
+    it('should return public key', async () => {
         const cosignatoryPublicKey = '0000000000000000000000000000000000000000000000000000000000000000,' +
             '0000000000000000000000000000000000000000000000000000000000000001';
         const profileOptions = {cosignatoryPublicKey} as any;
-        const resolution = new CosignatoryPublicKeyResolver().resolve(profileOptions);
+        const resolution = await new CosignatoryPublicKeyResolver().resolve(profileOptions);
         expect(resolution[0].publicKey)
             .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000');
         expect(resolution[1].publicKey)

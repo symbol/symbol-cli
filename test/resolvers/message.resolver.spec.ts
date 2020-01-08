@@ -30,10 +30,10 @@ describe('Message resolver', () => {
 
 describe('Recipient public key resolver', () => {
 
-    it('should return public account', () => {
+    it('should return public account', async () => {
         const recipientPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const profileOptions = {recipientPublicKey} as any;
-        expect(new RecipientPublicKeyResolver().resolve(profileOptions).publicKey)
+        expect((await new RecipientPublicKeyResolver().resolve(profileOptions)).publicKey)
             .to.be.equal(recipientPublicKey);
     });
 

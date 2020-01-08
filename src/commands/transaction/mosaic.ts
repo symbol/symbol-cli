@@ -97,18 +97,18 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
+        const account = await profile.decrypt(options);
 
         const nonce = MosaicNonce.createRandom();
         let blocksDuration;
         if (!options.nonExpiring) {
             if (!readlineSync.keyInYN('Do you want a non-expiring mosaic?')) {
-                blocksDuration = new DurationResolver().resolve(options);
+                blocksDuration = await new DurationResolver().resolve(options);
             }
         }
-        const divisibility = new DivisibilityResolver().resolve(options);
+        const divisibility = await new DivisibilityResolver().resolve(options);
         const mosaicFlags = MosaicFlags.create(
             options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
                 'Do you want mosaic to have supply mutable?'),
@@ -117,8 +117,8 @@ export default class extends AnnounceTransactionsCommand {
             options.restrictable ? options.restrictable : readlineSync.keyInYN(
                 'Do you want mosaic to be restrictable?'),
         );
-        const amount = new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ');
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const amount = await new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ');
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),

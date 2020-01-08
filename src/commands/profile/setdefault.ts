@@ -16,8 +16,8 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        options.profile = OptionsResolver(options,
+    async execute(options: CommandOptions) {
+        options.profile = await OptionsResolver(options,
             'profile',
             () => undefined,
             'New default profile: ');

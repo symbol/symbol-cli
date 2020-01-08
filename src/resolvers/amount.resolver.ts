@@ -17,11 +17,11 @@ export class AmountResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'amount',
         () =>  undefined,
-        altText ? altText : 'Enter an absolute amount: ').trim();
+        altText ? altText : 'Enter an absolute amount: ');
         new NumericStringValidator().validate(resolution);
         return UInt64.fromNumericString(resolution);
     }

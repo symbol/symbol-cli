@@ -16,11 +16,11 @@ export class TransactionTypeResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'transactionType',
             () => undefined,
-            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ').trim();
+            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ');
         new TransactionTypeValidator().validate(resolution);
         return parseInt(resolution, 16);
     }

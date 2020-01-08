@@ -17,11 +17,11 @@ export class PublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ').trim();
+            altText ? altText : 'Enter the account public key: ');
         new PublicKeyValidator().validate(resolution);
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
@@ -39,11 +39,11 @@ export class MultisigAccountPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'multisigAccountPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the multisig account public key: ').trim();
+            altText ? altText : 'Enter the multisig account public key: ');
         new PublicKeyValidator().validate(resolution);
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
@@ -61,11 +61,11 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount[]}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ').trim();
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ');
         new PublicKeysValidator().validate(resolution);
         const cosignatoryPublicKeys = resolution.split(',');
         const cosignatories: PublicAccount[] = [];

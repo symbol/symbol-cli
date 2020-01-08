@@ -30,7 +30,7 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: ProfileOptions) {
+    async execute(options: ProfileOptions) {
         const profile = this.getProfile(options);
         const listener = new Listener(profile.url);
 

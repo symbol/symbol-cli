@@ -81,23 +81,23 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const recipientAddress = new RecipientAddressResolver().resolve(options);
-        const mosaics = new MosaicsResolver().resolve(options);
-        const rawMessage = new MessageResolver().resolve(options);
+        const account = await profile.decrypt(options);
+        const recipientAddress = await new RecipientAddressResolver().resolve(options);
+        const mosaics = await new MosaicsResolver().resolve(options);
+        const rawMessage = await new MessageResolver().resolve(options);
         let message = EmptyMessage;
         if (rawMessage) {
             if (options.persistentHarvestingDelegation) {
-                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
+                const recipientPublicAccount = await new RecipientPublicKeyResolver().resolve(options, profile);
                 message = PersistentHarvestingDelegationMessage.create(
                     rawMessage,
                     account.privateKey,
                     recipientPublicAccount.publicKey,
                     profile.networkType);
             } else if (options.encrypted) {
-                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
+                const recipientPublicAccount = await new RecipientPublicKeyResolver().resolve(options, profile);
                 message = account.encryptMessage(
                     rawMessage,
                     recipientPublicAccount,
@@ -106,7 +106,7 @@ export default class extends AnnounceTransactionsCommand {
                 message = PlainMessage.create(rawMessage);
             }
         }
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const transferTransaction = TransferTransaction.create(
             Deadline.create(),

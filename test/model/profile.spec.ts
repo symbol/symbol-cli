@@ -76,7 +76,7 @@ describe('Profile', () => {
         expect(profile.isPasswordValid(password)).to.be.equal(true);
     });
 
-    it('should decrypt profile', () => {
+    it('should decrypt profile', async () => {
         const privateKey =  '0'.repeat(64);
         const password = new Password('password');
         const simpleWallet = SimpleWallet.createFromPrivateKey(
@@ -90,7 +90,7 @@ describe('Profile', () => {
             'generationHash',
         );
         const profileOptions = {password: 'password'} as any;
-        expect(profile.decrypt(profileOptions).privateKey).to.be.equal(privateKey);
+        expect((await profile.decrypt(profileOptions)).privateKey).to.be.equal(privateKey);
         expect(profile.address).to.be.equal(simpleWallet.address);
     });
 

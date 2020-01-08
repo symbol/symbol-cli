@@ -20,17 +20,17 @@ import {DurationResolver} from '../../src/resolvers/duration.resolver';
 
 describe('Duration resolver', () => {
 
-    it('should return duration', () => {
+    it('should return duration', async () => {
         const duration = '10';
         const profileOptions = {duration} as any;
-        expect(new DurationResolver().resolve(profileOptions).compact())
+        expect((await new DurationResolver().resolve(profileOptions)).compact())
             .to.be.equal(10);
     });
 
     it('should throw error if height invalid', () => {
         const duration = '-1';
         const profileOptions = {duration} as any;
-        expect(() => new DurationResolver().resolve(profileOptions))
+        expect(async () => await new DurationResolver().resolve(profileOptions))
             .to.throws(Error);
     });
 });

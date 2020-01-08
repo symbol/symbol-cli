@@ -49,12 +49,12 @@ export default class extends AnnounceTransactionsCommand {
         super();
     }
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const publicKey = new PublicKeyResolver().resolve(options, profile, 'Enter the public key of the remote account: ');
+        const account = await profile.decrypt(options);
+        const publicKey = await new PublicKeyResolver().resolve(options, profile, 'Enter the public key of the remote account: ');
         const action = new LinkActionResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const accountLinkTransaction = AccountLinkTransaction.create(
             Deadline.create(),

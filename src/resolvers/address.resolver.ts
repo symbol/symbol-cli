@@ -18,11 +18,11 @@ export class AddressResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Address}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an address: ').trim();
+            altText ? altText : 'Enter an address: ');
         new AddressValidator().validate(resolution);
         return Address.createFromRawAddress(resolution);
     }
@@ -40,11 +40,11 @@ export class RecipientAddressResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Address}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'recipientAddress',
             () => undefined,
-            altText ? altText : 'Enter the recipient address or alias: ').trim();
+            altText ? altText : 'Enter the recipient address or alias: ');
         new AddressAliasValidator().validate(resolution);
         return AccountService.getRecipient(resolution);
     }

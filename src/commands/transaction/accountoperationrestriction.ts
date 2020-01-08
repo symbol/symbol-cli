@@ -57,13 +57,13 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
+        const account = await profile.decrypt(options);
         const action = new ActionResolver().resolve(options);
         const flags = new RestrictionAccountOperationFlagsResolver().resolve(options);
-        const transactionType = new TransactionTypeResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const transactionType = await new TransactionTypeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),

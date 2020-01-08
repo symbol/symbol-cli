@@ -19,11 +19,11 @@ export class MosaicIdResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'mosaicId',
         () =>  undefined,
-        altText ? altText : 'Enter the mosaic id in hexadecimal format: ').trim();
+        altText ? altText : 'Enter the mosaic id in hexadecimal format: ');
         new MosaicIdValidator().validate(resolution);
         return new MosaicId(resolution);
     }
@@ -41,11 +41,11 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId | NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'mosaicId',
             () =>  undefined,
-            altText ? altText : 'Enter the mosaic id or alias: ').trim();
+            altText ? altText : 'Enter the mosaic id or alias: ');
         new MosaicIdAliasValidator().validate(resolution);
         return MosaicService.getMosaicId(resolution);
     }
@@ -63,12 +63,12 @@ export class MosaicsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Mosaic[]}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ').trim();
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ');
         new MosaicsValidator().validate(resolution);
         return resolution ? MosaicService.getMosaics(resolution) : [];
     }

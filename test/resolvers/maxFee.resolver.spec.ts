@@ -20,34 +20,34 @@ import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../src/resolvers/maxFee
 
 describe('Max fee resolver', () => {
 
-    it('default case', () => {
+    it('default case', async () => {
         const maxFee = '10';
         const profileOptions = {maxFee} as any;
-        expect(new MaxFeeResolver().resolve(profileOptions).compact())
+        expect((await new MaxFeeResolver().resolve(profileOptions)).compact())
             .to.be.equal(10);
     });
 
-    it('should return 0 if invalid', () => {
+    it('should return 0 if invalid', async () => {
         const maxFee = 'test';
         const profileOptions = {maxFee} as any;
-        expect(new MaxFeeResolver().resolve(profileOptions).compact())
+        expect((await new MaxFeeResolver().resolve(profileOptions)).compact())
             .to.be.equal(0);
     });
 });
 
 describe('Max fee hash lock resolver', () => {
 
-    it('should return maxFee', () => {
+    it('should return maxFee', async () => {
         const maxFeeHashLock = '10';
         const profileOptions = {maxFeeHashLock} as any;
-        expect(new MaxFeeHashLockResolver().resolve(profileOptions).compact())
+        expect((await new MaxFeeHashLockResolver().resolve(profileOptions)).compact())
             .to.be.equal(10);
     });
 
-    it('should return 0 if invalid', () => {
+    it('should return 0 if invalid', async () => {
         const maxFeeHashLock = 'test';
         const profileOptions = {maxFeeHashLock} as any;
-        expect(new MaxFeeHashLockResolver().resolve(profileOptions).compact())
+        expect((await new MaxFeeHashLockResolver().resolve(profileOptions)).compact())
             .to.be.equal(0);
     });
 });

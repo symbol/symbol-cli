@@ -16,11 +16,11 @@ export class MaxFeeResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'maxFee',
         () => undefined,
-        altText ? altText : 'Enter the maximum fee (absolute amount): ').trim();
+        altText ? altText : 'Enter the maximum fee (absolute amount): ');
         try {
            return UInt64.fromNumericString(resolution);
         }  catch {
@@ -41,11 +41,11 @@ export class MaxFeeHashLockResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'maxFeeHashLock',
             () => undefined,
-            altText ? altText : 'Enter the maximum fee to announce the hashlock transaction (absolute amount): ').trim();
+            altText ? altText : 'Enter the maximum fee to announce the hashlock transaction (absolute amount): ');
         try {
             return UInt64.fromNumericString(resolution);
         }  catch {

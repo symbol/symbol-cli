@@ -17,13 +17,12 @@ export class PasswordResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Password}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'password',
             () => undefined,
             'Enter your wallet password: ',
-            undefined,
-            true);
+            'password');
         new PasswordValidator().validate(resolution);
         return new Password(resolution);
     }

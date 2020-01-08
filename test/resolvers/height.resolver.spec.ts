@@ -21,10 +21,10 @@ import {HeightResolver} from '../../src/resolvers/height.resolver';
 
 describe('Height resolver', () => {
 
-    it('should return height', () => {
+    it('should return height', async () => {
         const height = '10';
         const profileOptions = {height} as any;
-        expect(new HeightResolver().resolve(profileOptions).compact())
+        expect((await new HeightResolver().resolve(profileOptions)).compact())
             .to.be.equal(10);
     });
 

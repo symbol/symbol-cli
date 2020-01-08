@@ -17,11 +17,11 @@ export class DurationResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'duration',
         () =>  undefined,
-        altText ? altText : 'Enter the duration in number of blocks: ').trim();
+        altText ? altText : 'Enter the duration in number of blocks: ');
         new NumericStringValidator().validate(resolution);
         return UInt64.fromNumericString(resolution);
     }

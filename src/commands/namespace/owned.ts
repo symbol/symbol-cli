@@ -44,9 +44,9 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        const address = await new AddressResolver().resolve(options, profile);
 
         const namespaceHttp = new NamespaceHttp(profile.url);
         this.spinner.start();

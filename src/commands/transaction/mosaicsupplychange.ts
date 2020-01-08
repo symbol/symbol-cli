@@ -59,14 +59,14 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const mosaicId = new MosaicIdResolver().resolve(options);
-        const action = new SupplyActionResolver().resolve(options);
-        const amount = new AmountResolver()
+        const account = await profile.decrypt(options);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
+        const action = await new SupplyActionResolver().resolve(options);
+        const amount = await new AmountResolver()
             .resolve(options, undefined, 'Enter absolute amount of supply change: ');
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),

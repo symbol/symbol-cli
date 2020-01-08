@@ -18,6 +18,10 @@ export class ActionResolver implements Resolver {
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const choices = ['Remove', 'Add'];
+        // const choices = [
+        //     {title: 'Remove'},
+        //     {title: 'Add'},
+        // ];
         const index = +OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',

@@ -41,7 +41,7 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         let message = '';
         this.profileService.findAll().map((profile) => {
             message += '\n' + profile.toString();

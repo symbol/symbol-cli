@@ -22,6 +22,7 @@ import * as readlineSync from 'readline-sync';
 import { merge } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
 import { AnnounceTransactionFieldsTable } from './announce.transactions.command';
+import { OptionsConfirmResolver } from './options-resolver';
 import { ProfileCommand, ProfileOptions } from './profile.command';
 import { NumericStringValidator } from './validators/numericString.validator';
 import { PasswordValidator } from './validators/password.validator';
@@ -38,15 +39,16 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
      * @param {Address} senderAddress - Address of the account sending the transaction.
      * @param {string} url - Node URL.
      */
-    protected announceAggregateTransaction(signedHashLockTransaction: SignedTransaction,
-                                           signedAggregateTransaction: SignedTransaction,
-                                           senderAddress: Address,
-                                           url: string) {
+    protected async announceAggregateTransaction(signedHashLockTransaction: SignedTransaction,
+                                                 signedAggregateTransaction: SignedTransaction,
+                                                 senderAddress: Address,
+                                                 url: string) {
         const transactionHttp = new TransactionHttp(url);
         const listener = new Listener(url);
         console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
         console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce these transactions? ');
+        const shouldAnnounceTransaction = await OptionsConfirmResolver('Do you want to announce this transaction? ');
+
         if (shouldAnnounceTransaction) {
             listener.open().then(() => {
                 merge(

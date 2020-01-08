@@ -17,11 +17,11 @@ export class URLResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'url',
             () => secondSource ? secondSource.url : undefined,
-            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim();
+            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ');
         return resolution;
     }
 }

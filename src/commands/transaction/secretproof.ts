@@ -63,15 +63,15 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const recipientAddress = new RecipientAddressResolver()
+        const account = await profile.decrypt(options);
+        const recipientAddress = await new RecipientAddressResolver()
             .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
-        const secret = new SecretResolver().resolve(options);
-        const proof = new ProofResolver().resolve(options);
+        const secret = await new SecretResolver().resolve(options);
+        const proof = await new ProofResolver().resolve(options);
         const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const secretProofTransaction = SecretProofTransaction.create(
             Deadline.create(),

@@ -17,11 +17,11 @@ export class HeightResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'height',
         () =>  undefined,
-        altText ? altText : 'Enter the block height: ').trim();
+        altText ? altText : 'Enter the block height: ');
         new HeightValidator().validate(resolution);
         return  UInt64.fromNumericString(resolution);
     }

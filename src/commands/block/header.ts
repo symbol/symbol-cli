@@ -83,11 +83,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const blockHttp = new BlockHttp(profile.url);
-        const height = new HeightResolver().resolve(options);
+        const height = await new HeightResolver().resolve(options);
 
         blockHttp.getBlockByHeight(height)
             .subscribe((blockInfo) => {

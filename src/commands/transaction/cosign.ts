@@ -51,13 +51,13 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
+        const account = await profile.decrypt(options);
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
-        const hash = new HashResolver()
+        const hash = await new HashResolver()
             .resolve(options, undefined, '\'Enter aggregate bonded transaction hash to be signed: ');
 
         this.getGraphAccounts(profile)

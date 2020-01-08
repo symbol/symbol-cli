@@ -78,14 +78,14 @@ export default class extends AnnounceAggregateTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const action = new ActionResolver().resolve(options);
-        const multisigAccount = new MultisigAccountPublicKeyResolver().resolve(options, profile);
-        const cosignatories = new CosignatoryPublicKeyResolver().resolve(options, profile);
-        const maxFee = new MaxFeeResolver().resolve(options);
-        const maxFeeHashLock = new MaxFeeHashLockResolver().resolve(options);
+        const account = await profile.decrypt(options);
+        const action = await new ActionResolver().resolve(options);
+        const multisigAccount = await new MultisigAccountPublicKeyResolver().resolve(options, profile);
+        const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const maxFeeHashLock = await new MaxFeeHashLockResolver().resolve(options);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),

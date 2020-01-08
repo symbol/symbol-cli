@@ -105,10 +105,10 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const networkType = new NetworkTypeResolver().resolve(options);
-        const profile = new ProfileNameResolver().resolve(options);
-        const password = new PasswordResolver().resolve(options);
+        const profile = await new ProfileNameResolver().resolve(options);
+        const password = await new PasswordResolver().resolve(options);
         const simpleWallet = SimpleWallet.create(profile, password, networkType);
         let text = new AccountCredentialsTable(simpleWallet.open(password), password).toString();
 
@@ -117,7 +117,7 @@ export default class extends Command {
         }
 
         if (options.save) {
-            const url = new URLResolver().resolve(options);
+            const url = await new URLResolver().resolve(options);
             const blockHttp = new BlockHttp(url);
 
             blockHttp.getBlockByHeight('1')

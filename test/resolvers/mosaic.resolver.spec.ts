@@ -21,10 +21,10 @@ import {MosaicIdAliasResolver, MosaicIdResolver, MosaicsResolver} from '../../sr
 
 describe('Mosaic id resolver', () => {
 
-    it('should return mosaicId', () => {
+    it('should return mosaicId', async () => {
         const mosaicId = '0DC67FBE1CAD29E3';
         const profileOptions = {mosaicId} as any;
-        expect(new MosaicIdResolver().resolve(profileOptions).toHex())
+        expect((await new MosaicIdResolver().resolve(profileOptions)).toHex())
             .to.be.equal(mosaicId);
     });
 
@@ -39,10 +39,10 @@ describe('Mosaic id resolver', () => {
 
 describe('Mosaic id alias validator', () => {
 
-    it('should return mosaicId', () => {
+    it('should return mosaicId', async () => {
         const mosaicId = '0DC67FBE1CAD29E3';
         const profileOptions = {mosaicId} as any;
-        expect(new MosaicIdAliasResolver().resolve(profileOptions).toHex())
+        expect((await new MosaicIdAliasResolver().resolve(profileOptions)).toHex())
             .to.be.equal(mosaicId);
     });
 
@@ -64,10 +64,10 @@ describe('Mosaic id alias validator', () => {
 
 describe('Mosaics resolver', () => {
 
-    it('should return array of mosaics', () => {
+    it('should return array of mosaics', async () => {
         const mosaics = '0DC67FBE1CAD29E3::1,@test::2';
         const profileOptions = {mosaics} as any;
-        const resolution = new MosaicsResolver().resolve(profileOptions);
+        const resolution = await new MosaicsResolver().resolve(profileOptions);
 
         expect(resolution[0].id.toHex()).to.be.equal('0DC67FBE1CAD29E3');
         expect(resolution[0].amount.compact()).to.be.equal(1);

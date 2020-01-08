@@ -31,12 +31,12 @@ export default class extends AccountTransactionsCommand {
     }
 
     @metadata
-    execute(options: AccountTransactionsOptions) {
+    async execute(options: AccountTransactionsOptions) {
         this.spinner.start();
 
         const profile = this.getProfile(options);
         const accountHttp =  new AccountHttp(profile.url);
-        const address = new AddressResolver().resolve(options, profile);
+        const address = await new AddressResolver().resolve(options, profile);
 
         accountHttp.getAccountTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {

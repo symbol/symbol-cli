@@ -21,10 +21,10 @@ import {NamespaceIdResolver, NamespaceNameResolver} from '../../src/resolvers/na
 
 describe('Namespace name resolver', () => {
 
-    it('should return namespace id', () => {
+    it('should return namespace id', async () => {
         const namespaceName = 'test';
         const profileOptions = {namespaceName} as any;
-        expect(new NamespaceNameResolver().resolve(profileOptions).toHex())
+        expect((await new NamespaceNameResolver().resolve(profileOptions)).toHex())
             .to.be.equal(new NamespaceId(namespaceName).toHex());
     });
 
@@ -39,10 +39,10 @@ describe('Namespace name resolver', () => {
 
 describe('Namespace id resolver', () => {
 
-    it('should return namespaceId', () => {
+    it('should return namespaceId', async () => {
         const namespaceId = '85BBEA6CC462B244';
         const profileOptions = {namespaceId} as any;
-        expect(new NamespaceIdResolver().resolve(profileOptions).toHex())
+        expect((await new NamespaceIdResolver().resolve(profileOptions)).toHex())
             .to.be.equal(namespaceId);
     });
 

@@ -73,10 +73,10 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const mosaicId = new MosaicIdResolver().resolve(options);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),

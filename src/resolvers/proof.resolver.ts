@@ -15,11 +15,11 @@ export class ProofResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'proof',
         () => undefined,
-        altText ? altText : 'Enter the original random set of bytes in hexadecimal: ').trim();
+        altText ? altText : 'Enter the original random set of bytes in hexadecimal: ');
         return resolution;
     }
 }

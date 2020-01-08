@@ -68,11 +68,11 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
+        const account = await profile.decrypt(options);
 
-        options.name = OptionsResolver(options,
+        options.name = await OptionsResolver(options,
             'name',
             () => undefined,
             'Enter namespace name: ');
@@ -83,14 +83,14 @@ export default class extends AnnounceTransactionsCommand {
         let duration;
         if (!options.rootnamespace) {
             options.subnamespace = true;
-            options.parentName = OptionsResolver(options,
+            options.parentName = await OptionsResolver(options,
                 'parentName',
                 () => undefined,
                 'Enter the parent namespace name: ');
         } else {
-            duration = new DurationResolver().resolve(options);
+            duration = await new DurationResolver().resolve(options);
         }
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {

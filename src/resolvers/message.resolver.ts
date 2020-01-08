@@ -17,8 +17,8 @@ export class MessageResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'message',
         () =>  undefined,
         'Enter a message: ');
@@ -38,8 +38,8 @@ export class RecipientPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const recipientPublicKey = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const recipientPublicKey = await OptionsResolver(options,
             'recipientPublicKey',
             () => undefined,
             'Enter the recipient public key: ');

@@ -68,11 +68,11 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const networkType = new NetworkTypeResolver().resolve(options);
-        const url = new URLResolver().resolve(options);
-        const profileName = new ProfileNameResolver().resolve(options);
-        const password = new PasswordResolver().resolve(options);
+        const url = await new URLResolver().resolve(options);
+        const profileName = await new ProfileNameResolver().resolve(options);
+        const password = await new PasswordResolver().resolve(options);
         const blockHttp = new BlockHttp(url);
 
         const simpleWallet: SimpleWallet = SimpleWallet.create(

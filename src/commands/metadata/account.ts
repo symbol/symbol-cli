@@ -70,11 +70,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const metadataHttp = new MetadataHttp(profile.url);
-        const address = new AddressResolver().resolve(options, profile);
+        const address = await new AddressResolver().resolve(options, profile);
 
         metadataHttp.getAccountMetadata(address)
             .subscribe((metadataEntries) => {

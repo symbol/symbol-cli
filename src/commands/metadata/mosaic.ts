@@ -42,11 +42,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const metadataHttp = new MetadataHttp(profile.url);
-        const mosaicId = new MosaicIdResolver().resolve(options);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
 
         metadataHttp.getMosaicMetadata(mosaicId)
             .subscribe((metadataEntries) => {

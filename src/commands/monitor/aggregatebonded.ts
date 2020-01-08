@@ -31,10 +31,10 @@ export default class extends MonitorAddressCommand {
     }
 
     @metadata
-    execute(options: MonitorAddressOptions) {
+    async execute(options: MonitorAddressOptions) {
         const profile = this.getProfile(options);
         const listener = new Listener(profile.url);
-        const address = new AddressResolver().resolve(options, profile);
+        const address = await new AddressResolver().resolve(options, profile);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
 

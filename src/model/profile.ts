@@ -126,8 +126,8 @@ export class Profile {
      * @throws {ExpectedError}
      * @returns {Account}
      */
-    decrypt(options: ProfileOptions): Account {
-        const password = new PasswordResolver().resolve(options);
+    async decrypt(options: ProfileOptions): Promise<Account> {
+        const password = await new PasswordResolver().resolve(options);
         if (!this.isPasswordValid(password)) {
             throw new ExpectedError('The password provided does not match your account password');
         }

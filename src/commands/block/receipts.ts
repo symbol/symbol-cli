@@ -44,11 +44,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const receiptHttp = new ReceiptHttp(profile.url);
-        const height =  new HeightResolver().resolve(options);
+        const height =  await new HeightResolver().resolve(options);
         receiptHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);

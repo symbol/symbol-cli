@@ -17,13 +17,12 @@ export class PrivateKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Password}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'privateKey',
             () => undefined,
             'Enter your account private key: ',
-            undefined,
-            true).trim();
+            'password');
         new PrivateKeyValidator().validate(resolution);
         return resolution;
     }

@@ -91,13 +91,13 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const namespaceHttp = new NamespaceHttp(profile.url);
         const namespaceId = options.namespaceName ?
-            new NamespaceNameResolver().resolve(options) :
-            new NamespaceIdResolver().resolve(options);
+        await new NamespaceNameResolver().resolve(options) :
+        await new NamespaceIdResolver().resolve(options);
 
         namespaceHttp.getNamespace(namespaceId)
             .subscribe((namespaceInfo) => {

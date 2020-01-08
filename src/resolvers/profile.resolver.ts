@@ -15,10 +15,10 @@ export class ProfileNameResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        return OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        return await OptionsResolver(options,
             'profile',
             () => undefined,
-            'Enter a profile name: ').trim();
+            'Enter a profile name: ');
     }
 }

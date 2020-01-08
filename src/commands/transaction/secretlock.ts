@@ -82,20 +82,20 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const mosaicId = new MosaicIdAliasResolver()
+        const account = await profile.decrypt(options);
+        const mosaicId = await new MosaicIdAliasResolver()
             .resolve(options, undefined, 'Enter the locked mosaic identifier or alias: ');
-        const amount = new AmountResolver()
+        const amount = await new AmountResolver()
             .resolve(options, undefined, 'Enter the absolute amount of mosaic units to lock: ');
-        const recipientAddress = new RecipientAddressResolver()
+        const recipientAddress = await new RecipientAddressResolver()
             .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
-        const duration = new DurationResolver()
+        const duration = await new DurationResolver()
             .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid: ');
-        const secret = new SecretResolver().resolve(options);
+        const secret = await new SecretResolver().resolve(options);
         const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const secretLockTransaction = SecretLockTransaction.create(
             Deadline.create(),

@@ -20,10 +20,10 @@ import {AmountResolver} from '../../src/resolvers/amount.resolver';
 
 describe('Amount resolver', () => {
 
-    it('should return amount', () => {
+    it('should return amount', async () => {
         const amount = '10';
         const profileOptions = {amount} as any;
-        expect(new AmountResolver().resolve(profileOptions).compact())
+        expect((await new AmountResolver().resolve(profileOptions)).compact())
             .to.be.equal(10);
     });
 

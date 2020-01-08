@@ -41,11 +41,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const namespaceHttp = new NamespaceHttp(profile.url);
-        const namespaceId = new NamespaceNameResolver().resolve(options);
+        const namespaceId = await new NamespaceNameResolver().resolve(options);
 
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),

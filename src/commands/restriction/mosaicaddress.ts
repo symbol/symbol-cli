@@ -77,13 +77,13 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
 
         const profile = this.getProfile(options);
         const restrictionHttp = new RestrictionMosaicHttp(profile.url);
-        const address = new AddressResolver().resolve(options, profile);
-        const mosaicId = new MosaicIdResolver().resolve(options);
+        const address = await new AddressResolver().resolve(options, profile);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
 
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
             .subscribe((mosaicRestrictions) => {

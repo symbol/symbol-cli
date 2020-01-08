@@ -17,11 +17,11 @@ export class NamespaceNameResolver {
      * @param {string} altText - Alternative text.
      * @returns {NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
         'namespaceName',
         () =>  undefined,
-        altText ? altText : 'Enter the namespace name: ').trim();
+        altText ? altText : 'Enter the namespace name: ');
         return new NamespaceId(resolution);
     }
 }
@@ -38,11 +38,11 @@ export class NamespaceIdResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const resolution = await OptionsResolver(options,
             'namespaceId',
             () =>  undefined,
-            altText ? altText : 'Enter the namespace id in hexadecimal: ').trim();
+            altText ? altText : 'Enter the namespace id in hexadecimal: ');
         new NamespaceIdValidator().validate(resolution);
         const namespaceIdUInt64 = UInt64.fromHex(resolution);
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);

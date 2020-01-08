@@ -167,7 +167,7 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         this.spinner.start();
 
         const profile = this.getProfile(options);
@@ -175,7 +175,7 @@ export default class extends ProfileCommand {
         const multisigHttp = new MultisigHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
-        const address = new AddressResolver().resolve(options, profile);
+        const address = await new AddressResolver().resolve(options, profile);
 
         forkJoin(
             accountHttp.getAccountInfo(address),

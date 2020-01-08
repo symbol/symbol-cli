@@ -16,19 +16,21 @@
  *
  */
 
+import * as prompts from 'prompts';
+import { Choice, PromptType } from 'prompts';
 import * as readlineSync from 'readline-sync';
 
-export const OptionsResolver = (options: any,
-                                key: string,
-                                secondSource: () => string | undefined,
-                                promptText: string,
-                                readlineDependency?: any,
-                                hide?: boolean) => {
-    const readline = readlineDependency || readlineSync;
-    const hideEchoBack = hide ? true : false;
-    return options[key] !== undefined ? options[key] : (secondSource() ||
-        readline.question(promptText, {hideEchoBack}));
-};
+// export const OptionsResolver = (options: any,
+//                                 key: string,
+//                                 secondSource: () => string | undefined,
+//                                 promptText: string,
+//                                 readlineDependency?: any,
+//                                 hide?: boolean) => {
+//     const readline = readlineDependency || readlineSync;
+//     const hideEchoBack = hide ? true : false;
+//     return options[key] !== undefined ? options[key] : (secondSource() ||
+//         readline.question(promptText, {hideEchoBack}));
+// };
 
 export const OptionsChoiceResolver = (options: any,
                                       key: string,
@@ -44,4 +46,36 @@ export const OptionsChoiceResolver = (options: any,
         return process.exit();
     }
     return choiceIndex;
+};
+export const EXIT_FLAG = '@EXIT';
+
+export const OptionsResolver = async (options: any,
+                                      key: string,
+                                      secondSource: () => string | undefined,
+                                      promptText: string,
+                                      type: PromptType = 'text',
+                                      choices?: Choice[]) => {
+    const response = await prompts({
+        type,
+        name: key,
+        message: promptText,
+        choices,
+      });
+    if (('select' === type || 'multiselect' === type) && response[key].includes(EXIT_FLAG)) {
+        return process.exit();
+    }
+    return options[key] !== undefined ? options[key] : (secondSource() || response[key]);
+};
+
+export const OptionsConfirmResolver = async (promptText: string,
+                                             type: PromptType = 'confirm',
+                                             initial: boolean = true,
+                                             name: string = 'value') => {
+    const response = await prompts({
+        type,
+        name,
+        message: promptText,
+        initial,
+      });
+    return response[name];
 };

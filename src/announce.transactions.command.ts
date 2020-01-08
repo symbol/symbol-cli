@@ -20,7 +20,7 @@ import { HorizontalTable } from 'cli-table3';
 import * as Table from 'cli-table3';
 import { option } from 'clime';
 import { SignedTransaction, TransactionHttp, TransactionType } from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import { OptionsConfirmResolver } from './options-resolver';
 import { ProfileCommand, ProfileOptions } from './profile.command';
 import { NumericStringValidator } from './validators/numericString.validator';
 import { PasswordValidator } from './validators/password.validator';
@@ -71,9 +71,9 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @param {SignedTransaction} signedTransaction
      * @param {string} url - Node URL.
      */
-    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
+    protected async announceTransaction(signedTransaction: SignedTransaction, url: string) {
         console.log(new AnnounceTransactionFieldsTable(signedTransaction, url).toString('Transaction Information'));
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
+        const shouldAnnounceTransaction = await OptionsConfirmResolver('Do you want to announce this transaction? ');
         if (shouldAnnounceTransaction) {
             const transactionHttp = new TransactionHttp(url);
             transactionHttp.announce(signedTransaction).subscribe(() => {

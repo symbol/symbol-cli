@@ -21,10 +21,10 @@ import {AddressResolver, RecipientAddressResolver} from '../../src/resolvers/add
 
 describe('Address resolver', () => {
 
-    it('should return address', () => {
+    it('should return address', async () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
         const profileOptions = {address} as any;
-        expect(new AddressResolver().resolve(profileOptions).plain())
+        expect((await new AddressResolver().resolve(profileOptions)).plain())
             .to.be.equal(address);
     });
 
@@ -46,10 +46,10 @@ describe('Recipient address resolver', () => {
             .to.be.instanceOf(NamespaceId);
     });
 
-    it('should return address', () => {
+    it('should return address', async () => {
         const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
         const profileOptions = {recipientAddress} as any;
-        expect(new RecipientAddressResolver().resolve(profileOptions).plain())
+        expect((await new RecipientAddressResolver().resolve(profileOptions)).plain())
             .to.be.equal(recipientAddress);
     });
 

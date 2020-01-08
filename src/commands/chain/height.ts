@@ -30,7 +30,7 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: ProfileOptions) {
+    async execute(options: ProfileOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
         const chainHttp = new ChainHttp(profile.url);
