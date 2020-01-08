@@ -33,7 +33,10 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
         if (index < 0 || index > 3) {
             throw new ExpectedError('Unknown restriction flag.');
         }
-        return AccountRestrictionFlags[choices[index] as any];
+        const accountRestriction = choices.find((item) => {
+            return item.value === index;
+        })?.title as any;
+        return AccountRestrictionFlags[accountRestriction];
     }
 }
 

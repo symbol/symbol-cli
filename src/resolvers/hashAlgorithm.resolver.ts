@@ -29,7 +29,11 @@ export class HashAlgorithmResolver implements Resolver {
             altText ? altText : 'Select the algorithm used to hash the proof: ',
         choices,
         ));
-        new HashAlgorithmValidator().validate(index);
+
+        const hashAlgorithm = choices.find((item) => {
+            return item.value === index;
+        })?.title as any;
+        new HashAlgorithmValidator().validate(hashAlgorithm);
         return index;
     }
 }

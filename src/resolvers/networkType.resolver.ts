@@ -29,7 +29,9 @@ export class NetworkTypeResolver implements Resolver {
             altText ? altText : 'Select the network type: ',
             choices,
         ));
-        const networkFriendlyName = choices[index] as any;
+        const networkFriendlyName = choices.find((item) => {
+            return item.value === index;
+        })?.title as any;
         new NetworkValidator().validate(networkFriendlyName);
         return NetworkType[networkFriendlyName];
     }

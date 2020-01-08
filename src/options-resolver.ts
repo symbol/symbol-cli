@@ -40,10 +40,11 @@ export const OptionsChoiceResolver = async (options: any,
     if (!response[key]) {
         return process.exit();
     }
-    if (('select' === type || 'multiselect' === type) && response[key].includes(EXIT_FLAG)) {
+
+    if (('select' === type && EXIT_FLAG === response[key]) || ('multiselect' === type && response[key].includes(EXIT_FLAG))) {
         return process.exit();
     }
-    return response[name];
+    return response[key];
 };
 
 export const OptionsResolver = async (options: any,
