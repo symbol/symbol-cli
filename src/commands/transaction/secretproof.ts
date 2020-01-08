@@ -70,7 +70,7 @@ export default class extends AnnounceTransactionsCommand {
             .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
         const secret = await new SecretResolver().resolve(options);
         const proof = await new ProofResolver().resolve(options);
-        const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
+        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
 
         const secretProofTransaction = SecretProofTransaction.create(

@@ -60,8 +60,8 @@ export default class extends AnnounceTransactionsCommand {
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = await profile.decrypt(options);
-        const action = new ActionResolver().resolve(options);
-        const flags = new RestrictionAccountOperationFlagsResolver().resolve(options);
+        const action = await new ActionResolver().resolve(options);
+        const flags = await new RestrictionAccountOperationFlagsResolver().resolve(options);
         const transactionType = await new TransactionTypeResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
 

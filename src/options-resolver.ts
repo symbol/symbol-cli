@@ -15,55 +15,50 @@
  * limitations under the License.
  *
  */
-
 import * as prompts from 'prompts';
 import { Choice, PromptType } from 'prompts';
-import * as readlineSync from 'readline-sync';
 
-// export const OptionsResolver = (options: any,
-//                                 key: string,
-//                                 secondSource: () => string | undefined,
-//                                 promptText: string,
-//                                 readlineDependency?: any,
-//                                 hide?: boolean) => {
-//     const readline = readlineDependency || readlineSync;
-//     const hideEchoBack = hide ? true : false;
-//     return options[key] !== undefined ? options[key] : (secondSource() ||
-//         readline.question(promptText, {hideEchoBack}));
-// };
+export const EXIT_FLAG = '@EXIT';
 
-export const OptionsChoiceResolver = (options: any,
-                                      key: string,
-                                      promptText: string,
-                                      choices: string[],
-                                      readlineDependency?: any) => {
-    const readline = readlineDependency || readlineSync;
+export const OptionsChoiceResolver = async (options: any,
+                                            key: string,
+                                            promptText: string,
+                                            choices: Choice[],
+                                            type: PromptType = 'select') => {
+    if (!['select', 'multiselect'].includes(type)) {
+        throw new Error('Invalid options choice resolver type');
+    }
     if (options[key] !== undefined) {
         return options[key];
     }
-    const choiceIndex = readline.keyInSelect(choices, promptText);
-    if (-1 === choiceIndex) {
-        return process.exit();
-    }
-    return choiceIndex;
-};
-export const EXIT_FLAG = '@EXIT';
-
-export const OptionsResolver = async (options: any,
-                                      key: string,
-                                      secondSource: () => string | undefined,
-                                      promptText: string,
-                                      type: PromptType = 'text',
-                                      choices?: Choice[]) => {
     const response = await prompts({
         type,
         name: key,
         message: promptText,
         choices,
-      });
+    });
+    if (!response[key]) {
+        return process.exit();
+    }
     if (('select' === type || 'multiselect' === type) && response[key].includes(EXIT_FLAG)) {
         return process.exit();
     }
+    return response[name];
+};
+
+export const OptionsResolver = async (options: any,
+                                      key: string,
+                                      secondSource: () => string | undefined,
+                                      promptText: string,
+                                      type: PromptType = 'text') => {
+    if (!['text', 'password', 'number'].includes(type)) {
+        throw new Error('Invalid options resolver type');
+    }
+    const response = await prompts({
+        type,
+        name: key,
+        message: promptText,
+    });
     return options[key] !== undefined ? options[key] : (secondSource() || response[key]);
 };
 

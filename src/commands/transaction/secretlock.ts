@@ -94,7 +94,7 @@ export default class extends AnnounceTransactionsCommand {
         const duration = await new DurationResolver()
             .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid: ');
         const secret = await new SecretResolver().resolve(options);
-        const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
+        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
 
         const secretLockTransaction = SecretLockTransaction.create(

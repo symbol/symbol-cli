@@ -17,13 +17,18 @@ export class NetworkTypeResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['MAIN_NET', 'TEST_NET', 'MIJIN', 'MIJIN_TEST'];
-        const index = +OptionsChoiceResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const choices = [
+            {title: 'MAIN_NET', value: 0},
+            {title: 'TEST_NET', value: 1},
+            {title: 'MIJIN', value: 2},
+            {title: 'MIJIN_TEST', value: 3},
+        ];
+        const index = +(await OptionsChoiceResolver(options,
             'network',
             altText ? altText : 'Select the network type: ',
             choices,
-        );
+        ));
         const networkFriendlyName = choices[index] as any;
         new NetworkValidator().validate(networkFriendlyName);
         return NetworkType[networkFriendlyName];

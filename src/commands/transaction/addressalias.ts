@@ -62,7 +62,7 @@ export default class extends AnnounceTransactionsCommand {
         const account = await profile.decrypt(options);
         const namespaceId = await new NamespaceNameResolver().resolve(options);
         const address = await new AddressResolver().resolve(options);
-        const action = new LinkActionResolver().resolve(options);
+        const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
 
         const addressAliasTransaction = AddressAliasTransaction.create(

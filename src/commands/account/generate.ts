@@ -106,7 +106,7 @@ export default class extends Command {
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = new NetworkTypeResolver().resolve(options);
+        const networkType = await new NetworkTypeResolver().resolve(options);
         const profile = await new ProfileNameResolver().resolve(options);
         const password = await new PasswordResolver().resolve(options);
         const simpleWallet = SimpleWallet.create(profile, password, networkType);

@@ -69,7 +69,7 @@ export default class extends Command {
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = new NetworkTypeResolver().resolve(options);
+        const networkType = await new NetworkTypeResolver().resolve(options);
         const url = await new URLResolver().resolve(options);
         const profileName = await new ProfileNameResolver().resolve(options);
         const password = await new PasswordResolver().resolve(options);

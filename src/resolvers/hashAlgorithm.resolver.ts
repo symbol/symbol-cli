@@ -16,13 +16,19 @@ export class HashAlgorithmResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['Op_Sha3_256', 'Op_Keccak_256', 'Op_Hash_160', 'Op_Hash_256'];
-        const index = +OptionsChoiceResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const choices = [
+            {title: 'Op_Sha3_256', value: 0},
+            {title: 'Op_Keccak_256', value: 1},
+            {title: 'Op_Hash_160', value: 2},
+            {title: 'Op_Hash_256', value: 3},
+        ];
+
+        const index = +(await OptionsChoiceResolver(options,
         'hashAlgorithm',
             altText ? altText : 'Select the algorithm used to hash the proof: ',
         choices,
-        );
+        ));
         new HashAlgorithmValidator().validate(index);
         return index;
     }

@@ -16,17 +16,16 @@ export class ActionResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['Remove', 'Add'];
-        // const choices = [
-        //     {title: 'Remove'},
-        //     {title: 'Add'},
-        // ];
-        const index = +OptionsChoiceResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const choices = [
+            {title: 'Remove', value: 0},
+            {title: 'Add', value: 1},
+        ];
+        const index = +(await OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        );
+        ));
         new BinaryValidator().validate(index);
         return index;
     }
@@ -44,13 +43,16 @@ export class LinkActionResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['Unlink', 'Link'];
-        const index = +OptionsChoiceResolver(options,
-        'action',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const choices = [
+            {title: 'Unlink', value: 0},
+            {title: 'Link', value: 1},
+        ];
+        const index = +(await OptionsChoiceResolver(options,
+            'action',
             altText ? altText : 'Select an action: ',
-        choices,
-        );
+            choices,
+        ));
         new BinaryValidator().validate(index);
         return index;
     }
@@ -65,13 +67,16 @@ export class SupplyActionResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['Decrease', 'Increase'];
-        const index = +OptionsChoiceResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+        const choices = [
+            {title: 'Decrease', value: 0},
+            {title: 'Increase', value: 1},
+        ];
+        const index = +(await OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        );
+        ));
         new BinaryValidator().validate(index);
         return index;
     }
