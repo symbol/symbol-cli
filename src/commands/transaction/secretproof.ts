@@ -44,7 +44,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'H',
         validator: new HashAlgorithmValidator(),
     })
-    hashAlgorithm: number;
+    hashAlgorithm: string;
 
     @option({
         description: 'Address or @alias that receives the funds once unlocked.',
