@@ -16,7 +16,6 @@
  *
  */
 import {ValidationContext, Validator} from 'clime';
-import { ExpectedError } from 'clime';
 import {MosaicService} from '../service/mosaic.service';
 
 export class MosaicValidator implements Validator<string> {

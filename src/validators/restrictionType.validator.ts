@@ -17,15 +17,6 @@
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime';
 
-export class AccountRestrictionTypeValidator implements Validator<string> {
-    validate(value: string, context: ValidationContext): void {
-        value = value.toLowerCase();
-        if ('allow' !== value && 'block' !== value) {
-            throw new ExpectedError('restrictionType must be one of \'allow\' or \'block\'');
-        }
-    }
-}
-
 export class MosaicRestrictionTypeValidator implements Validator<string> {
     validate(value: string, context?: ValidationContext): void {
         const limitValue = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];

@@ -17,41 +17,20 @@
  */
 import {expect} from 'chai';
 import {
-    AccountRestrictionTypeValidator, MosaicRestrictionTypeValidator,
+    MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator';
 
-describe('Account Restriction type validator', () => {
-    it('valid value allow', () => {
-        const value = 'allow';
-        expect(new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value}))
+describe('mosaic restriction type validator', () => {
+    it('valid mosaic restriction type', () => {
+        const mosaic = 'EQ';
+        expect(new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic }))
             .to.be.equal(undefined);
     });
 
-    it('valid value block', () => {
-        const value = 'block';
-        expect(new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value}))
-            .to.be.equal(undefined);
-    });
-
-    it('invalid value', () => {
-        const value = '1';
+    it('invalid mosaic restriction type', () => {
+        const mosaic = 'error';
         expect(() => {
-            new AccountRestrictionTypeValidator().validate(value, {name: 'value', source: value});
-        }).to.throws('restrictionType must be one of \'allow\' or \'block\'');
-    });
-});
-
-describe('Mosaic Restriction type validator', () => {
-    it('valid value EQ', () => {
-        const value = 'EQ';
-        expect(new MosaicRestrictionTypeValidator().validate(value, {name: 'value', source: value}))
-            .to.be.equal(undefined);
-    });
-
-    it('invalid value', () => {
-        const value = 'NO';
-        expect(() => {
-            new MosaicRestrictionTypeValidator().validate(value, {name: 'value', source: value});
+            new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic });
         }).to.throws('Wrong mosaic restriction type');
     });
 });
