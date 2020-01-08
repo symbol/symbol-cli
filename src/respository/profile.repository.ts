@@ -70,6 +70,9 @@ export class ProfileRepository {
     public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
         const profiles = this.getProfiles();
         const {name, network} = simpleWallet;
+        if (profiles.hasOwnProperty(name)) {
+            throw new Error(`A profile named ${name} already exists.`);
+        }
         profiles[name] = {
             networkType: network,
             simpleWallet,
@@ -88,7 +91,7 @@ export class ProfileRepository {
      */
     public setDefaultProfile(name: string) {
         const profiles = this.getProfiles();
-        if (profiles[name]) {
+        if (profiles.hasOwnProperty(name)) {
             for (const item in profiles) {
                 if (item !== name) {
                     profiles[item].default = '0';
@@ -113,6 +116,9 @@ export class ProfileRepository {
             if ('1' === profiles[name].default) {
                 defaultProfile = name;
             }
+        }
+        if ('' === defaultProfile) {
+            throw new Error(`default profile not found`);
         }
         return this.find(defaultProfile);
     }

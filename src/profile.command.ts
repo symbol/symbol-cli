@@ -31,15 +31,15 @@ export abstract class ProfileCommand extends Command {
     /**
      * Constructor.
      */
-    constructor() {
+    constructor(fileUrl?: string) {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
+        const profileRepository = new ProfileRepository(fileUrl || '.nem2rc.json');
         this.profileService = new ProfileService(profileRepository);
         this.spinner.setSpinnerString('|/-\\');
     }
 
     /**
-     * Get profile by name.
+     * Gets profile by name.
      * @param {ProfileOptions} options - The  attribute "profile" should include the name.
      * @throws {ExpectedError}
      * @returns {Profile}
@@ -56,25 +56,10 @@ export abstract class ProfileCommand extends Command {
             'if not, use \'nem2-cli profile create\' to create a new profile');
         }
     }
-
-    /**
-     * Set a profile by default.
-     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
-     * @throws {ExpectedError}
-     */
-    protected setDefaultProfile(options: ProfileOptions) {
-        try {
-            this.profileService.setDefaultProfile(options.profile);
-        } catch (err) {
-            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile.' +
-                'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile');
-        }
-    }
 }
 
 /**
- * Monitor profile options.
+ * Profile options.
  */
 export class ProfileOptions extends Options {
     @option({
