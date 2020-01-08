@@ -1,9 +1,9 @@
+import {ExpectedError} from 'clime';
 import {BlockHttp} from 'nem2-sdk';
+import {CreateProfileOptions} from '../create.profile.command';
 import {Profile} from '../model/profile';
 import {ProfileOptions} from '../profile.command';
 import {Resolver} from './resolver';
-import {ExpectedError} from 'clime';
-import {CreateProfileOptions} from '../create.profile.command';
 
 /**
  * Generation hash resolver

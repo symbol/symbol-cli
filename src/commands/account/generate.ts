@@ -20,12 +20,12 @@ import {command, metadata, option} from 'clime';
 import {Account, SimpleWallet} from 'nem2-sdk';
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../create.profile.command';
 import {DefaultResolver} from '../../resolvers/default.resolver';
+import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
 import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PasswordResolver} from '../../resolvers/password.resolver';
 import {ProfileNameResolver} from '../../resolvers/profile.resolver';
 import {SaveResolver} from '../../resolvers/save.resolver';
 import {URLResolver} from '../../resolvers/url.resolver';
-import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -53,7 +53,7 @@ export default class extends CreateProfileCommand {
         const account = Account.generateNewAccount(networkType);
         console.log(new AccountCredentialsTable(account).toString());
         if (save) {
-            const url = new URLResolver().resolve(options);
+            options.url = new URLResolver().resolve(options);
             const profileName = new ProfileNameResolver().resolve(options);
             const password = new PasswordResolver().resolve(options);
             const isDefault = new DefaultResolver().resolve(options);
@@ -64,7 +64,7 @@ export default class extends CreateProfileCommand {
                 password,
                 account.privateKey,
                 networkType);
-            this.createProfile(simpleWallet, networkType, url, isDefault, generationHash);
+            this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash);
             console.log( chalk.green('\nStored ' + profileName + ' profile'));
         }
     }
