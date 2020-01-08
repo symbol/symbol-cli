@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp, SimpleWallet} from 'nem2-sdk';
+import {SimpleWallet} from 'nem2-sdk';
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../create.profile.command';
 import {DefaultResolver} from '../../resolvers/default.resolver';
 import {NetworkResolver} from '../../resolvers/network.resolver';
@@ -26,6 +26,7 @@ import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
 import {ProfileNameResolver} from '../../resolvers/profile.resolver';
 import {URLResolver} from '../../resolvers/url.resolver';
 import {PrivateKeyValidator} from '../../validators/privateKey.validator';
+import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -53,22 +54,15 @@ export default class extends CreateProfileCommand {
         const profileName = new ProfileNameResolver().resolve(options);
         const password = new PasswordResolver().resolve(options);
         const isDefault = new DefaultResolver().resolve(options);
+        const generationHash = await new GenerationHashResolver().resolve(options);
 
-        const blockHttp = new BlockHttp(url);
         const simpleWallet = SimpleWallet.createFromPrivateKey(
             profileName,
             password,
             privateKey,
             networkType);
         console.log(new AccountCredentialsTable(simpleWallet.open(password), password).toString());
-
-        try {
-            const generationHash = options.generationHash
-                ? options.generationHash : (await blockHttp.getBlockByHeight('1').toPromise()).generationHash;
-            this.createProfile(simpleWallet, networkType, url, isDefault, generationHash);
-            console.log( chalk.green('\nStored ' + profileName + ' profile'));
-        } catch (ignored) {
-            console.log(chalk.red('Error'), 'Check if you can reach the NEM2 url provided: ' + url + '/block/1');
-        }
+        this.createProfile(simpleWallet, networkType, url, isDefault, generationHash);
+        console.log( chalk.green('\nStored ' + profileName + ' profile'));
     }
 }
