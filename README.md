@@ -11,7 +11,7 @@ Command Line Interface (CLI) to interact with Catapult.
 
 ## Important Notes
 
-- [0.16.0](CHANGELOG.md#0160-30-Dec-2019) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
+- [0.16.1](CHANGELOG.md#0161-07-Jan-2020) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
 
 :warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.
 Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.json``.

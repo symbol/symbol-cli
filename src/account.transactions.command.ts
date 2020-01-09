@@ -27,7 +27,7 @@ import {PublicKeyValidator} from './validators/publicKey.validator';
  * Base command class to retrieve transactions from an account.
  */
 export abstract class AccountTransactionsCommand extends ProfileCommand {
-    public readonly transactionService: TransactionService;
+    protected readonly transactionService: TransactionService;
 
     /**
      * Constructor.
@@ -48,13 +48,6 @@ export class AccountTransactionsOptions extends ProfileOptions {
         validator: new AddressValidator(),
     })
     address: string;
-
-    @option({
-        flag: 'u',
-        description: 'Account public key.',
-        validator: new PublicKeyValidator(),
-    })
-    publicKey: string;
 
     @option({
         flag: 'n',
