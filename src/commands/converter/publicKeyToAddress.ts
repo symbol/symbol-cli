@@ -18,7 +18,7 @@
 import {Command, command, metadata, option} from 'clime';
 import {PublicAccount} from 'nem2-sdk';
 import {ProfileOptions} from '../../profile.command';
-import {NetworkTypeResolver} from '../../resolvers/networkType.resolver';
+import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {NetworkValidator} from '../../validators/network.validator';
 import {PublicKeyValidator} from '../../validators/publicKey.validator';
@@ -51,8 +51,8 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        const publicKey = new PublicKeyResolver().resolve(options);
-        const network = new NetworkTypeResolver().resolve(options);
-        console.log(PublicAccount.createFromPublicKey(publicKey, network).publicKey);
+        const publicAccount = new PublicKeyResolver().resolve(options);
+        new NetworkResolver().resolve(options);
+        console.log(publicAccount.address);
     }
 }
