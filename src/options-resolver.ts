@@ -37,7 +37,7 @@ export const OptionsChoiceResolver = async (options: any,
         message: promptText,
         choices,
     });
-    if (!response[key]) {
+    if (response[key] === undefined) {
         return process.exit();
     }
 
