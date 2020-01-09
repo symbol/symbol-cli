@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -33,7 +34,12 @@ export class HashAlgorithmResolver implements Resolver {
         const hashAlgorithm = choices.find((item) => {
             return item.value === index;
         })?.title as any;
-        new HashAlgorithmValidator().validate(hashAlgorithm);
+        try {
+            new HashAlgorithmValidator().validate(hashAlgorithm);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return index;
     }
 }

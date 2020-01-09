@@ -47,12 +47,12 @@ describe('OptionsResolver', () => {
 });
 
 describe('OptionsChoicesResolver', () => {
-    it('should return the value if contains the commands option is passed', () => {
+    it('should return the value if contains the commands option is passed', async () => {
         const choices = [
             {title: 'nem', value: 0},
             {title: 'mijin', value: 1},
         ];
-        const value = OptionsChoiceResolver({name: 'nem'}, 'name', 'Select name: ', choices);
+        const value = await OptionsChoiceResolver({name: 'nem'}, 'name', 'Select name: ', choices);
         expect(value).to.be.equal('nem');
     });
 

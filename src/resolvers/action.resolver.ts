@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -26,7 +27,12 @@ export class ActionResolver implements Resolver {
             altText ? altText : 'Select an action: ',
             choices,
         ));
-        new BinaryValidator().validate(index);
+        try {
+            new BinaryValidator().validate(index);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return index;
     }
 }
@@ -53,7 +59,12 @@ export class LinkActionResolver implements Resolver {
             altText ? altText : 'Select an action: ',
             choices,
         ));
-        new BinaryValidator().validate(index);
+        try {
+            new BinaryValidator().validate(index);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return index;
     }
 }
@@ -77,7 +88,12 @@ export class SupplyActionResolver implements Resolver {
             altText ? altText : 'Select an action: ',
             choices,
         ));
-        new BinaryValidator().validate(index);
+        try {
+            new BinaryValidator().validate(index);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return index;
     }
 }

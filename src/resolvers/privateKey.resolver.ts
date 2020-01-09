@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {Password} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
@@ -17,13 +18,18 @@ export class PrivateKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Password}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
             'privateKey',
             () => undefined,
             'Enter your account private key: ',
             'password');
-        new PrivateKeyValidator().validate(resolution);
+        try {
+            new PrivateKeyValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return resolution;
     }
 }

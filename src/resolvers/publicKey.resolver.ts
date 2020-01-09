@@ -1,10 +1,10 @@
+import chalk from 'chalk';
 import {NetworkType, PublicAccount} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
 import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator';
 import {Resolver} from './resolver';
-
 /**
  * Public key resolver
  */
@@ -17,12 +17,17 @@ export class PublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount> {
         const resolution = await OptionsResolver(options,
             'publicKey',
             () => undefined,
             altText ? altText : 'Enter the account public key: ');
-        new PublicKeyValidator().validate(resolution);
+        try {
+            new PublicKeyValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
 }
@@ -39,12 +44,17 @@ export class MultisigAccountPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount> {
         const resolution = await OptionsResolver(options,
             'multisigAccountPublicKey',
             () => undefined,
             altText ? altText : 'Enter the multisig account public key: ');
-        new PublicKeyValidator().validate(resolution);
+        try {
+            new PublicKeyValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
 }
@@ -61,12 +71,17 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount[]}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount[]> {
         const resolution = await OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
             altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ');
-        new PublicKeysValidator().validate(resolution);
+        try {
+            new PublicKeyValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         const cosignatoryPublicKeys = resolution.split(',');
         const cosignatories: PublicAccount[] = [];
         cosignatoryPublicKeys.map((cosignatory: string) => {

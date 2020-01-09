@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {Password} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
@@ -17,13 +18,18 @@ export class PasswordResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Password}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<Password> {
         const resolution = await OptionsResolver(options,
             'password',
             () => undefined,
             'Enter your wallet password: ',
             'password');
-        new PasswordValidator().validate(resolution);
+        try {
+            new PasswordValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return new Password(resolution);
     }
 }

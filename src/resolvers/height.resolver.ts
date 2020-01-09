@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
@@ -17,12 +18,17 @@ export class HeightResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
         'height',
         () =>  undefined,
         altText ? altText : 'Enter the block height: ');
-        new HeightValidator().validate(resolution);
+        try {
+            new HeightValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return  UInt64.fromNumericString(resolution);
     }
 }

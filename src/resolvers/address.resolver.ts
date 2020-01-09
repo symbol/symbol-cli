@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {Address} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
@@ -23,7 +24,12 @@ export class AddressResolver implements Resolver {
             'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
             altText ? altText : 'Enter an address: ');
-        new AddressValidator().validate(resolution);
+        try {
+            new AddressValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return Address.createFromRawAddress(resolution);
     }
 }
@@ -45,7 +51,12 @@ export class RecipientAddressResolver implements Resolver {
             'recipientAddress',
             () => undefined,
             altText ? altText : 'Enter the recipient address or alias: ');
-        new AddressAliasValidator().validate(resolution);
+        try {
+            new AddressAliasValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return AccountService.getRecipient(resolution);
     }
 }

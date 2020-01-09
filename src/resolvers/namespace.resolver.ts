@@ -1,10 +1,10 @@
+import chalk from 'chalk';
 import {NamespaceId, UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
 import {NamespaceIdValidator} from '../validators/namespaceId.validator';
 import {Resolver} from './resolver';
-
 /**
  * Namespace name resolver
  */
@@ -17,7 +17,7 @@ export class NamespaceNameResolver {
      * @param {string} altText - Alternative text.
      * @returns {NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<NamespaceId> {
         const resolution = await OptionsResolver(options,
         'namespaceName',
         () =>  undefined,
@@ -38,12 +38,17 @@ export class NamespaceIdResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<NamespaceId> {
         const resolution = await OptionsResolver(options,
             'namespaceId',
             () =>  undefined,
             altText ? altText : 'Enter the namespace id in hexadecimal: ');
-        new NamespaceIdValidator().validate(resolution);
+        try {
+            new NamespaceIdValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         const namespaceIdUInt64 = UInt64.fromHex(resolution);
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
     }

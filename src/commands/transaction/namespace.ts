@@ -80,23 +80,24 @@ export default class extends AnnounceTransactionsCommand {
         if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
             options.rootnamespace = true;
         }
-        let duration;
-        if (!options.rootnamespace) {
+
+        const maxFee = await new MaxFeeResolver().resolve(options);
+
+        let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
+        if (options.rootnamespace) {
+            const duration = await new DurationResolver().resolve(options);
+            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(),
+                options.name,
+                duration,
+                profile.networkType,
+                maxFee);
+        } else {
             options.subnamespace = true;
             options.parentName = await OptionsResolver(options,
                 'parentName',
                 () => undefined,
                 'Enter the parent namespace name: ');
-        } else {
-            duration = await new DurationResolver().resolve(options);
-        }
-        const maxFee = await new MaxFeeResolver().resolve(options);
-
-        let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
-        if (options.rootnamespace) {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(), options.name, duration, profile.networkType, maxFee);
-        } else {
             namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), options.name, options.parentName, profile.networkType, maxFee);
         }

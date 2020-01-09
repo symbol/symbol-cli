@@ -1,8 +1,6 @@
-import {Address} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
-import {AddressValidator} from '../validators/address.validator';
 import {Resolver} from './resolver';
 
 /**
@@ -17,7 +15,7 @@ export class URLResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
             'url',
             () => secondSource ? secondSource.url : undefined,

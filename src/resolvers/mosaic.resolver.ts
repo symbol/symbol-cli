@@ -1,4 +1,5 @@
-import {Mosaic, MosaicId, NamespaceId} from 'nem2-sdk';
+import chalk from 'chalk';
+import {MosaicId, NamespaceId, Mosaic} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -19,12 +20,17 @@ export class MosaicIdResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<MosaicId> {
         const resolution = await OptionsResolver(options,
         'mosaicId',
         () =>  undefined,
         altText ? altText : 'Enter the mosaic id in hexadecimal format: ');
-        new MosaicIdValidator().validate(resolution);
+        try {
+            new MosaicIdValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return new MosaicId(resolution);
     }
 }
@@ -41,12 +47,17 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId | NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<MosaicId | NamespaceId> {
         const resolution = await OptionsResolver(options,
             'mosaicId',
             () =>  undefined,
             altText ? altText : 'Enter the mosaic id or alias: ');
-        new MosaicIdAliasValidator().validate(resolution);
+        try {
+            new MosaicIdAliasValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return MosaicService.getMosaicId(resolution);
     }
 }
@@ -63,13 +74,18 @@ export class MosaicsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Mosaic[]}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<Mosaic[]> {
         const resolution = await OptionsResolver(options,
             'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
                 ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ');
-        new MosaicsValidator().validate(resolution);
+        try {
+            new MosaicsValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return resolution ? MosaicService.getMosaics(resolution) : [];
     }
 }

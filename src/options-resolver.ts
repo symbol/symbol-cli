@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+import chalk from 'chalk';
 import * as prompts from 'prompts';
 import { Choice, PromptType } from 'prompts';
 
@@ -26,7 +27,8 @@ export const OptionsChoiceResolver = async (options: any,
                                             choices: Choice[],
                                             type: PromptType = 'select') => {
     if (!['select', 'multiselect'].includes(type)) {
-        throw new Error('Invalid options choice resolver type');
+        console.log(chalk.red('ERR'), 'Invalid options choice resolver type');
+        return process.exit();
     }
     if (options[key] !== undefined) {
         return options[key];
@@ -53,7 +55,8 @@ export const OptionsResolver = async (options: any,
                                       promptText: string,
                                       type: PromptType = 'text') => {
     if (!['text', 'password', 'number'].includes(type)) {
-        throw new Error('Invalid options resolver type');
+        console.log(chalk.red('ERR'), 'Invalid options resolver type');
+        return process.exit();
     }
     const response = await prompts({
         type,

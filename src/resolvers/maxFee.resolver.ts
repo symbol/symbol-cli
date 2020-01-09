@@ -16,7 +16,7 @@ export class MaxFeeResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
         'maxFee',
         () => undefined,
@@ -41,7 +41,7 @@ export class MaxFeeHashLockResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
             'maxFeeHashLock',
             () => undefined,

@@ -16,7 +16,7 @@ export class HashResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
             'hash',
             () => undefined,

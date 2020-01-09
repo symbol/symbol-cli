@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {NetworkType} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
@@ -32,7 +33,12 @@ export class NetworkTypeResolver implements Resolver {
         const networkFriendlyName = choices.find((item) => {
             return item.value === index;
         })?.title as any;
-        new NetworkValidator().validate(networkFriendlyName);
+        try {
+            new NetworkValidator().validate(networkFriendlyName);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return NetworkType[networkFriendlyName];
     }
 }

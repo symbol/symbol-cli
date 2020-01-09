@@ -16,8 +16,7 @@
  *
  */
 import {option} from 'clime';
-import {AccountHttp, Address, QueryParams} from 'nem2-sdk';
-import {OptionsResolver} from '../src/options-resolver';
+import {QueryParams} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
 import {AddressValidator} from './validators/address.validator';

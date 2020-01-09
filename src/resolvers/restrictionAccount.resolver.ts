@@ -1,4 +1,4 @@
-import {ExpectedError} from 'clime';
+import chalk from 'chalk';
 import {AccountRestrictionFlags} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
@@ -31,7 +31,9 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
             choices,
         ));
         if (index < 0 || index > 3) {
-            throw new ExpectedError('Unknown restriction flag.');
+            // throw new ExpectedError('Unknown restriction flag.');
+            console.log(chalk.red('ERR'), 'Unknown restriction flag.');
+            return process.exit();
         }
         const accountRestriction = choices.find((item) => {
             return item.value === index;
@@ -62,7 +64,12 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
             altText ? altText : 'Select the restriction flags: ',
             choices,
         ));
-        new BinaryValidator().validate(index);
+        try {
+            new BinaryValidator().validate(index);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return AccountRestrictionFlags[choices[index] as any];
     }
 }
@@ -89,7 +96,12 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
             altText ? altText : 'Select the restriction flags: ',
             choices,
         ));
-        new BinaryValidator().validate(index);
+        try {
+            new BinaryValidator().validate(index);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return AccountRestrictionFlags[choices[index] as any];
     }
 }

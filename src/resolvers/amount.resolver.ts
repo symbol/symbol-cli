@@ -1,3 +1,4 @@
+import chalk from 'chalk';
 import {UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
@@ -22,7 +23,12 @@ export class AmountResolver implements Resolver {
         'amount',
         () =>  undefined,
         altText ? altText : 'Enter an absolute amount: ');
-        new NumericStringValidator().validate(resolution);
+        try {
+            new NumericStringValidator().validate(resolution);
+        } catch (err) {
+            console.log(chalk.red('ERR'), err);
+            return process.exit();
+        }
         return UInt64.fromNumericString(resolution);
     }
 }
