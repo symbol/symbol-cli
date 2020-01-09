@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import {MosaicId, NamespaceId, Mosaic} from 'nem2-sdk';
+import {Mosaic, MosaicId, NamespaceId} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
