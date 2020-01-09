@@ -44,16 +44,37 @@ describe('Profile Command', () => {
         expect(command['profileService']['profileRepository']['fileUrl']).to.equal(repositoryFileUrl);
     });
 
-    it('should create a new profile', () => {
+    it('should get a new profile', () => {
         new ProfileRepository(repositoryFileUrl).save(wallet, 'http://localhost:3000', '1');
         const profileOptions = {profile: wallet.name};
         const profile = command['getProfile'](profileOptions);
         expect(profile.name).to.equal(wallet.name);
     });
 
-    it('should not set as default if profile does not exist', () => {
+    it('should not get a profile that does not exist', () => {
         const profileOptions = {profile: 'random'};
         expect(() => command['getProfile'](profileOptions))
             .to.throws(Error);
+    });
+
+    it('should get a profile saved as default', () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        profileRepository.save(wallet, 'http://localhost:3000', '1');
+        profileRepository.setDefault(wallet.name);
+        const profile = command['getDefaultProfile']();
+        expect(profile.name).to.be.equal(wallet.name);
+    });
+
+    it('should throw error if trying to retrieve a default profile that does not exist', () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        profileRepository.save(wallet, 'http://localhost:3000', '1');
+        expect(() => command['getDefaultProfile']()).to.be.throws(Error);
+    });
+
+    it('should get all  saved profiles', () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        profileRepository.save(wallet, 'http://localhost:3000', '1');
+        const profile = command['findAllProfiles']()[0];
+        expect(profile.name).to.be.equal(wallet.name);
     });
 });

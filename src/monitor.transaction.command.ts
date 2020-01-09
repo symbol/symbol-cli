@@ -25,7 +25,7 @@ import {AddressValidator} from './validators/address.validator';
  * Base command class to listen the blockchain.
  */
 export abstract class MonitorAddressCommand extends ProfileCommand {
-    public readonly transactionService: TransactionService;
+    protected readonly transactionService: TransactionService;
 
     /**
      * Constructor.

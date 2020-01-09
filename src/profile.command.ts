@@ -44,7 +44,7 @@ export abstract class ProfileCommand extends Command {
      * @throws {ExpectedError}
      * @returns {Profile}
      */
-    public getProfile(options: ProfileOptions): Profile {
+    protected getProfile(options: ProfileOptions): Profile {
         try {
             if (options.profile) {
                 return this.profileService.findProfileNamed(options.profile);
@@ -56,6 +56,34 @@ export abstract class ProfileCommand extends Command {
             'if not, use \'nem2-cli profile create\' to create a new profile');
         }
     }
+
+    /**
+     * Gets default profile.
+     * @throws {ExpectedError}
+     * @returns {Profile}
+     */
+    protected getDefaultProfile(): Profile {
+        try {
+            return this.profileService.getDefaultProfile();
+        } catch (err) {
+            throw new ExpectedError('Can\'t retrieve the default profile.' +
+                'Use \'nem2-cli profile create\' to create a new default profile');
+        }
+    }
+
+    /**
+     * Gets all profiles.
+     * @throws {ExpectedError}
+     * @returns {Profile[]}
+     */
+    protected findAllProfiles(): Profile[] {
+        try {
+            return this.profileService.findAllProfiles();
+        } catch (err) {
+            throw new ExpectedError('Can\'t retrieve the profile list.');
+        }
+    }
+
 }
 
 /**

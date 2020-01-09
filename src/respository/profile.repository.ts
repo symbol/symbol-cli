@@ -89,7 +89,7 @@ export class ProfileRepository {
      * @param {string} name - Profile name.
      * @throws {Error}
      */
-    public setDefaultProfile(name: string) {
+    public setDefault(name: string) {
         const profiles = this.getProfiles();
         if (profiles.hasOwnProperty(name)) {
             for (const item in profiles) {

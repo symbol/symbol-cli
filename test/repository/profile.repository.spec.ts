@@ -125,7 +125,7 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000';
         profileRepository.save(simpleWallet1, url, networkGenerationHash);
         profileRepository.save(simpleWallet2, url, networkGenerationHash);
-        profileRepository.setDefaultProfile('default');
+        profileRepository.setDefault('default');
         const currentDefaultProfile = profileRepository.getDefaultProfile();
         expect(currentDefaultProfile).to.not.be.equal(undefined);
         if (currentDefaultProfile instanceof Profile) {
