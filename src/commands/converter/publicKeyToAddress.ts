@@ -29,7 +29,7 @@ export class CommandOptions extends ProfileOptions {
         description: 'Public Key.',
         validator: new PublicKeyValidator(),
     })
-    privateKey: string;
+    publicKey: string;
 
     @option({
         flag: 'n',
