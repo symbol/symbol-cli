@@ -30,7 +30,7 @@ describe('Network type validator', () => {
         const networkType = 'TEST';
         expect(() => {
             new NetworkValidator().validate(networkType);
-        }).to.throws('Enter a valid network type. Example: (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)');
+        }).to.throws('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)');
     });
 
 });

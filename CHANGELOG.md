@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.1] - 07-Jan-2020
+
+### Added
+
+- Announce transaction information formatted as a table.
+- Offline profile creation.
+
+### Changed
+
+- ``NetworkType`` and ``HashType`` resolvers now accept strings.
+- Prevent creating multiple profiles with the same name.
+- ``nem2-sdk`` dependency to 0.16.2.
+
 ## [0.16.0] - 30-Dec-2019
 
 :warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.

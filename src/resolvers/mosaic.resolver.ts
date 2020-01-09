@@ -1,4 +1,6 @@
-import {Mosaic, MosaicId, NamespaceId} from 'nem2-sdk';
+import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
+import {CommandOptions} from '../commands/transaction/mosaic';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -71,5 +73,28 @@ export class MosaicsResolver implements Resolver {
                 ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ').trim();
         new MosaicsValidator().validate(resolution);
         return resolution ? MosaicService.getMosaics(resolution) : [];
+    }
+}
+
+/**
+ * Mosaics flags resolver
+ */
+export class MosaicFlagsResolver implements Resolver {
+
+    /**
+     * Resolves mosaic flags by the user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @returns {MosaicFlags}
+     */
+    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): any {
+        return MosaicFlags.create(
+            options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
+                'Do you want mosaic to have supply mutable?'),
+            options.transferable ? options.transferable : readlineSync.keyInYN(
+                'Do you want mosaic to be transferable?'),
+            options.restrictable ? options.restrictable : readlineSync.keyInYN(
+                'Do you want mosaic to be restrictable?'));
     }
 }

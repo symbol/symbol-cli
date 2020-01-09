@@ -29,11 +29,12 @@ import {
 } from 'nem2-sdk';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
+import {AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {Profile} from '../../model/profile';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {ProfileCommand} from '../../profile.command';
 import {HashResolver} from '../../resolvers/hash.resolver';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'h',
         description: 'Aggregate bonded transaction hash to be signed.',

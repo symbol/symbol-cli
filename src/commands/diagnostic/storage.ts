@@ -45,7 +45,7 @@ export class StorageTable {
 }
 
 @command({
-    description: 'Returns diagnostic information about the node storage',
+    description: 'Get diagnostic information about the node storage',
 })
 export default class extends ProfileCommand {
 
