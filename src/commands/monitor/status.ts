@@ -41,7 +41,7 @@ export default class extends MonitorAddressCommand {
         listener.open().then(() => {
             listener.status(address).subscribe((transactionStatusError) => {
                 const text = '\nHash: ' + transactionStatusError.hash + '\n' +
-                        'Error code: ' + transactionStatusError.status + '\n' +
+                        'Error code: ' + transactionStatusError.code + '\n' +
                         'Deadline: ' + transactionStatusError.deadline.value.toLocalDate().toString() + ' ' +
                     transactionStatusError.deadline.value.toLocalTime().toString();
                 console.log(text);

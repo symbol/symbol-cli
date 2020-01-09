@@ -1,3 +1,5 @@
+import {HashType} from 'nem2-sdk';
+import {isNumeric} from 'rxjs/internal-compatibility';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -18,12 +20,18 @@ export class HashAlgorithmResolver implements Resolver {
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const choices = ['Op_Sha3_256', 'Op_Keccak_256', 'Op_Hash_160', 'Op_Hash_256'];
-        const index = +OptionsChoiceResolver(options,
+        const resolution = OptionsChoiceResolver(options,
         'hashAlgorithm',
             altText ? altText : 'Select the algorithm used to hash the proof: ',
         choices,
         );
-        new HashAlgorithmValidator().validate(index);
-        return index;
+        let hashAlgorithmName;
+        if (isNumeric(resolution)) {
+            hashAlgorithmName = choices[+resolution] as any;
+        } else {
+            hashAlgorithmName = resolution;
+        }
+        new HashAlgorithmValidator().validate(hashAlgorithmName);
+        return HashType[hashAlgorithmName];
     }
 }

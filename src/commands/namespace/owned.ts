@@ -27,7 +27,7 @@ export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'a',
-        description: 'Address',
+        description: 'Account address.',
         validator: new AddressValidator(),
     })
     address: string;

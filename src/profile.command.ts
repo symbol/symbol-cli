@@ -31,20 +31,20 @@ export abstract class ProfileCommand extends Command {
     /**
      * Constructor.
      */
-    constructor() {
+    constructor(fileUrl?: string) {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
+        const profileRepository = new ProfileRepository(fileUrl || '.nem2rc.json');
         this.profileService = new ProfileService(profileRepository);
         this.spinner.setSpinnerString('|/-\\');
     }
 
     /**
-     * Get profile by name.
+     * Gets profile by name.
      * @param {ProfileOptions} options - The  attribute "profile" should include the name.
      * @throws {ExpectedError}
      * @returns {Profile}
      */
-    public getProfile(options: ProfileOptions): Profile {
+    protected getProfile(options: ProfileOptions): Profile {
         try {
             if (options.profile) {
                 return this.profileService.findProfileNamed(options.profile);
@@ -58,23 +58,36 @@ export abstract class ProfileCommand extends Command {
     }
 
     /**
-     * Set a profile by default.
-     * @param {ProfileOptions} options - The  attribute "profile" should include the name.
+     * Gets default profile.
      * @throws {ExpectedError}
+     * @returns {Profile}
      */
-    protected setDefaultProfile(options: ProfileOptions) {
+    protected getDefaultProfile(): Profile {
         try {
-            this.profileService.setDefaultProfile(options.profile);
+            return this.profileService.getDefaultProfile();
         } catch (err) {
-            throw new ExpectedError('Can\'t set the profile [' + options.profile + '] as the default profile.' +
-                'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile');
+            throw new ExpectedError('Can\'t retrieve the default profile.' +
+                'Use \'nem2-cli profile create\' to create a new default profile');
         }
     }
+
+    /**
+     * Gets all profiles.
+     * @throws {ExpectedError}
+     * @returns {Profile[]}
+     */
+    protected findAllProfiles(): Profile[] {
+        try {
+            return this.profileService.findAllProfiles();
+        } catch (err) {
+            throw new ExpectedError('Can\'t retrieve the profile list.');
+        }
+    }
+
 }
 
 /**
- * Monitor profile options.
+ * Profile options.
  */
 export class ProfileOptions extends Options {
     @option({

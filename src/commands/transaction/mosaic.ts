@@ -21,7 +21,6 @@ import {
     AggregateTransaction,
     Deadline,
     MosaicDefinitionTransaction,
-    MosaicFlags,
     MosaicId,
     MosaicNonce,
     MosaicSupplyChangeAction,
@@ -34,6 +33,7 @@ import {AmountResolver} from '../../resolvers/amount.resolver';
 import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver';
 import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -109,14 +109,7 @@ export default class extends AnnounceTransactionsCommand {
             }
         }
         const divisibility = new DivisibilityResolver().resolve(options);
-        const mosaicFlags = MosaicFlags.create(
-            options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
-                'Do you want mosaic to have supply mutable?'),
-            options.transferable ? options.transferable : readlineSync.keyInYN(
-                'Do you want mosaic to be transferable?'),
-            options.restrictable ? options.restrictable : readlineSync.keyInYN(
-                'Do you want mosaic to be restrictable?'),
-        );
+        const mosaicFlags = new MosaicFlagsResolver().resolve(options);
         const amount = new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ');
         const maxFee = new MaxFeeResolver().resolve(options);
 

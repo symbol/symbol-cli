@@ -1,4 +1,5 @@
 import {NetworkType} from 'nem2-sdk';
+import {isNumeric} from 'rxjs/internal-compatibility';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -8,7 +9,7 @@ import {Resolver} from './resolver';
 /**
  * Restriction account address flags resolver
  */
-export class NetworkTypeResolver implements Resolver {
+export class NetworkResolver implements Resolver {
 
     /**
      * Resolves a network type provided by the user.
@@ -19,12 +20,17 @@ export class NetworkTypeResolver implements Resolver {
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const choices = ['MAIN_NET', 'TEST_NET', 'MIJIN', 'MIJIN_TEST'];
-        const index = +OptionsChoiceResolver(options,
+        const resolution = OptionsChoiceResolver(options,
             'network',
             altText ? altText : 'Select the network type: ',
             choices,
         );
-        const networkFriendlyName = choices[index] as any;
+        let networkFriendlyName;
+        if (isNumeric(resolution)) {
+            networkFriendlyName = choices[+resolution] as any;
+        } else {
+            networkFriendlyName = resolution;
+        }
         new NetworkValidator().validate(networkFriendlyName);
         return NetworkType[networkFriendlyName];
     }

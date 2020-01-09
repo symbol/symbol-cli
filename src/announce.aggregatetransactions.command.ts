@@ -77,7 +77,7 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
 export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'p',
-        description: '(Optional) Profile password',
+        description: 'Profile password.',
         validator: new PasswordValidator(),
     })
     password: string;

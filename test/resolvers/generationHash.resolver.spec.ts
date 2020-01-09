@@ -15,24 +15,14 @@
  * limitations under the License.
  *
  */
-import {command, metadata} from 'clime';
-import {AccountCredentialsTable} from '../../create.profile.command';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {expect} from 'chai';
+import {GenerationHashResolver} from '../../src/resolvers/generationHash.resolver';
 
-@command({
-    description: 'View profile credentials',
-})
-export default class extends ProfileCommand {
+describe('Generation hash resolver', () => {
 
-    constructor() {
-        super();
-    }
-
-    @metadata
-    execute(options: ProfileOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const text = new AccountCredentialsTable(account).toString();
-        console.log(text);
-    }
-}
+    it('should return generation hash', async () => {
+        const profileOptions = {generationHash: '1'} as any;
+        expect(await new GenerationHashResolver().resolve(profileOptions))
+            .to.be.equal('1');
+    });
+});

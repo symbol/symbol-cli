@@ -15,24 +15,14 @@
  * limitations under the License.
  *
  */
-import {command, metadata} from 'clime';
-import {AccountCredentialsTable} from '../../create.profile.command';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {expect} from 'chai';
+import {DefaultResolver} from '../../src/resolvers/default.resolver';
 
-@command({
-    description: 'View profile credentials',
-})
-export default class extends ProfileCommand {
+describe('Default resolver', () => {
 
-    constructor() {
-        super();
-    }
+    it('should return boolean', () => {
+        const profileOptions = {save: false, url: '', network: '', profile: '', password: '', default: true, generationHash: '1'};
+        expect(new DefaultResolver().resolve(profileOptions)).to.be.equal(true);
+    });
 
-    @metadata
-    execute(options: ProfileOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const text = new AccountCredentialsTable(account).toString();
-        console.log(text);
-    }
-}
+});
