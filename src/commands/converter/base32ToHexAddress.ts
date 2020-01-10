@@ -29,7 +29,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Address Base 32 -> Address hex .',
+    description: 'Address Base 32 -> Address hex converter.',
 })
 export default class extends Command {
     constructor() {
