@@ -16,25 +16,20 @@
 *
 */
 import {Command, command, metadata, option} from 'clime';
-import {PublicAccount} from 'nem2-sdk';
 import {ProfileOptions} from '../../profile.command';
 import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
-import {NetworkValidator} from '../../validators/network.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
         description: 'Public Key.',
-        validator: new PublicKeyValidator(),
     })
     publicKey: string;
 
     @option({
         flag: 'n',
         description: 'Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
-        validator: new NetworkValidator(),
     })
     network: string;
 

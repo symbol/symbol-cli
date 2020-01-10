@@ -34,9 +34,9 @@ export default class extends AccountTransactionsCommand {
     execute(options: AccountTransactionsOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const accountHttp =  new AccountHttp(profile.url);
         const address = new AddressResolver().resolve(options, profile);
 
+        const accountHttp =  new AccountHttp(profile.url);
         accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
@@ -47,10 +47,8 @@ export default class extends AccountTransactionsCommand {
                 console.log(text === '' ? 'There aren\'t aggregate bonded transaction' : text);
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

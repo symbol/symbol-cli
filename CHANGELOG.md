@@ -18,6 +18,10 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Prevent creating multiple profiles with the same name.
 - ``nem2-sdk`` dependency to 0.16.2.
 
+### Removed
+
+- Validators from options.
+
 ## [0.16.0] - 30-Dec-2019
 
 :warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.

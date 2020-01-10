@@ -4,7 +4,8 @@ import {CreateProfileCommand} from '../../create.profile.command';
 import {OptionsResolver} from '../../options-resolver';
 import {ProfileOptions} from '../../profile.command';
 
-export class CommandOptions extends ProfileOptions {}
+export class CommandOptions extends ProfileOptions {
+}
 
 @command({
     description: 'Change the default profile',

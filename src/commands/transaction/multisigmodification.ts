@@ -24,12 +24,10 @@ import {
     NetworkCurrencyMosaic,
     UInt64,
 } from 'nem2-sdk';
-import {AnnounceAggregateTransactionsCommand, AnnounceAggregateTransactionsOptions} from '../../announce.aggregatetransactions.command';
+import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../announce.transactions.command';
 import {ActionResolver} from '../../resolvers/action.resolver';
 import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {CosignatoryPublicKeyResolver, MultisigAccountPublicKeyResolver} from '../../resolvers/publicKey.resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {PublicKeysValidator, PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -49,21 +47,18 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Modification Action (1: Add, 0: Remove).',
-        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'p',
         description: 'Cosignatory accounts public keys (separated by a comma).',
-        validator: new PublicKeysValidator(),
     })
     cosignatoryPublicKey: string;
 
     @option({
         flag: 'u',
         description: 'Multisig account public key.',
-        validator: new PublicKeyValidator(),
     })
     multisigAccountPublicKey: string;
 }
@@ -71,7 +66,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 @command({
     description: 'Create or modify a multisig account',
 })
-export default class extends AnnounceAggregateTransactionsCommand {
+export default class extends AnnounceTransactionsCommand {
 
     constructor() {
         super();
@@ -113,7 +108,6 @@ export default class extends AnnounceAggregateTransactionsCommand {
             profile.networkType,
             maxFeeHashLock);
         const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
-        console.log(chalk.green('HashLock Hash:   '), signedHashLockTransaction.hash);
 
         this.announceAggregateTransaction(
             signedHashLockTransaction,

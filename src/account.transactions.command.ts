@@ -16,12 +16,9 @@
  *
  */
 import {option} from 'clime';
-import {AccountHttp, Address, QueryParams} from 'nem2-sdk';
-import {OptionsResolver} from '../src/options-resolver';
+import {QueryParams} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
-import {AddressValidator} from './validators/address.validator';
-import {PublicKeyValidator} from './validators/publicKey.validator';
 
 /**
  * Base command class to retrieve transactions from an account.
@@ -45,7 +42,6 @@ export class AccountTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
 

@@ -26,13 +26,11 @@ import {PasswordResolver} from '../../resolvers/password.resolver';
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
 import {ProfileNameResolver} from '../../resolvers/profile.resolver';
 import {URLResolver} from '../../resolvers/url.resolver';
-import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
         flag: 'P',
         description: 'Account private key.',
-        validator: new PrivateKeyValidator(),
     })
     privateKey: string;
 }

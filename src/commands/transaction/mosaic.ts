@@ -34,13 +34,11 @@ import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver';
-import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Initial supply of mosaics.',
-        validator: new NumericStringValidator(),
     })
     amount: string;
 
@@ -74,7 +72,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: 'Mosaic duration in amount of blocks.',
-        validator: new NumericStringValidator(),
     })
     duration: string;
 

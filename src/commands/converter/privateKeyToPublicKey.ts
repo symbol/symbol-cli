@@ -20,21 +20,17 @@ import {Account} from 'nem2-sdk';
 import {ProfileOptions} from '../../profile.command';
 import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
-import {NetworkValidator} from '../../validators/network.validator';
-import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
         description: 'Private Key.',
-        validator: new PrivateKeyValidator(),
     })
     privateKey: string;
 
     @option({
         flag: 'n',
         description: 'Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
-        validator: new NetworkValidator(),
     })
     network: string;
 

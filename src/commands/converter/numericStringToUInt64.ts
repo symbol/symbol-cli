@@ -18,13 +18,11 @@
 import {Command, command, metadata, option} from 'clime';
 import {ProfileOptions} from '../../profile.command';
 import {AmountResolver} from '../../resolvers/amount.resolver';
-import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Numeric string. Example: 12345678',
-        validator: new NumericStringValidator(),
     })
     amount: string;
 }

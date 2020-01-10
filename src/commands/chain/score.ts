@@ -63,10 +63,8 @@ export default class extends ProfileCommand {
             console.log(new ChainScoreTable(score).toString());
         }, (err) => {
             this.spinner.stop(true);
-            let text = '';
-            text += chalk.red('Error');
             err = err.message ? JSON.parse(err.message) : err;
-            console.log(text, err.body && err.body.message ? err.body.message : err);
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
         });
     }
 }
