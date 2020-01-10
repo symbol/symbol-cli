@@ -9,6 +9,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 
 - Announce transaction information formatted as a table.
+- Converter module.
 - Offline profile creation.
 
 ### Changed
