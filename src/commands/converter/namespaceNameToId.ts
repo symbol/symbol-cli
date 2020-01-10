@@ -21,7 +21,7 @@ import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'v',
+        flag: 'n',
         description: 'Namespace name.',
     })
     namespaceName: string;
