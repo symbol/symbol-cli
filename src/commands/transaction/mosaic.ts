@@ -144,7 +144,7 @@ export default class extends AnnounceTransactionsCommand {
         const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
 
         console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
-        console.log(chalk.green('The created mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
+        console.log(chalk.green('The new mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
         const shouldAnnounce = new AnnounceResolver().resolve(options);
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url);
