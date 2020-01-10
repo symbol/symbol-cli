@@ -17,8 +17,13 @@
  */
 import {command, metadata, option} from 'clime';
 import {AccountLinkTransaction, Deadline} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 
@@ -52,15 +57,21 @@ export default class extends AnnounceTransactionsCommand {
         const action = new LinkActionResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
 
-        const accountLinkTransaction = AccountLinkTransaction.create(
+        const transaction = AccountLinkTransaction.create(
             Deadline.create(),
             publicKey,
             action,
             profile.networkType,
             maxFee);
 
-        const signedTransaction = account.sign(accountLinkTransaction,
-            profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

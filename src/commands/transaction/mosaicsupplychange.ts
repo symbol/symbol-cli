@@ -16,9 +16,14 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, MosaicSupplyChangeTransaction} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {SupplyActionResolver} from '../../resolvers/action.resolver';
 import {AmountResolver} from '../../resolvers/amount.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 
@@ -62,15 +67,21 @@ export default class extends AnnounceTransactionsCommand {
             .resolve(options, undefined, 'Enter absolute amount of supply change: ');
         const maxFee = new MaxFeeResolver().resolve(options);
 
-        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+        const transaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
             mosaicId,
             action,
             amount,
             profile.networkType,
             maxFee);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
 
-        const signedTransaction = account.sign(mosaicSupplyChangeTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }
