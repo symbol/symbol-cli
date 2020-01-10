@@ -21,14 +21,14 @@ import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
 
 export class CommandOptions extends ProfileOptions {
     @option({
-        flag: 'v',
+        flag: 'n',
         description: 'Namespace name.',
     })
     namespaceName: string;
 }
 
 @command({
-    description: 'Namespace name -> NamespaceId coder.',
+    description: 'Namespace name -> NamespaceId converter.',
 })
 export default class extends Command {
 

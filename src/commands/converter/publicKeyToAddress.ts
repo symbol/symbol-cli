@@ -41,7 +41,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Public key -> Address coder.',
+    description: 'Public key -> Address converter.',
 })
 export default class extends Command {
 
