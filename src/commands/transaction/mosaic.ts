@@ -147,7 +147,7 @@ export default class extends AnnounceTransactionsCommand {
         console.log(chalk.green('The created mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
         const shouldAnnounce = new AnnounceResolver().resolve(options);
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
         } else if (shouldAnnounce) {
             this.announceTransaction(signedTransaction, profile.url);
         }

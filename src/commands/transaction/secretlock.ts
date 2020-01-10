@@ -107,7 +107,7 @@ export default class extends AnnounceTransactionsCommand {
         console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
         const shouldAnnounce = new AnnounceResolver().resolve(options);
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
         } else if (shouldAnnounce) {
             this.announceTransaction(signedTransaction, profile.url);
         }
