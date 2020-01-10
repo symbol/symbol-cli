@@ -17,12 +17,11 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {Address} from 'nem2-sdk';
-import {AccountService} from '../service/account.service';
 
 /**
- * Address validator
+ * Hex Address validator
  */
-export class AddressValidator implements Validator<string> {
+export class HexAddressValidator implements Validator<string> {
 
     /**
      * Validates if an address object can be created from a string.
@@ -32,29 +31,9 @@ export class AddressValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            Address.createFromRawAddress(value);
+            Address.createFromEncoded(value);
         } catch (err) {
-            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-        }
-    }
-}
-
-/**
- * Address alias validator
- */
-export class AddressAliasValidator implements Validator<string> {
-
-    /**
-     * Validates if an address object can be created from a string.
-     * @param {string} value - Raw address. If starts with '@', then it is an alias.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
-     */
-    validate(value: string, context?: ValidationContext): void {
-        try {
-            const ignored = AccountService.getRecipient(value);
-        } catch {
-            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF');
         }
     }
 }
