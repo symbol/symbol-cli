@@ -28,7 +28,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Namespace name -> NamespaceId coder.',
+    description: 'Namespace name -> NamespaceId converter.',
 })
 export default class extends Command {
 

@@ -41,7 +41,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Private key -> Public key coder.',
+    description: 'Private key -> Public key converter.',
 })
 export default class extends Command {
 

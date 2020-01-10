@@ -29,7 +29,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Payload -> Transaction coder.',
+    description: 'Payload -> Transaction converter.',
 })
 export default class extends Command {
 

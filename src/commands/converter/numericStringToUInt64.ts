@@ -30,7 +30,7 @@ export class CommandOptions extends ProfileOptions {
 }
 
 @command({
-    description: 'Numeric string -> UInt64 coder.',
+    description: 'Numeric string -> UInt64 converter.',
 })
 export default class extends Command {
 
