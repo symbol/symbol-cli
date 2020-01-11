@@ -176,46 +176,6 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
             console.log(chalk.red('Error'), err.message);
         });
     }
-
-    /**
-     * Announces a hash lock transaction. Once this is confirmed, announces an aggregate transaction.
-     * @param {SignedTransaction} signedHashLockTransaction
-     * @param {SignedTransaction} signedAggregateTransaction
-     * @param {Address} senderAddress - Address of the account sending the transaction.
-     * @param {string} url - Node URL.
-     */
-    protected announceAggregateTransaction(signedHashLockTransaction: SignedTransaction,
-                                           signedAggregateTransaction: SignedTransaction,
-                                           senderAddress: Address,
-                                           url: string) {
-        const transactionHttp = new TransactionHttp(url);
-        const listener = new Listener(url);
-        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
-        console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce these transactions? ');
-        if (shouldAnnounceTransaction) {
-            listener.open().then(() => {
-                merge(
-                    transactionHttp.announce(signedHashLockTransaction),
-                    listener
-                        .confirmed(senderAddress)
-                        .pipe(
-                            filter((transaction) => transaction.transactionInfo !== undefined
-                                && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
-                            mergeMap((ignored) => {
-                                listener.close();
-                                return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
-                            }),
-                        )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
-                    (err) => {
-                        let text = '';
-                        text += chalk.red('Error');
-                        err = err.message ? JSON.parse(err.message) : err;
-                        console.log(text, err.body && err.body.message ? err.body.message : err);
-                    });
-            });
-        }
-    }
 }
 
 /**
@@ -246,32 +206,6 @@ export class AnnounceTransactionsOptions extends ProfileOptions {
     })
     announce: any;
 
-}
-
-/**
- * Announce aggregate transactions options
- */
-export class AnnounceAggregateTransactionsOptions extends AnnounceTransactionsOptions {
-
-    @option({
-        flag: 'F',
-        description: 'Maximum fee (absolute amount) to announce the hash lock transaction.',
-    })
-    maxFeeHashLock: string;
-
-    @option({
-        flag: 'D',
-        description: 'Hash lock duration expressed in blocks.',
-        default: '480',
-    })
-    duration: string;
-
-    @option({
-        flag: 'L',
-        description: 'Relative amount of network mosaic to lock.',
-        default: '10',
-    })
-    amount: string;
 }
 
 /**
