@@ -23,7 +23,7 @@ import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transa
 import {AddressResolver} from '../../resolvers/address.resolver';
 
 @command({
-    description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors.',
+    description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',
 })
 export default class extends MonitorAddressCommand {
 
