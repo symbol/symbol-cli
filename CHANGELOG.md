@@ -11,7 +11,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Announce transaction information formatted as a table.
 - Converter module.
 - Offline profile creation.
-- ``monitor all`` monitors all events related with an address.
+- ``monitor all`` command.
 
 ### Changed
 
