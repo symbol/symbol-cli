@@ -90,20 +90,15 @@ export default class extends ProfileCommand {
                             console.log(chalk.green('Transaction cosigned and announced correctly'));
                         }, (err) => {
                             this.spinner.stop(true);
-
-                            let text = '';
-                            text += chalk.red('Error');
                             err = err.message ? JSON.parse(err.message) : err;
-                            console.log(text, err.body && err.body.message ? err.body.message : err);
+                            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
                         });
 
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 

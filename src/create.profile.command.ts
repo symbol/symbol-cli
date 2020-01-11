@@ -24,8 +24,6 @@ import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {ProfileOptions} from './profile.command';
 import {ProfileRepository} from './respository/profile.repository';
 import {ProfileService} from './service/profile.service';
-import {NetworkValidator} from './validators/network.validator';
-import {PasswordValidator} from './validators/password.validator';
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable;
@@ -131,14 +129,12 @@ export class CreateProfileOptions extends ProfileOptions {
     @option({
         flag: 'n',
         description: 'Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
-        validator: new NetworkValidator(),
     })
     network: string;
 
     @option({
         flag: 'p',
         description: '(Optional) When saving profile, provide the password.',
-        validator: new PasswordValidator(),
     })
     password: string;
 

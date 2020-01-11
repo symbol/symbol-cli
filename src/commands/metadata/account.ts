@@ -22,13 +22,11 @@ import {command, metadata, option} from 'clime';
 import {Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
-import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
 }
@@ -73,9 +71,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const metadataHttp = new MetadataHttp(profile.url);
         const address = new AddressResolver().resolve(options, profile);
 
+        const metadataHttp = new MetadataHttp(profile.url);
         metadataHttp.getAccountMetadata(address)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
@@ -89,10 +87,8 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }
