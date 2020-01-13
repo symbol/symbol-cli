@@ -26,14 +26,18 @@ describe('ProfileRepository', () => {
     let repositoryFileUrl: string;
 
     const removeAccountsFile = () => {
-        if (fs.existsSync(process.env.HOME + '/' + repositoryFileUrl)) {
-            fs.unlinkSync(process.env.HOME + '/' + repositoryFileUrl);
+        if (fs.existsSync(process.env.HOME || process.env.USERPROFILE + '/' + repositoryFileUrl)) {
+            fs.unlinkSync(process.env.HOME || process.env.USERPROFILE + '/' + repositoryFileUrl);
         }
     };
 
     before(() => {
         removeAccountsFile();
         repositoryFileUrl = '.nem2rctest.json';
+    });
+
+    beforeEach(() => {
+        removeAccountsFile();
     });
 
     after(() => {
@@ -48,7 +52,6 @@ describe('ProfileRepository', () => {
     it('should save new account', () => {
         const simpleWallet = SimpleWallet
             .create('test', new Password('password'), NetworkType.MIJIN_TEST);
-
         const url = 'http://localhost:3000';
         const networkGenerationHash = 'test';
         const profileRepository = new ProfileRepository(repositoryFileUrl);
@@ -56,10 +59,22 @@ describe('ProfileRepository', () => {
         expect(savedProfile.simpleWallet).to.be.equal(simpleWallet);
     });
 
-    it('should save new account and find it', () => {
+    it('should not save two accounts with the same name', () => {
         const simpleWallet = SimpleWallet
             .create('default', new Password('password'), NetworkType.MIJIN_TEST);
+        const simpleWallet2 = SimpleWallet
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
+        const url = 'http://localhost:3000';
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        const networkGenerationHash = 'test';
+        profileRepository.save(simpleWallet, url, networkGenerationHash);
+        expect( () => profileRepository.save(simpleWallet2, url, networkGenerationHash))
+            .to.throws('A profile named default already exists.');
+    });
 
+    it('should find an account', () => {
+        const simpleWallet = SimpleWallet
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
         const url = 'http://localhost:3000';
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         const networkGenerationHash = 'test';
@@ -86,53 +101,31 @@ describe('ProfileRepository', () => {
         expect(() => profileRepository.find('name')).to.throw(Error);
     });
 
-    it('should save two account with name default and find last one', () => {
-        const simpleWallet = SimpleWallet
-            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
-
-        const url = 'http://localhost:3000';
-
-        const simpleWallet2 = SimpleWallet
-            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
-
-        const url2 = 'http://localhost:3000';
-        const profileRepository = new ProfileRepository(repositoryFileUrl);
-        const networkGenerationHash = 'test';
-        profileRepository.save(simpleWallet, url, networkGenerationHash);
-        profileRepository.save(simpleWallet2, url2, networkGenerationHash);
-        const savedProfile = profileRepository.find('default');
-        expect(savedProfile).to.not.be.equal(undefined);
-
-        if (savedProfile instanceof Profile) {
-            expect(savedProfile.simpleWallet.address.plain())
-                .to.be.equal(simpleWallet2.address.plain());
-
-            expect(savedProfile.simpleWallet.address.networkType)
-                .to.be.equal(simpleWallet2.address.networkType);
-
-            expect(savedProfile.url).to.be.equal(url2);
-            expect(savedProfile.name).to.be.equal('default');
-            expect(savedProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
-            expect(savedProfile.networkGenerationHash).to.be.equal('test');
-        }
-    });
-
-    it('should save two accounts and find default',  () => {
+    it('should get all profiles',  () => {
         const simpleWallet1 = SimpleWallet
             .create('simpleWallet1', new Password('password'), NetworkType.MIJIN_TEST);
-
-        const url = 'http://localhost:3000';
-
         const simpleWallet2 = SimpleWallet
             .create('default', new Password('password'), NetworkType.MIJIN_TEST);
-
-        const url2 = 'http://localhost:3000';
-
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         const networkGenerationHash = 'test';
+        const url = 'http://localhost:3000';
         profileRepository.save(simpleWallet1, url, networkGenerationHash);
-        profileRepository.save(simpleWallet2, url2, networkGenerationHash);
-        profileRepository.setDefaultProfile('default');
+        profileRepository.save(simpleWallet2, url, networkGenerationHash);
+        const all = profileRepository.all();
+        expect(all.length).to.be.equal(2);
+    });
+
+    it('should set and get default profile',  () => {
+        const simpleWallet1 = SimpleWallet
+            .create('simpleWallet1', new Password('password'), NetworkType.MIJIN_TEST);
+        const simpleWallet2 = SimpleWallet
+            .create('default', new Password('password'), NetworkType.MIJIN_TEST);
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        const networkGenerationHash = 'test';
+        const url = 'http://localhost:3000';
+        profileRepository.save(simpleWallet1, url, networkGenerationHash);
+        profileRepository.save(simpleWallet2, url, networkGenerationHash);
+        profileRepository.setDefault('default');
         const currentDefaultProfile = profileRepository.getDefaultProfile();
         expect(currentDefaultProfile).to.not.be.equal(undefined);
         if (currentDefaultProfile instanceof Profile) {
@@ -140,4 +133,10 @@ describe('ProfileRepository', () => {
                 .to.be.equal(simpleWallet2.address.plain());
         }
     });
+
+    it('should throw error if default does not exist',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl);
+        expect(() => profileRepository.getDefaultProfile()).to.throws(Error);
+    });
+
 });

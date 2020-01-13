@@ -17,18 +17,16 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {Address, NamespaceHttp} from 'nem2-sdk';
+import {NamespaceHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
-import {AddressValidator} from '../../validators/address.validator';
 import {NamespaceInfoTable} from './info';
 
 export class CommandOptions extends ProfileOptions {
 
     @option({
         flag: 'a',
-        description: 'Address',
-        validator: new AddressValidator(),
+        description: 'Account address.',
     })
     address: string;
 }
@@ -45,11 +43,11 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: CommandOptions) {
+        this.spinner.start();
         const profile = this.getProfile(options);
         const address = new AddressResolver().resolve(options, profile);
 
         const namespaceHttp = new NamespaceHttp(profile.url);
-        this.spinner.start();
         namespaceHttp.getNamespacesFromAccount(address)
             .subscribe((namespaces) => {
                 this.spinner.stop(true);
@@ -63,11 +61,8 @@ export default class extends ProfileCommand {
 
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

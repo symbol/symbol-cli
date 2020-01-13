@@ -42,6 +42,10 @@ export const subcommands = [
         brief: 'Get chain related information',
     },
     {
+        name: 'converter',
+        brief: 'Convert between data types',
+    },
+    {
         name: 'diagnostic',
         brief: 'Get node diagnostics reports',
     },

@@ -57,7 +57,7 @@ export class ProfileService {
      * Gets all profiles.
      * @returns {Profile[]}
      */
-    findAll(): Profile[] {
+    findAllProfiles(): Profile[] {
         return this.profileRepository.all();
     }
 
@@ -66,7 +66,7 @@ export class ProfileService {
      * @param {string} name - Profile name.
      */
     setDefaultProfile(name: string) {
-        this.profileRepository.setDefaultProfile(name);
+        this.profileRepository.setDefault(name);
     }
 
     /**

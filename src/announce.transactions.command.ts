@@ -16,30 +16,21 @@
  *
  */
 import chalk from 'chalk';
-import { HorizontalTable } from 'cli-table3';
 import * as Table from 'cli-table3';
-import { option } from 'clime';
-import { SignedTransaction, TransactionHttp, TransactionType } from 'nem2-sdk';
+import {HorizontalTable} from 'cli-table3';
+import {option} from 'clime';
+import {Address, Listener, SignedTransaction, TransactionHttp, TransactionType} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import { ProfileCommand, ProfileOptions } from './profile.command';
-import { NumericStringValidator } from './validators/numericString.validator';
-import { PasswordValidator } from './validators/password.validator';
+import {merge} from 'rxjs';
+import {filter, mergeMap} from 'rxjs/operators';
+import {ProfileCommand, ProfileOptions} from './profile.command';
 
 export class AnnounceTransactionFieldsTable {
     private readonly table: HorizontalTable;
 
-    /**
-     * Formats a payload to fit in the command line.
-     * @param {string} payload.
-     * @returns {String[]}
-     */
-    static formatPayload(payload: string) {
-        return payload.match(/.{1,64}/g) || [];
-    }
-
     constructor(public readonly signedTransaction: SignedTransaction, url: string) {
         this.table = new Table({
-            style: { head: ['cyan'] },
+            style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable;
 
@@ -52,6 +43,15 @@ export class AnnounceTransactionFieldsTable {
             ['Network Type', signedTransaction.networkType],
             ['Url', url],
         );
+    }
+
+    /**
+     * Formats a payload to fit in the command line.
+     * @param {string} payload.
+     * @returns {String[]}
+     */
+    static formatPayload(payload: string) {
+        return payload.match(/.{1,64}/g) || [];
     }
 
     toString(title: string): string {
@@ -86,6 +86,46 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
             });
         }
     }
+
+    /**
+     * Announces a hash lock transaction. Once this is confirmed, announces an aggregate transaction.
+     * @param {SignedTransaction} signedHashLockTransaction
+     * @param {SignedTransaction} signedAggregateTransaction
+     * @param {Address} senderAddress - Address of the account sending the transaction.
+     * @param {string} url - Node URL.
+     */
+    protected announceAggregateTransaction(signedHashLockTransaction: SignedTransaction,
+                                           signedAggregateTransaction: SignedTransaction,
+                                           senderAddress: Address,
+                                           url: string) {
+        const transactionHttp = new TransactionHttp(url);
+        const listener = new Listener(url);
+        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
+        console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
+        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce these transactions? ');
+        if (shouldAnnounceTransaction) {
+            listener.open().then(() => {
+                merge(
+                    transactionHttp.announce(signedHashLockTransaction),
+                    listener
+                        .confirmed(senderAddress)
+                        .pipe(
+                            filter((transaction) => transaction.transactionInfo !== undefined
+                                && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
+                            mergeMap((ignored) => {
+                                listener.close();
+                                return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
+                            }),
+                        )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
+                    (err) => {
+                        let text = '';
+                        text += chalk.red('Error');
+                        err = err.message ? JSON.parse(err.message) : err;
+                        console.log(text, err.body && err.body.message ? err.body.message : err);
+                    });
+            });
+        }
+    }
 }
 
 /**
@@ -94,15 +134,39 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 export class AnnounceTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'p',
-        description: '(Optional) Profile password',
-        validator: new PasswordValidator(),
+        description: 'Profile password.',
     })
     password: string;
 
     @option({
         flag: 'f',
         description: 'Maximum fee (absolute amount).',
-        validator: new NumericStringValidator(),
     })
     maxFee: string;
+}
+
+/**
+ * Announce aggregate transactions options
+ */
+export class AnnounceAggregateTransactionsOptions extends AnnounceTransactionsOptions {
+
+    @option({
+        flag: 'F',
+        description: 'Maximum fee (absolute amount) to announce the hash lock transaction.',
+    })
+    maxFeeHashLock: string;
+
+    @option({
+        flag: 'D',
+        description: 'Hash lock duration expressed in blocks.',
+        default: '480',
+    })
+    duration: string;
+
+    @option({
+        flag: 'L',
+        description: 'Relative amount of network mosaic to lock.',
+        default: '10',
+    })
+    amount: string;
 }

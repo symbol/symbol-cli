@@ -21,13 +21,11 @@ import {ReceiptHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {HeightResolver} from '../../resolvers/height.resolver';
 import {ReceiptService} from '../../service/receipt.service';
-import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
-        validator: new HeightValidator(),
     })
     height: string;
 }
@@ -47,8 +45,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
+        const height = new HeightResolver().resolve(options);
+
         const receiptHttp = new ReceiptHttp(profile.url);
-        const height =  new HeightResolver().resolve(options);
         receiptHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {
                 this.spinner.stop(true);
@@ -62,10 +61,8 @@ export default class extends ProfileCommand {
                 console.log(txt);
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

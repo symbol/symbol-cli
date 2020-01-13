@@ -29,11 +29,12 @@ import {
 } from 'nem2-sdk';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
+import {AnnounceTransactionsOptions} from '../../announce.transactions.command';
 import {Profile} from '../../model/profile';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {ProfileCommand} from '../../profile.command';
 import {HashResolver} from '../../resolvers/hash.resolver';
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'h',
         description: 'Aggregate bonded transaction hash to be signed.',
@@ -89,20 +90,15 @@ export default class extends ProfileCommand {
                             console.log(chalk.green('Transaction cosigned and announced correctly'));
                         }, (err) => {
                             this.spinner.stop(true);
-
-                            let text = '';
-                            text += chalk.red('Error');
                             err = err.message ? JSON.parse(err.message) : err;
-                            console.log(text, err.body && err.body.message ? err.body.message : err);
+                            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
                         });
 
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 
