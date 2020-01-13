@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.16.1] - 07-Jan-2020
+## [0.16.1] - 11-Jan-2020
 
 ### Added
 
@@ -12,6 +12,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Converter module.
 - Offline profile creation.
 - ``monitor all`` command.
+- Synchronous transaction announcement with ``--sync`` option.
 
 ### Changed
 
