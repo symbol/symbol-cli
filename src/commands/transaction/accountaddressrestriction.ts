@@ -22,8 +22,6 @@ import {ActionResolver} from '../../resolvers/action.resolver';
 import {RecipientAddressResolver} from '../../resolvers/address.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
-import {AddressAliasValidator} from '../../validators/address.validator';
-import {BinaryValidator} from '../../validators/binary.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -36,14 +34,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
-        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'v',
         description: 'Address or @alias to allow/block.',
-        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }

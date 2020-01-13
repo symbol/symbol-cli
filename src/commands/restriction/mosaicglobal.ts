@@ -22,13 +22,11 @@ import {command, metadata, option} from 'clime';
 import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
-        validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 }
@@ -70,9 +68,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         const mosaicId = new MosaicIdResolver().resolve(options);
 
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
@@ -83,10 +81,8 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

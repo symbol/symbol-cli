@@ -44,7 +44,7 @@ export class RecipientAddressResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'recipientAddress',
             () => undefined,
-            altText ? altText : 'Enter the recipient address or alias: ').trim();
+            altText ? altText : 'Enter the recipient address or @alias: ').trim();
         new AddressAliasValidator().validate(resolution);
         return AccountService.getRecipient(resolution);
     }

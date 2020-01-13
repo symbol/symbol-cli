@@ -21,29 +21,23 @@ import {SupplyActionResolver} from '../../resolvers/action.resolver';
 import {AmountResolver} from '../../resolvers/amount.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
-import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Mosaic supply change action (1: Increase, 0: Decrease).',
-        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
-        validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 
     @option({
         flag: 'd',
         description: 'Atomic amount of supply change.',
-        validator: new NumericStringValidator(),
     })
     amount: string;
 }

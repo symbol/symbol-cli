@@ -22,13 +22,11 @@ import {command, metadata, option} from 'clime';
 import {BlockHttp, BlockInfo, NetworkType} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {HeightResolver} from '../../resolvers/height.resolver';
-import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
-        validator: new HeightValidator(),
     })
     height: string;
 }
@@ -86,19 +84,17 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
         const height = new HeightResolver().resolve(options);
 
+        const blockHttp = new BlockHttp(profile.url);
         blockHttp.getBlockByHeight(height)
             .subscribe((blockInfo) => {
                 this.spinner.stop(true);
                 console.log(new BlockHeaderTable(blockInfo).toString());
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

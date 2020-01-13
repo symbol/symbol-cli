@@ -24,23 +24,17 @@ import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
-import {AddressAliasValidator} from '../../validators/address.validator';
-import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
-import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
-import {NumericStringValidator} from '../../validators/numericString.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: 'Locked mosaic identifier or @alias.',
         flag: 'm',
-        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 
     @option({
         description: 'Amount of mosaic units to lock.',
         flag: 'a',
-        validator: new NumericStringValidator(),
     })
     amount: string;
 
@@ -48,7 +42,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Number of blocks for which a lock should be valid. ' +
             'Duration is allowed to lie up to 30 days. If reached, the mosaics will be returned to the initiator.',
         flag: 'd',
-        validator: new NumericStringValidator(),
     })
     duration: string;
 
@@ -61,14 +54,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256).',
         flag: 'H',
-        validator: new HashAlgorithmValidator(),
     })
     hashAlgorithm: string;
 
     @option({
         description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
-        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }

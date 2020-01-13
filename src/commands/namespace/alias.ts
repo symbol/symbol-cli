@@ -44,9 +44,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const namespaceHttp = new NamespaceHttp(profile.url);
         const namespaceId = new NamespaceNameResolver().resolve(options);
 
+        const namespaceHttp = new NamespaceHttp(profile.url);
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),
@@ -61,10 +61,8 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

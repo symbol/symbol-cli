@@ -32,25 +32,20 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: ProfileOptions) {
         const profile = this.getProfile(options);
-        const listener = new Listener(profile.url);
 
         console.log(`Using ${profile.url}`);
-
+        const listener = new Listener(profile.url);
         listener.open().then(() => {
             listener.newBlock().subscribe((block) => {
                 console.log('\n');
                 console.log(block);
             }, (err) => {
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
-            let text = '';
-            text += chalk.red('Error');
             err = err.message ? JSON.parse(err.message) : err;
-            console.log(text, err.body && err.body.message ? err.body.message : err);
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
         });
     }
 }

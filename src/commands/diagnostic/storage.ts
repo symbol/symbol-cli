@@ -60,17 +60,14 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         const diagnosticHttp = new DiagnosticHttp(profile.url);
-
         diagnosticHttp.getDiagnosticStorage()
             .subscribe((storage) => {
                 this.spinner.stop(true);
                 console.log(new StorageTable(storage).toString());
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

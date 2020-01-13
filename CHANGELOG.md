@@ -9,6 +9,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 ### Added
 
 - Announce transaction information formatted as a table.
+- Converter module.
 - Offline profile creation.
 
 ### Changed
@@ -16,6 +17,10 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - ``NetworkType`` and ``HashType`` resolvers now accept strings.
 - Prevent creating multiple profiles with the same name.
 - ``nem2-sdk`` dependency to 0.16.2.
+
+### Removed
+
+- Validators from options.
 
 ## [0.16.0] - 30-Dec-2019
 

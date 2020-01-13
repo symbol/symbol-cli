@@ -22,7 +22,6 @@ import {command, metadata, option} from 'clime';
 import {NamespaceHttp, NamespaceInfo} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {NamespaceIdValidator} from '../../validators/namespaceId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -34,7 +33,6 @@ export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Namespace id in hexadecimal.',
-        validator: new NamespaceIdValidator(),
     })
     namespaceId: string;
 }
@@ -94,21 +92,19 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const namespaceHttp = new NamespaceHttp(profile.url);
         const namespaceId = options.namespaceName ?
             new NamespaceNameResolver().resolve(options) :
             new NamespaceIdResolver().resolve(options);
 
+        const namespaceHttp = new NamespaceHttp(profile.url);
         namespaceHttp.getNamespace(namespaceId)
             .subscribe((namespaceInfo) => {
                 this.spinner.stop(true);
                 console.log(new NamespaceInfoTable(namespaceInfo).toString());
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }
