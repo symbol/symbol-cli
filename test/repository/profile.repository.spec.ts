@@ -47,6 +47,7 @@ describe('ProfileRepository', () => {
     it('should create account repository via constructor', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         expect(profileRepository).to.not.be.equal(undefined);
+        expect(profileRepository['fileUrl']).to.be.equal(repositoryFileUrl);
     });
 
     it('should save new account', () => {
