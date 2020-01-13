@@ -75,3 +75,21 @@ describe('Cosignatory public key resolver', () => {
     });
 
 });
+
+describe('Target public key resolver', () => {
+
+    it('should return public key', () => {
+        const publicKey = '0000000000000000000000000000000000000000000000000000000000000000';
+        const profileOptions = {publicKey} as any;
+        expect(new PublicKeyResolver().resolve(profileOptions).publicKey)
+            .to.be.equal(publicKey);
+    });
+
+    it('should throw error if public key invalid', () => {
+        const publicKey = '000';
+        const profileOptions = {publicKey} as any;
+        expect(() => new PublicKeyResolver().resolve(profileOptions))
+            .to.throws(Error);
+    });
+
+});
