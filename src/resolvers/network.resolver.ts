@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import {NetworkType} from 'nem2-sdk';
+import {isNumeric} from 'rxjs/internal-compatibility';
 import {Profile} from '../model/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -9,7 +10,7 @@ import {Resolver} from './resolver';
 /**
  * Restriction account address flags resolver
  */
-export class NetworkTypeResolver implements Resolver {
+export class NetworkResolver implements Resolver {
 
     /**
      * Resolves a network type provided by the user.

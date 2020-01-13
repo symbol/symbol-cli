@@ -22,13 +22,11 @@ import {command, metadata, option} from 'clime';
 import {AccountHttp, MosaicHttp, MosaicService, MosaicView} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
-        validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 }
@@ -92,10 +90,8 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 

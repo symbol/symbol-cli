@@ -37,7 +37,6 @@ export default class extends MonitorAddressCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-
         listener.open().then(() => {
             listener.cosignatureAdded(address).subscribe((transaction) => {
                 const transactionFormatted = '\nCosignatureSignedTransaction: ParentHash:' + transaction.parentHash +
@@ -45,16 +44,12 @@ export default class extends MonitorAddressCommand {
                     ' Signature:' + transaction.signature;
                 console.log(transactionFormatted);
             }, (err) => {
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
-            let text = '';
-            text += chalk.red('Error');
             err = err.message ? JSON.parse(err.message) : err;
-            console.log(text, err.body && err.body.message ? err.body.message : err);
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
         });
     }
 }

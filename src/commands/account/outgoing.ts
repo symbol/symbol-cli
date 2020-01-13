@@ -48,10 +48,8 @@ export default class extends AccountTransactionsCommand {
                 console.log(text === '' ? 'There aren\'t outgoing transaction' : text);
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

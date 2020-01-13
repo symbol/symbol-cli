@@ -19,14 +19,12 @@ import {option} from 'clime';
 import {QueryParams} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
-import {AddressValidator} from './validators/address.validator';
-import {PublicKeyValidator} from './validators/publicKey.validator';
 
 /**
  * Base command class to retrieve transactions from an account.
  */
 export abstract class AccountTransactionsCommand extends ProfileCommand {
-    public readonly transactionService: TransactionService;
+    protected readonly transactionService: TransactionService;
 
     /**
      * Constructor.
@@ -44,16 +42,8 @@ export class AccountTransactionsOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
-
-    @option({
-        flag: 'u',
-        description: 'Account public key.',
-        validator: new PublicKeyValidator(),
-    })
-    publicKey: string;
 
     @option({
         flag: 'n',

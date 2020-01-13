@@ -16,103 +16,51 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, metadata, option, Options} from 'clime';
-import {BlockHttp, NetworkType, SimpleWallet} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
-import {NetworkTypeResolver} from '../../resolvers/networkType.resolver';
+import {command, metadata, option} from 'clime';
+import {SimpleWallet} from 'nem2-sdk';
+import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../create.profile.command';
+import {DefaultResolver} from '../../resolvers/default.resolver';
+import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
+import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PasswordResolver} from '../../resolvers/password.resolver';
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
 import {ProfileNameResolver} from '../../resolvers/profile.resolver';
 import {URLResolver} from '../../resolvers/url.resolver';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
-import {NetworkValidator} from '../../validators/network.validator';
-import {PasswordValidator} from '../../validators/password.validator';
-import {PrivateKeyValidator} from '../../validators/privateKey.validator';
 
-export class CommandOptions extends Options {
+export class CommandOptions extends CreateProfileOptions {
     @option({
         flag: 'P',
         description: 'Account private key.',
-        validator: new PrivateKeyValidator(),
     })
     privateKey: string;
-
-    @option({
-        flag: 'n',
-        description: 'Network Type. (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)',
-    })
-    network: number;
-
-    @option({
-        flag: 'u',
-        description: 'NEM2 Node URL. Example: http://localhost:3000',
-    })
-    url: string;
-
-    @option({
-        description: 'Profile name.',
-    })
-    profile: string;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Profile password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
-
-    getNetwork(network: any): NetworkType {
-        new NetworkValidator().validate(network);
-        return parseInt(NetworkType[network], 10);
-    }
 }
 
 @command({
     description: 'Create a new profile with existing private key',
 })
-export default class extends Command {
-    private readonly profileService: ProfileService;
+export default class extends CreateProfileCommand {
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = await new NetworkTypeResolver().resolve(options);
-        const url = await new URLResolver().resolve(options);
+        const networkType = await new NetworkResolver().resolve(options);
+        const privateKey = await new PrivateKeyResolver().resolve(options);
+        options.url = await new URLResolver().resolve(options);
         const profileName = await new ProfileNameResolver().resolve(options);
         const password = await new PasswordResolver().resolve(options);
-        const privateKey = await new PrivateKeyResolver().resolve(options);
-        const blockHttp = new BlockHttp(url);
+        const isDefault = await new DefaultResolver().resolve(options);
+        const generationHash = await new GenerationHashResolver().resolve(options);
 
-        const simpleWallet: SimpleWallet = SimpleWallet.createFromPrivateKey(
+        const simpleWallet = SimpleWallet.createFromPrivateKey(
             profileName,
             password,
             privateKey,
             networkType);
-
-        blockHttp.getBlockByHeight('1')
-            .subscribe((block) => {
-                if (block.networkType !== networkType) {
-                    console.log('The network provided and the node network don\'t match.');
-                } else {
-                    const profile = this.profileService.createNewProfile(simpleWallet,
-                        url as string,
-                        block.generationHash);
-                    if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
-                        this.profileService.setDefaultProfile(profileName);
-                    }
-                    console.log(chalk.green('\nProfile stored correctly\n') + profile.toString() + '\n');
-                }
-            }, (ignored) => {
-                let error = '';
-                error += chalk.red('Error');
-                error += ' Check if you can reach the NEM2 url provided: ' + url + '/block/1';
-                console.log(error);
-            });
+        console.log(new AccountCredentialsTable(simpleWallet.open(password), password).toString());
+        this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash);
+        console.log( chalk.green('\nStored ' + profileName + ' profile'));
     }
 }

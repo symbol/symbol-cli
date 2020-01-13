@@ -44,7 +44,7 @@ export class ServerInfoTable {
 }
 
 @command({
-    description: 'Returns the REST server components versions',
+    description: 'Get the REST server components versions',
 })
 export default class extends ProfileCommand {
 
@@ -59,17 +59,14 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         const diagnosticHttp = new DiagnosticHttp(profile.url);
-
         diagnosticHttp.getServerInfo()
             .subscribe((serverInfo) => {
                 this.spinner.stop(true);
                 console.log(new ServerInfoTable(serverInfo).toString());
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

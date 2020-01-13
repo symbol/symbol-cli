@@ -32,7 +32,7 @@ export class NetworkValidator implements Validator<string> {
     validate(value: string, context?: ValidationContext): void {
         if (!(value in NetworkType)) {
             throw new ExpectedError('Enter a valid network type. ' +
-                'Example: (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)');
+                'Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)');
         }
     }
 }

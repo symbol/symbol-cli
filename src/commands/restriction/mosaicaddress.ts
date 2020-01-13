@@ -23,21 +23,17 @@ import {RestrictionMosaicHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {AddressValidator} from '../../validators/address.validator';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
-        validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 }
@@ -81,10 +77,10 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         const profile = this.getProfile(options);
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         const address = await new AddressResolver().resolve(options, profile);
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
             .subscribe((mosaicRestrictions) => {
                 this.spinner.stop(true);
@@ -95,10 +91,8 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

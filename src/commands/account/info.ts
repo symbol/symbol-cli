@@ -34,13 +34,11 @@ import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
-import {AddressValidator} from '../../validators/address.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
 }
@@ -171,11 +169,12 @@ export default class extends ProfileCommand {
         this.spinner.start();
 
         const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
+
         const accountHttp = new AccountHttp(profile.url);
         const multisigHttp = new MultisigHttp(profile.url);
         const mosaicHttp = new MosaicHttp(profile.url);
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
-        const address = await new AddressResolver().resolve(options, profile);
 
         forkJoin(
             accountHttp.getAccountInfo(address),
@@ -192,10 +191,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true);
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

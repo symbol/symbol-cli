@@ -21,21 +21,17 @@ import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../an
 import {LinkActionResolver} from '../../resolvers/action.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: 'Remote account public key.',
-        validator: new PublicKeyValidator(),
     })
     publicKey: string;
 
     @option({
         flag: 'a',
         description: 'Alias action (1: Link, 0: Unlink).',
-        validator: new BinaryValidator(),
     })
     action: number;
 }

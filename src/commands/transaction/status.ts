@@ -83,20 +83,18 @@ export default class extends ProfileCommand {
     async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const transactionHttp = new TransactionHttp(profile.url);
         const hash = await new HashResolver()
             .resolve(options);
 
+        const transactionHttp = new TransactionHttp(profile.url);
         transactionHttp.getTransactionStatus(hash)
             .subscribe((status) => {
                 this.spinner.stop(true);
                 console.log(new TransactionStatusTable(status).toString());
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

@@ -21,21 +21,17 @@ import {LinkActionResolver} from '../../resolvers/action.resolver';
 import {AddressResolver} from '../../resolvers/address.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {AddressValidator} from '../../validators/address.validator';
-import {BinaryValidator} from '../../validators/binary.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Alias action (1: Link, 0: Unlink).',
-        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
 

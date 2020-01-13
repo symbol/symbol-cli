@@ -16,132 +16,56 @@
  *
  */
 import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {Command, command, metadata, option, Options} from 'clime';
-import {Account, BlockHttp, Password, SimpleWallet} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
-import {NetworkTypeResolver} from '../../resolvers/networkType.resolver';
+import {command, metadata, option} from 'clime';
+import {Account, SimpleWallet} from 'nem2-sdk';
+import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../create.profile.command';
+import {DefaultResolver} from '../../resolvers/default.resolver';
+import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
+import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PasswordResolver} from '../../resolvers/password.resolver';
 import {ProfileNameResolver} from '../../resolvers/profile.resolver';
+import {SaveResolver} from '../../resolvers/save.resolver';
 import {URLResolver} from '../../resolvers/url.resolver';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
-import {PasswordValidator} from '../../validators/password.validator';
 
-export class CommandOptions extends Options {
+export class CommandOptions extends CreateProfileOptions {
     @option({
         flag: 's',
-        description: '(Optional) Saves the profile',
+        description: '(Optional) Saves the profile.',
         toggle: true,
     })
     save: any;
-
-    @option({
-        flag: 'u',
-        description: '(Optional) When saving profile, provide a NEM2 Node URL. Example: http://localhost:3000',
-    })
-    url: string;
-
-    @option({
-        description: '(Optional) Profile name.',
-    })
-    profile: string;
-
-    @option({
-        flag: 'n',
-        description: 'Network Type. (0: MAIN_NET, 1: TEST_NET, 2: MIJIN, 3: MIJIN_TEST)',
-    })
-    network: number;
-
-    @option({
-        flag: 'p',
-        description: '(Optional) Profile password',
-        validator: new PasswordValidator(),
-    })
-    password: string;
-}
-
-export class AccountCredentialsTable {
-    private readonly table: HorizontalTable;
-
-    constructor(
-        public readonly account: Account,
-        public readonly password?: Password,
-    ) {
-
-        this.table = new Table({
-            style: { head: ['cyan'] },
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-        this.table.push(
-            ['Address', account.address.pretty()],
-            ['Public Key', account.publicKey],
-            ['Private Key', account.privateKey],
-        );
-        if (password) {
-            this.table.push(['Password', password.value]);
-        }
-    }
-
-    toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Account') + '\n';
-        text += this.table.toString();
-        return text;
-    }
 }
 
 @command({
     description: 'Generate new accounts',
 })
-export default class extends Command {
-    private readonly profileService: ProfileService;
+export default class extends CreateProfileCommand {
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = await new NetworkTypeResolver().resolve(options);
-        const profile = await new ProfileNameResolver().resolve(options);
-        const password = await new PasswordResolver().resolve(options);
-        const simpleWallet = SimpleWallet.create(profile, password, networkType);
-        let text = new AccountCredentialsTable(simpleWallet.open(password), password).toString();
+        const networkType = await new NetworkResolver().resolve(options);
+        const save = new SaveResolver().resolve(options);
 
-        if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
-            options.save = true;
-        }
+        const account = Account.generateNewAccount(networkType);
+        console.log(new AccountCredentialsTable(account).toString());
+        if (save) {
+            options.url = await new URLResolver().resolve(options);
+            const profileName = await new ProfileNameResolver().resolve(options);
+            const password = await new PasswordResolver().resolve(options);
+            const isDefault = await new DefaultResolver().resolve(options);
+            const generationHash = await new GenerationHashResolver().resolve(options);
 
-        if (options.save) {
-            const url = await new URLResolver().resolve(options);
-            const blockHttp = new BlockHttp(url);
-
-            blockHttp.getBlockByHeight('1')
-                .subscribe((block) => {
-                    if (block.networkType !== networkType) {
-                        console.log('The network provided and node network don\'t match.');
-                    } else {
-                        this.profileService.createNewProfile(simpleWallet,
-                            url as string,
-                            block.generationHash);
-                        if (readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
-                            this.profileService.setDefaultProfile(profile);
-                        }
-                        text += chalk.green('\nStored ' + profile + ' profile');
-                        console.log(text);
-                    }
-                }, (ignored) => {
-                    let error = '';
-                    error += chalk.red('Error');
-                    error += ' Check if you can reach the NEM2 url provided: ' + url + '/block/1';
-                    console.log(error);
-                });
-        } else {
-            console.log(text);
+            const simpleWallet = SimpleWallet.createFromPrivateKey(
+                profileName,
+                password,
+                account.privateKey,
+                networkType);
+            this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash);
+            console.log( chalk.green('\nStored ' + profileName + ' profile'));
         }
     }
 }

@@ -22,15 +22,11 @@ import {RecipientAddressResolver} from '../../resolvers/address.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MessageResolver, RecipientPublicKeyResolver} from '../../resolvers/message.resolver';
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver';
-import {AddressAliasValidator} from '../../validators/address.validator';
-import {MosaicsValidator} from '../../validators/mosaic.validator';
-import {PublicKeyValidator} from '../../validators/publicKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
-        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 
@@ -43,7 +39,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'c',
         description: 'Mosaic to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount. Add multiple mosaics with commas.',
-        validator: new MosaicsValidator(),
     })
     mosaics: string;
 
@@ -58,7 +53,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: '(Optional) The recipient public key in an encrypted message.',
-        validator: new PublicKeyValidator(),
     })
     recipientPublicKey: string;
 

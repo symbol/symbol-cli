@@ -22,8 +22,6 @@ import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {ProofResolver} from '../../resolvers/proof.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
-import {AddressAliasValidator} from '../../validators/address.validator';
-import {HashAlgorithmValidator} from '../../validators/hashAlgorithm.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
@@ -40,16 +38,14 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     proof: string;
 
     @option({
-        description: 'Algorithm used to hash the proof (0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256). ',
+        description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256). ',
         flag: 'H',
-        validator: new HashAlgorithmValidator(),
     })
-    hashAlgorithm: number;
+    hashAlgorithm: string;
 
     @option({
         description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
-        validator: new AddressAliasValidator(),
     })
     recipientAddress: string;
 }

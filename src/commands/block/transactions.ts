@@ -21,13 +21,11 @@ import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {HeightResolver} from '../../resolvers/height.resolver';
 import {TransactionService} from '../../service/transaction.service';
-import {HeightValidator} from '../../validators/block.validator';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
-        validator: new HeightValidator(),
     })
     height: string;
 
@@ -67,7 +65,6 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
         const height = (await new HeightResolver().resolve(options)).toString();
 
         let pageSize = options.pageSize || 10;
@@ -84,6 +81,7 @@ export default class extends ProfileCommand {
             order = 'DESC';
         }
 
+        const blockHttp = new BlockHttp(profile.url);
         blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
                 this.spinner.stop(true);
@@ -99,10 +97,8 @@ export default class extends ProfileCommand {
                 console.log(txt);
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

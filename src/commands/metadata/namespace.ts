@@ -43,9 +43,9 @@ export default class extends ProfileCommand {
     async execute(options: CommandOptions) {
         this.spinner.start();
         const profile = this.getProfile(options);
-        const metadataHttp = new MetadataHttp(profile.url);
         const namespaceId = await new NamespaceNameResolver().resolve(options);
 
+        const metadataHttp = new MetadataHttp(profile.url);
         metadataHttp.getNamespaceMetadata(namespaceId)
             .subscribe((metadataEntries) => {
                 this.spinner.stop(true);
@@ -59,10 +59,8 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true);
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
     }
 }

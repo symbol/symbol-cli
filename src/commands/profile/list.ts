@@ -16,42 +16,37 @@
  *
  */
 import chalk from 'chalk';
-import {Command, command, metadata, option, Options} from 'clime';
-import {ProfileRepository} from '../../respository/profile.repository';
-import {ProfileService} from '../../service/profile.service';
+import {command, metadata} from 'clime';
+import {ProfileCommand, ProfileOptions} from '../../profile.command';
 
-export class CommandOptions extends Options {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-    })
-    address: string;
-}
+export class CommandOptions extends ProfileOptions {}
 
 @command({
     description: 'Display the list of stored profiles',
 })
-export default class extends Command {
-    private readonly profileService: ProfileService;
+export default class extends ProfileCommand {
 
     constructor() {
         super();
-        const profileRepository = new ProfileRepository('.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
     }
 
     @metadata
     async execute(options: CommandOptions) {
         let message = '';
-        this.profileService.findAll().map((profile) => {
-            message += '\n' + profile.toString();
-        });
-        console.log(message);
-        try {
-            const currentProfile = this.profileService.getDefaultProfile();
-            console.log(chalk.green('\n Default profile:', currentProfile.name));
-        } catch {
-            console.log(chalk.green('\n Default profile: None'));
+        if (options.profile) {
+           const profile = this.getProfile(options);
+           console.log('\n' + profile.toString());
+        } else {
+            this.findAllProfiles().map((profile) => {
+                message += '\n' + profile.toString();
+            });
+            console.log(message);
+            try {
+                const currentProfile = this.getDefaultProfile();
+                console.log(chalk.green('\n Default profile:', currentProfile.name));
+            } catch {
+                console.log(chalk.green('\n Default profile: None'));
+            }
         }
     }
 }

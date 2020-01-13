@@ -35,14 +35,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
-        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'v',
         description: 'Transaction type formatted as hex.',
-        validator: new TransactionTypeValidator(),
     })
     transactionType: string;
 }

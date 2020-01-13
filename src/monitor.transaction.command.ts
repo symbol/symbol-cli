@@ -16,16 +16,14 @@
  *
  */
 import {option} from 'clime';
-import {Address} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 import {TransactionService} from './service/transaction.service';
-import {AddressValidator} from './validators/address.validator';
 
 /**
  * Base command class to listen the blockchain.
  */
 export abstract class MonitorAddressCommand extends ProfileCommand {
-    public readonly transactionService: TransactionService;
+    protected readonly transactionService: TransactionService;
 
     /**
      * Constructor.
@@ -43,7 +41,6 @@ export class MonitorAddressOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
-        validator: new AddressValidator(),
     })
     address: string;
 }

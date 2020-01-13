@@ -21,7 +21,6 @@ import {
     AggregateTransaction,
     Deadline,
     MosaicDefinitionTransaction,
-    MosaicFlags,
     MosaicId,
     MosaicNonce,
     MosaicSupplyChangeAction,
@@ -34,13 +33,12 @@ import {AmountResolver} from '../../resolvers/amount.resolver';
 import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {NumericStringValidator} from '../../validators/numericString.validator';
+import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Initial supply of mosaics.',
-        validator: new NumericStringValidator(),
     })
     amount: string;
 
@@ -74,7 +72,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: 'Mosaic duration in amount of blocks.',
-        validator: new NumericStringValidator(),
     })
     duration: string;
 
@@ -109,14 +106,7 @@ export default class extends AnnounceTransactionsCommand {
             }
         }
         const divisibility = await new DivisibilityResolver().resolve(options);
-        const mosaicFlags = MosaicFlags.create(
-            options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
-                'Do you want mosaic to have supply mutable?'),
-            options.transferable ? options.transferable : readlineSync.keyInYN(
-                'Do you want mosaic to be transferable?'),
-            options.restrictable ? options.restrictable : readlineSync.keyInYN(
-                'Do you want mosaic to be restrictable?'),
-        );
+        const mosaicFlags = await new MosaicFlagsResolver().resolve(options);
         const amount = await new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ');
         const maxFee = await new MaxFeeResolver().resolve(options);
 

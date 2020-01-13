@@ -33,11 +33,10 @@ export default class extends MonitorAddressCommand {
     @metadata
     async execute(options: MonitorAddressOptions) {
         const profile = this.getProfile(options);
-        const listener = new Listener(profile.url);
         const address = await new AddressResolver().resolve(options, profile);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-
+        const listener = new Listener(profile.url);
         listener.open().then(() => {
             listener.status(address).subscribe((transactionStatusError) => {
                 const text = '\nHash: ' + transactionStatusError.hash + '\n' +
@@ -46,16 +45,12 @@ export default class extends MonitorAddressCommand {
                     transactionStatusError.deadline.value.toLocalTime().toString();
                 console.log(text);
             }, (err) => {
-                let text = '';
-                text += chalk.red('Error');
                 err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
-            let text = '';
-            text += chalk.red('Error');
             err = err.message ? JSON.parse(err.message) : err;
-            console.log(text, err.body && err.body.message ? err.body.message : err);
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
         });
     }
 }

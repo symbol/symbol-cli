@@ -22,8 +22,6 @@ import {ActionResolver} from '../../resolvers/action.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
-import {BinaryValidator} from '../../validators/binary.validator';
-import {MosaicIdAliasValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -36,14 +34,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
-        validator: new BinaryValidator(),
     })
     action: number;
 
     @option({
         flag: 'v',
         description: 'Mosaic or @alias to allow / block.',
-        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 }

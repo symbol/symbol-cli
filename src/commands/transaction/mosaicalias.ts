@@ -21,7 +21,6 @@ import {LinkActionResolver} from '../../resolvers/action.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {MosaicIdValidator} from '../../validators/mosaicId.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -33,7 +32,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
-        validator: new MosaicIdValidator(),
     })
     mosaicId: string;
 

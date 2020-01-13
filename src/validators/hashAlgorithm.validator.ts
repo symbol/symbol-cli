@@ -4,7 +4,7 @@ import {HashType} from 'nem2-sdk';
 /**
  * Hash algorithm validator
  */
-export class HashAlgorithmValidator implements Validator<number> {
+export class HashAlgorithmValidator implements Validator<string> {
 
     /**
      * Validates if the hash algorithm is available.
@@ -12,10 +12,10 @@ export class HashAlgorithmValidator implements Validator<number> {
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
-    validate(value: number, context?: ValidationContext): void {
+    validate(value: string, context?: ValidationContext): void {
         if (!(value in HashType)) {
             throw new ExpectedError('Hash algorithm must be one of ' +
-                '(0: Op_Sha3_256, 1: Op_Keccak_256, 2: Op_Hash_160, 3: Op_Hash_256)');
+                '(Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256)');
         }
     }
 }
