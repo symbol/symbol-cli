@@ -11,6 +11,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - Announce transaction information formatted as a table.
 - Converter module.
 - Offline profile creation.
+- ``monitor all`` command.
 - Synchronous transaction announcement with ``--sync`` option.
 
 ### Changed
