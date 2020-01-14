@@ -1,6 +1,7 @@
 import { command, metadata, option } from 'clime';
-import { Deadline, KeyGenerator, NamespaceMetadataTransaction } from 'nem2-sdk';
+import { Deadline, KeyGenerator, MetadataHttp, MetadataTransactionService, MetadataType } from 'nem2-sdk';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { NamespaceIdResolver } from '../../resolvers/namespace.resolver';
 import { KeyResolver, StringResolver } from '../../resolvers/string.resolver';
 
@@ -33,22 +34,27 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const namespaceId = new NamespaceIdResolver().resolve(options);
         const key = KeyGenerator.generateUInt64Key(new KeyResolver().resolve(options));
         const value = new StringResolver().resolve(options);
+        const maxFee = new MaxFeeResolver().resolve(options);
 
-        const namespaceMetadataTransaction = NamespaceMetadataTransaction.create(
+        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataTransactionService = new MetadataTransactionService(metadataHttp);
+        const namespaceMetadataTransaction = await metadataTransactionService.createMetadataTransaction(
             Deadline.create(),
-            account.publicKey,
-            key,
-            namespaceId,
-            value.length,
-            value,
             account.networkType,
-        );
+            MetadataType.Namespace,
+            account.publicAccount,
+            key,
+            value,
+            account.publicAccount,
+            namespaceId,
+            maxFee,
+        ).toPromise();
 
         const signedTransaction = account.sign(namespaceMetadataTransaction, profile.networkGenerationHash);
         this.announceTransaction(signedTransaction, profile.url);

@@ -1,10 +1,12 @@
 import { command, metadata, option } from 'clime';
 import {
-    AccountMetadataTransaction,
     AggregateTransaction,
     Deadline,
     HashLockTransaction,
     KeyGenerator,
+    MetadataHttp,
+    MetadataTransactionService,
+    MetadataType,
     NetworkCurrencyMosaic,
     PublicAccount,
     UInt64,
@@ -57,7 +59,7 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const targetAccount = PublicAccount.createFromPublicKey(new TargetPublicKeyResolver().resolve(options), account.networkType);
@@ -65,14 +67,19 @@ export default class extends AnnounceTransactionsCommand {
         const value = new StringResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
 
-        const accountMetadataTransaction = AccountMetadataTransaction.create(
+        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataTransactionService = new MetadataTransactionService(metadataHttp);
+        const accountMetadataTransaction = await metadataTransactionService.createMetadataTransaction(
             Deadline.create(),
-            targetAccount.publicKey,
-            key,
-            value.length,
-            value,
             account.networkType,
-        );
+            MetadataType.Account,
+            targetAccount,
+            key,
+            value,
+            account.publicAccount,
+            undefined,
+            maxFee,
+        ).toPromise();
 
         const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
