@@ -19,10 +19,9 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {option} from 'clime';
-import {Address, Listener, SignedTransaction, TransactionHttp, TransactionType} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService, TransactionType} from 'nem2-sdk';
 import {merge} from 'rxjs';
-import {filter, mergeMap} from 'rxjs/operators';
+import {filter, mergeMap, tap} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 
 export class AnnounceTransactionFieldsTable {
@@ -66,25 +65,66 @@ export class AnnounceTransactionFieldsTable {
  * Base command class to announce transactions.
  */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
+
+    protected constructor() {
+        super();
+    }
+
     /**
      * Announces a transaction.
      * @param {SignedTransaction} signedTransaction
      * @param {string} url - Node URL.
      */
     protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, url).toString('Transaction Information'));
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce this transaction? ');
-        if (shouldAnnounceTransaction) {
-            const transactionHttp = new TransactionHttp(url);
-            transactionHttp.announce(signedTransaction).subscribe(() => {
-                console.log(chalk.green('Transaction announced correctly'));
+        this.spinner.start();
+        const transactionHttp = new TransactionHttp(url);
+        transactionHttp
+            .announce(signedTransaction)
+            .subscribe((ignored) => {
+                this.spinner.stop(true);
+                console.log(chalk.green('\nTransaction announced correctly.'));
             }, (err) => {
-                let text = '';
-                text += chalk.red('Error');
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(text, err.body && err.body.message ? err.body.message : err);
+                this.spinner.stop(true);
+                console.log(chalk.red('Error'), err.message);
             });
-        }
+    }
+
+    /**
+     * Announces a transaction waiting for the response.
+     * @param {SignedTransaction} signedTransaction
+     * @param {Address} senderAddress - Address of the account sending the transaction.
+     * @param {string} url - Node URL.
+     */
+    protected announceTransactionSync(signedTransaction: SignedTransaction, senderAddress: Address, url: string) {
+        this.spinner.start();
+        const transactionHttp = new TransactionHttp(url);
+        const receiptHttp = new ReceiptHttp(url);
+        const listener = new Listener(url);
+        const transactionService = new TransactionService(transactionHttp, receiptHttp);
+        listener.open().then(() => {
+            merge(transactionService.announce(signedTransaction, listener),
+                listener
+                    .status(senderAddress)
+                    .pipe(
+                        filter((error) => error.hash === signedTransaction.hash),
+                        tap((error) => {
+                            throw new Error(error.code);
+                        })))
+                .subscribe((ignored) => {
+                    listener.close();
+                    this.spinner.stop(true);
+                    console.log(chalk.green('\nTransaction confirmed.'));
+                }, (err) => {
+                    listener.close();
+                    this.spinner.stop(true);
+                    listener.close();
+                    console.log(chalk.red('Error'), err.message);
+                });
+        }, (err) => {
+            this.spinner.stop(true);
+            listener.close();
+            console.log(chalk.red('Error'), err.message);
+        });
     }
 
     /**
@@ -98,33 +138,43 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                                            signedAggregateTransaction: SignedTransaction,
                                            senderAddress: Address,
                                            url: string) {
+        this.spinner.start();
         const transactionHttp = new TransactionHttp(url);
         const listener = new Listener(url);
-        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
-        console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
-        const shouldAnnounceTransaction = readlineSync.keyInYN('Do you want to announce these transactions? ');
-        if (shouldAnnounceTransaction) {
-            listener.open().then(() => {
-                merge(
-                    transactionHttp.announce(signedHashLockTransaction),
-                    listener
-                        .confirmed(senderAddress)
-                        .pipe(
-                            filter((transaction) => transaction.transactionInfo !== undefined
-                                && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
-                            mergeMap((ignored) => {
-                                listener.close();
-                                return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
-                            }),
-                        )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
-                    (err) => {
-                        let text = '';
-                        text += chalk.red('Error');
-                        err = err.message ? JSON.parse(err.message) : err;
-                        console.log(text, err.body && err.body.message ? err.body.message : err);
-                    });
-            });
-        }
+        listener.open().then(() => {
+            merge(
+                transactionHttp.announce(signedHashLockTransaction),
+                listener
+                    .status(senderAddress)
+                    .pipe(
+                        filter((error) => error.hash === signedHashLockTransaction.hash),
+                        tap((error) => {
+                            throw new Error(error.code);
+                        })),
+                listener
+                    .confirmed(senderAddress)
+                    .pipe(
+                        filter((transaction) => transaction.transactionInfo !== undefined
+                            && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
+                        mergeMap((ignored) => {
+                            return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
+                        }),
+                    ),
+            )
+                .subscribe((ignored) => {
+                    listener.close();
+                    this.spinner.stop(true);
+                    console.log(chalk.green('\n Aggregate transaction announced'));
+                }, (err) => {
+                    this.spinner.stop(true);
+                    listener.close();
+                    console.log(chalk.red('Error'), err.message);
+                });
+        }, (err) => {
+            this.spinner.stop(true);
+            listener.close();
+            console.log(chalk.red('Error'), err.message);
+        });
     }
 }
 
@@ -143,6 +193,19 @@ export class AnnounceTransactionsOptions extends ProfileOptions {
         description: 'Maximum fee (absolute amount).',
     })
     maxFee: string;
+
+    @option({
+        description: '(Optional) Wait until the server confirms or rejects the transaction.',
+        toggle: true,
+    })
+    sync: any;
+
+    @option({
+        description: '(Optional) Announce the transaction without double confirmation.',
+        toggle: true,
+    })
+    announce: any;
+
 }
 
 /**

@@ -1,7 +1,6 @@
 import * as readlineSync from 'readline-sync';
 import {CommandOptions} from '../commands/account/generate';
 import {Profile} from '../model/profile';
-import {ProfileOptions} from '../profile.command';
 import {Resolver} from './resolver';
 
 /**
@@ -11,7 +10,7 @@ export class SaveResolver implements Resolver {
 
     /**
      * Resolves an action provided by the user.
-     * @param {ProfileOptions} options - Command options.
+     * @param {CommandOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {number}

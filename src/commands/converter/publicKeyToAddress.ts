@@ -46,8 +46,8 @@ export default class extends Command {
 
     @metadata
     execute(options: CommandOptions) {
-        const publicAccount = new PublicKeyResolver().resolve(options);
-        new NetworkResolver().resolve(options);
+        const networkType = new NetworkResolver().resolve(options);
+        const publicAccount = new PublicKeyResolver().resolve(options, networkType);
         console.log(publicAccount.address);
     }
 }

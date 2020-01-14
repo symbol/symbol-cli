@@ -21,6 +21,10 @@ import {MosaicService} from '../../src/service/mosaic.service';
 
 describe('Mosaic service', () => {
 
+    it('should create mosaic service', () => {
+        expect(new MosaicService()).to.not.be.equal(undefined);
+    });
+
     it('getMosaicId should return an alias', () => {
         const rawMosaicId = '@foo';
         expect(MosaicService.getMosaicId(rawMosaicId)).to.be.instanceOf(NamespaceId);
