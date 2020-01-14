@@ -16,6 +16,7 @@
  *
  */
 import { MosaicRestrictionType } from 'nem2-sdk';
+import { isNumeric } from 'rxjs/internal-compatibility';
 import { Profile } from '../model/profile';
 import { OptionsChoiceResolver } from '../options-resolver';
 import { ProfileOptions } from '../profile.command';
@@ -25,12 +26,17 @@ import { Resolver } from './resolver';
 export class RestrictionTypeResolver implements Resolver {
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const choices = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
-        const index = +OptionsChoiceResolver(options,
+        const index = OptionsChoiceResolver(options,
             'newRestrictionType',
             altText ? altText : 'Select the new restriction type: ',
             choices,
         );
-        const restrictionName = choices[index] as any;
+        let restrictionName;
+        if (isNumeric(index)) {
+            restrictionName = choices[+index] as any;
+        } else {
+            restrictionName = index;
+        }
         new MosaicRestrictionTypeValidator().validate(restrictionName);
         return MosaicRestrictionType[restrictionName];
     }
