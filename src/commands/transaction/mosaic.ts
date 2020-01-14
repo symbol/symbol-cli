@@ -28,8 +28,13 @@ import {
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {AmountResolver} from '../../resolvers/amount.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
@@ -137,7 +142,14 @@ export default class extends AnnounceTransactionsCommand {
             [],
             maxFee);
         const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
-        console.log(chalk.green('Your mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
-        this.announceTransaction(signedTransaction, profile.url);
+
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        console.log(chalk.green('The new mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

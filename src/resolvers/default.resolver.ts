@@ -11,7 +11,7 @@ export class DefaultResolver implements Resolver {
 
     /**
      * Resolves an action provided by the user.
-     * @param {ProfileOptions} options - Command options.
+     * @param {CreateProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {number}

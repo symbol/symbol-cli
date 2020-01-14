@@ -41,12 +41,13 @@ export default class extends MonitorAddressCommand {
             listener.unconfirmedAdded(address).subscribe((transaction) => {
                 console.log('\n' + this.transactionService.formatTransactionToFilter(transaction));
             }, (err) => {
+                listener.close();
                 err = err.message ? JSON.parse(err.message) : err;
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
-            err = err.message ? JSON.parse(err.message) : err;
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
+            listener.close();
+            console.log(chalk.red('Error'), err);
         });
     }
 }
