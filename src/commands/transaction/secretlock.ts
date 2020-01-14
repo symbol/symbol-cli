@@ -16,9 +16,14 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {RecipientAddressResolver} from '../../resolvers/address.resolver';
 import {AmountResolver} from '../../resolvers/amount.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
@@ -88,7 +93,7 @@ export default class extends AnnounceTransactionsCommand {
         const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
 
-        const secretLockTransaction = SecretLockTransaction.create(
+        const transaction = SecretLockTransaction.create(
             Deadline.create(),
             new Mosaic(mosaicId, amount),
             duration,
@@ -97,8 +102,14 @@ export default class extends AnnounceTransactionsCommand {
             recipientAddress,
             profile.networkType,
             maxFee);
-        const signedTransaction = account.sign(secretLockTransaction, profile.networkGenerationHash);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
 
-        this.announceTransaction(signedTransaction, profile.url);
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

@@ -24,8 +24,13 @@ import {
     NetworkCurrencyMosaic,
     UInt64,
 } from 'nem2-sdk';
-import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../announce.transactions.command';
+import {
+    AnnounceAggregateTransactionsOptions,
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+} from '../../announce.transactions.command';
 import {ActionResolver} from '../../resolvers/action.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {CosignatoryPublicKeyResolver, MultisigAccountPublicKeyResolver} from '../../resolvers/publicKey.resolver';
 
@@ -109,10 +114,15 @@ export default class extends AnnounceTransactionsCommand {
             maxFeeHashLock);
         const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
 
-        this.announceAggregateTransaction(
-            signedHashLockTransaction,
-            signedTransaction,
-            account.address,
-            profile.url);
+        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, profile.url).toString('HashLock Transaction'));
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Aggregate Transaction'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce) {
+            this.announceAggregateTransaction(
+                signedHashLockTransaction,
+                signedTransaction,
+                account.address,
+                profile.url);
+        }
     }
 }

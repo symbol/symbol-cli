@@ -59,7 +59,7 @@ export default class extends ProfileCommand {
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
         const hash = await new HashResolver()
-            .resolve(options, undefined, '\'Enter aggregate bonded transaction hash to be signed: ');
+            .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ');
 
         this.getGraphAccounts(profile)
             .pipe(
@@ -76,7 +76,7 @@ export default class extends ProfileCommand {
 
                     let text = '';
                     text += chalk.red('Error');
-                    console.log(text, 'This aggregate bonded transaction for given hash in this profile');
+                    console.log(text, 'The profile', profile.name, 'cannot cosign the transaction with hash', hash, '.');
                 } else {
 
                     const transaction = transactions[0];
@@ -87,7 +87,7 @@ export default class extends ProfileCommand {
                     transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
                         () => {
                             this.spinner.stop(true);
-                            console.log(chalk.green('Transaction cosigned and announced correctly'));
+                            console.log(chalk.green('Transaction cosigned and announced correctly.'));
                         }, (err) => {
                             this.spinner.stop(true);
                             err = err.message ? JSON.parse(err.message) : err;

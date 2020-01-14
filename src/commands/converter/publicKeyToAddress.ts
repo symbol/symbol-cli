@@ -46,8 +46,8 @@ export default class extends Command {
 
     @metadata
     async execute(options: CommandOptions) {
-        const publicAccount = await new PublicKeyResolver().resolve(options);
-        new NetworkResolver().resolve(options);
+        const networkType = await new NetworkResolver().resolve(options);
+        const publicAccount = await new PublicKeyResolver().resolve(options, networkType);
         console.log(publicAccount.address);
     }
 }

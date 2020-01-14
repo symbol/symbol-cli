@@ -44,12 +44,13 @@ export default class extends MonitorAddressCommand {
                     ' Signature:' + transaction.signature;
                 console.log(transactionFormatted);
             }, (err) => {
+                listener.close();
                 err = err.message ? JSON.parse(err.message) : err;
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
-            err = err.message ? JSON.parse(err.message) : err;
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
+            listener.close();
+            console.log(chalk.red('Error'), err);
         });
     }
 }

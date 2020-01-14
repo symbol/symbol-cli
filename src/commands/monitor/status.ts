@@ -45,12 +45,13 @@ export default class extends MonitorAddressCommand {
                     transactionStatusError.deadline.value.toLocalTime().toString();
                 console.log(text);
             }, (err) => {
+                listener.close();
                 err = err.message ? JSON.parse(err.message) : err;
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
             });
         }, (err) => {
-            err = err.message ? JSON.parse(err.message) : err;
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
+            listener.close();
+            console.log(chalk.red('Error'), err);
         });
     }
 }

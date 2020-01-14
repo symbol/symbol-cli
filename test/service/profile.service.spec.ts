@@ -24,6 +24,11 @@ import {ProfileService} from '../../src/service/profile.service';
 
 describe('Configure service', () => {
 
+    it('should create profile service', () => {
+        const mockProfileRepository = mock(ProfileRepository);
+        expect(new ProfileService(instance(mockProfileRepository))).to.not.be.equal(undefined);
+    });
+
     it('should create configure service instance via constructor', () => {
         const mockProfileRepository = mock(ProfileRepository);
         const profileService = new ProfileService(instance(mockProfileRepository));

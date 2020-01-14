@@ -18,8 +18,13 @@
 import {command, metadata, option} from 'clime';
 import {Deadline, NamespaceRegistrationTransaction} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 
@@ -71,11 +76,11 @@ export default class extends AnnounceTransactionsCommand {
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = await profile.decrypt(options);
-
         options.name = await OptionsResolver(options,
             'name',
             () => undefined,
             'Enter namespace name: ');
+        const duration = await new DurationResolver().resolve(options);
 
         if (!options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
             options.rootnamespace = true;
@@ -83,25 +88,22 @@ export default class extends AnnounceTransactionsCommand {
 
         const maxFee = await new MaxFeeResolver().resolve(options);
 
-        let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
+        let transaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
-            const duration = await new DurationResolver().resolve(options);
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
-                options.name,
-                duration,
-                profile.networkType,
-                maxFee);
+            transaction = NamespaceRegistrationTransaction.createRootNamespace(
+                Deadline.create(), options.name, duration, profile.networkType, maxFee);
         } else {
-            options.subnamespace = true;
-            options.parentName = await OptionsResolver(options,
-                'parentName',
-                () => undefined,
-                'Enter the parent namespace name: ');
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(
+            transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), options.name, options.parentName, profile.networkType, maxFee);
         }
-        const signedTransaction = account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

@@ -16,8 +16,13 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, MosaicAliasTransaction} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
@@ -61,15 +66,21 @@ export default class extends AnnounceTransactionsCommand {
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
 
-        const mosaicAliasTransaction = MosaicAliasTransaction.create(
+        const transaction = MosaicAliasTransaction.create(
             Deadline.create(),
             action,
             namespaceId,
             mosaicId,
             profile.networkType,
             maxFee);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
 
-        const signedTransaction = account.sign(mosaicAliasTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

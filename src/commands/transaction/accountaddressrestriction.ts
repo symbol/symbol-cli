@@ -17,9 +17,14 @@
  */
 import {command, metadata, option} from 'clime';
 import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {ActionResolver} from '../../resolvers/action.resolver';
 import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
 
@@ -68,9 +73,15 @@ export default class extends AnnounceTransactionsCommand {
             (action === 0) ? [address] : [],
             profile.networkType,
             maxFee);
-
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 
 }
