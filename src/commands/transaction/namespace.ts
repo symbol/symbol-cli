@@ -18,8 +18,13 @@
 import {command, metadata, option} from 'clime';
 import {Deadline, NamespaceRegistrationTransaction} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import {OptionsResolver} from '../../options-resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 
@@ -92,15 +97,22 @@ export default class extends AnnounceTransactionsCommand {
         }
         const maxFee = new MaxFeeResolver().resolve(options);
 
-        let namespaceRegistrationTransaction: NamespaceRegistrationTransaction;
+        let transaction: NamespaceRegistrationTransaction;
         if (options.rootnamespace) {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createRootNamespace(
+            transaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(), options.name, duration, profile.networkType, maxFee);
         } else {
-            namespaceRegistrationTransaction = NamespaceRegistrationTransaction.createSubNamespace(
+            transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), options.name, options.parentName, profile.networkType, maxFee);
         }
-        const signedTransaction = account.sign(namespaceRegistrationTransaction, profile.networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

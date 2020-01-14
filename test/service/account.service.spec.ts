@@ -21,6 +21,10 @@ import {AccountService} from '../../src/service/account.service';
 
 describe('Account service', () => {
 
+    it('should create account service', () => {
+        expect(new AccountService()).to.not.be.equal(undefined);
+    });
+
     it('should return an alias', () => {
         const rawRecipient = '@foo';
         expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
