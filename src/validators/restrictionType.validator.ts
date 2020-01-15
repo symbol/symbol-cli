@@ -16,11 +16,11 @@
  *
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime';
+import { MosaicRestrictionType } from 'nem2-sdk';
 
 export class MosaicRestrictionTypeValidator implements Validator<string> {
     validate(value: string, context?: ValidationContext): void {
-        const limitValue = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
-        if (!limitValue.includes(value.toUpperCase())) {
+        if (!(value in MosaicRestrictionType)) {
             throw new ExpectedError('Wrong mosaic restriction type');
         }
     }

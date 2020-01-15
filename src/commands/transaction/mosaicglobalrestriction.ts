@@ -101,7 +101,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const previousRestrictionType = Number(MosaicRestrictionType[options.previousRestrictionType as any]) as MosaicRestrictionType;
         const previousRestrictionValue = UInt64.fromNumericString(options.previousRestrictionValue);
-        const referenceMosaicId = options.referenceMosaicId === '0' ? new MosaicId(options.referenceMosaicId) : undefined;
+        const referenceMosaicId = options.referenceMosaicId === '0' ? undefined : new MosaicId(options.referenceMosaicId);
 
         const transaction = MosaicGlobalRestrictionTransaction.create(
             Deadline.create(),
