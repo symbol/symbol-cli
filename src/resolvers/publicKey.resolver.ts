@@ -77,3 +77,22 @@ export class CosignatoryPublicKeyResolver implements Resolver {
     }
 
 }
+
+export class TargetPublicKeyResolver implements Resolver {
+    /**
+     * Resolved a set of target public key provided by the user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @returns {string}
+     */
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+        const resolution = OptionsResolver(options,
+            'targetPublicKey',
+            () => undefined,
+            altText ? altText : 'Enter the target public key: ').trim();
+        new PublicKeyValidator().validate(resolution);
+        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
+    }
+
+}
