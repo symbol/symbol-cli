@@ -16,12 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {
-    CosignatoryPublicKeyResolver,
-    MultisigAccountPublicKeyResolver,
-    PublicKeyResolver,
-    TargetPublicKeyResolver,
-} from '../../src/resolvers/publicKey.resolver';
+import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../src/resolvers/publicKey.resolver';
 
 describe('Public key resolver', () => {
 
@@ -46,15 +41,9 @@ describe('Multisig account public key resolver', () => {
     it('should return public key', () => {
         const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const profileOptions = {multisigAccountPublicKey} as any;
-        expect(new MultisigAccountPublicKeyResolver().resolve(profileOptions).publicKey)
+        expect(new PublicKeyResolver().resolve(profileOptions, undefined,
+            'test', 'multisigAccountPublicKey').publicKey)
             .to.be.equal(multisigAccountPublicKey);
-    });
-
-    it('should throw error if public key invalid', () => {
-        const multisigAccountPublicKey = '000';
-        const profileOptions = {multisigAccountPublicKey} as any;
-        expect(() => new MultisigAccountPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error);
     });
 
 });
@@ -76,24 +65,6 @@ describe('Cosignatory public key resolver', () => {
         const cosignatoryPublicKey = '000,000';
         const profileOptions = {cosignatoryPublicKey} as any;
         expect(() => new CosignatoryPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
-
-});
-
-describe('Target public key resolver', () => {
-
-    it('should return public key', () => {
-        const targetPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
-        const profileOptions = {targetPublicKey} as any;
-        expect(new TargetPublicKeyResolver().resolve(profileOptions).publicKey)
-            .to.be.equal(targetPublicKey);
-    });
-
-    it('should throw error if public key invalid', () => {
-        const targetPublicKey = '000';
-        const profileOptions = {targetPublicKey} as any;
-        expect(() => new TargetPublicKeyResolver().resolve(profileOptions))
             .to.throws(Error);
     });
 

@@ -14,42 +14,18 @@ export class MaxFeeResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
         const resolution = OptionsResolver(options,
-        'maxFee',
+        altKey ? altKey : 'maxFee',
         () => undefined,
         altText ? altText : 'Enter the maximum fee (absolute amount): ').trim();
         try {
            return UInt64.fromNumericString(resolution);
         }  catch {
            return UInt64.fromUint(0);
-        }
-    }
-}
-
-/**
- * Max fee resolver
- */
-export class MaxFeeHashLockResolver implements Resolver {
-
-    /**
-     * Resolves a max fee hash lock provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {UInt64}
-     */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
-            'maxFeeHashLock',
-            () => undefined,
-            altText ? altText : 'Enter the maximum fee to announce the hashlock transaction (absolute amount): ').trim();
-        try {
-            return UInt64.fromNumericString(resolution);
-        }  catch {
-            return UInt64.fromUint(0);
         }
     }
 }
