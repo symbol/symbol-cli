@@ -1,3 +1,4 @@
+import {UInt64} from 'nem2-sdk';
 import {Profile} from '../model/profile';
 import {OptionsResolver} from '../options-resolver';
 import {ProfileOptions} from '../profile.command';
@@ -19,6 +20,6 @@ export class KeyResolver implements Resolver {
             altText ?
             altText : 'Enter a UInt64 string key (You could convert it using command \'nem2-cli converter stringtokey\'): ').trim();
         new KeyValidator().validate(resolution);
-        return resolution;
+        return UInt64.fromNumericString(resolution);
     }
 }
