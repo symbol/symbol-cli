@@ -24,7 +24,7 @@ import {StringResolver} from '../../resolvers/string.resolver';
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
         flag: 'n',
-        description: 'Id of namespace to be assigned metadata.',
+        description: 'Mosaic id be assigned metadata in hexadecimal format.',
     })
     namespaceId: string;
 
@@ -42,7 +42,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 
     @option({
         flag: 'v',
-        description: 'Value of metadata key.',
+        description: 'Metadata key (UInt64) in hexadecimal format.',
     })
     value: string;
 }

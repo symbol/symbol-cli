@@ -17,16 +17,16 @@ import {
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {KeyResolver} from '../../resolvers/key.resolver';
 import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
 import {TargetPublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {StringResolver} from '../../resolvers/string.resolver';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
         flag: 'm',
-        description: 'Mosaic to be assigned metadata (mosaicId(hex)|@aliasName).',
+        description: 'Mosaic id be assigned metadata in hexadecimal format.',
     })
-    mosaic: string;
+    mosaicId: string;
 
     @option({
         flag: 't',
@@ -36,7 +36,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 
     @option({
         flag: 'k',
-        description: 'Key of metadata.',
+        description: 'Metadata key (UInt64) in hexadecimal format.',
     })
     key: string;
 
@@ -59,7 +59,7 @@ export default class extends AnnounceTransactionsCommand {
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-        const mosaic = new MosaicIdAliasResolver().resolve(options);
+        const mosaic = new MosaicIdResolver().resolve(options);
         const targetAccount = new TargetPublicKeyResolver()
             .resolve(options, profile, 'Enter the mosaic owner account public key: ');
         const key = new KeyResolver().resolve(options);

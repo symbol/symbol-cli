@@ -22,9 +22,9 @@ import {KeyResolver} from '../../src/resolvers/key.resolver';
 describe('Key resolver', () => {
 
     it('should return key', () => {
-        const key = KeyGenerator.generateUInt64Key('test').toString();
+        const key = KeyGenerator.generateUInt64Key('test').toHex();
         const profileOptions = {key} as any;
-        expect(new KeyResolver().resolve(profileOptions).toString())
+        expect(new KeyResolver().resolve(profileOptions).toHex())
             .to.be.equal(key);
     });
 });

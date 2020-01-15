@@ -29,7 +29,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 
     @option({
         flag: 'k',
-        description: 'Metadata key scoped to source, target and type.',
+        description: 'Metadata key (UInt64) in hexadecimal format.',
     })
     key: string;
 
