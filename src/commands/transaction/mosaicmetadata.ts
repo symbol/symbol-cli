@@ -16,9 +16,9 @@ import {
 } from '../../announce.transactions.command';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {KeyResolver} from '../../resolvers/key.resolver';
-import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {TargetPublicKeyResolver} from '../../resolvers/publicKey.resolver';
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {StringResolver} from '../../resolvers/string.resolver';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
@@ -60,8 +60,9 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const mosaic = new MosaicIdResolver().resolve(options);
-        const targetAccount = new TargetPublicKeyResolver()
-            .resolve(options, profile, 'Enter the mosaic owner account public key: ');
+        const targetAccount = new PublicKeyResolver()
+            .resolve(options, profile.networkType,
+                'Enter the mosaic owner account public key: ', 'targetPublicKey');
         const key = new KeyResolver().resolve(options);
         const value = new StringResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
@@ -114,7 +115,9 @@ export default class extends AnnounceTransactionsCommand {
                 maxFee,
             );
             const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
-            const maxFeeHashLock = new MaxFeeHashLockResolver().resolve(options);
+
+            const maxFeeHashLock = new MaxFeeResolver().resolve(options, undefined,
+                'Enter the maximum fee to announce the hashlock transaction (absolute amount): ', 'maxFeeHashLock');
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyMosaic.createRelative(UInt64.fromNumericString(options.amount)),
@@ -123,6 +126,7 @@ export default class extends AnnounceTransactionsCommand {
                 profile.networkType,
                 maxFeeHashLock);
             const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
+
             console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, profile.url)
                 .toString('HashLock Transaction'));
             console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url)

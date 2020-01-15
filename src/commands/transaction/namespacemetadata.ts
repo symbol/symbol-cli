@@ -16,9 +16,9 @@ import {
 } from '../../announce.transactions.command';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {KeyResolver} from '../../resolvers/key.resolver';
-import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {NamespaceIdResolver} from '../../resolvers/namespace.resolver';
-import {TargetPublicKeyResolver} from '../../resolvers/publicKey.resolver';
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {StringResolver} from '../../resolvers/string.resolver';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
@@ -60,8 +60,9 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const namespaceId = new NamespaceIdResolver().resolve(options);
-        const targetAccount = new TargetPublicKeyResolver()
-            .resolve(options, profile, 'Enter the namespace owner account public key: ');
+        const targetAccount = new PublicKeyResolver()
+            .resolve(options, profile.networkType,
+                'Enter the namespace owner account public key: ', 'targetPublicKey');
         const key = new KeyResolver().resolve(options);
         const value = new StringResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
@@ -113,7 +114,9 @@ export default class extends AnnounceTransactionsCommand {
                 maxFee,
             );
             const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
-            const maxFeeHashLock = new MaxFeeHashLockResolver().resolve(options);
+
+            const maxFeeHashLock = new MaxFeeResolver().resolve(options, undefined,
+                'Enter the maximum fee to announce the hashlock transaction (absolute amount): ', 'maxFeeHashLock');
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyMosaic.createRelative(UInt64.fromNumericString(options.amount)),

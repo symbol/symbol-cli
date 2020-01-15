@@ -13,39 +13,18 @@ export class PublicKeyResolver implements Resolver {
     /**
      * Resolves a public key provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {NetworkType} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative text.
      * @returns {PublicAccount}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): any {
         const resolution = OptionsResolver(options,
-            'publicKey',
+            altKey ? altKey : 'publicKey',
             () => undefined,
             altText ? altText : 'Enter the account public key: ').trim();
         new PublicKeyValidator().validate(resolution);
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
-    }
-}
-
-/**
- * Multisig account public key resolver
- */
-export class MultisigAccountPublicKeyResolver implements Resolver {
-
-    /**
-     * Resolves a multisig account public key provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {PublicAccount}
-     */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
-            'multisigAccountPublicKey',
-            () => undefined,
-            altText ? altText : 'Enter the multisig account public key: ').trim();
-        new PublicKeyValidator().validate(resolution);
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
+        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST);
     }
 }
 
@@ -74,25 +53,6 @@ export class CosignatoryPublicKeyResolver implements Resolver {
                 .createFromPublicKey(cosignatory, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST));
         });
         return cosignatories;
-    }
-
-}
-
-export class TargetPublicKeyResolver implements Resolver {
-    /**
-     * Resolved a set of target public key provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {string}
-     */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
-            'targetPublicKey',
-            () => undefined,
-            altText ? altText : 'Enter the target public key: ').trim();
-        new PublicKeyValidator().validate(resolution);
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
 
 }
