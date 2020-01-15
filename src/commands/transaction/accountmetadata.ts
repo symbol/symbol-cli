@@ -64,7 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const targetAccount = PublicAccount.createFromPublicKey(new TargetPublicKeyResolver().resolve(options), account.networkType);
-        const key = KeyGenerator.generateUInt64Key(new KeyResolver().resolve(options));
+        const key = new KeyResolver().resolve(options);
         const value = new StringResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
 
