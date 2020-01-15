@@ -12,9 +12,10 @@ import {
     UInt64,
 } from 'nem2-sdk';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { TargetPublicKeyResolver } from '../../resolvers/publicKey.resolver';
-import { KeyResolver, StringResolver } from '../../resolvers/string.resolver';
+import { StringResolver } from '../../resolvers/string.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

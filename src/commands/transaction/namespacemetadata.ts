@@ -1,9 +1,10 @@
 import { command, metadata, option } from 'clime';
 import { Deadline, KeyGenerator, MetadataHttp, MetadataTransactionService, MetadataType } from 'nem2-sdk';
 import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { NamespaceIdResolver } from '../../resolvers/namespace.resolver';
-import { KeyResolver, StringResolver } from '../../resolvers/string.resolver';
+import { StringResolver } from '../../resolvers/string.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

@@ -27,12 +27,3 @@ describe('Value resolver', () => {
             .to.be.equal(value);
     });
 });
-
-describe('Key resolver', () => {
-    it('should return string', () => {
-        const value = 'key';
-        const profileOptions = {value} as any;
-        expect(new StringResolver().resolve(profileOptions))
-            .to.be.equal(value);
-    });
-});
