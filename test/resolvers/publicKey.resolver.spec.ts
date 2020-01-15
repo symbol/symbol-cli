@@ -20,7 +20,7 @@ import {
     CosignatoryPublicKeyResolver,
     MultisigAccountPublicKeyResolver,
     PublicKeyResolver,
-    TargetPublicKeyResolver
+    TargetPublicKeyResolver,
 } from '../../src/resolvers/publicKey.resolver';
 
 describe('Public key resolver', () => {

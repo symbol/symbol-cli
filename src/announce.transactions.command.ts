@@ -26,7 +26,7 @@ import {
     SignedTransaction,
     TransactionHttp,
     TransactionService,
-    TransactionType
+    TransactionType,
 } from 'nem2-sdk';
 import {merge} from 'rxjs';
 import {filter, mergeMap, tap} from 'rxjs/operators';
