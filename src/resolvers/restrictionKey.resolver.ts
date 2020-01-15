@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { KeyGenerator, UInt64 } from 'nem2-sdk';
+import { UInt64 } from 'nem2-sdk';
 import { Profile } from '../model/profile';
 import { OptionsResolver } from '../options-resolver';
 import { ProfileOptions } from '../profile.command';
@@ -30,6 +30,6 @@ export class RestrictionKeyResolver implements Resolver {
             altText ? altText : 'Enter the new restriction key: ',
         );
         new MosaicRestrictionKeyValidator().validate(key);
-        return KeyGenerator.generateUInt64Key(key);
+        return UInt64.fromNumericString(key);
     }
 }

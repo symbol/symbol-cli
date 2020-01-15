@@ -16,16 +16,12 @@
  *
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime';
-import { KeyGenerator } from 'nem2-sdk';
+import { KeyGenerator, UInt64 } from 'nem2-sdk';
 
 export class MosaicRestrictionKeyValidator implements Validator<string> {
     validate(value: string, context?: ValidationContext): void {
-        const regExp = /^[a-zA-Z]+[a-zA-Z0-9_]+?$/g;
-        if (!regExp.test(value)) {
-            throw new ExpectedError('Invalid restriction key format');
-        }
         try {
-            KeyGenerator.generateUInt64Key(value);
+            UInt64.fromNumericString(value);
         } catch (err) {
             throw new ExpectedError('Restriction key is an invalid UInt64 string');
         }
