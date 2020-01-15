@@ -18,7 +18,7 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 
 /**
- * Private key validator
+ * Public key validator
  */
 export class PublicKeyValidator implements Validator<string> {
 
@@ -36,7 +36,7 @@ export class PublicKeyValidator implements Validator<string> {
 }
 
 /**
- * Private keys validator
+ * Public keys validator
  */
 export class PublicKeysValidator implements Validator<string> {
 
