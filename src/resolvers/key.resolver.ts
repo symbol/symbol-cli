@@ -18,7 +18,9 @@ export class KeyResolver implements Resolver {
             'key',
             () => undefined,
             altText ?
-            altText : 'Enter a UInt64 string key (You could convert it using command \'nem2-cli converter stringtokey\'): ').trim();
+            altText : 'Enter a UInt64 key.' +
+                ' You can use the command \'nem2-cli converter stringtokey\' ' +
+                'to turn an string into a valid key: ').trim();
         new KeyValidator().validate(resolution);
         return UInt64.fromNumericString(resolution);
     }

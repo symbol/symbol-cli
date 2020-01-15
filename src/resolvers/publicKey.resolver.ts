@@ -92,7 +92,7 @@ export class TargetPublicKeyResolver implements Resolver {
             () => undefined,
             altText ? altText : 'Enter the target public key: ').trim();
         new PublicKeyValidator().validate(resolution);
-        return resolution;
+        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
     }
 
 }
