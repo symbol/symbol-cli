@@ -24,13 +24,22 @@ import { Resolver } from './resolver';
 
 export class RestrictionValueResolver implements Resolver {
 
-    resolve(options: ProfileOptions, secondSource?: Profile, key?: string, altText?: string): UInt64 {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): UInt64 {
         const value = OptionsResolver(options,
-            key ? key : 'newRestrictionValue',
+            altKey ? altKey : 'newRestrictionValue',
             () => undefined,
             altText ? altText : 'Enter new restriction value: ',
         );
         new NumericStringValidator().validate(value);
         return UInt64.fromNumericString(value);
+    }
+
+    optionalResolve(options: any, altKey?: string, defaultValue?: string): UInt64 {
+        const key = altKey ? altKey : 'previousRestrictionValue';
+        if (defaultValue) {
+            options[key] = options[key] ? options[key] : defaultValue;
+        }
+        new NumericStringValidator().validate(options[key]);
+        return UInt64.fromNumericString(options[key]);
     }
 }

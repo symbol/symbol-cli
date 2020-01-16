@@ -40,4 +40,13 @@ export class RestrictionTypeResolver implements Resolver {
         new MosaicRestrictionTypeValidator().validate(restrictionName);
         return MosaicRestrictionType[restrictionName];
     }
+
+    optionalResolve(options: any, altKey?: string, defaultValue?: any): MosaicRestrictionType {
+        const key = altKey ? altKey : 'previousRestrictionType';
+        if (defaultValue) {
+            options[key] = options[key] ? options[key] : defaultValue;
+        }
+        new MosaicRestrictionTypeValidator().validate(options[key]);
+        return Number(MosaicRestrictionType[options[key] as any]) as MosaicRestrictionType;
+    }
 }

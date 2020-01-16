@@ -98,3 +98,34 @@ describe('MosaicFlag resolver', () => {
     });
 
 });
+
+describe('MosaicIdAliasResolver optional resolver', () => {
+    it('should return mosaicId', () => {
+        const referenceMosaicId = '0DC67FBE1CAD29E3';
+        const profileOptions = {referenceMosaicId} as any;
+        expect(new MosaicIdAliasResolver().optionalResolve(profileOptions).toHex())
+            .to.be.equal(referenceMosaicId);
+    });
+
+    it('should return alias', () => {
+        const referenceMosaicId = '@test';
+        const profileOptions = {referenceMosaicId} as any;
+        expect(new MosaicIdAliasResolver().optionalResolve(profileOptions))
+            .to.be.instanceOf(NamespaceId);
+    });
+
+    it('should return default mosaicId', () => {
+        const defaultMosaicId = '0DC67FBE1CAD29E3';
+        const referenceMosaicId = undefined;
+        const profileOptions = {referenceMosaicId} as any;
+        expect(new MosaicIdAliasResolver().optionalResolve(profileOptions, 'referenceMosaicId', '0DC67FBE1CAD29E3').toHex())
+            .to.be.equal(defaultMosaicId);
+    });
+
+    it('should return default mosaicId', () => {
+        const referenceMosaicId = undefined;
+        const profileOptions = {referenceMosaicId} as any;
+        expect(() => new MosaicIdAliasResolver().optionalResolve(profileOptions).toHex())
+            .to.throws(Error);
+    });
+});

@@ -81,11 +81,12 @@ export default class extends AnnounceTransactionsCommand {
         const restrictionKey = new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey');
         const newRestrictionValue = new RestrictionValueResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
-        let previousRestrictionValue: UInt64 | undefined;
+
+        let previousRestrictionValue;
         if (!options.previousRestrictionValue || '' === options.previousRestrictionValue) {
             previousRestrictionValue = undefined;
         } else {
-            previousRestrictionValue = UInt64.fromNumericString(options.previousRestrictionValue);
+            previousRestrictionValue = new RestrictionValueResolver().optionalResolve(options);
         }
         const mosaicAddressRestrictionTransaction = MosaicAddressRestrictionTransaction.create(
             Deadline.create(),

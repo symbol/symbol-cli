@@ -51,6 +51,15 @@ export class MosaicIdAliasResolver implements Resolver {
         new MosaicIdAliasValidator().validate(resolution);
         return MosaicService.getMosaicId(resolution);
     }
+
+    optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicId | NamespaceId {
+        const key = altKey ? altKey : 'referenceMosaicId';
+        if (defaultValue) {
+            options[key] = options[key] ? options[key] : defaultValue;
+        }
+        new MosaicIdAliasValidator().validate(options[key]);
+        return MosaicService.getMosaicId(options[key]);
+    }
 }
 
 /**
