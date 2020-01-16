@@ -18,34 +18,12 @@ export class AddressResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Address}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
         const resolution = OptionsResolver(options,
-            'address',
+            altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
             altText ? altText : 'Enter an address: ').trim();
         new AddressValidator().validate(resolution);
-        return Address.createFromRawAddress(resolution);
-    }
-}
-
-/**
- * Recipient address resolver
- */
-export class RecipientAddressResolver implements Resolver {
-
-    /**
-     * Resolves a recipient address provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {Address}
-     */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const resolution = OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            altText ? altText : 'Enter the recipient address or @alias: ').trim();
-        new AddressAliasValidator().validate(resolution);
         return AccountService.getRecipient(resolution);
     }
 }

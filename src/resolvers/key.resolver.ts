@@ -13,9 +13,9 @@ export class KeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
         const resolution = OptionsResolver(options,
-            'key',
+            altKey ? altKey : 'key',
             () => undefined,
             altText ?
             altText : 'Enter a UInt64 key in hexadecimal format.' +

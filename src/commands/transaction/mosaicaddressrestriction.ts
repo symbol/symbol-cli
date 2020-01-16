@@ -15,43 +15,40 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata, option } from 'clime';
 import {
     Deadline,
     MosaicAddressRestrictionTransaction,
     UInt64,
 } from 'nem2-sdk';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
 import { TargetAddressResolver } from '../../resolvers/address.resolver';
+import { AnnounceResolver } from '../../resolvers/announce.resolver';
+import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
-import { RestrictionKeyResolver } from '../../resolvers/restrictionKey.resolver';
 import { RestrictionValueResolver } from '../../resolvers/restrictionValue.resolver';
-import { AddressAliasValidator } from '../../validators/address.validator';
-import { MosaicIdAliasValidator } from '../../validators/mosaicId.validator';
-import { NumericStringValidator } from '../../validators/numericString.validator';
-import { MosaicRestrictionKeyValidator } from '../../validators/restrictionKey.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'm',
         description: 'Mosaic identifier or @alias being restricted.',
-        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 
     @option({
         flag: 'a',
         description: 'Address or @alias being restricted.',
-        validator: new AddressAliasValidator(),
     })
     targetAddress: string;
 
     @option({
         flag: 'k',
         description: 'Restriction key.',
-        validator: new MosaicRestrictionKeyValidator(),
     })
     restrictionKey: string;
 
@@ -64,7 +61,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'V',
         description: 'New restriction value.',
-        validator: new NumericStringValidator(),
     })
     newRestrictionValue: string;
 }
@@ -82,7 +78,7 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(options);
         const mosaicId = new MosaicIdAliasResolver().resolve(options);
         const targetAddress = new TargetAddressResolver().resolve(options);
-        const restrictionKey = new RestrictionKeyResolver().resolve(options);
+        const restrictionKey = new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey');
         const newRestrictionValue = new RestrictionValueResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
         let previousRestrictionValue: UInt64 | undefined;
@@ -102,8 +98,14 @@ export default class extends AnnounceTransactionsCommand {
             maxFee,
         );
 
-        const networkGenerationHash = profile.networkGenerationHash;
-        const signedTransaction = account.sign(mosaicAddressRestrictionTransaction, networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        const signedTransaction = account.sign(mosaicAddressRestrictionTransaction, profile.networkGenerationHash);
+
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }

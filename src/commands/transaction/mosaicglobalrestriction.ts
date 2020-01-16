@@ -17,22 +17,22 @@
  */
 import { command, metadata, option } from 'clime';
 import { Deadline, MosaicGlobalRestrictionTransaction, MosaicId, MosaicRestrictionType, UInt64 } from 'nem2-sdk';
-import { AnnounceTransactionsCommand, AnnounceTransactionsOptions } from '../../announce.transactions.command';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../announce.transactions.command';
+import { AnnounceResolver } from '../../resolvers/announce.resolver';
+import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
-import { RestrictionKeyResolver } from '../../resolvers/restrictionKey.resolver';
 import { RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
 import { RestrictionValueResolver } from '../../resolvers/restrictionValue.resolver';
-import { MosaicIdAliasValidator } from '../../validators/mosaicId.validator';
-import { NumericStringValidator } from '../../validators/numericString.validator';
-import { MosaicRestrictionKeyValidator } from '../../validators/restrictionKey.validator';
-import { MosaicRestrictionTypeValidator } from '../../validators/restrictionType.validator';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'm',
         description: 'Mosaic identifier or @alias being restricted.',
-        validator: new MosaicIdAliasValidator(),
     })
     mosaicId: string;
 
@@ -46,7 +46,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'k',
         description: 'Restriction key relative to the reference mosaic identifier.',
-        validator: new MosaicRestrictionKeyValidator(),
     })
     restrictionKey: string;
 
@@ -54,7 +53,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'v',
         default: '0',
         description: '(Optional) Previous restriction value.',
-        validator: new NumericStringValidator(),
     })
     previousRestrictionValue: string;
 
@@ -63,21 +61,18 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         default: 'NONE',
         description: '(Optional) Previous restriction type. (NONE: no restriction, EQ: equal, NE: not equal, LT: less than,' +
             'LE: less than or equal, GT: greater than, GE: greater than or equal)',
-        validator: new MosaicRestrictionTypeValidator(),
     })
     previousRestrictionType: string;
 
     @option({
         flag: 'V',
         description: 'New restriction value.',
-        validator: new NumericStringValidator(),
     })
     newRestrictionValue: string;
 
     @option({
         flag: 'T',
         description: 'New restriction type.',
-        validator: new MosaicRestrictionTypeValidator(),
     })
     newRestrictionType: string;
 }
@@ -95,7 +90,7 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(options);
         const mosaicId = new MosaicIdAliasResolver().resolve(options);
         const newRestrictionType = new RestrictionTypeResolver().resolve(options);
-        const restrictionKey = new RestrictionKeyResolver().resolve(options);
+        const restrictionKey = new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey');
         const newRestrictionValue = new RestrictionValueResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
 
@@ -118,6 +113,12 @@ export default class extends AnnounceTransactionsCommand {
 
         const networkGenerationHash = profile.networkGenerationHash;
         const signedTransaction = account.sign(transaction, networkGenerationHash);
-        this.announceTransaction(signedTransaction, profile.url);
+        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        if (shouldAnnounce && options.sync) {
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+        } else if (shouldAnnounce) {
+            this.announceTransaction(signedTransaction, profile.url);
+        }
     }
 }
