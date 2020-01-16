@@ -40,6 +40,6 @@ export default class extends Command {
     @metadata
     async execute(options: CommandOptions) {
         const value = await new StringResolver().resolve(options);
-        console.log(KeyGenerator.generateUInt64Key(value).toString());
+        console.log(KeyGenerator.generateUInt64Key(value).toHex());
     }
 }

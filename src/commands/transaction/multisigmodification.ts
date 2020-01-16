@@ -31,8 +31,8 @@ import {
 } from '../../announce.transactions.command';
 import {ActionResolver} from '../../resolvers/action.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {CosignatoryPublicKeyResolver, MultisigAccountPublicKeyResolver} from '../../resolvers/publicKey.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -82,10 +82,13 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = await profile.decrypt(options);
         const action = await new ActionResolver().resolve(options);
-        const multisigAccount = await new MultisigAccountPublicKeyResolver().resolve(options, profile);
+        const multisigAccount = await new PublicKeyResolver()
+            .resolve(options, profile.networkType,
+                'Enter the multisig account public key: ', 'multisigAccountPublicKey');
         const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const maxFeeHashLock = await new MaxFeeHashLockResolver().resolve(options);
+        const maxFeeHashLock = await new MaxFeeResolver().resolve(options, undefined,
+            'Enter the maximum fee to announce the hashlock transaction (absolute amount): ', 'maxFeeHashLock');
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),

@@ -13,49 +13,18 @@ export class PublicKeyResolver implements Resolver {
     /**
      * Resolves a public key provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {NetworkType} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative text.
      * @returns {PublicAccount}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount> {
-        const resolution = await OptionsResolver(options,
-            'publicKey',
+    async resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): Promise<any> {
+        const resolution = (await OptionsResolver(options,
+            altKey ? altKey : 'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ');
-        try {
-            new PublicKeyValidator().validate(resolution);
-        } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
-        }
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
-    }
-}
-
-/**
- * Multisig account public key resolver
- */
-export class MultisigAccountPublicKeyResolver implements Resolver {
-
-    /**
-     * Resolves a multisig account public key provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {PublicAccount}
-     */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount> {
-        const resolution = await OptionsResolver(options,
-            'multisigAccountPublicKey',
-            () => undefined,
-            altText ? altText : 'Enter the multisig account public key: ');
-        try {
-            new PublicKeyValidator().validate(resolution);
-        } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
-        }
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
+            altText ? altText : 'Enter the account public key: ')).trim();
+        new PublicKeyValidator().validate(resolution);
+        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST);
     }
 }
 

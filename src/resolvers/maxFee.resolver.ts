@@ -14,42 +14,18 @@ export class MaxFeeResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const resolution = await OptionsResolver(options,
-        'maxFee',
+        altKey ? altKey : 'maxFee',
         () => undefined,
         altText ? altText : 'Enter the maximum fee (absolute amount): ');
         try {
            return UInt64.fromNumericString(resolution);
         }  catch {
            return UInt64.fromUint(0);
-        }
-    }
-}
-
-/**
- * Max fee resolver
- */
-export class MaxFeeHashLockResolver implements Resolver {
-
-    /**
-     * Resolves a max fee hash lock provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {UInt64}
-     */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
-        const resolution = await OptionsResolver(options,
-            'maxFeeHashLock',
-            () => undefined,
-            altText ? altText : 'Enter the maximum fee to announce the hashlock transaction (absolute amount): ');
-        try {
-            return UInt64.fromNumericString(resolution);
-        }  catch {
-            return UInt64.fromUint(0);
         }
     }
 }

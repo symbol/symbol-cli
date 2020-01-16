@@ -48,6 +48,6 @@ export default class extends Command {
     async execute(options: CommandOptions) {
         const networkType = await new NetworkResolver().resolve(options);
         const publicAccount = await new PublicKeyResolver().resolve(options, networkType);
-        console.log(publicAccount.address);
+        console.log(publicAccount.address.pretty());
     }
 }

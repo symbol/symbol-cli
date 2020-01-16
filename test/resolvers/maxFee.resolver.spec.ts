@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {MaxFeeHashLockResolver, MaxFeeResolver} from '../../src/resolvers/maxFee.resolver';
+import {MaxFeeResolver} from '../../src/resolvers/maxFee.resolver';
 
 describe('Max fee resolver', () => {
 
@@ -40,14 +40,9 @@ describe('Max fee hash lock resolver', () => {
     it('should return maxFee', async () => {
         const maxFeeHashLock = '10';
         const profileOptions = {maxFeeHashLock} as any;
-        expect((await new MaxFeeHashLockResolver().resolve(profileOptions)).compact())
+        expect((await new MaxFeeResolver().resolve(profileOptions, undefined,
+            'test', 'maxFeeHashLock')).compact())
             .to.be.equal(10);
     });
 
-    it('should return 0 if invalid', async () => {
-        const maxFeeHashLock = 'test';
-        const profileOptions = {maxFeeHashLock} as any;
-        expect((await new MaxFeeHashLockResolver().resolve(profileOptions)).compact())
-            .to.be.equal(0);
-    });
 });

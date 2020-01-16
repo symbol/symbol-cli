@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {CosignatoryPublicKeyResolver, MultisigAccountPublicKeyResolver, PublicKeyResolver} from '../../src/resolvers/publicKey.resolver';
+import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../src/resolvers/publicKey.resolver';
 
 describe('Public key resolver', () => {
 
@@ -41,15 +41,9 @@ describe('Multisig account public key resolver', () => {
     it('should return public key', async () => {
         const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const profileOptions = {multisigAccountPublicKey} as any;
-        expect((await new MultisigAccountPublicKeyResolver().resolve(profileOptions)).publicKey)
+        expect((await new PublicKeyResolver().resolve(profileOptions, undefined,
+            'test', 'multisigAccountPublicKey')).publicKey)
             .to.be.equal(multisigAccountPublicKey);
-    });
-
-    it('should throw error if public key invalid', () => {
-        const multisigAccountPublicKey = '000';
-        const profileOptions = {multisigAccountPublicKey} as any;
-        expect(() => new MultisigAccountPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error);
     });
 
 });
