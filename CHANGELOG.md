@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.2] - 15-Jan-2020
+
+### Added
+
+- ``transaction acountmetadata`` command.
+- ``transaction mosaicmetadata`` command.
+- ``transaction namespacemetadata`` command.
+
+### Changed
+
+- Resolvers accept alternative keys.
+
+### Fixed
+
+- ``converter publicKeyToAddress`` command network type.
+
 ## [0.16.1] - 11-Jan-2020
 
 ### Added
@@ -186,6 +202,8 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 ### Added
 - Initial code release.
 
+[0.16.2]: https://github.com/nemtech/nem2-cli/compare/v0.16.1...v0.16.2
+[0.16.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/nemtech/nem2-cli/compare/v0.15.1...v0.16.0
 [0.15.1]: https://github.com/nemtech/nem2-cli/compare/v0.14.0...v0.15.1
 [0.14.0]: https://github.com/nemtech/nem2-cli/compare/v0.13.4...v0.14.0

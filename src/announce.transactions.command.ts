@@ -19,7 +19,15 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {option} from 'clime';
-import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService, TransactionType} from 'nem2-sdk';
+import {
+    Address,
+    Listener,
+    ReceiptHttp,
+    SignedTransaction,
+    TransactionHttp,
+    TransactionService,
+    TransactionType,
+} from 'nem2-sdk';
 import {merge} from 'rxjs';
 import {filter, mergeMap, tap} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from './profile.command';
@@ -139,6 +147,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                                            senderAddress: Address,
                                            url: string) {
         this.spinner.start();
+        let confirmations = 0;
         const transactionHttp = new TransactionHttp(url);
         const listener = new Listener(url);
         listener.open().then(() => {
@@ -163,8 +172,17 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
             )
                 .subscribe((ignored) => {
                     listener.close();
-                    this.spinner.stop(true);
-                    console.log(chalk.green('\n Aggregate transaction announced'));
+                    confirmations = confirmations + 1;
+                    if (confirmations === 1) {
+                        this.spinner.stop(true);
+                        console.log(chalk.green('\n Hash lock transaction announced.'));
+                        this.spinner.start();
+                    } else if (confirmations === 2) {
+                        listener.close();
+                        this.spinner.stop(true);
+                        console.log(chalk.green('\n Hash lock transaction confirmed.'));
+                        console.log(chalk.green('\n Aggregate transaction announced.'));
+                    }
                 }, (err) => {
                     this.spinner.stop(true);
                     listener.close();

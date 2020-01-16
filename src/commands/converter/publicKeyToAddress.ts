@@ -48,6 +48,6 @@ export default class extends Command {
     execute(options: CommandOptions) {
         const networkType = new NetworkResolver().resolve(options);
         const publicAccount = new PublicKeyResolver().resolve(options, networkType);
-        console.log(publicAccount.address);
+        console.log(publicAccount.address.pretty());
     }
 }

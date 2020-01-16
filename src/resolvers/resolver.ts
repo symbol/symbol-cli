@@ -14,5 +14,5 @@ export interface Resolver {
      * @param {string} altText - Alternative text.
      * @returns {any}
      */
-    resolve(options: Options, secondSource?: Profile, altText?: string): any;
+    resolve(options: Options, secondSource?: any, altText?: string): any;
 }
