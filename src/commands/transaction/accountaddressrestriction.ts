@@ -23,7 +23,7 @@ import {
     AnnounceTransactionsOptions,
 } from '../../announce.transactions.command';
 import {ActionResolver} from '../../resolvers/action.resolver';
-import {AddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
@@ -63,7 +63,8 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(options);
         const action = new ActionResolver().resolve(options);
         const flags = new RestrictionAccountAddressFlagsResolver().resolve(options);
-        const address = new AddressResolver().resolve(options, undefined, 'Enter the recipient address or @alias: ', 'recipientAddress');
+        const address = new AddressAliasResolver()
+        .resolve(options, undefined, 'Enter the recipient address (or @alias): ', 'recipientAddress');
         const maxFee = new MaxFeeResolver().resolve(options);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(

@@ -21,7 +21,7 @@ import {
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
 } from '../../announce.transactions.command';
-import {AddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
@@ -67,8 +67,8 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-        const recipientAddress = new AddressResolver()
-            .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ', 'recipientAddress');
+        const recipientAddress = new AddressAliasResolver()
+            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress');
         const secret = new SecretResolver().resolve(options);
         const proof = new ProofResolver().resolve(options);
         const hashAlgorithm = new HashAlgorithmResolver().resolve(options);
