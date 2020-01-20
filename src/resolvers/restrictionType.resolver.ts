@@ -23,7 +23,16 @@ import { ProfileOptions } from '../profile.command';
 import { MosaicRestrictionTypeValidator } from '../validators/restrictionType.validator';
 import { Resolver } from './resolver';
 
+/**
+ * Restriction type resolver
+ */
 export class RestrictionTypeResolver implements Resolver {
+    /**
+     * Resolve a restriction type provided by a user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
         const choices = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
         const index = OptionsChoiceResolver(options,
@@ -41,7 +50,13 @@ export class RestrictionTypeResolver implements Resolver {
         return MosaicRestrictionType[restrictionName];
     }
 
-    optionalResolve(options: any, altKey?: string, defaultValue?: any): MosaicRestrictionType {
+    /**
+     * Resolve an optional restriction type provided by a user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {string} altKey - Alternative key.
+     * @param {string} defaultValue - Default value.
+     */
+    optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicRestrictionType {
         const key = altKey ? altKey : 'previousRestrictionType';
         if (defaultValue) {
             options[key] = options[key] ? options[key] : defaultValue;

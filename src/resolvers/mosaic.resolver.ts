@@ -52,6 +52,12 @@ export class MosaicIdAliasResolver implements Resolver {
         return MosaicService.getMosaicId(resolution);
     }
 
+    /**
+     * Resolves an optional mosaic id or alias provided by the user.
+     * @param {any} options - Command options.
+     * @param {string} altKey - Alternative key.
+     * @param {string} defaultValue - Default value.
+     */
     optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicId | NamespaceId {
         const key = altKey ? altKey : 'referenceMosaicId';
         if (defaultValue) {

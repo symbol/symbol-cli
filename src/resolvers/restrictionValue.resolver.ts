@@ -22,8 +22,18 @@ import { ProfileOptions } from '../profile.command';
 import { NumericStringValidator } from '../validators/numericString.validator';
 import { Resolver } from './resolver';
 
+/**
+ * Restriction value resolver
+ */
 export class RestrictionValueResolver implements Resolver {
 
+    /**
+     * Resolve a restriction value provided by a user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
+     */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): UInt64 {
         const value = OptionsResolver(options,
             altKey ? altKey : 'newRestrictionValue',
@@ -34,6 +44,12 @@ export class RestrictionValueResolver implements Resolver {
         return UInt64.fromNumericString(value);
     }
 
+    /**
+     * Resolve optional restriction value.
+     * @param {any} options - Command options.
+     * @param {string} altKey - Alternative key.
+     * @param {string} defaultValue - Default value.
+     */
     optionalResolve(options: any, altKey?: string, defaultValue?: string): UInt64 {
         const key = altKey ? altKey : 'previousRestrictionValue';
         if (defaultValue) {
