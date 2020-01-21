@@ -25,7 +25,7 @@ export class MosaicRestrictionTypeValidator implements Validator<string> {
     /**
      * Validates if a mosaic restriction type is valid.
      * @param {string} value - Mosaic restriction type.
-     * @param {ValidationContext} context 
+     * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
