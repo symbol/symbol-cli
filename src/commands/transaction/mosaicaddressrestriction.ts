@@ -22,7 +22,7 @@ import {
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
 } from '../../announce.transactions.command';
-import {TargetAddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {KeyResolver} from '../../resolvers/key.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
@@ -56,7 +56,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Set a mosaic restriction to an specific address',
+    description: 'Set a mosaic restriction to an specific address (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -67,8 +67,10 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const mosaicId = new MosaicIdAliasResolver().resolve(options);
-        const targetAddress = new TargetAddressResolver().resolve(options);
-        const restrictionKey = new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey');
+        const targetAddress = new AddressAliasResolver()
+            .resolve(options, undefined, 'Enter the restricted target address or alias: ', 'targetAddress');
+        const restrictionKey = new KeyResolver()
+            .resolve(options, undefined, undefined, 'restrictionKey');
         const restrictionValue = new RestrictionValueResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
 

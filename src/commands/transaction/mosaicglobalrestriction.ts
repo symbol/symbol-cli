@@ -63,7 +63,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Set a global restriction to a mosaic',
+    description: 'Set a global restriction to a mosaic (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {

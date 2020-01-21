@@ -48,7 +48,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 }
 
 @command({
-    description: 'Add custom data to a mosaic',
+    description: 'Add custom data to a mosaic (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
