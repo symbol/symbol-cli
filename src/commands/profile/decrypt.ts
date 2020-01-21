@@ -16,8 +16,8 @@
  *
  */
 import {command, metadata} from 'clime';
-import {AccountCredentialsTable} from '../../create.profile.command';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {AccountCredentialsTable} from '../create.profile.command';
+import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 @command({
     description: 'View profile credentials',

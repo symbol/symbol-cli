@@ -16,9 +16,9 @@
 *
 */
 import {Command, command, metadata, option} from 'clime';
-import {ProfileOptions} from '../../profile.command';
 import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
+import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

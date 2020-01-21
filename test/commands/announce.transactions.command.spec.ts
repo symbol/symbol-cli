@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {AnnounceTransactionFieldsTable} from '../../src/announce.transactions.command';
+import {AnnounceTransactionFieldsTable} from '../../src/commands/announce.transactions.command';
 
 describe('Announce Transactions Command', () => {
 

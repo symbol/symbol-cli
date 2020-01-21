@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {TransactionService} from '../../src/service/transaction.service';
+import {TransactionService} from '../../src/services/transaction.service';
 
 describe('Mosaic service', () => {
 

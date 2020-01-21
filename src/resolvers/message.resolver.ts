@@ -1,7 +1,7 @@
-import {Message, NetworkType, PublicAccount} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {NetworkType, PublicAccount} from 'nem2-sdk';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
 import {PublicKeyValidator} from '../validators/publicKey.validator';
 import {Resolver} from './resolver';
 

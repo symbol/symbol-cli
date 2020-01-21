@@ -17,8 +17,8 @@
 */
 import {Command, command, metadata, option} from 'clime';
 import {KeyGenerator} from 'nem2-sdk';
-import {ProfileOptions} from '../../profile.command';
 import {StringResolver} from '../../resolvers/string.resolver';
+import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

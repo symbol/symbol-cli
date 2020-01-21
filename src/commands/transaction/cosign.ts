@@ -29,10 +29,10 @@ import {
 } from 'nem2-sdk';
 import {Observable, of} from 'rxjs';
 import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
-import {AnnounceTransactionsOptions} from '../../announce.transactions.command';
-import {Profile} from '../../model/profile';
-import {ProfileCommand} from '../../profile.command';
+import {Profile} from '../../models/profile';
 import {HashResolver} from '../../resolvers/hash.resolver';
+import {AnnounceTransactionsOptions} from '../announce.transactions.command';
+import {ProfileCommand} from '../profile.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

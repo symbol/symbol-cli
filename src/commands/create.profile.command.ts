@@ -21,9 +21,9 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {Command, ExpectedError, option} from 'clime';
 import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
+import {ProfileRepository} from '../respositories/profile.repository';
+import {ProfileService} from '../services/profile.service';
 import {ProfileOptions} from './profile.command';
-import {ProfileRepository} from './respository/profile.repository';
-import {ProfileService} from './service/profile.service';
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable;

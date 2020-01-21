@@ -1,10 +1,10 @@
 import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {ProfileOptions} from '../commands/profile.command';
 import {CommandOptions} from '../commands/transaction/mosaic';
-import {Profile} from '../model/profile';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
-import {MosaicService} from '../service/mosaic.service';
+import {MosaicService} from '../services/mosaic.service';
 import {MosaicsValidator} from '../validators/mosaic.validator';
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../validators/mosaicId.validator';
 import {Resolver} from './resolver';

@@ -18,9 +18,9 @@
 import {expect} from 'chai';
 import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
 import {instance, mock, when} from 'ts-mockito';
-import {Profile} from '../../src/model/profile';
-import {ProfileRepository} from '../../src/respository/profile.repository';
-import {ProfileService} from '../../src/service/profile.service';
+import {Profile} from '../../src/models/profile';
+import {ProfileRepository} from '../../src/respositories/profile.repository';
+import {ProfileService} from '../../src/services/profile.service';
 
 describe('Configure service', () => {
 

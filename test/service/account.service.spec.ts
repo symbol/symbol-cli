@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai';
 import {Address, NamespaceId} from 'nem2-sdk';
-import {AccountService} from '../../src/service/account.service';
+import {AccountService} from '../../src/services/account.service';
 
 describe('Account service', () => {
 

@@ -17,8 +17,8 @@
  */
 import {option} from 'clime';
 import {QueryParams} from 'nem2-sdk';
+import {TransactionService} from '../services/transaction.service';
 import {ProfileCommand, ProfileOptions} from './profile.command';
-import {TransactionService} from './service/transaction.service';
 
 /**
  * Base command class to retrieve transactions from an account.

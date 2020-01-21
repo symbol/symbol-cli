@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai';
 import {MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
-import {MosaicService} from '../../src/service/mosaic.service';
+import {MosaicService} from '../../src/services/mosaic.service';
 
 describe('Mosaic service', () => {
 

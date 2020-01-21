@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai';
-import {ReceiptService} from '../../src/service/receipt.service';
+import {ReceiptService} from '../../src/services/receipt.service';
 
 describe('Receipt service', () => {
 

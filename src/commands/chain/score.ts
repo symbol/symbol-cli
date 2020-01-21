@@ -20,7 +20,7 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata} from 'clime';
 import {BlockchainScore, ChainHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
+import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 export class ChainScoreTable {
     private readonly table: HorizontalTable;

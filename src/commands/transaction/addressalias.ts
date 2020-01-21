@@ -16,16 +16,16 @@
  */
 import {command, metadata, option} from 'clime';
 import {AddressAliasTransaction, Deadline} from 'nem2-sdk';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../../announce.transactions.command';
 import {LinkActionResolver} from '../../resolvers/action.resolver';
 import {AddressResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
