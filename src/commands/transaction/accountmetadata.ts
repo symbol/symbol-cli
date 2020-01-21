@@ -41,7 +41,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 }
 
 @command({
-    description: 'Add custom data to an account',
+    description: 'Add custom data to an account (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {

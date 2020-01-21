@@ -16,23 +16,21 @@
  *
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime';
-import { UInt64 } from 'nem2-sdk';
+import { MosaicRestrictionType } from 'nem2-sdk';
 
 /**
- * Key validator
+ * Validator of mosaic restriction type
  */
-export class KeyValidator implements Validator<string> {
+export class MosaicRestrictionTypeValidator implements Validator<string> {
     /**
-     * validates if the key is valid.
-     * @param {string} value - the key.
+     * Validates if a mosaic restriction type is valid.
+     * @param {string} value - Mosaic restriction type.
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        try {
-            UInt64.fromHex(value);
-        } catch (err) {
-            throw new ExpectedError('Invalid key');
+        if (!(value in MosaicRestrictionType)) {
+            throw new ExpectedError('Wrong mosaic restriction type');
         }
     }
 }

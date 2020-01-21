@@ -18,6 +18,9 @@
 import {ValidationContext, Validator} from 'clime';
 import {MosaicService} from '../service/mosaic.service';
 
+/**
+ * Mosaic validator
+ */
 export class MosaicValidator implements Validator<string> {
 
     /**
@@ -31,6 +34,9 @@ export class MosaicValidator implements Validator<string> {
     }
 }
 
+/**
+ * Mosaics validator
+ */
 export class MosaicsValidator implements Validator<string> {
 
     /**

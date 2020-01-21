@@ -43,13 +43,28 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId | NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): MosaicId | NamespaceId {
         const resolution = OptionsResolver(options,
             'mosaicId',
             () =>  undefined,
             altText ? altText : 'Enter the mosaic id or alias: ').trim();
         new MosaicIdAliasValidator().validate(resolution);
         return MosaicService.getMosaicId(resolution);
+    }
+
+    /**
+     * Resolves an optional mosaic id or alias provided by the user.
+     * @param {any} options - Command options.
+     * @param {string} altKey - Alternative key.
+     * @param {string} defaultValue - Default value.
+     */
+    optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicId | NamespaceId {
+        const key = altKey ? altKey : 'referenceMosaicId';
+        if (defaultValue) {
+            options[key] = options[key] ? options[key] : defaultValue;
+        }
+        new MosaicIdAliasValidator().validate(options[key]);
+        return MosaicService.getMosaicId(options[key]);
     }
 }
 

@@ -22,7 +22,7 @@ import {
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
 } from '../../announce.transactions.command';
-import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MessageResolver, RecipientPublicKeyResolver} from '../../resolvers/message.resolver';
@@ -83,7 +83,8 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-        const recipientAddress = new RecipientAddressResolver().resolve(options);
+        const recipientAddress = new AddressAliasResolver()
+            .resolve(options, undefined, 'Enter the recipient address or @alias: ', 'recipientAddress');
         const mosaics = new MosaicsResolver().resolve(options);
         const rawMessage = new MessageResolver().resolve(options);
         let message = EmptyMessage;
