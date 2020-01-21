@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import { MosaicRestrictionType } from 'nem2-sdk';
-import { isNumeric } from 'rxjs/internal-compatibility';
-import { Profile } from '../model/profile';
-import { OptionsChoiceResolver } from '../options-resolver';
-import { ProfileOptions } from '../profile.command';
-import { MosaicRestrictionTypeValidator } from '../validators/restrictionType.validator';
-import { Resolver } from './resolver';
+import {MosaicRestrictionType} from 'nem2-sdk';
+import {isNumeric} from 'rxjs/internal-compatibility';
+import {Profile} from '../model/profile';
+import {OptionsChoiceResolver} from '../options-resolver';
+import {ProfileOptions} from '../profile.command';
+import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator';
+import {Resolver} from './resolver';
 
 /**
  * Restriction type resolver
@@ -48,20 +48,5 @@ export class RestrictionTypeResolver implements Resolver {
         }
         new MosaicRestrictionTypeValidator().validate(restrictionName);
         return MosaicRestrictionType[restrictionName];
-    }
-
-    /**
-     * Resolve an optional restriction type provided by a user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {string} altKey - Alternative key.
-     * @param {string} defaultValue - Default value.
-     */
-    optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicRestrictionType {
-        const key = altKey ? altKey : 'previousRestrictionType';
-        if (defaultValue) {
-            options[key] = options[key] ? options[key] : defaultValue;
-        }
-        new MosaicRestrictionTypeValidator().validate(options[key]);
-        return Number(MosaicRestrictionType[options[key] as any]) as MosaicRestrictionType;
     }
 }

@@ -34,28 +34,13 @@ export class RestrictionValueResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): UInt64 {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): string {
         const value = OptionsResolver(options,
             altKey ? altKey : 'newRestrictionValue',
             () => undefined,
             altText ? altText : 'Enter new restriction value: ',
         );
         new NumericStringValidator().validate(value);
-        return UInt64.fromNumericString(value);
-    }
-
-    /**
-     * Resolve optional restriction value.
-     * @param {any} options - Command options.
-     * @param {string} altKey - Alternative key.
-     * @param {string} defaultValue - Default value.
-     */
-    optionalResolve(options: any, altKey?: string, defaultValue?: string): UInt64 {
-        const key = altKey ? altKey : 'previousRestrictionValue';
-        if (defaultValue) {
-            options[key] = options[key] ? options[key] : defaultValue;
-        }
-        new NumericStringValidator().validate(options[key]);
-        return UInt64.fromNumericString(options[key]);
+        return value;
     }
 }

@@ -15,19 +15,19 @@
  * limitations under the License.
  *
  */
-import { command, metadata, option } from 'clime';
-import { Deadline, MosaicGlobalRestrictionTransaction, MosaicId, MosaicRestrictionType, UInt64 } from 'nem2-sdk';
+import {command, metadata, option} from 'clime';
+import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'nem2-sdk';
 import {
     AnnounceTransactionFieldsTable,
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
 } from '../../announce.transactions.command';
-import { AnnounceResolver } from '../../resolvers/announce.resolver';
-import { KeyResolver } from '../../resolvers/key.resolver';
-import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
-import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
-import { RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
-import { RestrictionValueResolver } from '../../resolvers/restrictionValue.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
+import {KeyResolver} from '../../resolvers/key.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
+import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver';
+import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -38,8 +38,8 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'r',
-        default: '0',
         description: '(Optional) Identifier of the mosaic providing the restriction key.',
+        default: '0000000000000000',
     })
     referenceMosaicId: string;
 
@@ -48,21 +48,6 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Restriction key relative to the reference mosaic identifier.',
     })
     restrictionKey: string;
-
-    @option({
-        flag: 'v',
-        default: '0',
-        description: '(Optional) Previous restriction value.',
-    })
-    previousRestrictionValue: string;
-
-    @option({
-        flag: 't',
-        default: 'NONE',
-        description: '(Optional) Previous restriction type. (NONE: no restriction, EQ: equal, NE: not equal, LT: less than,' +
-            'LE: less than or equal, GT: greater than, GE: greater than or equal)',
-    })
-    previousRestrictionType: string;
 
     @option({
         flag: 'V',
@@ -85,7 +70,7 @@ export default class extends AnnounceTransactionsCommand {
         super();
     }
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
         const mosaicId = new MosaicIdAliasResolver().resolve(options);
@@ -93,23 +78,23 @@ export default class extends AnnounceTransactionsCommand {
         const restrictionKey = new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey');
         const newRestrictionValue = new RestrictionValueResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
+        const referenceMosaicId = new MosaicIdAliasResolver().optionalResolve(options);
 
-        const previousRestrictionType = new RestrictionTypeResolver().optionalResolve(options);
-        const previousRestrictionValue = new RestrictionValueResolver().optionalResolve(options);
-        const referenceMosaicId = new MosaicIdAliasResolver().optionalResolve(options, 'referenceMosaicId', '0');
+        const restrictionMosaicHttp = new RestrictionMosaicHttp(profile.url);
+        const namespaceHttp = new NamespaceHttp(profile.url);
+        const mosaicRestrictionTransactionService =
+            new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp);
 
-        const transaction = MosaicGlobalRestrictionTransaction.create(
-            Deadline.create(),
-            mosaicId,
-            restrictionKey,
-            previousRestrictionValue,
-            previousRestrictionType,
-            newRestrictionValue,
-            newRestrictionType,
-            profile.networkType,
-            referenceMosaicId,
-            maxFee,
-        );
+        const transaction = await mosaicRestrictionTransactionService
+            .createMosaicGlobalRestrictionTransaction(
+                Deadline.create(),
+                profile.networkType,
+                mosaicId,
+                restrictionKey,
+                newRestrictionValue,
+                newRestrictionType,
+                referenceMosaicId,
+                maxFee).toPromise();
 
         const networkGenerationHash = profile.networkGenerationHash;
         const signedTransaction = account.sign(transaction, networkGenerationHash);
