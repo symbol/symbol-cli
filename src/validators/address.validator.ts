@@ -17,7 +17,7 @@
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime';
 import {Address} from 'nem2-sdk';
-import {AccountService} from '../service/account.service';
+import {AccountService} from '../services/account.service';
 
 /**
  * Address validator

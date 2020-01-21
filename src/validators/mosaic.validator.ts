@@ -16,7 +16,7 @@
  *
  */
 import {ValidationContext, Validator} from 'clime';
-import {MosaicService} from '../service/mosaic.service';
+import {MosaicService} from '../services/mosaic.service';
 
 /**
  * Mosaic validator

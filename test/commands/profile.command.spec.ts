@@ -1,8 +1,8 @@
 import {expect} from 'chai';
 import * as fs from 'fs';
 import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
-import {ProfileCommand} from '../../src/profile.command';
-import {ProfileRepository} from '../../src/respository/profile.repository';
+import {ProfileCommand} from '../../src/commands/profile.command';
+import {ProfileRepository} from '../../src/respositories/profile.repository';
 
 describe('Profile Command', () => {
     let repositoryFileUrl: string;

@@ -18,8 +18,8 @@
 import {expect} from 'chai';
 import * as fs from 'fs';
 import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../../src/model/profile';
-import {ProfileRepository} from '../../src/respository/profile.repository';
+import {Profile} from '../../src/models/profile';
+import {ProfileRepository} from '../../src/respositories/profile.repository';
 
 describe('ProfileRepository', () => {
 

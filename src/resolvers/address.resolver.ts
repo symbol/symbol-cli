@@ -1,8 +1,8 @@
-import {Address, NamespaceId} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {Address} from 'nem2-sdk';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
-import {AccountService} from '../service/account.service';
+import {AccountService} from '../services/account.service';
 import {AddressAliasValidator, AddressValidator} from '../validators/address.validator';
 import {Resolver} from './resolver';
 

@@ -17,7 +17,7 @@
  */
 import * as fs from 'fs';
 import {SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {Profile} from '../models/profile';
 
 /**
  * Profile repository

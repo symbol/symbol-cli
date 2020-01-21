@@ -1,8 +1,8 @@
 import {ExpectedError} from 'clime';
 import {AccountRestrictionFlags} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
 import {BinaryValidator} from '../validators/binary.validator';
 import {Resolver} from './resolver';
 

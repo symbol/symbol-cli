@@ -1,6 +1,6 @@
 import * as readlineSync from 'readline-sync';
 import {CommandOptions} from '../commands/account/generate';
-import {Profile} from '../model/profile';
+import {Profile} from '../models/profile';
 import {Resolver} from './resolver';
 
 /**

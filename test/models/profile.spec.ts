@@ -18,7 +18,7 @@
 
 import {expect} from 'chai';
 import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../../src/model/profile';
+import {Profile} from '../../src/models/profile';
 
 describe('Profile', () => {
     it('should contain the fields', () => {
