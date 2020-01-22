@@ -19,8 +19,8 @@ import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk';
 import {merge} from 'rxjs';
-import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transaction.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transaction.command';
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',

@@ -16,7 +16,6 @@
  *
  */
 
-import {ExpectedError} from 'clime';
 import {Address, NamespaceId} from 'nem2-sdk';
 
 /**

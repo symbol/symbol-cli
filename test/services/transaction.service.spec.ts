@@ -16,12 +16,12 @@
  *
  */
 import {expect} from 'chai';
-import {ReceiptService} from '../../src/service/receipt.service';
+import {TransactionService} from '../../src/services/transaction.service';
 
-describe('Receipt service', () => {
+describe('Mosaic service', () => {
 
-    it('should create receipt service', () => {
-        expect(new ReceiptService()).to.not.be.equal(undefined);
+    it('should create transaction service', () => {
+        expect(new TransactionService()).to.not.be.equal(undefined);
     });
 
 });

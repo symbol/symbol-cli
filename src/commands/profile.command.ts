@@ -17,9 +17,9 @@
  */
 import {Spinner} from 'cli-spinner';
 import {Command, ExpectedError, option, Options} from 'clime';
-import {Profile} from './model/profile';
-import {ProfileRepository} from './respository/profile.repository';
-import {ProfileService} from './service/profile.service';
+import {Profile} from '../models/profile';
+import {ProfileRepository} from '../respositories/profile.repository';
+import {ProfileService} from '../services/profile.service';
 
 /**
  * Base command class to use the stored profile.

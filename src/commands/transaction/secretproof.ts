@@ -16,17 +16,17 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, SecretProofTransaction} from 'nem2-sdk';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../../announce.transactions.command';
-import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {ProofResolver} from '../../resolvers/proof.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
@@ -67,8 +67,8 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = profile.decrypt(options);
-        const recipientAddress = new RecipientAddressResolver()
-            .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
+        const recipientAddress = new AddressAliasResolver()
+            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress');
         const secret = new SecretResolver().resolve(options);
         const proof = new ProofResolver().resolve(options);
         const hashAlgorithm = new HashAlgorithmResolver().resolve(options);

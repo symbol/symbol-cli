@@ -17,8 +17,8 @@
 */
 import {Command, command, metadata, option} from 'clime';
 import {Convert, RawAddress} from 'nem2-sdk';
-import {ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({
