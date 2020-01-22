@@ -22,15 +22,16 @@ import {
     Address,
     AggregateTransaction,
     CosignatureTransaction,
-    MultisigAccountInfo,
+    MultisigAccountGraphInfo,
     MultisigHttp,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
-import {Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
+import {from, Observable, of} from 'rxjs';
+import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../models/profile';
 import {HashResolver} from '../../resolvers/hash.resolver';
+import {SequentialFetcher} from '../../services/multisig.service';
 import {AnnounceTransactionsOptions} from '../announce.transactions.command';
 import {ProfileCommand} from '../profile.command';
 
@@ -58,33 +59,33 @@ export default class extends ProfileCommand {
         const account = profile.decrypt(options);
         const accountHttp = new AccountHttp(profile.url);
         const transactionHttp = new TransactionHttp(profile.url);
+        let transactionWasFound = false;
+
         const hash = new HashResolver()
             .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ');
 
-        this.getGraphAccounts(profile)
+        const networkCall = (address: Address) => accountHttp
+            .getAccountPartialTransactions(address, new QueryParams(100))
+            .toPromise();
+
+        const sequentialFetcher = SequentialFetcher.create(networkCall);
+
+        this.getSelfAndChildrenAddresses(profile)
             .pipe(
-                mergeMap((_) => _),
-                mergeMap((address) => accountHttp.getAccountPartialTransactions(address, new QueryParams(100))),
-                mergeMap((_) => _),
-                filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-                    _.transactionInfo.hash === hash), // Filter transaction
-                toArray(),
+                switchMap((addresses) => sequentialFetcher.getTransactionsToCosign(addresses)),
+                flatMap((transaction) => transaction),
+                filter((_) => _.transactionInfo !== undefined
+                    && _.transactionInfo.hash !== undefined
+                    && _.transactionInfo.hash === hash),
             )
-            .subscribe((transactions: AggregateTransaction[]) => {
-                if (!transactions.length) {
-                    this.spinner.stop(true);
-
-                    let text = '';
-                    text += chalk.red('Error');
-                    console.log(text, 'The profile', profile.name, 'cannot cosign the transaction with hash', hash, '.');
-                } else {
-
-                    const transaction = transactions[0];
-
-                    const cosignatureTransaction = CosignatureTransaction.create(transaction);
-                    const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
-
-                    transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
+            .subscribe((transaction: AggregateTransaction) => {
+                sequentialFetcher.kill();
+                const cosignatureTransaction = CosignatureTransaction.create(transaction);
+                const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
+                transactionWasFound = true;
+                transactionHttp
+                    .announceAggregateBondedCosignature(signedCosignature)
+                    .subscribe(
                         () => {
                             this.spinner.stop(true);
                             console.log(chalk.green('Transaction cosigned and announced correctly.'));
@@ -93,28 +94,42 @@ export default class extends ProfileCommand {
                             err = err.message ? JSON.parse(err.message) : err;
                             console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
                         });
-
-                }
             }, (err) => {
                 this.spinner.stop(true);
                 err = err.message ? JSON.parse(err.message) : err;
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
+            }, () => {
+                if (!transactionWasFound) {
+                    this.spinner.stop(true);
+                    const text = `${chalk.red('Error')}`;
+                    console.log(text, 'The profile', profile.name, 'cannot cosign the transaction with hash', hash, '.');
+                }
             });
     }
 
-    private getGraphAccounts(profile: Profile): Observable<Address[]> {
-        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.address)
+    private getSelfAndChildrenAddresses(profile: Profile): Observable<Address[]> {
+        return new MultisigHttp(profile.url)
+            .getMultisigAccountGraphInfo(profile.address)
             .pipe(
-                map((_) => {
-                    let addresses: Address[] = [];
-                    _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
-                        if (key <= 0) {
-                            addresses = addresses.concat(
-                                value.map((cosignatory) => cosignatory.account.address));
-                        }
-                    });
-                    return addresses;
-                }),
-                catchError((ignored) => of([profile.address])));
+                switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
+                catchError((ignored) => of([profile.address])),
+            );
+    }
+
+    private getAddressesFromGraphInfo(
+        graphInfo: MultisigAccountGraphInfo,
+    ): Observable<Address[]> {
+        const {multisigAccounts} = graphInfo;
+        return from(
+                [...multisigAccounts.keys()]
+                .sort((a, b) => b - a), // Get addresses from top to bottom
+            )
+            .pipe(
+                map((key) => multisigAccounts.get(key) || []),
+                filter((x) => x.length > 0),
+                flatMap((multisigAccountInfo) => multisigAccountInfo),
+                map(({account}) => account.address),
+                toArray(),
+            );
     }
 }
