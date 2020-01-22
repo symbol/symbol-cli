@@ -20,9 +20,9 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {TransactionHttp, TransactionStatus} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {HashResolver} from '../../resolvers/hash.resolver';
-import {TransactionService} from '../../service/transaction.service';
+import {TransactionService} from '../../services/transaction.service';
+import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

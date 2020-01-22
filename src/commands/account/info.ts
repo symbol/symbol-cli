@@ -32,8 +32,8 @@ import {
 } from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError, mergeMap, toArray} from 'rxjs/operators';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

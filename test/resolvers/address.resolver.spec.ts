@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai';
 import {NamespaceId} from 'nem2-sdk';
-import {AddressResolver, RecipientAddressResolver} from '../../src/resolvers/address.resolver';
+import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver';
 
 describe('Address resolver', () => {
 
@@ -37,26 +37,26 @@ describe('Address resolver', () => {
 
 });
 
-describe('Recipient address resolver', () => {
+describe('Recipient address alias resolver', () => {
 
     it('should return alias', () => {
         const recipientAddress = '@alias';
         const profileOptions = {recipientAddress} as any;
-        expect(new RecipientAddressResolver().resolve(profileOptions))
+        expect(new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
             .to.be.instanceOf(NamespaceId);
     });
 
     it('should return address', async () => {
         const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
         const profileOptions = {recipientAddress} as any;
-        expect((await new RecipientAddressResolver().resolve(profileOptions)).plain())
+        expect((await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress')).plain())
             .to.be.equal(recipientAddress);
     });
 
     it('should throw error if cannot create address', () => {
         const recipientAddress = 'test';
         const profileOptions = {recipientAddress} as any;
-        expect(() => new RecipientAddressResolver().resolve(profileOptions))
+        expect(() => new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
             .to.throws(Error);
     });
 

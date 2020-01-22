@@ -17,16 +17,16 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, EmptyMessage, PersistentHarvestingDelegationMessage, PlainMessage, TransferTransaction} from 'nem2-sdk';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../../announce.transactions.command';
-import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MessageResolver, RecipientPublicKeyResolver} from '../../resolvers/message.resolver';
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -83,7 +83,8 @@ export default class extends AnnounceTransactionsCommand {
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
         const account = await profile.decrypt(options);
-        const recipientAddress = await new RecipientAddressResolver().resolve(options);
+        const recipientAddress = await new AddressAliasResolver()
+            .resolve(options, undefined, 'Enter the recipient address or @alias: ', 'recipientAddress');
         const mosaics = await new MosaicsResolver().resolve(options);
         const rawMessage = await new MessageResolver().resolve(options);
         let message = EmptyMessage;

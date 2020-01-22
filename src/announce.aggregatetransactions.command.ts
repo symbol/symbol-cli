@@ -17,13 +17,12 @@
  */
 import chalk from 'chalk';
 import { option } from 'clime';
-import { Address, Listener, SignedTransaction, TransactionHttp, TransactionType } from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
+import { Address, Listener, SignedTransaction, TransactionHttp } from 'nem2-sdk';
 import { merge } from 'rxjs';
 import { filter, mergeMap } from 'rxjs/operators';
-import { AnnounceTransactionFieldsTable } from './announce.transactions.command';
+import { AnnounceTransactionFieldsTable } from './commands/announce.transactions.command';
+import { ProfileCommand, ProfileOptions } from './commands/profile.command';
 import { OptionsConfirmResolver } from './options-resolver';
-import { ProfileCommand, ProfileOptions } from './profile.command';
 import { NumericStringValidator } from './validators/numericString.validator';
 import { PasswordValidator } from './validators/password.validator';
 

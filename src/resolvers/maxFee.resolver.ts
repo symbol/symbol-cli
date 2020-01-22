@@ -1,7 +1,7 @@
 import {UInt64} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
 import {Resolver} from './resolver';
 
 /**

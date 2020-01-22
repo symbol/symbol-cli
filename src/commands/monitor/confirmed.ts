@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {Listener} from 'nem2-sdk';
-import {MonitorAddressCommand, MonitorAddressOptions} from '../../monitor.transaction.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transaction.command';
 
 @command({
     description: 'Monitor confirmed transactions added',

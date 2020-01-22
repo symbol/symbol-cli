@@ -17,16 +17,16 @@
  */
 import {command, metadata, option} from 'clime';
 import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
+import {ActionResolver} from '../../resolvers/action.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
 import {
     AnnounceTransactionFieldsTable,
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
-} from '../../announce.transactions.command';
-import {ActionResolver} from '../../resolvers/action.resolver';
-import {RecipientAddressResolver} from '../../resolvers/address.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
+} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -63,7 +63,8 @@ export default class extends AnnounceTransactionsCommand {
         const account = await profile.decrypt(options);
         const action = await new ActionResolver().resolve(options);
         const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options);
-        const address = await new RecipientAddressResolver().resolve(options);
+        const address = await new AddressAliasResolver()
+        .resolve(options, undefined, 'Enter the recipient address (or @alias): ', 'recipientAddress');
         const maxFee = await new MaxFeeResolver().resolve(options);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(

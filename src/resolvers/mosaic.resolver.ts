@@ -1,11 +1,11 @@
 import chalk from 'chalk';
 import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {ProfileOptions} from '../commands/profile.command';
 import {CommandOptions} from '../commands/transaction/mosaic';
-import {Profile} from '../model/profile';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
-import {MosaicService} from '../service/mosaic.service';
+import {MosaicService} from '../services/mosaic.service';
 import {MosaicsValidator} from '../validators/mosaic.validator';
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../validators/mosaicId.validator';
 import {Resolver} from './resolver';
@@ -61,6 +61,21 @@ export class MosaicIdAliasResolver implements Resolver {
             return process.exit();
         }
         return MosaicService.getMosaicId(resolution);
+    }
+
+    /**
+     * Resolves an optional mosaic id or alias provided by the user.
+     * @param {any} options - Command options.
+     * @param {string} altKey - Alternative key.
+     * @param {string} defaultValue - Default value.
+     */
+    optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicId | NamespaceId {
+        const key = altKey ? altKey : 'referenceMosaicId';
+        if (defaultValue) {
+            options[key] = options[key] ? options[key] : defaultValue;
+        }
+        new MosaicIdAliasValidator().validate(options[key]);
+        return MosaicService.getMosaicId(options[key]);
     }
 }
 

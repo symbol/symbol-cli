@@ -1,7 +1,6 @@
 import * as readlineSync from 'readline-sync';
-import {CreateProfileOptions} from '../create.profile.command';
-import {Profile} from '../model/profile';
-import {ProfileOptions} from '../profile.command';
+import {CreateProfileOptions} from '../commands/create.profile.command';
+import {Profile} from '../models/profile';
 import {Resolver} from './resolver';
 
 /**

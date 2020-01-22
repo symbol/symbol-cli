@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import {HashType} from 'nem2-sdk';
 import {isNumeric} from 'rxjs/internal-compatibility';
-import {Profile} from '../model/profile';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
 import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator';
 import {Resolver} from './resolver';
 

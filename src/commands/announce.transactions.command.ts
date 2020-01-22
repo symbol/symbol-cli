@@ -30,7 +30,7 @@ import {
 } from 'nem2-sdk';
 import {merge} from 'rxjs';
 import {filter, mergeMap, tap} from 'rxjs/operators';
-import { OptionsConfirmResolver } from './options-resolver';
+import { OptionsConfirmResolver } from '../options-resolver';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 
 export class AnnounceTransactionFieldsTable {

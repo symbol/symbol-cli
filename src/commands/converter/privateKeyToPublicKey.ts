@@ -17,9 +17,9 @@
 */
 import {Command, command, metadata, option} from 'clime';
 import {Account} from 'nem2-sdk';
-import {ProfileOptions} from '../../profile.command';
 import {NetworkResolver} from '../../resolvers/network.resolver';
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
+import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

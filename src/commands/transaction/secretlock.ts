@@ -16,12 +16,7 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../../announce.transactions.command';
-import {RecipientAddressResolver} from '../../resolvers/address.resolver';
+import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AmountResolver} from '../../resolvers/amount.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
@@ -29,6 +24,11 @@ import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -85,8 +85,8 @@ export default class extends AnnounceTransactionsCommand {
             .resolve(options, undefined, 'Enter the locked mosaic identifier or alias: ');
         const amount = await new AmountResolver()
             .resolve(options, undefined, 'Enter the absolute amount of mosaic units to lock: ');
-        const recipientAddress = await new RecipientAddressResolver()
-            .resolve(options, undefined, 'Enter the address or @alias that receives the funds once unlocked: ');
+        const recipientAddress = await new AddressAliasResolver()
+            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress');
         const duration = await new DurationResolver()
             .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid: ');
         const secret = await new SecretResolver().resolve(options);

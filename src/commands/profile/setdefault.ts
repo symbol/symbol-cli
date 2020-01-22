@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
-import {CreateProfileCommand} from '../../create.profile.command';
 import {OptionsResolver} from '../../options-resolver';
-import {ProfileOptions} from '../../profile.command';
+import {CreateProfileCommand} from '../create.profile.command';
+import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
 }

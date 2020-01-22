@@ -1,8 +1,8 @@
 import chalk from 'chalk';
 import {NamespaceId, UInt64} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
 import {NamespaceIdValidator} from '../validators/namespaceId.validator';
 import {Resolver} from './resolver';
 /**

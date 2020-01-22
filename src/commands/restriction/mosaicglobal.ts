@@ -20,8 +20,8 @@ import * as Table from 'cli-table3';
 import {HorizontalTable} from 'cli-table3';
 import {command, metadata, option} from 'clime';
 import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../profile.command';
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
+import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

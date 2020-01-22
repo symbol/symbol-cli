@@ -16,8 +16,8 @@
  *
  */
 import {SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../model/profile';
-import {ProfileRepository} from '../respository/profile.repository';
+import {Profile} from '../models/profile';
+import {ProfileRepository} from '../respositories/profile.repository';
 
 /**
  * Profile service

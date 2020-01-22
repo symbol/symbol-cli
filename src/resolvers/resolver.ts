@@ -1,6 +1,6 @@
 import {Options} from 'clime';
-import {Profile} from '../model/profile';
-import {ProfileOptions} from '../profile.command';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 
 /**
  * URL resolver

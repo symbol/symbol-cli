@@ -1,9 +1,9 @@
 import chalk from 'chalk';
 import {Address} from 'nem2-sdk';
-import {Profile} from '../model/profile';
+import {ProfileOptions} from '../commands/profile.command';
+import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
-import {ProfileOptions} from '../profile.command';
-import {AccountService} from '../service/account.service';
+import {AccountService} from '../services/account.service';
 import {AddressAliasValidator, AddressValidator} from '../validators/address.validator';
 import {Resolver} from './resolver';
 
@@ -17,11 +17,12 @@ export class AddressResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {Address}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const resolution = await OptionsResolver(options,
-            'address',
+            altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
             altText ? altText : 'Enter an address: ');
         try {
@@ -34,23 +35,20 @@ export class AddressResolver implements Resolver {
     }
 }
 
-/**
- * Recipient address resolver
- */
-export class RecipientAddressResolver implements Resolver {
-
+export class AddressAliasResolver implements Resolver {
     /**
-     * Resolves a recipient address provided by the user.
+     * Resolves an address provided by the user.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {Address}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
-        const resolution = await OptionsResolver(options,
-            'recipientAddress',
-            () => undefined,
-            altText ? altText : 'Enter the recipient address or alias: ');
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
+        const resolution = (await OptionsResolver(options,
+            altKey ? altKey : 'address',
+            () => secondSource ? secondSource.address.pretty() : undefined,
+            altText ? altText : 'Enter an address (or @alias): ')).trim();
         try {
             new AddressAliasValidator().validate(resolution);
         } catch (err) {
