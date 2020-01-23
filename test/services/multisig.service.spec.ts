@@ -15,9 +15,11 @@
  * limitations under the License.
  *
  */
+// tslint:disable-next-line: no-var-requires
 import {expect} from 'chai';
 import {Address} from 'nem2-sdk';
-import {instance, mock, times, verify, when} from 'ts-mockito';
+import {toArray} from 'rxjs/operators';
+import {capture, mock, spy, verify} from 'ts-mockito';
 import {SequentialFetcher} from '../../src/services/multisig.service';
 
 const addresses = [
@@ -26,27 +28,34 @@ const addresses = [
     Address.createFromRawAddress('SBIWHDWZMPIXXM2BINCRXAK3H3MGA5VHB3D2PO5W'),
 ];
 
-const networkCall = (address: Address) => Promise.resolve(address);
-const mockNetworkCall = mock(networkCall);
-
 describe('Multisig service', () => {
-    it('should call the response handler with all the addresses', async (done) => {
-        const sequentialFetcher = SequentialFetcher.create(mockNetworkCall, 1);
+    it('should call the response handler with all the addresses', async () => {
+        const networkCall = (address: Address) => Promise.resolve([address]);
+        const sequentialFetcher = SequentialFetcher.create(networkCall, 1);
         sequentialFetcher
             .getTransactionsToCosign(addresses)
-            .subscribe(
-                (x) => console.log(x),
-                (err) => console.log(err),
-            );
+            .pipe(toArray())
+            .toPromise()
+            .then((results) => {
+                const returnedAddresses = results.map((result) => result[0]);
+                expect(returnedAddresses).deep.equal(addresses);
+            });
+    });
 
-        // mockNetworkCall.
-        // setTimeout(() => {
-        // expect(mockNetworkCall.mock.calls[0][0]).equal([addresses[0]]);
-        // expect(mockNetworkCall.mock.calls[1][0]).equal([addresses[1]]);
-        // expect(mockNetworkCall.mock.calls[2][0]).equal([addresses[2]]);
-        // done();
-        // }, 50);
-
-        done();
+    it('should call the response handler with all the addresses even if it throws', async () => {
+        const mockBadNetworkCall = {call: (address: Address) => Promise.reject()};
+        const spiedMock = spy(mockBadNetworkCall);
+        const sequentialFetcher = SequentialFetcher.create(mockBadNetworkCall.call, 1);
+        sequentialFetcher
+            .getTransactionsToCosign(addresses)
+            .pipe(toArray())
+            .toPromise()
+            .then((results) => {
+                const returnedAddresses = results.map((result) => result[0]);
+                expect(returnedAddresses).deep.equal([]);
+                expect(capture(spiedMock.call).first()).deep.equal([addresses[0]]);
+                expect(capture(spiedMock.call).second()).deep.equal([addresses[1]]);
+                expect(capture(spiedMock.call).third()).deep.equal([addresses[2]]);
+            });
     });
 });

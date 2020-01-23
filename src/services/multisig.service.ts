@@ -23,7 +23,7 @@ export class SequentialFetcher {
   }
 
   private constructor(
-    private networkCallFunction: (address: Address) => Promise<any>,
+    private networkCallFunction: (address: Address) => Promise<any[]>,
     private minDelay: number,
   ) {
     this.routineController = new Subject();
@@ -36,7 +36,6 @@ export class SequentialFetcher {
    * @returns {Observable<AggregateTransaction[]>}
    */
   getTransactionsToCosign(addresses: Address[]): Observable<AggregateTransaction[]> {
-    console.log('TCL: SequentialFetcher -> addresses', addresses);
     if (this.isFetching) {this.kill(); }
     this.setIterators(addresses);
     this.isFetching = true;
@@ -48,8 +47,6 @@ export class SequentialFetcher {
    * Stops the fetching routine
    */
   kill() {
-    console.log('TCL: SequentialFetcher -> kill -> kill');
-
     this.transactionsSubject.complete();
     this.isFetching = false;
     this.routineController.next(false);
@@ -69,7 +66,6 @@ export class SequentialFetcher {
   private async networkCall(address: Address): Promise<{response: any, address: Address}> {
     try {
       const promises = await Promise.all([this.networkCallFunction(address), this.delay()]);
-      console.log('TCL: SequentialFetcher -> promises', promises);
       const [response] = promises;
       return {response, address};
     } catch (error) {
@@ -92,10 +88,8 @@ export class SequentialFetcher {
 
         while (continueRoutine) {
           const {value, done} = await this.networkCallsIterator.next();
-          console.log('TCL: startFetchingRoutine -> value, done', value, done);
 
           if (done) {
-            console.log('TCL: startFetchingRoutine -> done', done);
             this.kill();
             break;
           }
