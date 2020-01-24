@@ -21,8 +21,8 @@ import * as readlineSync from 'readline-sync';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {AnnounceTransactionFieldsTable, AnnounceTransactionsCommand, AnnounceTransactionsOptions,} from '../announce.transactions.command';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
+import {AnnounceTransactionFieldsTable, AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
