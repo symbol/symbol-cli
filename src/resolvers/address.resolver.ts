@@ -1,4 +1,4 @@
-import {Address} from 'nem2-sdk';
+import {Address, NamespaceId} from 'nem2-sdk';
 import {ProfileOptions} from '../commands/profile.command';
 import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
@@ -19,7 +19,7 @@ export class AddressResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Address}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Address {
         const resolution = OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
@@ -36,9 +36,9 @@ export class AddressAliasResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Address}
+     * @returns {Address | NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Address | NamespaceId {
         const resolution = OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,

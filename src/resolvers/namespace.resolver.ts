@@ -15,11 +15,12 @@ export class NamespaceNameResolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): NamespaceId {
         const resolution = OptionsResolver(options,
-        'namespaceName',
+        altKey ? altKey : 'namespaceName',
         () =>  undefined,
         altText ? altText : 'Enter the namespace name: ').trim();
         return new NamespaceId(resolution);
@@ -38,7 +39,7 @@ export class NamespaceIdResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {NamespaceId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): NamespaceId {
         const resolution = OptionsResolver(options,
             'namespaceId',
             () =>  undefined,

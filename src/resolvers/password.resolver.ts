@@ -17,7 +17,7 @@ export class PasswordResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Password}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Password {
         const resolution = OptionsResolver(options,
             'password',
             () => undefined,

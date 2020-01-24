@@ -32,6 +32,7 @@ export class RestrictionValueResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
+     * @return {string}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): string {
         const value = OptionsResolver(options,

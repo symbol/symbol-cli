@@ -28,6 +28,21 @@ describe('Namespace name resolver', () => {
             .to.be.equal(new NamespaceId(namespaceName).toHex());
     });
 
+    it('should return namespaceId with alt key', () => {
+        const name = 'test';
+        const profileOptions = {name} as any;
+        expect(new NamespaceNameResolver()
+            .resolve(profileOptions, undefined, undefined, 'name').toHex())
+            .to.be.equal(new NamespaceId(name).toHex());
+    });
+
+    it('should return namespace full name', () => {
+        const namespaceName = 'test';
+        const profileOptions = {namespaceName} as any;
+        expect(new NamespaceNameResolver().resolve(profileOptions).fullName)
+            .to.be.equal('test');
+    });
+
     it('should throw error if invalid namespace name', () => {
         const namespaceName = 'Test';
         const profileOptions = {namespaceName} as any;

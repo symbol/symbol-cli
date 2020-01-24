@@ -13,9 +13,9 @@ export class SaveResolver implements Resolver {
      * @param {CommandOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @returns {boolean}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): boolean {
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
             options.save = true;
         }

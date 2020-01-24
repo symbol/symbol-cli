@@ -15,9 +15,9 @@ export class PrivateKeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {Password}
+     * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
         const resolution = OptionsResolver(options,
             'privateKey',
             () => undefined,

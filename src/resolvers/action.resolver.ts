@@ -16,7 +16,7 @@ export class ActionResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['Remove', 'Add'];
         const index = +OptionsChoiceResolver(options,
             'action',
@@ -40,7 +40,7 @@ export class LinkActionResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['Unlink', 'Link'];
         const index = +OptionsChoiceResolver(options,
         'action',
@@ -61,7 +61,7 @@ export class SupplyActionResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['Decrease', 'Increase'];
         const index = +OptionsChoiceResolver(options,
             'action',
