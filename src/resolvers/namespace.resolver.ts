@@ -1,5 +1,7 @@
 import {NamespaceId, UInt64} from 'nem2-sdk';
+import * as readlineSync from 'readline-sync';
 import {ProfileOptions} from '../commands/profile.command';
+import {CommandOptions} from '../commands/transaction/namespace';
 import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
 import {NamespaceIdValidator} from '../validators/namespaceId.validator';
@@ -47,5 +49,25 @@ export class NamespaceIdResolver implements Resolver {
         new NamespaceIdValidator().validate(resolution);
         const namespaceIdUInt64 = UInt64.fromHex(resolution);
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
+    }
+}
+
+/**
+ * Root namespace resolver
+ */
+export class RootNamespaceResolver implements Resolver {
+
+    /**
+     * Resolves if the namespace is root.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @returns {boolean}
+     */
+    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): boolean {
+        if (!options.subnamespace && !options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
+            options.rootnamespace = true;
+        }
+        return options.rootnamespace;
     }
 }

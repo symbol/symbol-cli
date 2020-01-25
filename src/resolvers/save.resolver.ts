@@ -9,7 +9,7 @@ import {Resolver} from './resolver';
 export class SaveResolver implements Resolver {
 
     /**
-     * Resolves an action provided by the user.
+     * Resolves if the account has to be saved.
      * @param {CommandOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.

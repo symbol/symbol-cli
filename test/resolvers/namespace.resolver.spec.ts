@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai';
 import {NamespaceId} from 'nem2-sdk';
-import {NamespaceIdResolver, NamespaceNameResolver} from '../../src/resolvers/namespace.resolver';
+import {NamespaceIdResolver, NamespaceNameResolver, RootNamespaceResolver} from '../../src/resolvers/namespace.resolver';
 
 describe('Namespace name resolver', () => {
 
@@ -66,6 +66,26 @@ describe('Namespace id resolver', () => {
         const profileOptions = {namespaceId} as any;
         expect(() => new NamespaceIdResolver().resolve(profileOptions))
             .to.throws(Error);
+    });
+
+});
+
+describe('Root namespace resolver', () => {
+
+    it('should return boolean', () => {
+        const profileOptions = {
+            name: 'bar',
+            parentName: 'foo',
+            rootnamespace: true,
+            subnamespace: false,
+            duration: '1000',
+            maxFee: '1',
+            profile: 'test',
+            password: 'test',
+            sync: false,
+            announce: false};
+        expect(new RootNamespaceResolver()
+            .resolve(profileOptions)).to.be.equal(true);
     });
 
 });
