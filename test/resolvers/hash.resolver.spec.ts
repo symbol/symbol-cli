@@ -26,4 +26,16 @@ describe('Hash resolver', () => {
         expect(new HashResolver().resolve(profileOptions))
             .to.be.equal(hash);
     });
+
+    it('should throw when hash is invalid', () => {
+        const hash = 'notAHash';
+        const profileOptions = {hash} as any;
+        expect(() => new HashResolver().resolve(profileOptions)).to.throw();
+    });
+
+    it('should throw when hash is empty', () => {
+        const hash = 'notAHash';
+        const profileOptions = {hash} as any;
+        expect(() => new HashResolver().resolve(profileOptions)).to.throw();
+    });
 });
