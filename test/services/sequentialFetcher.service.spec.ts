@@ -20,7 +20,7 @@ import {expect} from 'chai';
 import {Address} from 'nem2-sdk';
 import {toArray} from 'rxjs/operators';
 import {capture, mock, spy, verify} from 'ts-mockito';
-import {SequentialFetcher} from '../../src/services/multisig.service';
+import {SequentialFetcher} from '../../src/services/sequentialFetcher.service';
 
 const addresses = [
     Address.createFromRawAddress('SAY7N2GP6JJBFIRBTUEXY2JJVOLGIZ46KWIMYB5T'),
@@ -33,7 +33,7 @@ describe('Multisig service', () => {
         const networkCall = (address: Address) => Promise.resolve([address]);
         const sequentialFetcher = SequentialFetcher.create(networkCall, 1);
         sequentialFetcher
-            .getTransactionsToCosign(addresses)
+            .getResults(addresses)
             .pipe(toArray())
             .toPromise()
             .then((results) => {
@@ -47,7 +47,7 @@ describe('Multisig service', () => {
         const spiedMock = spy(mockBadNetworkCall);
         const sequentialFetcher = SequentialFetcher.create(mockBadNetworkCall.call, 1);
         sequentialFetcher
-            .getTransactionsToCosign(addresses)
+            .getResults(addresses)
             .pipe(toArray())
             .toPromise()
             .then((results) => {

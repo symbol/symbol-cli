@@ -32,7 +32,7 @@ import {from, Observable, of} from 'rxjs';
 import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
 import {Profile} from '../../models/profile';
 import {HashResolver} from '../../resolvers/hash.resolver';
-import {SequentialFetcher} from '../../services/multisig.service';
+import {SequentialFetcher} from '../../services/sequentialFetcher.service';
 import {AnnounceTransactionsOptions} from '../announce.transactions.command';
 import {ProfileCommand} from '../profile.command';
 
@@ -68,8 +68,8 @@ export default class extends ProfileCommand {
 
         this.getSelfAndChildrenAddresses(this.profile)
             .pipe(
-                switchMap((addresses) => sequentialFetcher.getTransactionsToCosign(addresses)),
-                flatMap((transaction) => transaction),
+                switchMap((addresses) => sequentialFetcher.getResults(addresses)),
+                flatMap((transaction: AggregateTransaction[]) => transaction),
                 filter((_) => _.transactionInfo !== undefined
                     && _.transactionInfo.hash !== undefined
                     && _.transactionInfo.hash === hash),
