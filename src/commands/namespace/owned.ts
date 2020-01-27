@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {NamespaceHttp} from 'nem2-sdk';
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
 import {NamespaceInfoTable} from './info';
 
 export class CommandOptions extends ProfileOptions {

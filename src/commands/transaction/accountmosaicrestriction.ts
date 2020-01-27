@@ -17,16 +17,16 @@
  */
 import {command, metadata, option} from 'clime';
 import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../interfaces/announce.transactions.command';
 import {ActionResolver} from '../../resolvers/action.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

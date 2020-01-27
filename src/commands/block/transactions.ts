@@ -18,9 +18,9 @@
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
 import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 import {HeightResolver} from '../../resolvers/height.resolver';
 import {TransactionService} from '../../services/transaction.service';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

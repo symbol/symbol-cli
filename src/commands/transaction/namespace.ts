@@ -18,15 +18,15 @@
 import {command, metadata, option} from 'clime';
 import {Deadline, NamespaceRegistrationTransaction} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {OptionsResolver} from '../../options-resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {DurationResolver} from '../../resolvers/duration.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {
     AnnounceTransactionFieldsTable,
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
+} from '../../interfaces/announce.transactions.command';
+import {OptionsResolver} from '../../options-resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
+import {DurationResolver} from '../../resolvers/duration.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

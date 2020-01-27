@@ -25,7 +25,7 @@ import {PasswordResolver} from '../../resolvers/password.resolver';
 import {ProfileNameResolver} from '../../resolvers/profile.resolver';
 import {SaveResolver} from '../../resolvers/save.resolver';
 import {URLResolver} from '../../resolvers/url.resolver';
-import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../create.profile.command';
+import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command';
 
 export class CommandOptions extends CreateProfileOptions {
     @option({

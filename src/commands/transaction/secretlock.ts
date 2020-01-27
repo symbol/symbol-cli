@@ -16,6 +16,11 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../interfaces/announce.transactions.command';
 import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AmountResolver} from '../../resolvers/amount.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
@@ -24,11 +29,6 @@ import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

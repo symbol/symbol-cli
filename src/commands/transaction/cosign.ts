@@ -29,12 +29,12 @@ import {
     TransactionHttp,
 } from 'nem2-sdk';
 import {filter, flatMap, switchMap} from 'rxjs/operators';
+import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
+import {ProfileCommand} from '../../interfaces/profile.command';
 import {Profile} from '../../models/profile';
 import {HashResolver} from '../../resolvers/hash.resolver';
 import {MultisigService} from '../../services/multisig.service';
 import {SequentialFetcher} from '../../services/sequentialFetcher.service';
-import {AnnounceTransactionsOptions} from '../announce.transactions.command';
-import {ProfileCommand} from '../profile.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

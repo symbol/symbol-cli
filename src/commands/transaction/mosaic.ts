@@ -28,17 +28,17 @@ import {
     UInt64,
 } from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../interfaces/announce.transactions.command';
 import {AmountResolver} from '../../resolvers/amount.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

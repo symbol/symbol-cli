@@ -16,8 +16,8 @@
 *
 */
 import {Command, command, metadata, option} from 'clime';
+import {ProfileOptions} from '../../interfaces/profile.command';
 import {AmountResolver} from '../../resolvers/amount.resolver';
-import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

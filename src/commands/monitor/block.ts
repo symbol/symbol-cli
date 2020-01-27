@@ -18,7 +18,7 @@
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {Listener} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 
 @command({
     description: 'Monitor new blocks',

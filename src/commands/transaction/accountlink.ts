@@ -17,15 +17,15 @@
  */
 import {command, metadata, option} from 'clime';
 import {AccountLinkTransaction, Deadline} from 'nem2-sdk';
-import {LinkActionResolver} from '../../resolvers/action.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {
     AnnounceTransactionFieldsTable,
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
+} from '../../interfaces/announce.transactions.command';
+import {LinkActionResolver} from '../../resolvers/action.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

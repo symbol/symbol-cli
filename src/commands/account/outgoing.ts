@@ -18,8 +18,8 @@
 import chalk from 'chalk';
 import {command, metadata} from 'clime';
 import {AccountHttp} from 'nem2-sdk';
+import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../account.transactions.command';
 
 @command({
     description: 'Fetch outgoing transactions from account',

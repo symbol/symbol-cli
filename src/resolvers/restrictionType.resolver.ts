@@ -17,7 +17,7 @@
  */
 import {MosaicRestrictionType} from 'nem2-sdk';
 import {isNumeric} from 'rxjs/internal-compatibility';
-import {ProfileOptions} from '../commands/profile.command';
+import {ProfileOptions} from '../interfaces/profile.command';
 import {Profile} from '../models/profile';
 import {OptionsChoiceResolver} from '../options-resolver';
 import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator';
