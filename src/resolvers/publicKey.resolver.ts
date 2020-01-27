@@ -18,7 +18,7 @@ export class PublicKeyResolver implements Resolver {
      * @param {string} altKey - Alternative text.
      * @returns {PublicAccount}
      */
-    resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): any {
+    resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): PublicAccount {
         const resolution = OptionsResolver(options,
             altKey ? altKey : 'publicKey',
             () => undefined,
@@ -40,7 +40,7 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount[]}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): PublicAccount [] {
         const resolution = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,

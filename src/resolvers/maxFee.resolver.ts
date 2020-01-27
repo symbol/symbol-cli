@@ -17,7 +17,7 @@ export class MaxFeeResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): UInt64 {
         const resolution = OptionsResolver(options,
         altKey ? altKey : 'maxFee',
         () => undefined,

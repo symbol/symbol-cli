@@ -15,7 +15,7 @@ export class ProfileNameResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
         return OptionsResolver(options,
             'profile',
             () => undefined,

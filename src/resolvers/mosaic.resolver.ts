@@ -21,7 +21,7 @@ export class MosaicIdResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicId}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): MosaicId {
         const resolution = OptionsResolver(options,
         'mosaicId',
         () =>  undefined,
@@ -80,7 +80,7 @@ export class MosaicsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {Mosaic[]}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Mosaic[] {
         const resolution = OptionsResolver(options,
             'mosaics',
             () =>  undefined,
@@ -103,7 +103,7 @@ export class MosaicFlagsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicFlags}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): MosaicFlags {
         return MosaicFlags.create(
             options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
                 'Do you want mosaic to have supply mutable?'),

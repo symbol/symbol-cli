@@ -25,8 +25,9 @@ import {
 import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {MessageResolver, RecipientPublicKeyResolver} from '../../resolvers/message.resolver';
+import {MessageResolver} from '../../resolvers/message.resolver';
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver';
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -90,14 +91,18 @@ export default class extends AnnounceTransactionsCommand {
         let message = EmptyMessage;
         if (rawMessage) {
             if (options.persistentHarvestingDelegation) {
-                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
+                const recipientPublicAccount = new PublicKeyResolver()
+                    .resolve(options, profile.networkType,
+                        'Enter the recipient public key: ', 'recipientPublicKey');
                 message = PersistentHarvestingDelegationMessage.create(
                     rawMessage,
                     account.privateKey,
                     recipientPublicAccount.publicKey,
                     profile.networkType);
             } else if (options.encrypted) {
-                const recipientPublicAccount = new RecipientPublicKeyResolver().resolve(options, profile);
+                const recipientPublicAccount = new PublicKeyResolver()
+                    .resolve(options, profile.networkType,
+                        'Enter the recipient public key: ', 'recipientPublicKey');
                 message = account.encryptMessage(
                     rawMessage,
                     recipientPublicAccount,

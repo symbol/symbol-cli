@@ -16,7 +16,7 @@ export class TransactionTypeResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const resolution = OptionsResolver(options,
             'transactionType',
             () => undefined,

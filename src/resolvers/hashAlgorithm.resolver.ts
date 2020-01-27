@@ -18,7 +18,7 @@ export class HashAlgorithmResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['Op_Sha3_256', 'Op_Keccak_256', 'Op_Hash_160', 'Op_Hash_256'];
         const resolution = OptionsChoiceResolver(options,
         'hashAlgorithm',
@@ -32,6 +32,6 @@ export class HashAlgorithmResolver implements Resolver {
             hashAlgorithmName = resolution;
         }
         new HashAlgorithmValidator().validate(hashAlgorithmName);
-        return HashType[hashAlgorithmName];
+        return parseInt(HashType[hashAlgorithmName], 10);
     }
 }
