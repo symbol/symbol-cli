@@ -16,8 +16,8 @@
  *
  */
 import {expect} from 'chai';
-import {NamespaceId} from 'nem2-sdk';
-import {NamespaceIdResolver, NamespaceNameResolver, RootNamespaceResolver} from '../../src/resolvers/namespace.resolver';
+import {NamespaceId, NamespaceRegistrationType} from 'nem2-sdk';
+import {NamespaceIdResolver, NamespaceNameResolver, NamespaceTypeResolver} from '../../src/resolvers/namespace.resolver';
 
 describe('Namespace name resolver', () => {
 
@@ -72,7 +72,7 @@ describe('Namespace id resolver', () => {
 
 describe('Root namespace resolver', () => {
 
-    it('should return boolean', () => {
+    it('should return RootNamespace', () => {
         const profileOptions = {
             name: 'bar',
             parentName: 'foo',
@@ -84,8 +84,24 @@ describe('Root namespace resolver', () => {
             password: 'test',
             sync: false,
             announce: false};
-        expect(new RootNamespaceResolver()
-            .resolve(profileOptions)).to.be.equal(true);
+        expect(new NamespaceTypeResolver()
+            .resolve(profileOptions)).to.be.equal(NamespaceRegistrationType.RootNamespace);
+    });
+
+    it('should return SubNamespace', () => {
+        const profileOptions = {
+            name: 'bar',
+            parentName: 'foo',
+            rootnamespace: false,
+            subnamespace: true,
+            duration: '1000',
+            maxFee: '1',
+            profile: 'test',
+            password: 'test',
+            sync: false,
+            announce: false};
+        expect(new NamespaceTypeResolver()
+            .resolve(profileOptions)).to.be.equal(NamespaceRegistrationType.SubNamespace);
     });
 
 });

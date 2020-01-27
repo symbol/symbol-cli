@@ -16,11 +16,11 @@
  *
  */
 import {command, metadata, option} from 'clime';
-import {Deadline, NamespaceRegistrationTransaction} from 'nem2-sdk';
+import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {NamespaceNameResolver, RootNamespaceResolver} from '../../resolvers/namespace.resolver';
+import {NamespaceNameResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver';
 import {AnnounceTransactionFieldsTable, AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -75,11 +75,11 @@ export default class extends AnnounceTransactionsCommand {
         const namespaceId = new NamespaceNameResolver()
             .resolve(options, undefined, 'Enter the namespace name: ', 'name');
         const name = namespaceId.fullName ? namespaceId.fullName : '';
-        const isRootNamespace = new RootNamespaceResolver().resolve(options);
+        const namespaceType = new NamespaceTypeResolver().resolve(options);
         const maxFee = new MaxFeeResolver().resolve(options);
 
         let transaction: NamespaceRegistrationTransaction;
-        if (isRootNamespace) {
+        if (namespaceType === NamespaceRegistrationType.RootNamespace) {
             const duration = new DurationResolver().resolve(options);
             transaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(), name, duration, profile.networkType, maxFee);

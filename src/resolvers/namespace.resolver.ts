@@ -1,4 +1,4 @@
-import {NamespaceId, UInt64} from 'nem2-sdk';
+import {NamespaceId, NamespaceRegistrationType, UInt64} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
 import {ProfileOptions} from '../commands/profile.command';
 import {CommandOptions} from '../commands/transaction/namespace';
@@ -53,21 +53,25 @@ export class NamespaceIdResolver implements Resolver {
 }
 
 /**
- * Root namespace resolver
+ * Namespace type resolver
  */
-export class RootNamespaceResolver implements Resolver {
+export class NamespaceTypeResolver  implements Resolver {
 
     /**
-     * Resolves if the namespace is root.
+     * Resolves the namespace type.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {boolean}
+     * @returns {NamespaceRegistrationType}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): boolean {
+    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): NamespaceRegistrationType {
         if (!options.subnamespace && !options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
             options.rootnamespace = true;
         }
-        return options.rootnamespace;
+        let namespaceType = NamespaceRegistrationType.SubNamespace;
+        if (options.rootnamespace) {
+            namespaceType = NamespaceRegistrationType.RootNamespace;
+        }
+        return namespaceType;
     }
 }
