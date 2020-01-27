@@ -42,7 +42,7 @@ describe('Multisig service', () => {
             });
     });
 
-    it('should call the response handler with all the addresses even if it throws', async () => {
+    it('should call the response handler with all the addresses even if it throws', () => {
         const mockBadNetworkCall = {call: (address: Address) => Promise.reject()};
         const spiedMock = spy(mockBadNetworkCall);
         const sequentialFetcher = SequentialFetcher.create(mockBadNetworkCall.call, 1);

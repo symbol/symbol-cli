@@ -14,6 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ *
+ *
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
@@ -23,15 +25,13 @@ import {
     AggregateTransaction,
     CosignatureSignedTransaction,
     CosignatureTransaction,
-    MultisigAccountGraphInfo,
-    MultisigHttp,
     QueryParams,
     TransactionHttp,
 } from 'nem2-sdk';
-import {from, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {filter, flatMap, switchMap} from 'rxjs/operators';
 import {Profile} from '../../models/profile';
 import {HashResolver} from '../../resolvers/hash.resolver';
+import {MultisigService} from '../../services/multisig.service';
 import {SequentialFetcher} from '../../services/sequentialFetcher.service';
 import {AnnounceTransactionsOptions} from '../announce.transactions.command';
 import {ProfileCommand} from '../profile.command';
@@ -66,7 +66,7 @@ export default class extends ProfileCommand {
 
         const sequentialFetcher = this.getSequentialFetcher();
 
-        this.getSelfAndChildrenAddresses(this.profile)
+        new MultisigService(this.profile).getSelfAndChildrenAddresses()
             .pipe(
                 switchMap((addresses) => sequentialFetcher.getResults(addresses)),
                 flatMap((transaction: AggregateTransaction[]) => transaction),
@@ -89,6 +89,7 @@ export default class extends ProfileCommand {
 
     /**
      * Creates a sequential fetcher instance loaded with a getAccountPartialTransactions function
+     * @private
      * @returns {SequentialFetcher}
      */
     private getSequentialFetcher(): SequentialFetcher {
@@ -101,9 +102,10 @@ export default class extends ProfileCommand {
 
     /**
      * Attempts to cosign an aggregated transaction cosignature
-     * @param  {AggregateTransaction} transaction
-     * @param  {string} hash of the transaction to be cosigned
-     * @returns {CosignatureSignedTransaction | null}
+     * @private
+     * @param {AggregateTransaction} transaction
+     * @param {string} hash of the transaction to be cosigned
+     * @returns {(CosignatureSignedTransaction | null)}
      */
     private getSignedAggregateBondedCosignature(
         transaction: AggregateTransaction,
@@ -123,7 +125,8 @@ export default class extends ProfileCommand {
 
     /**
      * Announces aggregate bonded cosignature
-     * @param  {CosignatureSignedTransaction} signedCosignature
+     * @private
+     * @param {CosignatureSignedTransaction} signedCosignature
      * @returns {Promise<void>}
      */
     private async announceAggregateBondedCosignature(signedCosignature: CosignatureSignedTransaction): Promise<void> {
@@ -138,31 +141,5 @@ export default class extends ProfileCommand {
             err = err.message ? JSON.parse(err.message) : err;
             console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
         }
-    }
-
-    private getSelfAndChildrenAddresses(profile: Profile): Observable<Address[]> {
-        return new MultisigHttp(profile.url)
-            .getMultisigAccountGraphInfo(profile.address)
-            .pipe(
-                switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
-                catchError((ignored) => of([profile.address])),
-            );
-    }
-
-    private getAddressesFromGraphInfo(
-        graphInfo: MultisigAccountGraphInfo,
-    ): Observable<Address[]> {
-        const {multisigAccounts} = graphInfo;
-        return from(
-            [...multisigAccounts.keys()]
-                .sort((a, b) => b - a), // Get addresses from top to bottom
-        )
-            .pipe(
-                map((key) => multisigAccounts.get(key) || []),
-                filter((x) => x.length > 0),
-                flatMap((multisigAccountInfo) => multisigAccountInfo),
-                map(({account}) => account.address),
-                toArray(),
-            );
     }
 }

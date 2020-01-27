@@ -1,3 +1,8 @@
+import {Address, MultisigAccountGraphInfo, MultisigHttp} from 'nem2-sdk';
+import {from, Observable, of} from 'rxjs';
+import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
+import {Profile} from '../models/profile';
+
 /*
  *
  * Copyright 2018-present NEM
@@ -16,6 +21,47 @@
  *
  */
 
-  export class MultisigService {
+export class MultisigService {
+ /**
+  * Creates an instance of MultisigService.
+  * @param {Profile} profile
+  */
+ constructor(private readonly profile: Profile) {}
 
-  }
+ /**
+  * Gets self and children multisig accounts addresses from the network
+  * @public
+  * @returns {Observable<Address[]>}
+  */
+ public getSelfAndChildrenAddresses(): Observable<Address[]> {
+  return new MultisigHttp(this.profile.url)
+   .getMultisigAccountGraphInfo(this.profile.address)
+   .pipe(
+    switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
+    catchError((ignored) => of([this.profile.address])),
+   );
+ }
+
+ /**
+  * Gets self and children multisig accounts addresses from a MultisigAccountGraphInfo
+  * @private
+  * @param {MultisigAccountGraphInfo} graphInfo
+  * @returns {Observable<Address[]>}
+  */
+ private getAddressesFromGraphInfo(
+  graphInfo: MultisigAccountGraphInfo,
+ ): Observable<Address[]> {
+  const {multisigAccounts} = graphInfo;
+  return from(
+   [...multisigAccounts.keys()]
+    .sort((a, b) => b - a), // Get addresses from top to bottom
+  )
+   .pipe(
+    map((key) => multisigAccounts.get(key) || []),
+    filter((x) => x.length > 0),
+    flatMap((multisigAccountInfo) => multisigAccountInfo),
+    map(({account}) => account.address),
+    toArray(),
+   );
+ }
+}
