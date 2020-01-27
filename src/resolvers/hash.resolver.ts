@@ -1,6 +1,7 @@
 import {ProfileOptions} from '../commands/profile.command';
 import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
+import {HashValidator} from '../validators/hash.validator';
 import {Resolver} from './resolver';
 
 /**
@@ -20,6 +21,7 @@ export class HashResolver implements Resolver {
             'hash',
             () => undefined,
             altText ? altText : 'Enter a transaction hash: ').trim();
+        new HashValidator().validate(resolution);
         return resolution;
     }
 }
