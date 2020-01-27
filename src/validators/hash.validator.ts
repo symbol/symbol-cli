@@ -23,8 +23,8 @@ import {ExpectedError, ValidationContext, Validator} from 'clime';
 export class HashValidator implements Validator<string> {
 
     /**
-     * Validates if a string is composed by numbers.
-     * @param {string} value - Numeric string.
+     * Validates if a string is a valid hash.
+     * @param {string} value
      * @param {ValidationContext} context
      * @throws {ExpectedError}
      */
