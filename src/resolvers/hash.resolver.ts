@@ -16,7 +16,7 @@ export class HashResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
         const resolution = OptionsResolver(options,
             'hash',
             () => undefined,

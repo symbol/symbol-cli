@@ -11,9 +11,9 @@ export class KeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {string}
+     * @returns {UInt64}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): UInt64 {
         const resolution = OptionsResolver(options,
             altKey ? altKey : 'key',
             () => undefined,

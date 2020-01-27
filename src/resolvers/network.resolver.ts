@@ -18,7 +18,7 @@ export class NetworkResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['MAIN_NET', 'TEST_NET', 'MIJIN', 'MIJIN_TEST'];
         const resolution = OptionsChoiceResolver(options,
             'network',
@@ -32,6 +32,6 @@ export class NetworkResolver implements Resolver {
             networkFriendlyName = resolution;
         }
         new NetworkValidator().validate(networkFriendlyName);
-        return NetworkType[networkFriendlyName];
+        return parseInt(NetworkType[networkFriendlyName], 10);
     }
 }

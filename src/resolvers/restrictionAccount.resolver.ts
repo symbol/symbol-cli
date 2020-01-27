@@ -18,7 +18,7 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['AllowOutgoingAddress', 'BlockOutgoingAddress', 'AllowIncomingAddress', 'BlockIncomingAddress'];
         const index = +OptionsChoiceResolver(options,
             'flags',
@@ -28,7 +28,7 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
         if (index < 0 || index > 3) {
             throw new ExpectedError('Unknown restriction flag.');
         }
-        return AccountRestrictionFlags[choices[index] as any];
+        return parseInt(AccountRestrictionFlags[choices[index] as any], 10);
     }
 }
 
@@ -44,7 +44,7 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['AllowMosaic', 'BlockMosaic'];
         const index = +OptionsChoiceResolver(options,
             'flags',
@@ -52,7 +52,7 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
             choices,
         );
         new BinaryValidator().validate(index);
-        return AccountRestrictionFlags[choices[index] as any];
+        return parseInt(AccountRestrictionFlags[choices[index] as any], 10);
     }
 }
 
@@ -68,7 +68,7 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['AllowOutgoingTransactionType', 'BlockOutgoingTransactionType'];
         const index = +OptionsChoiceResolver(options,
             'flags',
@@ -76,6 +76,6 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
             choices,
         );
         new BinaryValidator().validate(index);
-        return AccountRestrictionFlags[choices[index] as any];
+        return parseInt(AccountRestrictionFlags[choices[index] as any], 10);
     }
 }

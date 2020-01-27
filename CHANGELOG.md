@@ -4,6 +4,21 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.16.3] - 17-Jan-2020
+
+### Added
+
+- ``transaction mosaicglobalrestriction`` command.
+- ``transaction mosaicaddressrestriction`` command.
+
+### Changed
+
+- ``transaction cosign`` aggregate transactions are fetched sequentially.
+
+### Fixed
+
+- ``transaction accountlink`` and ``block`` commands by adding typed resolvers.
+
 ## [0.16.2] - 15-Jan-2020
 
 ### Added

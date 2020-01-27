@@ -32,8 +32,9 @@ export class RestrictionTypeResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @return {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
         const choices = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
         const index = OptionsChoiceResolver(options,
             'newRestrictionType',
@@ -47,6 +48,6 @@ export class RestrictionTypeResolver implements Resolver {
             restrictionName = index;
         }
         new MosaicRestrictionTypeValidator().validate(restrictionName);
-        return MosaicRestrictionType[restrictionName];
+        return parseInt(MosaicRestrictionType[restrictionName], 10);
     }
 }

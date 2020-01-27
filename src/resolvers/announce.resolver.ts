@@ -14,9 +14,9 @@ export class AnnounceResolver implements Resolver {
      * @param {CreateProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @returns {boolean}
      */
-    resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): boolean {
         if (!options.announce && readlineSync.keyInYN('Do you want to announce this transaction?')) {
             options.announce = true;
         }
