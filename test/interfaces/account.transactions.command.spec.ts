@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {AccountTransactionsOptions} from '../../src/commands/account.transactions.command';
+import {AccountTransactionsOptions} from '../../src/interfaces/account.transactions.command';
 
 describe('Announce Transactions Command', () => {
 

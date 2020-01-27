@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import * as fs from 'fs';
 import {NetworkType, Password, SimpleWallet} from 'nem2-sdk';
-import {CreateProfileCommand} from '../../src/commands/create.profile.command';
+import {CreateProfileCommand} from '../../src/interfaces/create.profile.command';
 import {ProfileRepository} from '../../src/respositories/profile.repository';
 
 describe('Create Profile Command', () => {

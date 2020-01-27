@@ -1,5 +1,5 @@
 import {Options} from 'clime';
-import {ProfileOptions} from '../commands/profile.command';
+import {ProfileOptions} from '../interfaces/profile.command';
 import {Profile} from '../models/profile';
 
 /**

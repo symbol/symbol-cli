@@ -1,7 +1,7 @@
 import {NamespaceId, NamespaceRegistrationType, UInt64} from 'nem2-sdk';
 import * as readlineSync from 'readline-sync';
-import {ProfileOptions} from '../commands/profile.command';
 import {CommandOptions} from '../commands/transaction/namespace';
+import {ProfileOptions} from '../interfaces/profile.command';
 import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
 import {NamespaceIdValidator} from '../validators/namespaceId.validator';

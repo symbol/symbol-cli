@@ -17,11 +17,15 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../interfaces/announce.transactions.command';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {DurationResolver} from '../../resolvers/duration.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {NamespaceNameResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver';
-import {AnnounceTransactionFieldsTable, AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

@@ -17,13 +17,17 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, EmptyMessage, PersistentHarvestingDelegationMessage, PlainMessage, TransferTransaction} from 'nem2-sdk';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../interfaces/announce.transactions.command';
 import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MessageResolver} from '../../resolvers/message.resolver';
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
-import {AnnounceTransactionFieldsTable, AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

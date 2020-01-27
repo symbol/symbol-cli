@@ -1,6 +1,6 @@
 import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsOptions} from '../commands/announce.transactions.command';
-import {CreateProfileOptions} from '../commands/create.profile.command';
+import {AnnounceTransactionsOptions} from '../interfaces/announce.transactions.command';
+import {CreateProfileOptions} from '../interfaces/create.profile.command';
 import {Profile} from '../models/profile';
 import {Resolver} from './resolver';
 

@@ -20,8 +20,8 @@ import {command, metadata, option} from 'clime';
 import {NamespaceHttp} from 'nem2-sdk';
 import {forkJoin, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

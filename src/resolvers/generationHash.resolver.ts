@@ -1,7 +1,7 @@
 import {ExpectedError} from 'clime';
 import {BlockHttp} from 'nem2-sdk';
-import {CreateProfileOptions} from '../commands/create.profile.command';
-import {ProfileOptions} from '../commands/profile.command';
+import {CreateProfileOptions} from '../interfaces/create.profile.command';
+import {ProfileOptions} from '../interfaces/profile.command';
 import {Profile} from '../models/profile';
 import {Resolver} from './resolver';
 

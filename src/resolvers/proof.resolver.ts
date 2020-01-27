@@ -1,4 +1,4 @@
-import {ProfileOptions} from '../commands/profile.command';
+import {ProfileOptions} from '../interfaces/profile.command';
 import {Profile} from '../models/profile';
 import {OptionsResolver} from '../options-resolver';
 import {Resolver} from './resolver';

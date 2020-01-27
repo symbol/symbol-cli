@@ -24,15 +24,15 @@ import {
     NetworkCurrencyMosaic,
     UInt64,
 } from 'nem2-sdk';
-import {ActionResolver} from '../../resolvers/action.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {
     AnnounceAggregateTransactionsOptions,
     AnnounceTransactionFieldsTable,
     AnnounceTransactionsCommand,
-} from '../announce.transactions.command';
+} from '../../interfaces/announce.transactions.command';
+import {ActionResolver} from '../../resolvers/action.resolver';
+import {AnnounceResolver} from '../../resolvers/announce.resolver';
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
+import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({

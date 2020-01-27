@@ -16,9 +16,9 @@
 *
 */
 import {Command, command, metadata, option} from 'clime';
+import {ProfileOptions} from '../../interfaces/profile.command';
 import {PayloadResolver} from '../../resolvers/payload.resolver';
 import {TransactionService} from '../../services/transaction.service';
-import {ProfileOptions} from '../profile.command';
 
 export class CommandOptions extends ProfileOptions {
     @option({

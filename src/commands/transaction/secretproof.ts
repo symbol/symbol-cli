@@ -16,17 +16,17 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, SecretProofTransaction} from 'nem2-sdk';
+import {
+    AnnounceTransactionFieldsTable,
+    AnnounceTransactionsCommand,
+    AnnounceTransactionsOptions,
+} from '../../interfaces/announce.transactions.command';
 import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {ProofResolver} from '../../resolvers/proof.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
