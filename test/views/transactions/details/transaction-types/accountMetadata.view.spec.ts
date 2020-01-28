@@ -4,7 +4,7 @@ import {AccountMetadataView} from '../../../../../src/views/transactions/details
 import {account1} from '../../../../mocks/accounts.mock';
 import {unsignedAccountMetadata} from '../../../../mocks/transactions/accountMetadata.mock';
 
-describe('Account metadata view', () => {
+describe('AccountMetadataView', () => {
  it('should return a view', () => {
   const view = AccountMetadataView.get(unsignedAccountMetadata);
   expect(view['Target public key']).equal(account1.publicKey);

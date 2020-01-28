@@ -4,7 +4,7 @@ import {NamespaceMetadataView} from '../../../../../src/views/transactions/detai
 import {account1} from '../../../../mocks/accounts.mock';
 import {unsignedNamespaceMetadata1} from '../../../../mocks/transactions/namespaceMetadata.mock';
 
-describe('Namespace metadata view', () => {
+describe('NamespaceMetadataView', () => {
  it('should return a view', () => {
   const view = NamespaceMetadataView.get(unsignedNamespaceMetadata1);
   expect(view['Target public key']).equal(account1.publicKey);

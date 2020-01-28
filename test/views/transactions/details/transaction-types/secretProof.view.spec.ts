@@ -3,7 +3,7 @@ import {SecretProofView} from '../../../../../src/views/transactions/details/tra
 import {account1} from '../../../../mocks/accounts.mock';
 import {unsignedSecretProof1} from '../../../../mocks/transactions/secretProof.mock';
 
-describe('Secret proof view', () => {
+describe('SecretProofView', () => {
  it('should return a view', () => {
   const view = SecretProofView.get(unsignedSecretProof1);
   console.log('TCL: view', view);

@@ -19,8 +19,6 @@
 import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk';
 import {account1, account2, account3} from '../accounts.mock';
 
-export const accountRestrictionAddress = {};
-
 export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction
  .createAddressRestrictionModificationTransaction(
   Deadline.create(),

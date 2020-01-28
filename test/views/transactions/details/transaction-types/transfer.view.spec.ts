@@ -3,7 +3,7 @@ import {Address} from 'nem2-sdk';
 import {TransferView} from '../../../../../src/views/transactions/details/transaction-types/transfer.view';
 import {unsignedTransfer1, unsignedTransfer2} from '../../../../mocks/transactions/transfer.mock';
 
-describe('Transfer view', () => {
+describe('TransferView', () => {
  it('should return a view of a transfer', () => {
   const view = TransferView.get(unsignedTransfer1);
   const expectedRecipientAddress = unsignedTransfer1.recipientAddress as Address;

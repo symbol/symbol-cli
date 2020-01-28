@@ -3,7 +3,7 @@ import {MosaicSupplyChangeView} from '../../../../../src/views/transactions/deta
 import {mosaicId1} from '../../../../mocks/mosaics.mock';
 import {unsignedMosaicSupplyChange1} from '../../../../mocks/transactions/mosaicSupplyChange.mock';
 
-describe('Mosaic supply change view', () => {
+describe('MosaicSupplyChangeView', () => {
  it('should return a view', () => {
   const view = MosaicSupplyChangeView.get(unsignedMosaicSupplyChange1);
   expect(view['Mosaic Id']).equal(mosaicId1.toHex());

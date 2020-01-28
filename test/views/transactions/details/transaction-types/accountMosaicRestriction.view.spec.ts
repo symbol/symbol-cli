@@ -3,7 +3,7 @@ import {AccountMosaicRestrictionView} from '../../../../../src/views/transaction
 import {mosaicId1, mosaicId2} from '../../../../mocks/mosaics.mock';
 import {unsignedAccountMosaicRestriction1} from '../../../../mocks/transactions/accountMosaicRestriction.mock';
 
-describe('Account restriction mosaic view', () => {
+describe('AccountMosaicRestrictionView', () => {
  it('should return a view', () => {
   const view = AccountMosaicRestrictionView.get(unsignedAccountMosaicRestriction1);
   expect(view['Account restriction flag']).equal('AllowMosaic');

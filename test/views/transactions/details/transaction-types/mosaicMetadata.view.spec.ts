@@ -5,7 +5,7 @@ import {account1} from '../../../../mocks/accounts.mock';
 import {mosaicId1} from '../../../../mocks/mosaics.mock';
 import {unsignedMosaicMetadata1} from '../../../../mocks/transactions/mosaicMetadata.mock';
 
-describe('Mosaic metadata view', () => {
+describe('MosaicMetadataView', () => {
  it('should return a view', () => {
   const view = MosaicMetadataView.get(unsignedMosaicMetadata1);
   expect(view['Target public key']).equal(account1.publicKey);

@@ -4,7 +4,7 @@ import {account1} from '../../../../mocks/accounts.mock';
 import {namespaceId1} from '../../../../mocks/namespaces.mock';
 import {unsignedMosaicAddressRestriction1} from '../../../../mocks/transactions/mosaicAddressRestriction.mock';
 
-describe('Mosaic address restriction view', () => {
+describe('MosaicAddressRestrictionView', () => {
  it('should return a view', () => {
   const view = MosaicAddressRestrictionView.get(unsignedMosaicAddressRestriction1);
   expect(view['Mosaic id']).equal(namespaceId1.toHex());

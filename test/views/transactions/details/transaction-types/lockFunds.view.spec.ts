@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {LockFundsView} from '../../../../../src/views/transactions/details/transaction-types';
 import {unsignedLockFunds1} from '../../../../mocks/transactions/lockFunds.mock';
 
-describe('Lock view', () => {
+describe('LockFundsView', () => {
  it('should return a view', () => {
   const view = LockFundsView.get(unsignedLockFunds1);
   expect(view['Duration']).equal('10 blocks');

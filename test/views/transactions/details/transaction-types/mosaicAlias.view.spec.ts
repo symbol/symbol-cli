@@ -4,7 +4,7 @@ import {MosaicAliasView} from '../../../../../src/views/transactions/details/tra
 import {mosaicId1} from '../../../../mocks/mosaics.mock';
 import {unsignedMosaicAlias1} from '../../../../mocks/transactions/mosaicAlias.mock';
 
-describe('Mosaic alias view', () => {
+describe('MosaicAliasView', () => {
  it('should return a view', () => {
   const view = MosaicAliasView.get(unsignedMosaicAlias1);
   expect(view['Alias action']).equal(AliasAction[AliasAction.Link]);

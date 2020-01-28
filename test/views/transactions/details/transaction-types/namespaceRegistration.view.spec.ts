@@ -3,7 +3,7 @@ import {NamespaceRegistrationView} from '../../../../../src/views/transactions/d
 import {namespaceId1} from '../../../../mocks/namespaces.mock';
 import {unsignedNamespaceRegistration1, unsignedSubNamespaceRegistration1} from '../../../../mocks/transactions/namespaceRegistration.mock';
 
-describe('Register namespace view', () => {
+describe('NamespaceRegistrationView', () => {
  it('should return a view of a root namespace registration', () => {
   const view = NamespaceRegistrationView.get(unsignedNamespaceRegistration1);
   expect(view['Namespace name']).equal('root-test-namespace');

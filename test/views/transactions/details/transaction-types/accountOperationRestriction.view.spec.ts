@@ -5,7 +5,7 @@ import {
  operation1, operation2, operation3, unsignedAccountOperationRestriction1,
 } from '../../../../mocks/transactions/accountOperationRestriction.mock';
 
-describe('Account restriction operation view', () => {
+describe('AccountOperationRestrictionView', () => {
  it('should return a view', () => {
   const view = AccountOperationRestrictionView.get(unsignedAccountOperationRestriction1);
   expect(view['Account restriction flag']).equal('AllowIncomingTransactionType');

@@ -3,7 +3,7 @@ import {MosaicGlobalRestrictionView} from '../../../../../src/views/transactions
 import {mosaicId1, mosaicId2} from '../../../../mocks/mosaics.mock';
 import {unsignedMosaicGlobalRestriction1} from '../../../../mocks/transactions/mosaicGlobalRestriction.mock';
 
-describe('Mosaic global restriction view', () => {
+describe('MosaicGlobalRestrictionView', () => {
  it('should return a view', () => {
   const view = MosaicGlobalRestrictionView.get(unsignedMosaicGlobalRestriction1);
   expect(view['Mosaic Id']).equal(mosaicId1.toHex());

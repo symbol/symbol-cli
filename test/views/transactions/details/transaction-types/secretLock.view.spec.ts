@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {SecretLockView} from '../../../../../src/views/transactions/details/transaction-types';
 import {unsignedSecretLock1} from '../../../../mocks/transactions/secretLock.mock';
 
-describe('Secret lock view', () => {
+describe('SecretLockView', () => {
  it('should return a view', () => {
   const view = SecretLockView.get(unsignedSecretLock1);
   expect(view['Recipient']).equal('alice (9CF66FB0CFEED2E0)');

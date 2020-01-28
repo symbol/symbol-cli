@@ -3,7 +3,7 @@ import {MultisigAccountModificationView} from '../../../../../src/views/transact
 import {account1, account2, account3} from '../../../../mocks/accounts.mock';
 import {unsignedMultisigAccountModification1} from '../../../../mocks/transactions/multisigAccountModification.mock';
 
-describe('Modify multisig account view', () => {
+describe('MultisigAccountModificationView', () => {
  it('should return a view', () => {
   const view = MultisigAccountModificationView.get(unsignedMultisigAccountModification1);
   expect(view['Min approval delta']).equal('2');

@@ -4,7 +4,7 @@ import {AddressAliasView} from '../../../../../src/views/transactions/details/tr
 import {account1} from '../../../../mocks/accounts.mock';
 import {unsignedAddressAlias1} from '../../../../mocks/transactions/addressAlias.mock';
 
-describe('Address alias view', () => {
+describe('AddressAliasView', () => {
  it('should return a view', () => {
   const view = AddressAliasView.get(unsignedAddressAlias1);
   expect(view['action']).equal(AliasAction[unsignedAddressAlias1.aliasAction]);

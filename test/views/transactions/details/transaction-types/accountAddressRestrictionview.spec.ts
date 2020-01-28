@@ -3,7 +3,7 @@ import {AccountAddressRestrictionView} from '../../../../../src/views/transactio
 import {account1, account2, account3} from '../../../../mocks/accounts.mock';
 import {unsignedAccountAddressRestriction1} from '../../../../mocks/transactions/accountAddressRestriction.mock';
 
-describe('Account restriction address view', () => {
+describe('AccountAddressRestrictionView', () => {
  it('should return a view', () => {
   const view = AccountAddressRestrictionView.get(unsignedAccountAddressRestriction1);
   expect(view['Account restriction flag']).equal('AllowIncomingAddress');

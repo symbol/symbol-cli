@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {AggregateBondedView} from '../../../../../src/views/transactions/details/transaction-types';
 import {unsignedAggregateBonded1} from '../../../../mocks/transactions/aggregateBonded.mock';
 
-describe('Aggregate bonded view', () => {
+describe('AggregateBondedView', () => {
  it('should return a view', () => {
   const view = AggregateBondedView.get(unsignedAggregateBonded1);
 

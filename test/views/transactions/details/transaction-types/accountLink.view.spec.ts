@@ -4,7 +4,7 @@ import {AccountLinkView} from '../../../../../src/views/transactions/details/tra
 import {account1} from '../../../../mocks/accounts.mock';
 import {unsignedAccountLink1} from '../../../../mocks/transactions/accountLink.mock';
 
-describe('Account link view', () => {
+describe('AccountLinkView', () => {
  it('should return a view', () => {
   const view = AccountLinkView.get(unsignedAccountLink1);
   expect(view['Action']).equal(LinkAction[LinkAction.Link]);
