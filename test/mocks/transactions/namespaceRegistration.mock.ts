@@ -16,19 +16,22 @@
  *
  */
 
-import {AccountLinkTransaction, LinkAction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'nem2-sdk';
+import {namespaceId1} from '../namespaces.mock';
 
-export class LinkAccountView {
-  /**
-   * @static
-   * @param {AccountLinkTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AccountLinkTransaction): CellRecord {
-    return {
-      ['Action']: LinkAction[tx.linkAction],
-      ['Remote public key']: tx.remotePublicKey,
-    };
-  }
-}
+export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction
+ .createRootNamespace(
+  Deadline.create(),
+  'root-test-namespace',
+  UInt64.fromUint(1000),
+  NetworkType.MIJIN_TEST,
+  new UInt64([1, 0]),
+ );
+
+export const unsignedSubNamespaceRegistration1 = NamespaceRegistrationTransaction
+ .createSubNamespace(
+  Deadline.create(),
+  'sub-test-namespace',
+  namespaceId1,
+  NetworkType.MIJIN_TEST,
+ );

@@ -16,17 +16,20 @@
  *
  */
 
-import {Deadline, LockFundsTransaction, NetworkType, UInt64} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
-import {mosaic2} from '../mosaics.mock';
-import {unsignedAggregateBonded1} from './aggregateBonded.mock';
-const generationHash = '57F7DA205008026C776CB6AED843393F04CD458E0AA2D9F1D5F31A402072B2D6';
+import {LockFundsTransaction} from 'nem2-sdk';
+import {MosaicsView} from '../../../mosaics.view';
+import {CellRecord} from '../transaction.view';
 
-const signedTransaction = account1.sign(unsignedAggregateBonded1, generationHash);
-export const unsignedLock1 = LockFundsTransaction.create(
- Deadline.create(),
- mosaic2,
- UInt64.fromUint(10),
- signedTransaction,
- NetworkType.MIJIN_TEST,
-);
+export class LockFundsView {
+  /**
+   * @static
+   * @param {LockFundsTransaction} tx
+   * @returns {CellRecord}
+   */
+  static get(tx: LockFundsTransaction): CellRecord {
+    return {
+      Duration: `${tx.duration.compact().toLocaleString()} blocks`,
+      ...MosaicsView.get([tx.mosaic]),
+    };
+  }
+}

@@ -17,15 +17,15 @@
  */
 
 export * from './accountMetadata.mock';
-export * from './accountRestrictionAddress.mock';
-export * from './accountRestrictionMosaic.mock';
-export * from './accountRestrictionOperation.mock';
+export * from './accountAddressRestriction.mock';
+export * from './accountMosaicRestriction.mock';
+export * from './accountOperationRestriction.mock';
 export * from './addressAlias.mock';
 export * from './aggregateBonded.mock';
 export * from './aggregateComplete.mock';
-export * from './linkAccount.mock';
-export * from './lock.mock';
-export * from './modifyMultisigAccount.mock';
+export * from './accountLink.mock';
+export * from './lockFunds.mock';
+export * from './multisigAccountModification.mock';
 export * from './mosaicAddressRestriction.mock';
 export * from './mosaicAlias.mock';
 export * from './mosaicDefinition.mock';
@@ -33,7 +33,7 @@ export * from './mosaicGlobalRestriction.mock';
 export * from './mosaicMetadata.mock';
 export * from './mosaicSupplyChange.mock';
 export * from './namespaceMetadata.mock';
-export * from './registerNamespace.mock';
+export * from './namespaceRegistration.mock';
 export * from './secretLock.mock';
 export * from './secretProof.mock';
 export * from './transfer.mock';

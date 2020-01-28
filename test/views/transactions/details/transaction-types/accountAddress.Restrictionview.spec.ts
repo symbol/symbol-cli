@@ -1,11 +1,11 @@
 import {expect} from 'chai';
-import {AccountRestrictionAddressView} from '../../../../../src/views/transactions/details/transaction-types';
+import {AccountAddressRestrictionView} from '../../../../../src/views/transactions/details/transaction-types';
 import {account1, account2, account3} from '../../../../mocks/accounts.mock';
-import {unsignedAccountRestrictionAddress1} from '../../../../mocks/transactions/accountRestrictionAddress.mock';
+import {unsignedAccountAddressRestriction1} from '../../../../mocks/transactions/accountAddressRestriction.mock';
 
 describe('Account restriction address view', () => {
  it('should return a view', () => {
-  const view = AccountRestrictionAddressView.get(unsignedAccountRestrictionAddress1);
+  const view = AccountAddressRestrictionView.get(unsignedAccountAddressRestriction1);
   expect(view['Account restriction flag']).equal('AllowIncomingAddress');
   expect(view['Addition 1 of 2']).equal(account1.address.pretty());
   expect(view['Addition 2 of 2']).equal(account2.address.pretty());

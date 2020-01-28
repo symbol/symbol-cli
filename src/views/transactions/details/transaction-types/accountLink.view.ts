@@ -15,13 +15,20 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {TransactionService} from '../../src/services/transaction.service';
 
-describe('Mosaic service', () => {
+import {AccountLinkTransaction, LinkAction} from 'nem2-sdk';
+import {CellRecord} from '../transaction.view';
 
-    it('should create transaction service', () => {
-        expect(new TransactionService()).to.not.be.equal(undefined);
-    });
-
-});
+export class AccountLinkView {
+  /**
+   * @static
+   * @param {AccountLinkTransaction} tx
+   * @returns {CellRecord}
+   */
+  static get(tx: AccountLinkTransaction): CellRecord {
+    return {
+      ['Action']: LinkAction[tx.linkAction],
+      ['Remote public key']: tx.remotePublicKey,
+    };
+  }
+}

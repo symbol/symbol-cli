@@ -16,16 +16,12 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk';
-import {account1, account2, account3} from '../accounts.mock';
+import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'nem2-sdk';
+import {account1} from '../accounts.mock';
 
-export const accountRestrictionAddress = {};
-
-export const unsignedAccountRestrictionAddress1 = AccountRestrictionTransaction
- .createAddressRestrictionModificationTransaction(
-  Deadline.create(),
-  AccountRestrictionFlags.AllowIncomingAddress,
-  [account1.address, account2.address],
-  [account3.address],
-  NetworkType.MIJIN_TEST,
- );
+export const unsignedAccountLink1 = AccountLinkTransaction.create(
+ Deadline.create(),
+ account1.publicKey,
+ LinkAction.Link,
+ NetworkType.MIJIN_TEST,
+);

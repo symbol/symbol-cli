@@ -19,18 +19,18 @@
 import {NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk';
 import {CellRecord} from '../transaction.view';
 
-export class RegisterNamespaceView {
+export class NamespaceRegistrationView {
   /**
    * @static
    * @param {NamespaceRegistrationTransaction} tx
    * @returns {CellRecord}
    */
   static get(tx: NamespaceRegistrationTransaction): CellRecord {
-    return new RegisterNamespaceView(tx).render();
+    return new NamespaceRegistrationView(tx).render();
   }
 
   /**
-   * Creates an instance of RegisterNamespaceView.
+   * Creates an instance of NamespaceRegistrationView.
    * @param {NamespaceRegistrationTransaction} tx
    */
   private constructor(private readonly tx: NamespaceRegistrationTransaction) {}

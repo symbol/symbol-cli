@@ -21,6 +21,7 @@ import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatu
 import {merge} from 'rxjs';
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',
@@ -49,10 +50,10 @@ export default class extends MonitorAddressCommand {
                         response.transactionInfo &&
                         response.transactionInfo.height.compact() === 0) {
                         console.log(chalk.green('\nNew aggregate bonded transaction added:'));
-                        console.log(this.transactionService.formatTransactionToFilter(response));
+                        new TransactionView(response).print();
                     } else if (response instanceof Transaction) {
                         console.log(chalk.green('\nNew transaction confirmed:'));
-                        console.log(this.transactionService.formatTransactionToFilter(response));
+                        new TransactionView(response).print();
                     } else if (response instanceof BlockInfo) {
                         console.log(chalk.green('\nNew block:'), response.height.toString());
                     } else if (response instanceof TransactionStatusError) {

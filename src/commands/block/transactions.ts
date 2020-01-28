@@ -17,10 +17,10 @@
  */
 import chalk from 'chalk';
 import {command, metadata, option} from 'clime';
-import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
+import {BlockHttp, Order, QueryParams, Transaction} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 import {HeightResolver} from '../../resolvers/height.resolver';
-import {TransactionService} from '../../services/transaction.service';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -53,11 +53,9 @@ export class CommandOptions extends ProfileOptions {
 })
 
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionService = new TransactionService();
     }
 
     @metadata
@@ -85,16 +83,14 @@ export default class extends ProfileCommand {
         blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
                 this.spinner.stop(true);
-                let txt = '\n';
                 if (transactions.length > 0) {
-                    transactions.map((transaction: any, index: number) => {
-                        txt += `(${index + 1}) - `;
-                        txt +=  this.transactionService.formatTransactionToFilter(transaction) + '\n\n';
+                    transactions.forEach((transaction: Transaction, index: number) => {
+                        console.log(`(${index + 1}) - `);
+                        new TransactionView(transaction).print();
                     });
                 } else {
-                    txt = '[]';
+                    console.log('[]');
                 }
-                console.log(txt);
             }, (err) => {
                 this.spinner.stop(true);
                 err = err.message ? JSON.parse(err.message) : err;

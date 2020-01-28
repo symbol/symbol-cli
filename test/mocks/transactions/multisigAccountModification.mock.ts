@@ -16,22 +16,17 @@
  *
  */
 
-import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'nem2-sdk';
-import {namespaceId1} from '../namespaces.mock';
+import {Deadline, MultisigAccountModificationTransaction, NetworkType} from 'nem2-sdk';
+import {account1, account2, account3} from '../accounts.mock';
 
-export const unsignedRegisterNamespace1 = NamespaceRegistrationTransaction
- .createRootNamespace(
-  Deadline.create(),
-  'root-test-namespace',
-  UInt64.fromUint(1000),
-  NetworkType.MIJIN_TEST,
-  new UInt64([1, 0]),
- );
-
-export const unsignedRegisterSubNamespace1 = NamespaceRegistrationTransaction
- .createSubNamespace(
-  Deadline.create(),
-  'sub-test-namespace',
-  namespaceId1,
-  NetworkType.MIJIN_TEST,
- );
+export const unsignedMultisigAccountModification1 = MultisigAccountModificationTransaction.create(
+ Deadline.create(),
+ 2,
+ 1,
+ [
+  account1.publicAccount,
+  account2.publicAccount,
+ ],
+ [account3.publicAccount],
+ NetworkType.MIJIN_TEST,
+);

@@ -16,24 +16,24 @@
  *
  */
 
-import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'nem2-sdk';
+import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'nem2-sdk';
 import {CellRecord} from '../transaction.view';
 
-export class AccountRestrictionOperationView {
+export class AccountAddressRestrictionView {
   /**
    * @static
-   * @param {AccountOperationRestrictionTransaction} tx
+   * @param {AccountAddressRestrictionTransaction} tx
    * @returns {CellRecord}
    */
-  static get(tx: AccountOperationRestrictionTransaction): CellRecord {
-    return new AccountRestrictionOperationView(tx).render();
+  static get(tx: AccountAddressRestrictionTransaction): CellRecord {
+    return new AccountAddressRestrictionView(tx).render();
   }
 
   /**
-   * Creates an instance of AccountRestrictionOperationView.
-   * @param {AccountOperationRestrictionTransaction} tx
+   * Creates an instance of AccountAddressRestrictionView.
+   * @param {AccountAddressRestrictionTransaction} tx
    */
-  private constructor(private readonly tx: AccountOperationRestrictionTransaction) {}
+  private constructor(private readonly tx: AccountAddressRestrictionTransaction) {}
 
   /**
    * @private
@@ -54,16 +54,16 @@ export class AccountRestrictionOperationView {
     const numberOfAdditions = this.tx.restrictionAdditions.length;
     const numberOfDeletions = this.tx.restrictionDeletions.length;
     return {
-      ...this.tx.restrictionAdditions.reduce((acc, transactionType, index) => ({
+      ...this.tx.restrictionAdditions.reduce((acc, account, index) => ({
         ...acc,
         ...this.renderRestriction(
-          transactionType, index, numberOfAdditions, 'Addition',
+          account, index, numberOfAdditions, 'Addition',
         ),
       }), {}),
-      ...this.tx.restrictionDeletions.reduce((acc, transactionType, index) => ({
+      ...this.tx.restrictionDeletions.reduce((acc, account, index) => ({
         ...acc,
         ...this.renderRestriction(
-          transactionType, index, numberOfDeletions, 'Deletion',
+          account, index, numberOfDeletions, 'Deletion',
         ),
       }), {}),
     };
@@ -71,19 +71,20 @@ export class AccountRestrictionOperationView {
 
   /**
    * @private
-   * @param {TransactionType} transactionType
+   * @param {(Address | NamespaceId)} account
    * @param {number} index
    * @param {number} numberOfRestrictions
    * @param {('Addition' | 'Deletion')} additionOrDeletion
    * @returns {CellRecord}
    */
   private renderRestriction(
-    transactionType: TransactionType,
+    account: Address | NamespaceId,
     index: number,
     numberOfRestrictions: number,
     additionOrDeletion: 'Addition' | 'Deletion',
   ): CellRecord {
     const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`;
-    return {[key]: TransactionType[transactionType]};
+    const target = account instanceof Address ? account.pretty() : account.toHex();
+    return {[key]: target};
   }
 }

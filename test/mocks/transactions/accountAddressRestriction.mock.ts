@@ -16,20 +16,16 @@
  *
  */
 
-import {LockFundsTransaction} from 'nem2-sdk';
-import {MosaicsView} from '../../../mosaics.view';
-import {CellRecord} from '../transaction.view';
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk';
+import {account1, account2, account3} from '../accounts.mock';
 
-export class LockView {
-  /**
-   * @static
-   * @param {LockFundsTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: LockFundsTransaction): CellRecord {
-    return {
-      Duration: `${tx.duration.compact().toLocaleString()} blocks`,
-      ...MosaicsView.get([tx.mosaic]),
-    };
-  }
-}
+export const accountRestrictionAddress = {};
+
+export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction
+ .createAddressRestrictionModificationTransaction(
+  Deadline.create(),
+  AccountRestrictionFlags.AllowIncomingAddress,
+  [account1.address, account2.address],
+  [account3.address],
+  NetworkType.MIJIN_TEST,
+ );

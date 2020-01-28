@@ -19,18 +19,18 @@
 import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'nem2-sdk';
 import {CellRecord} from '../transaction.view';
 
-export class ModifyMultisigAccountView {
+export class MultisigAccountModificationView {
   /**
    * @static
    * @param {MultisigAccountModificationTransaction} tx
    * @returns {CellRecord}
    */
   static get(tx: MultisigAccountModificationTransaction): CellRecord {
-    return new ModifyMultisigAccountView(tx).render();
+    return new MultisigAccountModificationView(tx).render();
   }
 
   /**
-   * Creates an instance of ModifyMultisigAccountView.
+   * Creates an instance of MultisigAccountModificationView.
    * @param {MultisigAccountModificationTransaction} tx
    */
   private constructor(private readonly tx: MultisigAccountModificationTransaction) {}

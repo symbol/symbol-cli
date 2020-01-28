@@ -22,7 +22,7 @@ export const operation1 = TransactionType.ADDRESS_ALIAS;
 export const operation2 = TransactionType.LINK_ACCOUNT;
 export const operation3 = TransactionType.TRANSFER;
 
-export const unsignedAccountRestrictionOperation1 = AccountRestrictionTransaction
+export const unsignedAccountOperationRestriction1 = AccountRestrictionTransaction
     .createOperationRestrictionModificationTransaction(
         Deadline.create(),
         AccountRestrictionFlags.AllowIncomingTransactionType,

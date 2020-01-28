@@ -20,7 +20,7 @@ import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, Networ
 import {mosaicId1, mosaicId2} from '../mosaics.mock';
 import {namespaceId1} from '../namespaces.mock';
 
-export const unsignedAccountRestrictionMosaic1 = AccountRestrictionTransaction
+export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction
     .createMosaicRestrictionModificationTransaction(
         Deadline.create(),
         AccountRestrictionFlags.AllowMosaic,

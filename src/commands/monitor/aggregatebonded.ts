@@ -20,6 +20,7 @@ import {command, metadata} from 'clime';
 import {Listener} from 'nem2-sdk';
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 @command({
     description: 'Monitor aggregate bonded transactions added',
@@ -39,7 +40,7 @@ export default class extends MonitorAddressCommand {
         const listener = new Listener(profile.url);
         listener.open().then(() => {
             listener.aggregateBondedAdded(address).subscribe((transaction) => {
-                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction));
+                new TransactionView(transaction).print();
             }, (err) => {
                 listener.close();
                 err = err.message ? JSON.parse(err.message) : err;

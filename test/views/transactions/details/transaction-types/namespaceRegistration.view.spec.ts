@@ -1,11 +1,11 @@
 import {expect} from 'chai';
-import {RegisterNamespaceView} from '../../../../../src/views/transactions/details/transaction-types';
+import {NamespaceRegistrationView} from '../../../../../src/views/transactions/details/transaction-types';
 import {namespaceId1} from '../../../../mocks/namespaces.mock';
-import {unsignedRegisterNamespace1, unsignedRegisterSubNamespace1} from '../../../../mocks/transactions/registerNamespace.mock';
+import {unsignedNamespaceRegistration1, unsignedSubNamespaceRegistration1} from '../../../../mocks/transactions/namespaceRegistration.mock';
 
 describe('Register namespace view', () => {
  it('should return a view of a root namespace registration', () => {
-  const view = RegisterNamespaceView.get(unsignedRegisterNamespace1);
+  const view = NamespaceRegistrationView.get(unsignedNamespaceRegistration1);
   expect(view['Namespace name']).equal('root-test-namespace');
   expect(view['Type']).equal('Root namespace');
   expect(view['Duration']).equal('1000 blocks');
@@ -14,7 +14,7 @@ describe('Register namespace view', () => {
  });
 
  it('should return a view of a sub namespace registration', () => {
-  const view = RegisterNamespaceView.get(unsignedRegisterSubNamespace1);
+  const view = NamespaceRegistrationView.get(unsignedSubNamespaceRegistration1);
   expect(view['Namespace name']).equal('sub-test-namespace');
   expect(view['Type']).equal('Sub namespace');
   expect(view['Parent Id']).equal(namespaceId1.toHex());

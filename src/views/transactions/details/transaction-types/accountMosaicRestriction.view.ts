@@ -16,24 +16,25 @@
  *
  */
 
-import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'nem2-sdk';
+import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'nem2-sdk';
+import {MosaicsView} from '../../../mosaics.view';
 import {CellRecord} from '../transaction.view';
 
-export class AccountRestrictionAddressView {
+export class AccountMosaicRestrictionView {
   /**
    * @static
-   * @param {AccountAddressRestrictionTransaction} tx
+   * @param {AccountMosaicRestrictionTransaction} tx
    * @returns {CellRecord}
    */
-  static get(tx: AccountAddressRestrictionTransaction): CellRecord {
-    return new AccountRestrictionAddressView(tx).render();
+  static get(tx: AccountMosaicRestrictionTransaction): CellRecord {
+    return new AccountMosaicRestrictionView(tx).render();
   }
 
   /**
-   * Creates an instance of AccountRestrictionAddressView.
-   * @param {AccountAddressRestrictionTransaction} tx
+   * Creates an instance of AccountMosaicRestrictionView.
+   * @param {AccountMosaicRestrictionTransaction} tx
    */
-  private constructor(private readonly tx: AccountAddressRestrictionTransaction) {}
+  private constructor(private readonly tx: AccountMosaicRestrictionTransaction) {}
 
   /**
    * @private
@@ -54,16 +55,16 @@ export class AccountRestrictionAddressView {
     const numberOfAdditions = this.tx.restrictionAdditions.length;
     const numberOfDeletions = this.tx.restrictionDeletions.length;
     return {
-      ...this.tx.restrictionAdditions.reduce((acc, account, index) => ({
+      ...this.tx.restrictionAdditions.reduce((acc, mosaic, index) => ({
         ...acc,
         ...this.renderRestriction(
-          account, index, numberOfAdditions, 'Addition',
+          mosaic, index, numberOfAdditions, 'Addition',
         ),
       }), {}),
-      ...this.tx.restrictionDeletions.reduce((acc, account, index) => ({
+      ...this.tx.restrictionDeletions.reduce((acc, mosaic, index) => ({
         ...acc,
         ...this.renderRestriction(
-          account, index, numberOfDeletions, 'Deletion',
+          mosaic, index, numberOfDeletions, 'Deletion',
         ),
       }), {}),
     };
@@ -71,20 +72,19 @@ export class AccountRestrictionAddressView {
 
   /**
    * @private
-   * @param {(Address | NamespaceId)} account
+   * @param {(MosaicId | NamespaceId)} mosaicId
    * @param {number} index
    * @param {number} numberOfRestrictions
    * @param {('Addition' | 'Deletion')} additionOrDeletion
    * @returns {CellRecord}
    */
   private renderRestriction(
-    account: Address | NamespaceId,
+    mosaicId: MosaicId | NamespaceId,
     index: number,
     numberOfRestrictions: number,
     additionOrDeletion: 'Addition' | 'Deletion',
   ): CellRecord {
     const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`;
-    const target = account instanceof Address ? account.pretty() : account.toHex();
-    return {[key]: target};
+    return {[key]: MosaicsView.getMosaicLabel(mosaicId)};
   }
 }

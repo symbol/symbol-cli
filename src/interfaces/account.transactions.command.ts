@@ -17,21 +17,18 @@
  */
 import {option} from 'clime';
 import {QueryParams} from 'nem2-sdk';
-import {TransactionService} from '../services/transaction.service';
 import {ProfileCommand, ProfileOptions} from './profile.command';
 
 /**
  * Base command class to retrieve transactions from an account.
  */
 export abstract class AccountTransactionsCommand extends ProfileCommand {
-    protected readonly transactionService: TransactionService;
 
     /**
      * Constructor.
      */
     protected constructor() {
         super();
-        this.transactionService = new TransactionService();
     }
 }
 
