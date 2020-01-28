@@ -17,22 +17,29 @@
  */
 import {expect} from 'chai';
 import {MultisigService} from '../../src/services/multisig.service';
-import {mockProfile1, multisigGraphInfo1, multisigGraphInfoPublicAccounts} from '../mocks';
+import {
+  multisigGraphInfo1, multisigGraphInfoPublicAccount1, multisigGraphInfoPublicAccount5,
+} from '../mocks/multisigGraphInfo.mock';
+import {mockProfile1} from '../mocks/profile.mock';
 
 describe('Multisig service', () => {
- it('should create a multisig service service', () => {
-  const multisigService = new MultisigService(mockProfile1);
-  expect(multisigService).to.be.an.instanceOf(MultisigService);
- });
+  it('should create a multisig service service', () => {
+    const multisigService = new MultisigService(mockProfile1);
+    expect(multisigService).to.be.an.instanceOf(MultisigService);
+  });
 
- it('should return all addresses from a MultisigGraphInfo', () => {
-  const multisigService = new MultisigService(mockProfile1);
-  const expectedAddresses = multisigGraphInfoPublicAccounts.map(({address}) => address);
+  it('should return all addresses from a MultisigGraphInfo', async () => {
+    const multisigService = new MultisigService(mockProfile1);
+    const expectedAddresses = [
+      multisigGraphInfoPublicAccount1.address,
+      multisigGraphInfoPublicAccount5.address,
+    ];
 
-  multisigService
-   // @ts-ignore
-   .getAddressesFromGraphInfo(multisigGraphInfo1)
-   .toPromise()
-   .then((results) => expect(results).deep.equal(expectedAddresses));
- });
+    multisigService
+      // @ts-ignore
+      .getAddressesFromGraphInfo(multisigGraphInfo1)
+      .toPromise()
+      .then((results) => expect(results).deep.equal(expectedAddresses))
+      .catch((err) => console.error(err));
+  });
 });

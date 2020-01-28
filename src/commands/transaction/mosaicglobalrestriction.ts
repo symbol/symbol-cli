@@ -17,17 +17,14 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'nem2-sdk';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../../interfaces/announce.transactions.command';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {KeyResolver} from '../../resolvers/key.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
 import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver';
 import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -98,7 +95,9 @@ export default class extends AnnounceTransactionsCommand {
 
         const networkGenerationHash = profile.networkGenerationHash;
         const signedTransaction = account.sign(transaction, networkGenerationHash);
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+
+        new TransactionView(transaction, signedTransaction).print();
+
         const shouldAnnounce = new AnnounceResolver().resolve(options);
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url);
