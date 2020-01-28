@@ -37,7 +37,7 @@ export const transactionNameFromType = (type: TransactionType): string => {
    [TransactionType.ACCOUNT_RESTRICTION_ADDRESS]: 'Account address restriction',
    [TransactionType.ACCOUNT_RESTRICTION_MOSAIC]: 'Account mosaic restriction',
    [TransactionType.ACCOUNT_RESTRICTION_OPERATION]: 'Account operation restriction',
-   [TransactionType.LINK_ACCOUNT]: 'Link account',
+   [TransactionType.LINK_ACCOUNT]: 'Account link',
    [TransactionType.MOSAIC_ADDRESS_RESTRICTION]: 'Mosaic address restriction',
    [TransactionType.MOSAIC_GLOBAL_RESTRICTION]: 'Mosaic global restriction',
    [TransactionType.ACCOUNT_METADATA_TRANSACTION]: 'Account metadata transaction',
