@@ -18,7 +18,6 @@
 import {command, metadata, option} from 'clime';
 import {AccountLinkTransaction, Deadline} from 'nem2-sdk';
 import {
-    AnnounceTransactionFieldsTable,
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
 } from '../../interfaces/announce.transactions.command';
@@ -26,6 +25,7 @@ import {LinkActionResolver} from '../../resolvers/action.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -67,7 +67,8 @@ export default class extends AnnounceTransactionsCommand {
 
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
 
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        new TransactionView(transaction, signedTransaction).print();
+
         const shouldAnnounce = new AnnounceResolver().resolve(options);
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url);

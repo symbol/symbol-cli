@@ -20,6 +20,7 @@ import {command, metadata} from 'clime';
 import {AccountHttp} from 'nem2-sdk';
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command';
 import {AddressResolver} from '../../resolvers/address.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 @command({
     description: 'Fetch unconfirmed transactions from account',
@@ -41,11 +42,13 @@ export default class extends AccountTransactionsCommand {
         accountHttp.getAccountUnconfirmedTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true);
-                let text = '';
-                transactions.map((transaction) => {
-                    text += this.transactionService.formatTransactionToFilter(transaction) + '\n';
+                transactions.forEach((transaction) => {
+                    new TransactionView(transaction).print();
                 });
-                console.log(text === '' ? 'There aren\'t unconfirmed transactions' : text);
+
+                if (!transactions.length) {
+                    console.log('There aren\'t unconfirmed transactions');
+                }
             }, (err) => {
                 this.spinner.stop(true);
                 err = err.message ? JSON.parse(err.message) : err;

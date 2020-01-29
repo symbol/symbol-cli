@@ -22,7 +22,6 @@ import {command, metadata, option} from 'clime';
 import {TransactionHttp, TransactionStatus} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 import {HashResolver} from '../../resolvers/hash.resolver';
-import {TransactionService} from '../../services/transaction.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -72,11 +71,9 @@ export class TransactionStatusTable {
     description: 'Fetch transaction status',
 })
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionService = new TransactionService();
     }
 
     @metadata

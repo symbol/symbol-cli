@@ -9,16 +9,13 @@ import {
     NetworkCurrencyMosaic,
     UInt64,
 } from 'nem2-sdk';
-import {
-    AnnounceAggregateTransactionsOptions,
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-} from '../../interfaces/announce.transactions.command';
+import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {KeyResolver} from '../../resolvers/key.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
 import {StringResolver} from '../../resolvers/string.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -83,10 +80,9 @@ export default class extends AnnounceTransactionsCommand {
                 maxFee,
             );
             const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
-            console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url)
-                .toString('Aggregate Transaction'));
-            console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url)
-                .toString('Aggregate Transaction'));
+
+            new TransactionView(aggregateTransaction, signedTransaction).print();
+
             const shouldAnnounce = new AnnounceResolver().resolve(options);
             if (shouldAnnounce && options.sync) {
                 this.announceTransactionSync(
@@ -119,10 +115,9 @@ export default class extends AnnounceTransactionsCommand {
                 maxFeeHashLock);
             const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash);
 
-            console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, profile.url)
-                .toString('HashLock Transaction'));
-            console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url)
-                .toString('Aggregate Transaction'));
+            new TransactionView(aggregateTransaction, signedTransaction).print();
+            new TransactionView(hashLockTransaction, signedHashLockTransaction).print();
+
             const shouldAnnounce = new AnnounceResolver().resolve(options);
             if (shouldAnnounce) {
                 this.announceAggregateTransaction(

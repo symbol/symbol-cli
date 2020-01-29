@@ -20,7 +20,7 @@ import {command, metadata, option} from 'clime';
 import {TransactionHttp} from 'nem2-sdk';
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 import {HashResolver} from '../../resolvers/hash.resolver';
-import {TransactionService} from '../../services/transaction.service';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -34,11 +34,9 @@ export class CommandOptions extends ProfileOptions {
     description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
 
     constructor() {
         super();
-        this.transactionService = new TransactionService();
     }
 
     @metadata
@@ -52,7 +50,7 @@ export default class extends ProfileCommand {
         transactionHttp.getTransaction(hash)
             .subscribe((transaction) => {
                 this.spinner.stop(true);
-                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction) + '\n');
+                new TransactionView(transaction).print();
             }, (err) => {
                 this.spinner.stop(true);
                 err = err.message ? JSON.parse(err.message) : err;

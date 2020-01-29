@@ -16,8 +16,6 @@
  *
  */
 import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
 import {option} from 'clime';
 import {
     Address,
@@ -26,48 +24,10 @@ import {
     SignedTransaction,
     TransactionHttp,
     TransactionService,
-    TransactionType,
 } from 'nem2-sdk';
 import {merge} from 'rxjs';
 import {filter, mergeMap, tap} from 'rxjs/operators';
 import {ProfileCommand, ProfileOptions} from './profile.command';
-
-export class AnnounceTransactionFieldsTable {
-    private readonly table: HorizontalTable;
-
-    constructor(public readonly signedTransaction: SignedTransaction, url: string) {
-        this.table = new Table({
-            style: {head: ['cyan']},
-            head: ['Property', 'Value'],
-        }) as HorizontalTable;
-
-        const payload = AnnounceTransactionFieldsTable.formatPayload(signedTransaction.payload).join('\n');
-        this.table.push(
-            ['Payload', payload],
-            ['Hash', signedTransaction.hash],
-            ['Signer PublicKey', signedTransaction.signerPublicKey],
-            ['Type', TransactionType[signedTransaction.type]],
-            ['Network Type', signedTransaction.networkType],
-            ['Url', url],
-        );
-    }
-
-    /**
-     * Formats a payload to fit in the command line.
-     * @param {string} payload.
-     * @returns {String[]}
-     */
-    static formatPayload(payload: string) {
-        return payload.match(/.{1,64}/g) || [];
-    }
-
-    toString(title: string): string {
-        let text = '';
-        text += '\n' + chalk.green(title) + '\n';
-        text += this.table.toString();
-        return text;
-    }
-}
 
 /**
  * Base command class to announce transactions.

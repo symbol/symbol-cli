@@ -16,17 +16,14 @@
  */
 import {command, metadata, option} from 'clime';
 import {Deadline, SecretProofTransaction} from 'nem2-sdk';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../../interfaces/announce.transactions.command';
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
 import {AddressAliasResolver} from '../../resolvers/address.resolver';
 import {AnnounceResolver} from '../../resolvers/announce.resolver';
 import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
 import {ProofResolver} from '../../resolvers/proof.resolver';
 import {SecretResolver} from '../../resolvers/secret.resolver';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
@@ -84,7 +81,8 @@ export default class extends AnnounceTransactionsCommand {
             maxFee);
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
 
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
+        new TransactionView(transaction, signedTransaction).print();
+
         const shouldAnnounce = new AnnounceResolver().resolve(options);
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url);

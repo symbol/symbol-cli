@@ -18,7 +18,7 @@
 import {Command, command, metadata, option} from 'clime';
 import {ProfileOptions} from '../../interfaces/profile.command';
 import {PayloadResolver} from '../../resolvers/payload.resolver';
-import {TransactionService} from '../../services/transaction.service';
+import {TransactionView} from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -33,15 +33,13 @@ export class CommandOptions extends ProfileOptions {
 })
 export default class extends Command {
 
-    private readonly transactionService: TransactionService;
     constructor() {
         super();
-        this.transactionService = new TransactionService();
     }
 
     @metadata
     execute(options: CommandOptions) {
         const transaction = new PayloadResolver().resolve(options);
-        console.log(this.transactionService.formatTransactionToFilter(transaction));
+        new TransactionView(transaction).print();
     }
 }
