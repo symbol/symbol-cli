@@ -40,8 +40,8 @@ import {
  SecretLockView,
  SecretProofView,
  TransferView,
-} from '.';
-import {CellRecord} from '../transaction.view';
+} from './transaction-types';
+import {CellRecord} from './transaction.view';
 
 /**
  * @param  {Transaction} transaction

@@ -6,7 +6,6 @@ import {unsignedSecretProof1} from '../../../../mocks/transactions/secretProof.m
 describe('SecretProofView', () => {
  it('should return a view', () => {
   const view = SecretProofView.get(unsignedSecretProof1);
-  console.log('TCL: view', view);
   expect(view['Recipient']).equal(account1.address.pretty());
   expect(view['Hash type']).equal('Op_Sha3_256');
   expect(view['Secret']).equal('9b3155b37159da50aa52d5967c509b410f5a36a3b1e31ecb5ac76675d79b4a5e');

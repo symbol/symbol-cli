@@ -19,9 +19,9 @@
 import {Cell, HorizontalTable} from 'cli-table3';
 import {SignedTransaction, Transaction} from 'nem2-sdk';
 import {TableBuilder} from '../../../models/tableBuilder';
-import {transactionDetailViewFactory} from './transaction-types/transactionDetailViewFactory';
 import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view';
 import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view';
+import {transactionDetailViewFactory} from './transactionDetailViewFactory';
 
 export type CellRecord = Record<string, string | Cell>;
 

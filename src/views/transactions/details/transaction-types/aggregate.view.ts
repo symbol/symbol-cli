@@ -19,8 +19,8 @@
 import {Cell} from 'cli-table3';
 import {AggregateTransaction} from 'nem2-sdk';
 import {CellRecord} from '../transaction.view';
-import {transactionDetailViewFactory} from './transactionDetailViewFactory';
-import {transactionNameFromType} from './transactionNameFromType';
+import {transactionDetailViewFactory} from '../transactionDetailViewFactory';
+import {transactionNameFromType} from '../transactionNameFromType';
 
 export abstract class AggregateView {
   /**

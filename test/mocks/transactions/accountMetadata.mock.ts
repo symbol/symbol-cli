@@ -19,7 +19,7 @@
 import {AccountMetadataTransaction, Convert, Deadline, NetworkType, UInt64} from 'nem2-sdk';
 import {account1} from '../accounts.mock';
 
-export const unsignedAccountMetadata = AccountMetadataTransaction.create(
+export const unsignedAccountMetadata1 = AccountMetadataTransaction.create(
  Deadline.create(),
  account1.publicKey,
  UInt64.fromUint(1000),

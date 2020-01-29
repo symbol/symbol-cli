@@ -18,8 +18,8 @@
 
 import {Cell} from 'cli-table3';
 import {AggregateTransactionInfo, NetworkType, Transaction} from 'nem2-sdk';
-import {transactionNameFromType} from './transaction-types/transactionNameFromType';
 import {CellRecord} from './transaction.view';
+import {transactionNameFromType} from './transactionNameFromType';
 
 export interface ITransactionHeaderView extends CellRecord {
   'Title': Cell;
