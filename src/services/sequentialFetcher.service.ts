@@ -104,7 +104,7 @@ export class SequentialFetcher {
    * @param {Address} address
    * @returns {Promise<{response: any, address: Address}>}
    */
-  private async networkCall(address: Address): Promise<{response: any, address: Address}> {
+  private async networkCall(address: Address): Promise<{response: any; address: Address}> {
     try {
       const promises = await Promise.all([this.networkCallFunction(address), this.delay()]);
       const [response] = promises;

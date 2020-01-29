@@ -125,9 +125,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     .pipe(
                         filter((transaction) => transaction.transactionInfo !== undefined
                             && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
-                        mergeMap((ignored) => {
-                            return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
-                        }),
+                        mergeMap((ignored) => transactionHttp.announceAggregateBonded(signedAggregateTransaction)),
                     ),
             )
                 .subscribe((ignored) => {

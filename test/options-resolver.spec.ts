@@ -33,7 +33,7 @@ describe('OptionsResolver', () => {
     it('should return the value inserted via console if it is not in the command options object', () => {
         const promptText = 'Insert your name';
         const readlineSyncMock = {
-            question : (text: string) => text === promptText ? 'nem' : undefined,
+            question : (text: string): 'nem' | undefined => text === promptText ? 'nem' : undefined,
         };
         const value = OptionsResolver({}, 'name', () => undefined, promptText, readlineSyncMock);
         expect(value).to.be.equal('nem');
@@ -54,7 +54,7 @@ describe('OptionsChoicesResolver', () => {
     it('should return the value inserted via console if it is not in the command options object', () => {
         const choices = ['nem', 'mijin'];
         const readlineSyncMock = {
-            keyInSelect : (ignored: number) => 0,
+            keyInSelect : (): number => 0,
         };
         const index = OptionsChoiceResolver({}, 'name', 'Select name: ', choices, readlineSyncMock);
         expect(choices[index]).to.be.equal('nem');

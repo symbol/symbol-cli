@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-// tslint:disable-next-line: no-var-requires
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 import {expect} from 'chai';
 import {Address} from 'nem2-sdk';
 import {toArray} from 'rxjs/operators';

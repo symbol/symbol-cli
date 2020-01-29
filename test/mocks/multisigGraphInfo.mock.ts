@@ -76,27 +76,23 @@ const multisigAccountGraphInfoDTO2 = {
 const multisigAccounts = new Map<number, MultisigAccountInfo[]>();
 multisigAccounts.set(
  multisigAccountGraphInfoDTO.level,
- multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => {
-  return new MultisigAccountInfo(
+ multisigAccountGraphInfoDTO.multisigEntries.map((multisigAccountInfoDTO) => new MultisigAccountInfo(
    multisigAccountInfoDTO.multisig.account,
    multisigAccountInfoDTO.multisig.minApproval,
    multisigAccountInfoDTO.multisig.minRemoval,
    multisigAccountInfoDTO.multisig.cosignatories,
    multisigAccountInfoDTO.multisig.multisigAccounts,
-  );
- }),
+  )),
 );
 multisigAccounts.set(
  multisigAccountGraphInfoDTO2.level,
- multisigAccountGraphInfoDTO2.multisigEntries.map((multisigAccountInfoDTO) => {
-  return new MultisigAccountInfo(
+ multisigAccountGraphInfoDTO2.multisigEntries.map((multisigAccountInfoDTO) => new MultisigAccountInfo(
    multisigAccountInfoDTO.multisig.account,
    multisigAccountInfoDTO.multisig.minApproval,
    multisigAccountInfoDTO.multisig.minRemoval,
    multisigAccountInfoDTO.multisig.cosignatories,
    multisigAccountInfoDTO.multisig.multisigAccounts,
-  );
- }),
+  )),
 );
 
 export const multisigGraphInfo1 = new MultisigAccountGraphInfo(multisigAccounts);

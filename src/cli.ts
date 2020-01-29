@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {CLI, Shim} from 'clime';
 import * as Path from 'path';
+import {CLI, Shim} from 'clime';
 
 // The second parameter is the path to folder that contains command modules.
 const cli = new CLI('nem2-cli', Path.join(__dirname, 'commands'));
