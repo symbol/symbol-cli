@@ -9,4 +9,4 @@ before_script:
   - npm run build
 script:
   - npm run test:coveralls
-  - npx eslint ./**/*.ts
+  - npm run lint:all
