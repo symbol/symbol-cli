@@ -23,7 +23,7 @@ export const OptionsResolver = (options: any,
                                 secondSource: () => string | undefined,
                                 promptText: string,
                                 readlineDependency?: any,
-                                hide?: boolean) => {
+                                hide?: boolean): any => {
     const readline = readlineDependency || readlineSync;
     const hideEchoBack = hide ? true : false;
     return options[key] !== undefined ? options[key] : (secondSource() ||
@@ -34,7 +34,7 @@ export const OptionsChoiceResolver = (options: any,
                                       key: string,
                                       promptText: string,
                                       choices: string[],
-                                      readlineDependency?: any) => {
+                                      readlineDependency?: any): any => {
     const readline = readlineDependency || readlineSync;
     if (options[key] !== undefined) {
         return options[key];

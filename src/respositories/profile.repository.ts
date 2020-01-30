@@ -118,7 +118,7 @@ export class ProfileRepository {
             }
         }
         if ('' === defaultProfile) {
-            throw new Error(`default profile not found`);
+            throw new Error('default profile not found');
         }
         return this.find(defaultProfile);
     }
@@ -130,7 +130,7 @@ export class ProfileRepository {
     private getProfiles(): any {
         let accounts = {};
         try {
-            accounts = JSON.parse(fs.readFileSync(require('os').homedir() + '/' + this.fileUrl, 'utf-8') as string);
+            accounts = JSON.parse(fs.readFileSync(require('os').homedir() + '/' + this.fileUrl, 'utf-8'));
         } catch (err) {
             fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, '{}', 'utf-8');
         }

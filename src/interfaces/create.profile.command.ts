@@ -88,7 +88,7 @@ export abstract class CreateProfileCommand extends Command {
             let profile;
             try {
                  profile = this.profileService.createNewProfile(simpleWallet,
-                    url as string,
+                    url,
                     generationHash);
             } catch (ignored) {
                 throw new ExpectedError('The profile [' + simpleWallet.name + '] already exists');
