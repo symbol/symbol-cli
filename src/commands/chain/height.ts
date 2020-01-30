@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {ChainHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {ChainHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 
 @command({
     description: 'Get the current height of the chain',
@@ -26,22 +26,22 @@ import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: ProfileOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
+        this.spinner.start()
+        const profile = this.getProfile(options)
 
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = new ChainHttp(profile.url)
         chainHttp.getBlockchainHeight().subscribe((height) => {
-            this.spinner.stop(true);
-            console.log(height.toString());
+            this.spinner.stop(true)
+            console.log(height.toString())
         }, (err) => {
-            this.spinner.stop(true);
-            err = err.message ? JSON.parse(err.message) : err;
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-        });
+            this.spinner.stop(true)
+            err = err.message ? JSON.parse(err.message) : err
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+        })
     }
 }

@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, NetworkType, UInt64} from 'nem2-sdk';
-import {mosaicId1} from '../mosaics.mock';
+import {Deadline, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {mosaicId1} from '../mosaics.mock'
 
 export const unsignedMosaicSupplyChange1 = MosaicSupplyChangeTransaction.create(
  Deadline.create(),
@@ -26,4 +26,4 @@ export const unsignedMosaicSupplyChange1 = MosaicSupplyChangeTransaction.create(
  UInt64.fromUint(10),
  NetworkType.MIJIN_TEST,
  new UInt64([1, 0]),
-);
+)

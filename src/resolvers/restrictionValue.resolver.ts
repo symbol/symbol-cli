@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {NumericStringValidator} from '../validators/numericString.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {NumericStringValidator} from '../validators/numericString.validator'
+import {Resolver} from './resolver'
 
 /**
  * Restriction value resolver
@@ -39,8 +39,8 @@ export class RestrictionValueResolver implements Resolver {
             altKey ? altKey : 'newRestrictionValue',
             () => undefined,
             altText ? altText : 'Enter new restriction value: ',
-        );
-        new NumericStringValidator().validate(value);
-        return value;
+        )
+        new NumericStringValidator().validate(value)
+        return value
     }
 }

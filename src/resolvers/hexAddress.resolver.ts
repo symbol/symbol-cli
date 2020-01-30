@@ -1,8 +1,8 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {HexAddressValidator} from '../validators/hexAddress.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {HexAddressValidator} from '../validators/hexAddress.validator'
+import {Resolver} from './resolver'
 
 /**
  * Hex Address resolver
@@ -20,8 +20,8 @@ export class HexAddressResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an hex address: ').trim();
-        new HexAddressValidator().validate(resolution);
-        return resolution;
+            altText ? altText : 'Enter an hex address: ').trim()
+        new HexAddressValidator().validate(resolution)
+        return resolution
     }
 }

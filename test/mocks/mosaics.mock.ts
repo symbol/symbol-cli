@@ -16,11 +16,11 @@
  *
  */
 
-import {Mosaic, MosaicId, UInt64} from 'nem2-sdk';
-import {namespaceId1} from './namespaces.mock';
+import {Mosaic, MosaicId, UInt64} from 'nem2-sdk'
+import {namespaceId1} from './namespaces.mock'
 
-export const mosaicId1 = new MosaicId([3646934825, 3576016193]);
-export const mosaicId2 = new MosaicId([2262289484, 3405110546]);
+export const mosaicId1 = new MosaicId([3646934825, 3576016193])
+export const mosaicId2 = new MosaicId([2262289484, 3405110546])
 
-export const mosaic1 = new Mosaic(mosaicId1, new UInt64([1, 0]));
-export const mosaic2 = new Mosaic(namespaceId1, UInt64.fromUint(1234567890));
+export const mosaic1 = new Mosaic(mosaicId1, new UInt64([1, 0]))
+export const mosaic2 = new Mosaic(namespaceId1, UInt64.fromUint(1234567890))

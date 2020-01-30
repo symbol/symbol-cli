@@ -16,10 +16,10 @@
  *
  */
 
-import {Cell} from 'cli-table3';
-import {AggregateTransactionInfo, NetworkType, Transaction} from 'nem2-sdk';
-import {CellRecord} from './transaction.view';
-import {transactionNameFromType} from './transactionNameFromType';
+import {Cell} from 'cli-table3'
+import {AggregateTransactionInfo, NetworkType, Transaction} from 'nem2-sdk'
+import {CellRecord} from './transaction.view'
+import {transactionNameFromType} from './transactionNameFromType'
 
 export interface ITransactionHeaderView extends CellRecord {
   'Title': Cell;
@@ -37,7 +37,7 @@ export class TransactionHeaderView {
    * @returns {ITransactionHeaderView}
    */
   static get(transaction: Transaction): ITransactionHeaderView {
-    return new TransactionHeaderView(transaction).render();
+    return new TransactionHeaderView(transaction).render()
   }
 
   /**
@@ -58,7 +58,7 @@ export class TransactionHeaderView {
       ['Deadline']: this.formattedDeadline,
       ['Max fee']: this.tx.maxFee.compact().toLocaleString(),
       ['Signer']: this.signer,
-    };
+    }
   }
 
   /**
@@ -72,7 +72,7 @@ export class TransactionHeaderView {
       content: transactionNameFromType(this.tx.type),
       colSpan: 2,
       hAlign: 'center',
-    };
+    }
   }
 
   /**
@@ -81,12 +81,12 @@ export class TransactionHeaderView {
    * @type {string | null} TransactionHash
    */
   protected get hash(): string | null {
-    const {transactionInfo} = this.tx;
-    if (!transactionInfo) {return null; }
+    const {transactionInfo} = this.tx
+    if (!transactionInfo) {return null }
     if (transactionInfo instanceof AggregateTransactionInfo) {
-      return transactionInfo.aggregateHash;
+      return transactionInfo.aggregateHash
     }
-    return transactionInfo.hash || null;
+    return transactionInfo.hash || null
   }
 
   /**
@@ -95,9 +95,9 @@ export class TransactionHeaderView {
    * @type {string | null} Transaction signer
    */
   protected get signer(): string | null {
-    const {signer} = this.tx;
-    if (!signer) {return null; }
-    return signer.address.pretty();
+    const {signer} = this.tx
+    if (!signer) {return null }
+    return signer.address.pretty()
   }
 
   /**
@@ -107,7 +107,7 @@ export class TransactionHeaderView {
    * @type {string}
    */
   protected get formattedDeadline(): string {
-    const {deadline} = this.tx;
-    return `${deadline.value.toLocalDate()} ${deadline.value.toLocalTime()}`;
+    const {deadline} = this.tx
+    return `${deadline.value.toLocalDate()} ${deadline.value.toLocalTime()}`
   }
 }

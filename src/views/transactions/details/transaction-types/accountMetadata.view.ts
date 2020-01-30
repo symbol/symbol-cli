@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountMetadataTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {AccountMetadataTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class AccountMetadataView {
   /**
@@ -31,6 +31,6 @@ export class AccountMetadataView {
       'Scoped metadata key': tx.scopedMetadataKey.toHex(),
       'Value size delta': tx.valueSizeDelta.toString(),
       'Value': tx.value,
-    };
+    }
   }
 }

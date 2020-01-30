@@ -15,43 +15,43 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata, option} from 'clime'
+import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string;
+    mosaicId: string
 }
 
 export class MosaicGlobalRestrictionsTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
 
     constructor(public readonly mosaicGlobalRestrictions:  Map<string, MosaicGlobalRestrictionItem>) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Restriction Key', 'Reference MosaicId', 'Restriction Type', 'Restriction Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
 
         mosaicGlobalRestrictions.forEach((value: MosaicGlobalRestrictionItem, key: string) => {
             this.table.push(
                 [key, value.referenceMosaicId.toHex(), MosaicRestrictionType[value.restrictionType], value.restrictionValue],
-            );
-        });
+            )
+        })
     }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Mosaic Global Restrictions') + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Mosaic Global Restrictions') + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
@@ -61,28 +61,28 @@ export class MosaicGlobalRestrictionsTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const mosaicId = new MosaicIdResolver().resolve(options);
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const mosaicId = new MosaicIdResolver().resolve(options)
 
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url)
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {
-                this.spinner.stop(true);
+                this.spinner.stop(true)
                 if (mosaicRestrictions.restrictions.size > 0) {
-                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
+                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString())
                 } else {
-                    console.log('\n The mosaicId does not have mosaic global restrictions assigned.');
+                    console.log('\n The mosaicId does not have mosaic global restrictions assigned.')
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

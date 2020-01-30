@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {ExpectedError} from 'clime';
-import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'nem2-sdk';
-import {ProfileOptions} from '../interfaces/profile.command';
-import {PasswordResolver} from '../resolvers/password.resolver';
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {ExpectedError} from 'clime'
+import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {PasswordResolver} from '../resolvers/password.resolver'
 
 /**
  * Profile data transfer object.
@@ -35,7 +35,7 @@ interface ProfileDTO {
  * Profile model.
  */
 export class Profile {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
 
     /**
      * Constructor.
@@ -50,14 +50,14 @@ export class Profile {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
         this.table.push(
             ['Name', this.simpleWallet.name],
             ['Network', NetworkType[this.simpleWallet.network]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
             ['Address', this.simpleWallet.address.pretty()],
-        );
+        )
     }
 
     /**
@@ -65,7 +65,7 @@ export class Profile {
      * @returns {Address}
      */
     get address(): Address {
-        return this.simpleWallet.address;
+        return this.simpleWallet.address
     }
 
     /**
@@ -73,7 +73,7 @@ export class Profile {
      * @returns {NetworkType}
      */
     get networkType(): NetworkType {
-        return this.simpleWallet.network;
+        return this.simpleWallet.network
     }
 
     /**
@@ -81,7 +81,7 @@ export class Profile {
      * @returns {string}
      */
     get name(): string {
-        return this.simpleWallet.name;
+        return this.simpleWallet.name
     }
 
     /**
@@ -94,7 +94,7 @@ export class Profile {
             SimpleWallet.createFromDTO(profileDTO.simpleWallet),
             profileDTO.url,
             profileDTO.networkGenerationHash,
-        );
+        )
     }
 
     /**
@@ -102,7 +102,7 @@ export class Profile {
      * @returns {string}
      */
     toString(): string {
-        return this.table.toString();
+        return this.table.toString()
     }
 
     /**
@@ -112,10 +112,10 @@ export class Profile {
      */
     isPasswordValid(password: Password): boolean {
         try {
-            this.simpleWallet.open(password);
-            return true;
+            this.simpleWallet.open(password)
+            return true
         } catch (error) {
-            return false;
+            return false
         }
     }
 
@@ -126,10 +126,10 @@ export class Profile {
      * @returns {Account}
      */
     decrypt(options: ProfileOptions): Account {
-        const password = new PasswordResolver().resolve(options);
+        const password = new PasswordResolver().resolve(options)
         if (!this.isPasswordValid(password)) {
-            throw new ExpectedError('The password provided does not match your account password');
+            throw new ExpectedError('The password provided does not match your account password')
         }
-        return this.simpleWallet.open(password);
+        return this.simpleWallet.open(password)
     }
 }

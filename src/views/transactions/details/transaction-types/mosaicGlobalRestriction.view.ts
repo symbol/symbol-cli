@@ -16,8 +16,8 @@
  *
  */
 
-import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class MosaicGlobalRestrictionView {
   /**
@@ -34,6 +34,6 @@ export class MosaicGlobalRestrictionView {
       'Previous restriction type': MosaicRestrictionType[tx.previousRestrictionType],
       'New restriction value': tx.newRestrictionValue.toString(),
       'New restriction type': MosaicRestrictionType[tx.newRestrictionType],
-    };
+    }
   }
 }

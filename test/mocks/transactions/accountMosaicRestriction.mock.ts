@@ -16,9 +16,9 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk';
-import {mosaicId1, mosaicId2} from '../mosaics.mock';
-import {namespaceId1} from '../namespaces.mock';
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk'
+import {mosaicId1, mosaicId2} from '../mosaics.mock'
+import {namespaceId1} from '../namespaces.mock'
 
 export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction
     .createMosaicRestrictionModificationTransaction(
@@ -27,4 +27,4 @@ export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction
         [mosaicId1],
         [mosaicId2, namespaceId1],
         NetworkType.MIJIN_TEST,
-    );
+    )

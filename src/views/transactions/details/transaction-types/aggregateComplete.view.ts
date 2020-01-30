@@ -16,9 +16,9 @@
  *
  */
 
-import {AggregateTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
-import {AggregateView} from './aggregate.view';
+import {AggregateTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
+import {AggregateView} from './aggregate.view'
 
 export class AggregateCompleteView extends AggregateView {
   /**
@@ -27,7 +27,7 @@ export class AggregateCompleteView extends AggregateView {
    * @returns {CellRecord}
    */
   static get(tx: AggregateTransaction): CellRecord {
-    return new AggregateCompleteView(tx).render();
+    return new AggregateCompleteView(tx).render()
   }
 
   /**
@@ -35,7 +35,7 @@ export class AggregateCompleteView extends AggregateView {
    * @param {AggregateTransaction} tx
    */
   private constructor(tx: AggregateTransaction) {
-    super(tx);
+    super(tx)
   }
 
   /**
@@ -43,6 +43,6 @@ export class AggregateCompleteView extends AggregateView {
    * @returns {CellRecord}
    */
   private render(): CellRecord {
-    return this.getInnerTransactionViews();
+    return this.getInnerTransactionViews()
   }
 }

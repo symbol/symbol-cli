@@ -16,19 +16,19 @@
  *
  */
 
-import {Account, NetworkType} from 'nem2-sdk';
+import {Account, NetworkType} from 'nem2-sdk'
 
 export const account1 = Account.createFromPrivateKey(
  '4EE9CE9246E8B93C4AA3931ED0D9783165C8D68713E5CB58561E7F538CE6B960',
  NetworkType.MAIN_NET,
-);
+)
 
 export const account2 = Account.createFromPrivateKey(
  'B9B6FCC457B5D7AF81A14669BD7054AE8B4A9E9B9C22C388586CADF19C17BDA2',
  NetworkType.MAIN_NET,
-);
+)
 
 export const account3 = Account.createFromPrivateKey(
  'F56E58A3BD5E5299B6AACF4F17746A3D9647A17D8DF7ABE27CD56D7E271CFE1C',
  NetworkType.MAIN_NET,
-);
+)

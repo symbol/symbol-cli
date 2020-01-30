@@ -16,11 +16,11 @@
  *
  */
 
-import {Cell} from 'cli-table3';
-import {AggregateTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
-import {transactionDetailViewFactory} from '../transactionDetailViewFactory';
-import {transactionNameFromType} from '../transactionNameFromType';
+import {Cell} from 'cli-table3'
+import {AggregateTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
+import {transactionDetailViewFactory} from '../transactionDetailViewFactory'
+import {transactionNameFromType} from '../transactionNameFromType'
 
 export abstract class AggregateView {
   /**
@@ -28,7 +28,7 @@ export abstract class AggregateView {
    * @private
    * @type {number}
    */
-  private numberOfInnerTx: number;
+  private numberOfInnerTx: number
 
   /**
    * Creates an instance of AggregateView.
@@ -44,9 +44,9 @@ export abstract class AggregateView {
   protected getInnerTransactionViews(): CellRecord {
     const innerTransactionsViews = this.tx.innerTransactions.map(
       (transaction) => transactionDetailViewFactory(transaction),
-    );
+    )
 
-    this.numberOfInnerTx = innerTransactionsViews.length;
+    this.numberOfInnerTx = innerTransactionsViews.length
 
     return {
       ...innerTransactionsViews
@@ -55,7 +55,7 @@ export abstract class AggregateView {
           [`title${index}`]: this.getInnerTransactionTitle(index),
           ...this.getPrefixedInnerTransactionView(view, index),
         }), {}),
-    };
+    }
   }
 
   /**
@@ -66,13 +66,13 @@ export abstract class AggregateView {
    * @returns {Cell}
    */
   private getInnerTransactionTitle(index: number): Cell {
-    const txType = transactionNameFromType(this.tx.innerTransactions[index].type);
+    const txType = transactionNameFromType(this.tx.innerTransactions[index].type)
 
     return {
       content: `Inner transaction ${index + 1} of ${this.numberOfInnerTx} - ${txType}`,
       colSpan: 2,
       hAlign: 'center',
-    };
+    }
   }
 
   /**
@@ -88,6 +88,6 @@ export abstract class AggregateView {
       .map(([label, value]) => ({
         [`[Inner tx. ${index + 1} of ${this.numberOfInnerTx}] ${label}`]: value,
       }))
-      .reduce((acc, item) => ({...acc, ...item}));
+      .reduce((acc, item) => ({...acc, ...item}))
   }
 }

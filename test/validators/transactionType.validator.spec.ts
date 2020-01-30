@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {TransactionTypeValidator} from '../../src/validators/transactionType.validator';
+import {expect} from 'chai'
+import {TransactionTypeValidator} from '../../src/validators/transactionType.validator'
 
 describe('Transaction type validator', () => {
 
     it('default case', () => {
-        const value = '414C';
+        const value = '414C'
         expect(new TransactionTypeValidator().validate(value))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if transaction is unknown', () => {
-        const value = 'test';
+        const value = 'test'
         expect(() => {
-            new TransactionTypeValidator().validate(value);
-        }).to.throws('Enter a transaction type in hexadecimal. Example: 4154');
-    });
+            new TransactionTypeValidator().validate(value)
+        }).to.throws('Enter a transaction type in hexadecimal. Example: 4154')
+    })
 
-});
+})

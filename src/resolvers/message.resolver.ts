@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Message resolver
@@ -19,7 +19,7 @@ export class MessageResolver implements Resolver {
         const resolution = OptionsResolver(options,
         'message',
         () =>  undefined,
-        'Enter a message: ');
-        return resolution;
+        'Enter a message: ')
+        return resolution
     }
 }

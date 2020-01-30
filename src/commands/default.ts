@@ -18,7 +18,7 @@
 
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const pkg = require('../../../package.json');
+const pkg = require('../../../package.json')
 export const description = `
                       ____            _ _
  _ __   ___ _ __ ___ |___ \\       ___| (_)
@@ -27,7 +27,7 @@ export const description = `
 |_| |_|\\___|_| |_| |_|_____|     \\___|_|_|
 
                                    v${pkg.version}
-`;
+`
 
 export const subcommands = [
     {
@@ -78,4 +78,4 @@ export const subcommands = [
         name: 'transaction',
         brief: 'Announce transactions',
     },
-];
+]

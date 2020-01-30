@@ -15,23 +15,23 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {Account, Deadline, EmptyMessage, NetworkType, TransferTransaction} from 'nem2-sdk';
-import {PayloadResolver} from '../../src/resolvers/payload.resolver';
+import {expect} from 'chai'
+import {Account, Deadline, EmptyMessage, NetworkType, TransferTransaction} from 'nem2-sdk'
+import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 
 describe('Payload resolver', () => {
 
     it('should return transaction from payload', () => {
-        let transaction: TransferTransaction;
+        let transaction: TransferTransaction
         transaction = TransferTransaction.create(
             Deadline.create(),
             Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
             [],
             EmptyMessage,
-            NetworkType.MIJIN_TEST);
-        const payload = transaction.serialize();
-        const profileOptions = {payload} as any;
+            NetworkType.MIJIN_TEST)
+        const payload = transaction.serialize()
+        const profileOptions = {payload} as any
         expect(new PayloadResolver().resolve(profileOptions))
-            .to.be.deep.equal(transaction);
-    });
-});
+            .to.be.deep.equal(transaction)
+    })
+})

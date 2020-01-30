@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime';
-import { UInt64 } from 'nem2-sdk';
+import { ExpectedError, ValidationContext, Validator } from 'clime'
+import { UInt64 } from 'nem2-sdk'
 
 /**
  * Key validator
@@ -30,9 +30,9 @@ export class KeyValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            UInt64.fromHex(value);
+            UInt64.fromHex(value)
         } catch (err) {
-            throw new ExpectedError('Invalid key');
+            throw new ExpectedError('Invalid key')
         }
     }
 }

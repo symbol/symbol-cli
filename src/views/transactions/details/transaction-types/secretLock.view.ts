@@ -16,10 +16,10 @@
  *
  */
 
-import {HashType, SecretLockTransaction} from 'nem2-sdk';
-import {MosaicsView} from '../../../mosaics.view';
-import {RecipientsView} from '../../../recipients.view';
-import {CellRecord} from '../transaction.view';
+import {HashType, SecretLockTransaction} from 'nem2-sdk'
+import {MosaicsView} from '../../../mosaics.view'
+import {RecipientsView} from '../../../recipients.view'
+import {CellRecord} from '../transaction.view'
 
 export class SecretLockView {
   /**
@@ -34,6 +34,6 @@ export class SecretLockView {
       'Duration': tx.duration.toString(),
       'Hash type': HashType[tx.hashType],
       'Secret': tx.secret,
-    };
+    }
   }
 }

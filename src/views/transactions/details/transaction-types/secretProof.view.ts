@@ -16,9 +16,9 @@
  *
  */
 
-import {HashType, SecretProofTransaction} from 'nem2-sdk';
-import {RecipientsView} from '../../../recipients.view';
-import {CellRecord} from '../transaction.view';
+import {HashType, SecretProofTransaction} from 'nem2-sdk'
+import {RecipientsView} from '../../../recipients.view'
+import {CellRecord} from '../transaction.view'
 
 export class SecretProofView {
   /**
@@ -32,6 +32,6 @@ export class SecretProofView {
       'Hash type': HashType[tx.hashType],
       'Secret': tx.secret,
       'Proof': tx.proof,
-    };
+    }
   }
 }

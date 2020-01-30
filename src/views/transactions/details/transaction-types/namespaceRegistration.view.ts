@@ -16,8 +16,8 @@
  *
  */
 
-import {NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class NamespaceRegistrationView {
   /**
@@ -26,7 +26,7 @@ export class NamespaceRegistrationView {
    * @returns {CellRecord}
    */
   static get(tx: NamespaceRegistrationTransaction): CellRecord {
-    return new NamespaceRegistrationView(tx).render();
+    return new NamespaceRegistrationView(tx).render()
   }
 
   /**
@@ -44,7 +44,7 @@ export class NamespaceRegistrationView {
       'Namespace name': this.tx.namespaceName,
       ...this.tx.registrationType === NamespaceRegistrationType.RootNamespace
         ? this.getRootNamespaceProps() : this.getSubNamespaceProps(),
-    };
+    }
   }
 
   /**
@@ -53,13 +53,13 @@ export class NamespaceRegistrationView {
    */
   private getRootNamespaceProps(): CellRecord {
     if (!this.tx.duration) {
-      throw new Error('No duration found in getRootNamespaceProps');
+      throw new Error('No duration found in getRootNamespaceProps')
     }
 
     return {
       Type: 'Root namespace',
       Duration: `${this.tx.duration.toString()} blocks`,
-    };
+    }
   }
 
   /**
@@ -68,12 +68,12 @@ export class NamespaceRegistrationView {
    */
   private getSubNamespaceProps(): CellRecord {
     if (!this.tx.parentId) {
-      throw new Error('No parent Id found in getSubNamespaceProps');
+      throw new Error('No parent Id found in getSubNamespaceProps')
     }
 
     return {
       'Type': 'Sub namespace',
       'Parent Id': this.tx.parentId.toHex(),
-    };
+    }
   }
 }

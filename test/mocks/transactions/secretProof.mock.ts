@@ -16,11 +16,11 @@
  *
  */
 
-import {sha3_256} from 'js-sha3';
-import {Convert, Deadline, HashType, NetworkType, SecretProofTransaction, UInt64} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
+import {sha3_256} from 'js-sha3'
+import {Convert, Deadline, HashType, NetworkType, SecretProofTransaction, UInt64} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
 
-const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'
 
 export const unsignedSecretProof1 = SecretProofTransaction.create(
  Deadline.create(),
@@ -30,4 +30,4 @@ export const unsignedSecretProof1 = SecretProofTransaction.create(
  proof,
  NetworkType.MIJIN_TEST,
  new UInt64([1, 0]),
-);
+)

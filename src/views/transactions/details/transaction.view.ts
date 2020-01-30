@@ -16,31 +16,31 @@
  *
  */
 
-import {Cell, HorizontalTable} from 'cli-table3';
-import {SignedTransaction, Transaction} from 'nem2-sdk';
-import {TableBuilder} from '../../../models/tableBuilder';
-import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view';
-import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view';
-import {transactionDetailViewFactory} from './transactionDetailViewFactory';
+import {Cell, HorizontalTable} from 'cli-table3'
+import {SignedTransaction, Transaction} from 'nem2-sdk'
+import {TableBuilder} from '../../../models/tableBuilder'
+import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view'
+import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view'
+import {transactionDetailViewFactory} from './transactionDetailViewFactory'
 
-export type CellRecord = Record<string, string | Cell>;
+export type CellRecord = Record<string, string | Cell>
 
 export class TransactionView {
   /**
    * Properties common to all transactions
    * @type {ITransactionHeaderView}
    */
-  header: ITransactionHeaderView;
+  header: ITransactionHeaderView
   /**
    * Properties specific to the transaction type
    * @type {CellRecord}
    */
-  details: CellRecord;
+  details: CellRecord
   /**
    * Properties specific to a transaction signature
    * @type {ITransactionViewSignature}
    */
-  signature?: ITransactionViewSignature;
+  signature?: ITransactionViewSignature
 
   /**
    * Creates an instance of TransactionView.
@@ -48,23 +48,23 @@ export class TransactionView {
    * @param {SignedTransaction} [signedTransaction]
    */
   constructor(transaction: Transaction, signedTransaction?: SignedTransaction) {
-    this.header = TransactionHeaderView.get(transaction);
-    this.details = transactionDetailViewFactory(transaction);
-    this.signature = signedTransaction && TransactionSignatureView.get(signedTransaction);
+    this.header = TransactionHeaderView.get(transaction)
+    this.details = transactionDetailViewFactory(transaction)
+    this.signature = signedTransaction && TransactionSignatureView.get(signedTransaction)
   }
 
   /**
    * Logs the table
    */
   print(): void {
-    console.log(this.render().toString());
+    console.log(this.render().toString())
   }
 
   /**
    * @returns {HorizontalTable}
    */
   render(): HorizontalTable {
-    return TableBuilder.renderTableFromObject(this.sanitizedCellRecord);
+    return TableBuilder.renderTableFromObject(this.sanitizedCellRecord)
   }
 
   /**
@@ -74,21 +74,21 @@ export class TransactionView {
    * @type {CellRecord}
    */
   protected get sanitizedCellRecord(): CellRecord {
-    const headerNoNull = this.filterNullValues(this.header);
-    const detailsNoNull = this.filterNullValues(this.details);
-    const signatureNoNull = this.signature ? this.filterNullValues(this.signature) : undefined;
+    const headerNoNull = this.filterNullValues(this.header)
+    const detailsNoNull = this.filterNullValues(this.details)
+    const signatureNoNull = this.signature ? this.filterNullValues(this.signature) : undefined
 
     const allCellRecordsNoNull = {
       ...headerNoNull,
       ...detailsNoNull,
       ...signatureNoNull,
-    };
-
-    if (!allCellRecordsNoNull) {
-      throw new Error('Something went wrong at sanitizedCellRecord');
     }
 
-    return allCellRecordsNoNull;
+    if (!allCellRecordsNoNull) {
+      throw new Error('Something went wrong at sanitizedCellRecord')
+    }
+
+    return allCellRecordsNoNull
   }
 
   /**
@@ -98,6 +98,6 @@ export class TransactionView {
    * @returns {CellRecord}
    */
   private filterNullValues(cellRecord: CellRecord): CellRecord {
-    return Object.fromEntries(Object.entries(cellRecord).filter(([, v]) => v));
+    return Object.fromEntries(Object.entries(cellRecord).filter(([, v]) => v))
   }
 }

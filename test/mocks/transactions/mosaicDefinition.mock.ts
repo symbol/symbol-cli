@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce, NetworkType, UInt64} from 'nem2-sdk';
-import {mosaicId1} from '../mosaics.mock';
+import {Deadline, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce, NetworkType, UInt64} from 'nem2-sdk'
+import {mosaicId1} from '../mosaics.mock'
 
 export const unsignedMosaicDefinition1 = MosaicDefinitionTransaction.create(
  Deadline.create(),
@@ -27,4 +27,4 @@ export const unsignedMosaicDefinition1 = MosaicDefinitionTransaction.create(
  3,
  UInt64.fromUint(1000),
  NetworkType.MIJIN_TEST,
-);
+)

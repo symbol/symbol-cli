@@ -16,9 +16,9 @@
  *
  */
 
-import {AddressAliasTransaction, AliasAction, Deadline, NetworkType, UInt64} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
-import {namespaceId1} from '../namespaces.mock';
+import {AddressAliasTransaction, AliasAction, Deadline, NetworkType, UInt64} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
+import {namespaceId1} from '../namespaces.mock'
 
 export const unsignedAddressAlias1 = AddressAliasTransaction.create(
  Deadline.create(),
@@ -27,4 +27,4 @@ export const unsignedAddressAlias1 = AddressAliasTransaction.create(
  account1.address,
  NetworkType.MIJIN_TEST,
  new UInt64([1, 0]),
-);
+)

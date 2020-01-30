@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AccountHttp} from 'nem2-sdk';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {TransactionView} from '../../views/transactions/details/transaction.view';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {AccountHttp} from 'nem2-sdk'
+import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 @command({
     description: 'Fetch transactions from account',
@@ -28,32 +28,32 @@ import {TransactionView} from '../../views/transactions/details/transaction.view
 export default class extends AccountTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: AccountTransactionsOptions) {
-        this.spinner.start();
+        this.spinner.start()
 
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
 
-        const accountHttp = new AccountHttp(profile.url);
+        const accountHttp = new AccountHttp(profile.url)
         accountHttp.getAccountTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
-                this.spinner.stop(true);
+                this.spinner.stop(true)
 
                 if (!transactions.length) {
-                    console.log('There aren\'t transactions');
+                    console.log('There aren\'t transactions')
                 }
 
                 transactions.forEach((transaction) => {
-                    new TransactionView(transaction).print();
-                });
+                    new TransactionView(transaction).print()
+                })
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

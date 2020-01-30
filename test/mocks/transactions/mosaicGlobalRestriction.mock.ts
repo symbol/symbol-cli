@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'nem2-sdk';
-import {mosaicId1, mosaicId2} from '../mosaics.mock';
+import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'nem2-sdk'
+import {mosaicId1, mosaicId2} from '../mosaics.mock'
 
 export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransaction
     .create(
@@ -30,4 +30,4 @@ export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransacti
         MosaicRestrictionType.GE,
         NetworkType.MIJIN_TEST,
         mosaicId2,
-    );
+    )

@@ -1,8 +1,8 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsChoiceResolver} from '../options-resolver';
-import {BinaryValidator} from '../validators/binary.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsChoiceResolver} from '../options-resolver'
+import {BinaryValidator} from '../validators/binary.validator'
+import {Resolver} from './resolver'
 
 /**
  * Link action resolver
@@ -17,14 +17,14 @@ export class ActionResolver implements Resolver {
      * @returns {number}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['Remove', 'Add'];
+        const choices = ['Remove', 'Add']
         const index = +OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        );
-        new BinaryValidator().validate(index);
-        return index;
+        )
+        new BinaryValidator().validate(index)
+        return index
     }
 }
 
@@ -41,14 +41,14 @@ export class LinkActionResolver implements Resolver {
      * @returns {number}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['Unlink', 'Link'];
+        const choices = ['Unlink', 'Link']
         const index = +OptionsChoiceResolver(options,
         'action',
             altText ? altText : 'Select an action: ',
         choices,
-        );
-        new BinaryValidator().validate(index);
-        return index;
+        )
+        new BinaryValidator().validate(index)
+        return index
     }
 }
 
@@ -62,13 +62,13 @@ export class SupplyActionResolver implements Resolver {
      * @returns {number}
      */
     resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['Decrease', 'Increase'];
+        const choices = ['Decrease', 'Increase']
         const index = +OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        );
-        new BinaryValidator().validate(index);
-        return index;
+        )
+        new BinaryValidator().validate(index)
+        return index
     }
 }

@@ -15,27 +15,27 @@
  * limitations under the License.
  *
  */
-import {Spinner} from 'cli-spinner';
-import {Command, ExpectedError, option, Options} from 'clime';
-import {Profile} from '../models/profile';
-import {ProfileRepository} from '../respositories/profile.repository';
-import {ProfileService} from '../services/profile.service';
+import {Spinner} from 'cli-spinner'
+import {Command, ExpectedError, option, Options} from 'clime'
+import {Profile} from '../models/profile'
+import {ProfileRepository} from '../respositories/profile.repository'
+import {ProfileService} from '../services/profile.service'
 
 /**
  * Base command class to use the stored profile.
  */
 export abstract class ProfileCommand extends Command {
-    public spinner = new Spinner('processing.. %s');
-    private readonly profileService: ProfileService;
+    public spinner = new Spinner('processing.. %s')
+    private readonly profileService: ProfileService
 
     /**
      * Constructor.
      */
     constructor(fileUrl?: string) {
-        super();
-        const profileRepository = new ProfileRepository(fileUrl || '.nem2rc.json');
-        this.profileService = new ProfileService(profileRepository);
-        this.spinner.setSpinnerString('|/-\\');
+        super()
+        const profileRepository = new ProfileRepository(fileUrl || '.nem2rc.json')
+        this.profileService = new ProfileService(profileRepository)
+        this.spinner.setSpinnerString('|/-\\')
     }
 
     /**
@@ -47,13 +47,13 @@ export abstract class ProfileCommand extends Command {
     protected getProfile(options: ProfileOptions): Profile {
         try {
             if (options.profile) {
-                return this.profileService.findProfileNamed(options.profile);
+                return this.profileService.findProfileNamed(options.profile)
             }
-            return this.profileService.getDefaultProfile();
+            return this.profileService.getDefaultProfile()
         } catch (err) {
             throw new ExpectedError('Can\'t retrieve the current profile.' +
             'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-            'if not, use \'nem2-cli profile create\' to create a new profile');
+            'if not, use \'nem2-cli profile create\' to create a new profile')
         }
     }
 
@@ -64,10 +64,10 @@ export abstract class ProfileCommand extends Command {
      */
     protected getDefaultProfile(): Profile {
         try {
-            return this.profileService.getDefaultProfile();
+            return this.profileService.getDefaultProfile()
         } catch (err) {
             throw new ExpectedError('Can\'t retrieve the default profile.' +
-                'Use \'nem2-cli profile create\' to create a new default profile');
+                'Use \'nem2-cli profile create\' to create a new default profile')
         }
     }
 
@@ -78,9 +78,9 @@ export abstract class ProfileCommand extends Command {
      */
     protected findAllProfiles(): Profile[] {
         try {
-            return this.profileService.findAllProfiles();
+            return this.profileService.findAllProfiles()
         } catch (err) {
-            throw new ExpectedError('Can\'t retrieve the profile list.');
+            throw new ExpectedError('Can\'t retrieve the profile list.')
         }
     }
 
@@ -93,5 +93,5 @@ export class ProfileOptions extends Options {
     @option({
         description: '(Optional) Select between your profiles, by providing a profile name.',
     })
-    profile: string;
+    profile: string
 }

@@ -16,12 +16,12 @@
  *
  */
 
-import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
+import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
 
 export const unsignedAccountLink1 = AccountLinkTransaction.create(
  Deadline.create(),
  account1.publicKey,
  LinkAction.Link,
  NetworkType.MIJIN_TEST,
-);
+)

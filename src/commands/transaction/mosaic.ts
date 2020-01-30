@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
 import {
     AggregateTransaction,
     Deadline,
@@ -26,63 +26,63 @@ import {
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
     UInt64,
-} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
-import {AmountResolver} from '../../resolvers/amount.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {DivisibilityResolver} from '../../resolvers/divisibility.resolver';
-import {DurationResolver} from '../../resolvers/duration.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver';
-import {TransactionView} from '../../views/transactions/details/transaction.view';
+} from 'nem2-sdk'
+import * as readlineSync from 'readline-sync'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AmountResolver} from '../../resolvers/amount.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {DivisibilityResolver} from '../../resolvers/divisibility.resolver'
+import {DurationResolver} from '../../resolvers/duration.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Initial supply of mosaics.',
     })
-    amount: string;
+    amount: string
 
     @option({
         flag: 't',
         description: '(Optional) Mosaic transferable.',
         toggle: true,
     })
-    transferable: any;
+    transferable: any
 
     @option({
         flag: 's',
         description: '(Optional) Mosaic supply mutable.',
         toggle: true,
     })
-    supplyMutable: any;
+    supplyMutable: any
 
     @option({
         flag: 'r',
         description: '(Optional) Mosaic restrictable.',
         toggle: true,
     })
-    restrictable: any;
+    restrictable: any
 
     @option({
         flag: 'd',
         description: 'Mosaic divisibility, from 0 to 6.',
     })
-    divisibility: number;
+    divisibility: number
 
     @option({
         flag: 'u',
         description: 'Mosaic duration in amount of blocks.',
     })
-    duration: string;
+    duration: string
 
     @option({
         flag: 'n',
         description: '(Optional) Mosaic non-expiring.',
         toggle: true,
     })
-    nonExpiring: any;
+    nonExpiring: any
 }
 
 @command({
@@ -92,25 +92,25 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends AnnounceTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
 
-        const nonce = MosaicNonce.createRandom();
-        let blocksDuration;
+        const nonce = MosaicNonce.createRandom()
+        let blocksDuration
         if (!options.nonExpiring) {
             if (!readlineSync.keyInYN('Do you want a non-expiring mosaic?')) {
-                blocksDuration = new DurationResolver().resolve(options);
+                blocksDuration = new DurationResolver().resolve(options)
             }
         }
-        const divisibility = new DivisibilityResolver().resolve(options);
-        const mosaicFlags = new MosaicFlagsResolver().resolve(options);
-        const amount = new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ');
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const divisibility = new DivisibilityResolver().resolve(options)
+        const mosaicFlags = new MosaicFlagsResolver().resolve(options)
+        const amount = new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ')
+        const maxFee = new MaxFeeResolver().resolve(options)
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
@@ -119,7 +119,7 @@ export default class extends AnnounceTransactionsCommand {
             mosaicFlags,
             divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
-            profile.networkType);
+            profile.networkType)
 
         const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
@@ -127,7 +127,7 @@ export default class extends AnnounceTransactionsCommand {
             MosaicSupplyChangeAction.Increase,
             amount,
             profile.networkType,
-        );
+        )
 
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
@@ -137,17 +137,17 @@ export default class extends AnnounceTransactionsCommand {
             ],
             profile.networkType,
             [],
-            maxFee);
-        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash)
 
-        new TransactionView(aggregateTransaction, signedTransaction).print();
+        new TransactionView(aggregateTransaction, signedTransaction).print()
 
-        console.log(chalk.green('The new mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex());
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        console.log(chalk.green('The new mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex())
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 }

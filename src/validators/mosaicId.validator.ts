@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {MosaicId, NamespaceId} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {MosaicId, NamespaceId} from 'nem2-sdk'
 
 /**
  * Mosaic id validator
@@ -31,9 +31,9 @@ export class MosaicIdValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            const ignored = new MosaicId(value);
+            const ignored = new MosaicId(value)
         } catch (err) {
-            throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+            throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C')
         }
     }
 }
@@ -50,19 +50,19 @@ export class MosaicIdAliasValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        const aliasTag = '@';
+        const aliasTag = '@'
         if (value.charAt(0) !== aliasTag) {
             try {
-                const ignored = new MosaicId(value);
+                const ignored = new MosaicId(value)
             } catch (err) {
-                throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C');
+                throw new ExpectedError('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C')
             }
         } else {
-            const alias = value.substring(1);
+            const alias = value.substring(1)
             try {
-                const ignored = new NamespaceId(alias);
+                const ignored = new NamespaceId(alias)
             } catch (err) {
-                throw new ExpectedError('Enter valid mosaic alias. Example: @nem.xem');
+                throw new ExpectedError('Enter valid mosaic alias. Example: @nem.xem')
             }
         }
     }

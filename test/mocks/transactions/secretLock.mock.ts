@@ -16,12 +16,12 @@
  *
  */
 
-import {keccak_256} from 'js-sha3';
-import {Convert, Deadline, HashType, NetworkType, SecretLockTransaction, UInt64} from 'nem2-sdk';
-import {mosaic2} from '../mosaics.mock';
-import {namespaceId2} from '../namespaces.mock';
+import {keccak_256} from 'js-sha3'
+import {Convert, Deadline, HashType, NetworkType, SecretLockTransaction, UInt64} from 'nem2-sdk'
+import {mosaic2} from '../mosaics.mock'
+import {namespaceId2} from '../namespaces.mock'
 
-const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
+const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'
 
 export const unsignedSecretLock1 = SecretLockTransaction.create(
  Deadline.create(),
@@ -31,4 +31,4 @@ export const unsignedSecretLock1 = SecretLockTransaction.create(
  keccak_256.create().update(Convert.hexToUint8(proof)).hex(),
  namespaceId2,
  NetworkType.MIJIN_TEST,
-);
+)

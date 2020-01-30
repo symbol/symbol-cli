@@ -16,10 +16,10 @@
  *
  */
 
-import {TransferTransaction} from 'nem2-sdk';
-import {MosaicsView} from '../../../mosaics.view';
-import {RecipientsView} from '../../../recipients.view';
-import {CellRecord} from '../transaction.view';
+import {TransferTransaction} from 'nem2-sdk'
+import {MosaicsView} from '../../../mosaics.view'
+import {RecipientsView} from '../../../recipients.view'
+import {CellRecord} from '../transaction.view'
 
 export class TransferView {
   /**
@@ -28,7 +28,7 @@ export class TransferView {
    * @returns {CellRecord}
    */
   static get(tx: TransferTransaction): CellRecord {
-    return new TransferView(tx).render();
+    return new TransferView(tx).render()
   }
 
   /**
@@ -46,7 +46,7 @@ export class TransferView {
       Recipient: this.getRecipient(),
       Message: this.tx.message.payload || 'N/A',
       ...MosaicsView.get(this.tx.mosaics),
-    };
+    }
   }
 
   /**
@@ -54,7 +54,7 @@ export class TransferView {
    * @returns {string}
    */
   private getRecipient(): string {
-    if (!this.tx.recipientAddress) {return ''; }
-    return RecipientsView.get(this.tx.recipientAddress);
+    if (!this.tx.recipientAddress) {return '' }
+    return RecipientsView.get(this.tx.recipientAddress)
   }
 }

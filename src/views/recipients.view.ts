@@ -16,7 +16,7 @@
  *
  */
 
-import {Address, NamespaceId} from 'nem2-sdk';
+import {Address, NamespaceId} from 'nem2-sdk'
 
 export class RecipientsView {
   /**
@@ -28,6 +28,6 @@ export class RecipientsView {
   static get(recipient: Address | NamespaceId): string {
     return recipient instanceof Address
       ? recipient.pretty()
-      : `${recipient.fullName} (${recipient.toHex()})`;
+      : `${recipient.fullName} (${recipient.toHex()})`
   }
 }

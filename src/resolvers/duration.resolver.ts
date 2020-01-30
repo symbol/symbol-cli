@@ -1,9 +1,9 @@
-import {UInt64} from 'nem2-sdk';
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {NumericStringValidator} from '../validators/numericString.validator';
-import {Resolver} from './resolver';
+import {UInt64} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {NumericStringValidator} from '../validators/numericString.validator'
+import {Resolver} from './resolver'
 
 /**
  * Duration resolver
@@ -21,8 +21,8 @@ export class DurationResolver implements Resolver {
         const resolution = OptionsResolver(options,
         'duration',
         () =>  undefined,
-        altText ? altText : 'Enter the duration in number of blocks: ').trim();
-        new NumericStringValidator().validate(resolution);
-        return UInt64.fromNumericString(resolution);
+        altText ? altText : 'Enter the duration in number of blocks: ').trim()
+        new NumericStringValidator().validate(resolution)
+        return UInt64.fromNumericString(resolution)
     }
 }

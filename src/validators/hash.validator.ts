@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
 
 /**
  * Numeric string
@@ -29,9 +29,9 @@ export class HashValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-      const hashLength = 64;
-      const throwError = () => {throw new ExpectedError('The transaction hash is invalid'); };
-      if (typeof value !== 'string') {throwError(); }
-      if (value.length !== hashLength) {throwError(); }
+      const hashLength = 64
+      const throwError = () => {throw new ExpectedError('The transaction hash is invalid') }
+      if (typeof value !== 'string') {throwError() }
+      if (value.length !== hashLength) {throwError() }
     }
 }

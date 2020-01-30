@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {DurationResolver} from '../../src/resolvers/duration.resolver';
+import {expect} from 'chai'
+import {DurationResolver} from '../../src/resolvers/duration.resolver'
 
 describe('Duration resolver', () => {
 
     it('should return duration', () => {
-        const duration = '10';
-        const profileOptions = {duration} as any;
+        const duration = '10'
+        const profileOptions = {duration} as any
         expect(new DurationResolver().resolve(profileOptions).compact())
-            .to.be.equal(10);
-    });
+            .to.be.equal(10)
+    })
 
     it('should throw error if height invalid', () => {
-        const duration = '-1';
-        const profileOptions = {duration} as any;
+        const duration = '-1'
+        const profileOptions = {duration} as any
         expect(() => new DurationResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
-});
+            .to.throws(Error)
+    })
+})

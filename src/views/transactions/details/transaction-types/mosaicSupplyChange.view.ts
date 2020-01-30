@@ -16,8 +16,8 @@
  *
  */
 
-import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class MosaicSupplyChangeView {
   /**
@@ -31,6 +31,6 @@ export class MosaicSupplyChangeView {
       'Direction': tx.action === MosaicSupplyChangeAction.Increase
         ? 'Increase supply' : 'Decrease supply',
       'Delta': tx.delta.compact().toLocaleString(),
-    };
+    }
   }
 }

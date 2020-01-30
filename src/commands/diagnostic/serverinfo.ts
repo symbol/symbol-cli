@@ -15,31 +15,31 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata} from 'clime';
-import {DiagnosticHttp, ServerInfo} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata} from 'clime'
+import {DiagnosticHttp, ServerInfo} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 
 export class ServerInfoTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
     constructor(public readonly serverInfo: ServerInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
         this.table.push(
             ['Rest Version', serverInfo.restVersion],
             ['SDK Version', serverInfo.sdkVersion],
-        );
+        )
     }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Server Information') + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Server Information') + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
@@ -49,24 +49,24 @@ export class ServerInfoTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: ProfileOptions) {
-        this.spinner.start();
+        this.spinner.start()
 
-        const profile = this.getProfile(options);
+        const profile = this.getProfile(options)
 
-        const diagnosticHttp = new DiagnosticHttp(profile.url);
+        const diagnosticHttp = new DiagnosticHttp(profile.url)
         diagnosticHttp.getServerInfo()
             .subscribe((serverInfo) => {
-                this.spinner.stop(true);
-                console.log(new ServerInfoTable(serverInfo).toString());
+                this.spinner.stop(true)
+                console.log(new ServerInfoTable(serverInfo).toString())
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

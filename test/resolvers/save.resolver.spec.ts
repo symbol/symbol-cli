@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {SaveResolver} from '../../src/resolvers/save.resolver';
+import {expect} from 'chai'
+import {SaveResolver} from '../../src/resolvers/save.resolver'
 
 describe('Save resolver', () => {
 
     it('should return boolean', () => {
-        const profileOptions = {save: true, url: '', network: '', profile: '', password: '', default: false, generationHash: '1'};
-        expect(new SaveResolver().resolve(profileOptions)).to.be.equal(true);
-    });
+        const profileOptions = {save: true, url: '', network: '', profile: '', password: '', default: false, generationHash: '1'}
+        expect(new SaveResolver().resolve(profileOptions)).to.be.equal(true)
+    })
 
-});
+})
