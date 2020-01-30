@@ -15,51 +15,51 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {RestrictionMosaicHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata, option} from 'clime'
+import {RestrictionMosaicHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string;
+    address: string
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string;
+    mosaicId: string
 }
 
 export class MosaicAddressRestrictionsTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
 
     constructor(public readonly mosaicAddressRestrictions:  Map<string, string>) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Type', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
 
         mosaicAddressRestrictions.forEach((value: string, key: string) => {
             this.table.push(
                 ['Key', key],
                 ['Value', value],
-            );
-        });
+            )
+        })
 }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Mosaic Address Restrictions') + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Mosaic Address Restrictions') + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
@@ -69,30 +69,30 @@ export class MosaicAddressRestrictionsTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
+        this.spinner.start()
 
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
-        const mosaicId = new MosaicIdResolver().resolve(options);
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
+        const mosaicId = new MosaicIdResolver().resolve(options)
 
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url)
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
             .subscribe((mosaicRestrictions) => {
-                this.spinner.stop(true);
+                this.spinner.stop(true)
                 if (mosaicRestrictions.restrictions.size > 0) {
-                    console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString());
+                    console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString())
                 } else {
-                    console.log('\n The address does not have mosaic address restrictions assigned.');
+                    console.log('\n The address does not have mosaic address restrictions assigned.')
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

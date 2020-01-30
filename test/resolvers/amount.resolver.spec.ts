@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {AmountResolver} from '../../src/resolvers/amount.resolver';
+import {expect} from 'chai'
+import {AmountResolver} from '../../src/resolvers/amount.resolver'
 
 describe('Amount resolver', () => {
 
     it('should return amount', () => {
-        const amount = '10';
-        const profileOptions = {amount} as any;
+        const amount = '10'
+        const profileOptions = {amount} as any
         expect(new AmountResolver().resolve(profileOptions).compact())
-            .to.be.equal(10);
-    });
+            .to.be.equal(10)
+    })
 
     it('should throw error if amount invalid', () => {
-        const amount = '-1';
-        const profileOptions = {amount} as any;
+        const amount = '-1'
+        const profileOptions = {amount} as any
         expect(() => new AmountResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
-});
+            .to.throws(Error)
+    })
+})

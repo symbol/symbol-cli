@@ -16,9 +16,9 @@
  *
  */
 
-import {Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
-import {mosaicId1} from '../mosaics.mock';
+import {Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
+import {mosaicId1} from '../mosaics.mock'
 
 export const unsignedMosaicMetadata1 = MosaicMetadataTransaction.create(
  Deadline.create(),
@@ -29,4 +29,4 @@ export const unsignedMosaicMetadata1 = MosaicMetadataTransaction.create(
  Convert.uint8ToUtf8(new Uint8Array(10)),
  NetworkType.MIJIN_TEST,
  new UInt64([1, 0]),
-);
+)

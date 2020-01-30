@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountMetadataTransaction, Convert, Deadline, NetworkType, UInt64} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
+import {AccountMetadataTransaction, Convert, Deadline, NetworkType, UInt64} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
 
 export const unsignedAccountMetadata1 = AccountMetadataTransaction.create(
  Deadline.create(),
@@ -26,4 +26,4 @@ export const unsignedAccountMetadata1 = AccountMetadataTransaction.create(
  1,
  Convert.uint8ToUtf8(new Uint8Array(10)),
  NetworkType.MIJIN_TEST,
-);
+)

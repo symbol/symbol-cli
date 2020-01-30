@@ -16,9 +16,9 @@
  *
  */
 
-import {AddressAliasTransaction, AliasAction} from 'nem2-sdk';
-import {NamespacesView} from '../../../namespaces.view';
-import {CellRecord} from '../transaction.view';
+import {AddressAliasTransaction, AliasAction} from 'nem2-sdk'
+import {NamespacesView} from '../../../namespaces.view'
+import {CellRecord} from '../transaction.view'
 
 export class AddressAliasView {
   /**
@@ -31,6 +31,6 @@ export class AddressAliasView {
       action: tx.aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
       address: tx.address.pretty(),
       namespace: NamespacesView.getNamespaceLabel(tx.namespaceId),
-    };
+    }
   }
 }

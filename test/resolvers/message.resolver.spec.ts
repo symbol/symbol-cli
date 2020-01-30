@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {MessageResolver} from '../../src/resolvers/message.resolver';
+import {expect} from 'chai'
+import {MessageResolver} from '../../src/resolvers/message.resolver'
 
 describe('Message resolver', () => {
 
     it('should return message', () => {
-        const message = '10';
-        const profileOptions = {message} as any;
+        const message = '10'
+        const profileOptions = {message} as any
         expect(new MessageResolver().resolve(profileOptions))
-            .to.be.equal('10');
-    });
-});
+            .to.be.equal('10')
+    })
+})

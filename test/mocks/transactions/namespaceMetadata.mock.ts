@@ -16,9 +16,9 @@
  *
  */
 
-import {Convert, Deadline, NamespaceMetadataTransaction, NetworkType, UInt64} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
-import {namespaceId1} from '../namespaces.mock';
+import {Convert, Deadline, NamespaceMetadataTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
+import {namespaceId1} from '../namespaces.mock'
 
 export const unsignedNamespaceMetadata1 = NamespaceMetadataTransaction.create(
  Deadline.create(),
@@ -28,4 +28,4 @@ export const unsignedNamespaceMetadata1 = NamespaceMetadataTransaction.create(
  1,
  Convert.uint8ToUtf8(new Uint8Array(10)),
  NetworkType.MIJIN_TEST,
-);
+)

@@ -16,7 +16,7 @@
  *
  */
 
-import {TransactionType} from 'nem2-sdk';
+import {TransactionType} from 'nem2-sdk'
 
 export const transactionNameFromType = (type: TransactionType): string => {
  try {
@@ -43,10 +43,10 @@ export const transactionNameFromType = (type: TransactionType): string => {
    [TransactionType.ACCOUNT_METADATA_TRANSACTION]: 'Account metadata transaction',
    [TransactionType.MOSAIC_METADATA_TRANSACTION]: 'Mosaic metadata transaction',
    [TransactionType.NAMESPACE_METADATA_TRANSACTION]: 'Namespace metadata transaction',
-  };
+  }
 
-  return bridge[type];
+  return bridge[type]
  } catch {
-  throw new Error(`Transaction type not found: ${type}`);
+  throw new Error(`Transaction type not found: ${type}`)
  }
-};
+}

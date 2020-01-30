@@ -16,9 +16,9 @@
  *
  */
 
-import {AliasAction, MosaicAliasTransaction} from 'nem2-sdk';
-import {NamespacesView} from '../../../namespaces.view';
-import {CellRecord} from '../transaction.view';
+import {AliasAction, MosaicAliasTransaction} from 'nem2-sdk'
+import {NamespacesView} from '../../../namespaces.view'
+import {CellRecord} from '../transaction.view'
 
 export class MosaicAliasView {
   /**
@@ -31,6 +31,6 @@ export class MosaicAliasView {
       'Alias action': AliasAction[tx.aliasAction],
       'Mosaic Id': tx.mosaicId.toHex(),
       'Namespace Id': NamespacesView.getNamespaceLabel(tx.namespaceId),
-    };
+    }
   }
 }

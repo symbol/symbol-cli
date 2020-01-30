@@ -1,9 +1,9 @@
-import {Password} from 'nem2-sdk';
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {PrivateKeyValidator} from '../validators/privateKey.validator';
-import {Resolver} from './resolver';
+import {Password} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {PrivateKeyValidator} from '../validators/privateKey.validator'
+import {Resolver} from './resolver'
 
 /**
  * Private key resolver
@@ -23,8 +23,8 @@ export class PrivateKeyResolver implements Resolver {
             () => undefined,
             'Enter your account private key: ',
             undefined,
-            true).trim();
-        new PrivateKeyValidator().validate(resolution);
-        return resolution;
+            true).trim()
+        new PrivateKeyValidator().validate(resolution)
+        return resolution
     }
 }

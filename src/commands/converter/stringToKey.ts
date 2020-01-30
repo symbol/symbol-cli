@@ -15,17 +15,17 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {KeyGenerator} from 'nem2-sdk';
-import {ProfileOptions} from '../../interfaces/profile.command';
-import {StringResolver} from '../../resolvers/string.resolver';
+import {Command, command, metadata, option} from 'clime'
+import {KeyGenerator} from 'nem2-sdk'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {StringResolver} from '../../resolvers/string.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'v',
         description: 'String value.',
     })
-    value: string;
+    value: string
 }
 
 @command({
@@ -34,12 +34,12 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const value = new StringResolver().resolve(options);
-        console.log(KeyGenerator.generateUInt64Key(value).toHex());
+        const value = new StringResolver().resolve(options)
+        console.log(KeyGenerator.generateUInt64Key(value).toHex())
     }
 }

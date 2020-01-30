@@ -16,19 +16,19 @@
  *
  */
 
-import {Address} from 'nem2-sdk';
-import {Observable, Subject} from 'rxjs';
-import {startWith} from 'rxjs/operators';
+import {Address} from 'nem2-sdk'
+import {Observable, Subject} from 'rxjs'
+import {startWith} from 'rxjs/operators'
 
-const SEQUENTIAL_FETCHER_DEFAULT_DELAY = 200;
+const SEQUENTIAL_FETCHER_DEFAULT_DELAY = 200
 type Flatten<T> = T extends any[] ? T[number] :
   T extends object ? T[keyof T] :
-  T;
+  T
 export class SequentialFetcher {
-  isFetching = false;
-  private routineController: Subject<boolean>;
-  private networkCallsIterator: AsyncGenerator;
-  private transactionsSubject: Subject<any>;
+  isFetching = false
+  private routineController: Subject<boolean>
+  private networkCallsIterator: AsyncGenerator
+  private transactionsSubject: Subject<any>
 
   /**
    * @param  {(address:Address)=>Promise<T>} networkCallFunction
@@ -39,7 +39,7 @@ export class SequentialFetcher {
     networkCallFunction: (address: Address) => Promise<any>,
     minDelay = SEQUENTIAL_FETCHER_DEFAULT_DELAY,
   ): SequentialFetcher {
-    return new SequentialFetcher(networkCallFunction, minDelay);
+    return new SequentialFetcher(networkCallFunction, minDelay)
   }
 
   /**
@@ -51,8 +51,8 @@ export class SequentialFetcher {
     private networkCallFunction: (address: Address) => Promise<any[]>,
     private minDelay: number,
   ) {
-    this.routineController = new Subject();
-    this.transactionsSubject = new Subject();
+    this.routineController = new Subject()
+    this.transactionsSubject = new Subject()
   }
 
   /**
@@ -61,20 +61,20 @@ export class SequentialFetcher {
    * @returns {Observable<any>}
    */
   getResults(addresses: Address[]): Observable<any> {
-    if (this.isFetching) {this.kill(); }
-    this.setIterators(addresses);
-    this.isFetching = true;
-    this.startFetchingRoutine();
-    return this.transactionsSubject;
+    if (this.isFetching) {this.kill() }
+    this.setIterators(addresses)
+    this.isFetching = true
+    this.startFetchingRoutine()
+    return this.transactionsSubject
   }
 
   /**
    * Stops the fetching routine
    */
   kill() {
-    this.transactionsSubject.complete();
-    this.isFetching = false;
-    this.routineController.next(false);
+    this.transactionsSubject.complete()
+    this.isFetching = false
+    this.routineController.next(false)
   }
 
   /**
@@ -83,8 +83,8 @@ export class SequentialFetcher {
    * @param {Address[]} addresses
    */
   private setIterators(addresses: Address[]) {
-    const addressesIterator = addresses[Symbol.iterator]();
-    this.networkCallsIterator = this.createNetworkCallsIterator(addressesIterator);
+    const addressesIterator = addresses[Symbol.iterator]()
+    this.networkCallsIterator = this.createNetworkCallsIterator(addressesIterator)
   }
 
   /**
@@ -94,7 +94,7 @@ export class SequentialFetcher {
    */
   private async * createNetworkCallsIterator(addresses: IterableIterator<Address>) {
     for await (const address of addresses) {
-      yield this.networkCall(address);
+      yield this.networkCall(address)
     }
   }
 
@@ -106,11 +106,11 @@ export class SequentialFetcher {
    */
   private async networkCall(address: Address): Promise<{response: any; address: Address}> {
     try {
-      const promises = await Promise.all([this.networkCallFunction(address), this.delay()]);
-      const [response] = promises;
-      return {response, address};
+      const promises = await Promise.all([this.networkCallFunction(address), this.delay()])
+      const [response] = promises
+      return {response, address}
     } catch (error) {
-      return {response: null, address};
+      return {response: null, address}
     }
   }
 
@@ -121,7 +121,7 @@ export class SequentialFetcher {
    * @returns {Promise<void>}
    */
   private delay(): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, this.minDelay));
+    return new Promise((resolve) => setTimeout(resolve, this.minDelay))
   }
 
   /**
@@ -135,21 +135,21 @@ export class SequentialFetcher {
       .pipe(startWith(true))
       .subscribe(async (continueRoutine) => {
         if (!continueRoutine) {
-          this.networkCallsIterator.return(null);
-          return;
+          this.networkCallsIterator.return(null)
+          return
         }
 
         while (continueRoutine) {
-          const {value, done} = await this.networkCallsIterator.next();
+          const {value, done} = await this.networkCallsIterator.next()
 
           if (done) {
-            this.kill();
-            break;
+            this.kill()
+            break
           }
 
-          const {response} = value;
-          if (response && response.length) {this.transactionsSubject.next(response); }
+          const {response} = value
+          if (response && response.length) {this.transactionsSubject.next(response) }
         }
-      });
+      })
   }
 }

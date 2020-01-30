@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ValidationContext, Validator} from 'clime';
-import {MosaicService} from '../services/mosaic.service';
+import {ValidationContext, Validator} from 'clime'
+import {MosaicService} from '../services/mosaic.service'
 
 /**
  * Mosaic validator
@@ -30,7 +30,7 @@ export class MosaicValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        MosaicService.validate(value);
+        MosaicService.validate(value)
     }
 }
 
@@ -46,9 +46,9 @@ export class MosaicsValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        const mosaics = value.split(',');
+        const mosaics = value.split(',')
         mosaics.forEach((mosaic) => {
-            MosaicService.validate(mosaic);
-        });
+            MosaicService.validate(mosaic)
+        })
     }
 }

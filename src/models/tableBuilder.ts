@@ -16,9 +16,9 @@
  *
  */
 
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {CellRecord} from '../views/transactions/details/transaction.view';
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {CellRecord} from '../views/transactions/details/transaction.view'
 
 export class TableBuilder {
   /**
@@ -28,21 +28,21 @@ export class TableBuilder {
    * @returns {HorizontalTable}
    */
   static renderTableFromObject(object: CellRecord): HorizontalTable {
-    const table = TableBuilder.getEmptyTable();
+    const table = TableBuilder.getEmptyTable()
     Object.entries(object)
       // Filters out empty items. (eg ITransactionViewSignature)
       .filter((x) => x)
       .forEach(([label, value]) => {
         // handles <string, Cell> items
         if (typeof value === 'object') {
-          table.push([value]);
-          return;
+          table.push([value])
+          return
         }
         // handles <string, string> items
-        table.push([`${label}:`, `${value}`]);
-      });
+        table.push([`${label}:`, `${value}`])
+      })
 
-    return table;
+    return table
   }
 
   /**
@@ -51,6 +51,6 @@ export class TableBuilder {
    * @returns {HorizontalTable}
    */
   static getEmptyTable(): HorizontalTable {
-    return new Table() as HorizontalTable;
+    return new Table() as HorizontalTable
   }
 }

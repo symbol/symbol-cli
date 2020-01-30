@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'nem2-sdk';
-import {namespaceId1} from '../namespaces.mock';
+import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {namespaceId1} from '../namespaces.mock'
 
 export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction
  .createRootNamespace(
@@ -26,7 +26,7 @@ export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction
   UInt64.fromUint(1000),
   NetworkType.MIJIN_TEST,
   new UInt64([1, 0]),
- );
+ )
 
 export const unsignedSubNamespaceRegistration1 = NamespaceRegistrationTransaction
  .createSubNamespace(
@@ -34,4 +34,4 @@ export const unsignedSubNamespaceRegistration1 = NamespaceRegistrationTransactio
   'sub-test-namespace',
   namespaceId1,
   NetworkType.MIJIN_TEST,
- );
+ )

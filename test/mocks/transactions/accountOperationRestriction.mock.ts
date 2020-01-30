@@ -16,11 +16,11 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType, TransactionType} from 'nem2-sdk';
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType, TransactionType} from 'nem2-sdk'
 
-export const operation1 = TransactionType.ADDRESS_ALIAS;
-export const operation2 = TransactionType.LINK_ACCOUNT;
-export const operation3 = TransactionType.TRANSFER;
+export const operation1 = TransactionType.ADDRESS_ALIAS
+export const operation2 = TransactionType.LINK_ACCOUNT
+export const operation3 = TransactionType.TRANSFER
 
 export const unsignedAccountOperationRestriction1 = AccountRestrictionTransaction
     .createOperationRestrictionModificationTransaction(
@@ -29,4 +29,4 @@ export const unsignedAccountOperationRestriction1 = AccountRestrictionTransactio
         [operation1, operation2],
         [operation3],
         NetworkType.MIJIN_TEST,
-    );
+    )

@@ -1,8 +1,8 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {HashValidator} from '../validators/hash.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {HashValidator} from '../validators/hash.validator'
+import {Resolver} from './resolver'
 
 /**
  * Hash resolver
@@ -20,8 +20,8 @@ export class HashResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'hash',
             () => undefined,
-            altText ? altText : 'Enter a transaction hash: ').trim();
-        new HashValidator().validate(resolution);
-        return resolution;
+            altText ? altText : 'Enter a transaction hash: ').trim()
+        new HashValidator().validate(resolution)
+        return resolution
     }
 }

@@ -16,9 +16,9 @@
  *
  */
 
-import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'nem2-sdk';
-import {MosaicsView} from '../../../mosaics.view';
-import {CellRecord} from '../transaction.view';
+import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'nem2-sdk'
+import {MosaicsView} from '../../../mosaics.view'
+import {CellRecord} from '../transaction.view'
 
 export class AccountMosaicRestrictionView {
   /**
@@ -27,7 +27,7 @@ export class AccountMosaicRestrictionView {
    * @returns {CellRecord}
    */
   static get(tx: AccountMosaicRestrictionTransaction): CellRecord {
-    return new AccountMosaicRestrictionView(tx).render();
+    return new AccountMosaicRestrictionView(tx).render()
   }
 
   /**
@@ -44,7 +44,7 @@ export class AccountMosaicRestrictionView {
     return {
       'Account restriction flag': AccountRestrictionFlags[this.tx.restrictionFlags],
       ...this.getRestrictions(),
-    };
+    }
   }
 
   /**
@@ -52,8 +52,8 @@ export class AccountMosaicRestrictionView {
    * @returns {CellRecord}
    */
   private getRestrictions(): CellRecord {
-    const numberOfAdditions = this.tx.restrictionAdditions.length;
-    const numberOfDeletions = this.tx.restrictionDeletions.length;
+    const numberOfAdditions = this.tx.restrictionAdditions.length
+    const numberOfDeletions = this.tx.restrictionDeletions.length
     return {
       ...this.tx.restrictionAdditions.reduce((acc, mosaic, index) => ({
         ...acc,
@@ -67,7 +67,7 @@ export class AccountMosaicRestrictionView {
           mosaic, index, numberOfDeletions, 'Deletion',
         ),
       }), {}),
-    };
+    }
   }
 
   /**
@@ -84,7 +84,7 @@ export class AccountMosaicRestrictionView {
     numberOfRestrictions: number,
     additionOrDeletion: 'Addition' | 'Deletion',
   ): CellRecord {
-    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`;
-    return {[key]: MosaicsView.getMosaicLabel(mosaicId)};
+    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`
+    return {[key]: MosaicsView.getMosaicLabel(mosaicId)}
   }
 }

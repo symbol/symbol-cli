@@ -15,24 +15,24 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {PasswordResolver} from '../../src/resolvers/password.resolver';
-import {PrivateKeyResolver} from '../../src/resolvers/privateKey.resolver';
+import {expect} from 'chai'
+import {PasswordResolver} from '../../src/resolvers/password.resolver'
+import {PrivateKeyResolver} from '../../src/resolvers/privateKey.resolver'
 
 describe('Private key resolver', () => {
 
     it('should return private key', () => {
-        const privateKey = '0000000000000000000000000000000000000000000000000000000000000000';
-        const profileOptions = {privateKey} as any;
+        const privateKey = '0000000000000000000000000000000000000000000000000000000000000000'
+        const profileOptions = {privateKey} as any
         expect(new PrivateKeyResolver().resolve(profileOptions))
-            .to.be.equal(privateKey);
-    });
+            .to.be.equal(privateKey)
+    })
 
     it('should throw error if private key invalid', () => {
-        const privateKey = '000';
-        const profileOptions = {privateKey} as any;
+        const privateKey = '000'
+        const profileOptions = {privateKey} as any
         expect(() => new PrivateKeyResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

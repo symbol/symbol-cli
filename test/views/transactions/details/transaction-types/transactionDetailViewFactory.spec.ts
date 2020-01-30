@@ -1,5 +1,5 @@
-import {assert} from 'chai';
-import {transactionDetailViewFactory} from '../../../../../src/views/transactions/details/transactionDetailViewFactory';
+import {assert} from 'chai'
+import {transactionDetailViewFactory} from '../../../../../src/views/transactions/details/transactionDetailViewFactory'
 import {
  unsignedAccountAddressRestriction1,
  unsignedAccountLink1,
@@ -22,7 +22,7 @@ import {
  unsignedSecretLock1,
  unsignedSecretProof1,
  unsignedTransfer1,
-} from '../../../../mocks/transactions/index';
+} from '../../../../mocks/transactions/index'
 
 describe('Transaction detail view factory', () => {
  it('should return an object for each transaction type', () => {
@@ -48,11 +48,11 @@ describe('Transaction detail view factory', () => {
    unsignedSecretLock1,
    unsignedSecretProof1,
    unsignedTransfer1,
-  ];
+  ]
 
   allTransactions.forEach((tx) => assert.typeOf(
    transactionDetailViewFactory(unsignedAccountAddressRestriction1),
    'Object', `${tx?.type}`,
-  ));
- });
-});
+  ))
+ })
+})

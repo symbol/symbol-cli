@@ -16,9 +16,9 @@
  *
  */
 
-import {LockFundsTransaction} from 'nem2-sdk';
-import {MosaicsView} from '../../../mosaics.view';
-import {CellRecord} from '../transaction.view';
+import {LockFundsTransaction} from 'nem2-sdk'
+import {MosaicsView} from '../../../mosaics.view'
+import {CellRecord} from '../transaction.view'
 
 export class LockFundsView {
   /**
@@ -30,6 +30,6 @@ export class LockFundsView {
     return {
       Duration: `${tx.duration.compact().toLocaleString()} blocks`,
       ...MosaicsView.get([tx.mosaic]),
-    };
+    }
   }
 }

@@ -14,34 +14,34 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AddressAliasTransaction, Deadline} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
-import {LinkActionResolver} from '../../resolvers/action.resolver';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {TransactionView} from '../../views/transactions/details/transaction.view';
+import {command, metadata, option} from 'clime'
+import {AddressAliasTransaction, Deadline} from 'nem2-sdk'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {LinkActionResolver} from '../../resolvers/action.resolver'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Alias action (1: Link, 0: Unlink).',
     })
-    action: number;
+    action: number
 
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string;
+    address: string
 
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespaceName: string;
+    namespaceName: string
 }
 
 @command({
@@ -51,17 +51,17 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends AnnounceTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const namespaceId = new NamespaceNameResolver().resolve(options);
-        const address = new AddressResolver().resolve(options);
-        const action = new LinkActionResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
+        const namespaceId = new NamespaceNameResolver().resolve(options)
+        const address = new AddressResolver().resolve(options)
+        const action = new LinkActionResolver().resolve(options)
+        const maxFee = new MaxFeeResolver().resolve(options)
 
         const transaction = AddressAliasTransaction.create(
             Deadline.create(),
@@ -69,16 +69,16 @@ export default class extends AnnounceTransactionsCommand {
             namespaceId,
             address,
             profile.networkType,
-            maxFee);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        new TransactionView(transaction, signedTransaction).print();
+        new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 }

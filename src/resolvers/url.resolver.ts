@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * URL resolver
@@ -19,7 +19,7 @@ export class URLResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'url',
             () => secondSource ? secondSource.url : undefined,
-            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim();
-        return resolution;
+            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim()
+        return resolution
     }
 }

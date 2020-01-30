@@ -16,9 +16,9 @@
  *
  */
 
-import {AggregateTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
-import {AggregateView} from './aggregate.view';
+import {AggregateTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
+import {AggregateView} from './aggregate.view'
 
 export class AggregateBondedView extends AggregateView {
   /**
@@ -27,7 +27,7 @@ export class AggregateBondedView extends AggregateView {
    * @returns {CellRecord}
    */
   static get(tx: AggregateTransaction): CellRecord {
-    return new AggregateBondedView(tx).render();
+    return new AggregateBondedView(tx).render()
   }
 
   /**
@@ -35,7 +35,7 @@ export class AggregateBondedView extends AggregateView {
    * @param {AggregateTransaction} tx
    */
   private constructor(tx: AggregateTransaction) {
-    super(tx);
+    super(tx)
   }
 
   /**
@@ -43,12 +43,12 @@ export class AggregateBondedView extends AggregateView {
    * @returns {CellRecord}
    */
   private render(): CellRecord {
-    const innerTransactionsViews = this.getInnerTransactionViews();
+    const innerTransactionsViews = this.getInnerTransactionViews()
 
     return {
       ...innerTransactionsViews,
       ...this.getCosignedBy(),
-    };
+    }
   }
 
   /**
@@ -56,13 +56,13 @@ export class AggregateBondedView extends AggregateView {
    * @returns {CellRecord}
    */
   private getCosignedBy(): CellRecord {
-    if (!this.tx.signer) {return {}; }
+    if (!this.tx.signer) {return {} }
 
     return {
       'Cosigner 1': this.tx.signer.address.pretty(),
       ...this.tx.cosignatures.reduce((acc, {signer}, index) => ({
         ...acc, [`Cosigner ${index + 2}`]: signer.address.pretty(),
       }), {}),
-    };
+    }
   }
 }

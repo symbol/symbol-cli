@@ -15,53 +15,53 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {ActionResolver, LinkActionResolver, SupplyActionResolver} from '../../src/resolvers/action.resolver';
+import {expect} from 'chai'
+import {ActionResolver, LinkActionResolver, SupplyActionResolver} from '../../src/resolvers/action.resolver'
 
 describe('Action resolver', () => {
 
     it('should return action', () => {
-        const profileOptions = {action: 0} as any;
+        const profileOptions = {action: 0} as any
         expect(new ActionResolver().resolve(profileOptions))
-            .to.be.equal(0);
-    });
+            .to.be.equal(0)
+    })
 
     it('should throw error if not 0 or 1', () => {
-        const profileOptions = {action: 2} as any;
+        const profileOptions = {action: 2} as any
         expect(() => new ActionResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})
 
 describe('Link action resolver', () => {
 
     it('default case', () => {
-        const profileOptions = {action: 0} as any;
+        const profileOptions = {action: 0} as any
         expect(new LinkActionResolver().resolve(profileOptions))
-            .to.be.equal(0);
-    });
+            .to.be.equal(0)
+    })
 
     it('should throw error if not 0 or 1', () => {
-        const profileOptions = {action: 2} as any;
+        const profileOptions = {action: 2} as any
         expect(() => new LinkActionResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})
 
 describe('Supply action resolver', () => {
 
     it('default case', () => {
-        const profileOptions = {action: 0} as any;
+        const profileOptions = {action: 0} as any
         expect(new SupplyActionResolver().resolve(profileOptions))
-            .to.be.equal(0);
-    });
+            .to.be.equal(0)
+    })
 
     it('should throw error if not 0 or 1', () => {
-        const profileOptions = {action: 2} as any;
+        const profileOptions = {action: 2} as any
         expect(() => new SupplyActionResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Address} from 'nem2-sdk'
 
 /**
  * Hex Address validator
@@ -31,9 +31,9 @@ export class HexAddressValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            Address.createFromEncoded(value);
+            Address.createFromEncoded(value)
         } catch (err) {
-            throw new ExpectedError('Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF');
+            throw new ExpectedError('Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF')
         }
     }
 }

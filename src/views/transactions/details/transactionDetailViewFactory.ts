@@ -16,7 +16,7 @@
  *
  */
 
-import {Transaction, TransactionType} from 'nem2-sdk';
+import {Transaction, TransactionType} from 'nem2-sdk'
 
 import {
  AccountAddressRestrictionView,
@@ -40,8 +40,8 @@ import {
  SecretLockView,
  SecretProofView,
  TransferView,
-} from './transaction-types';
-import {CellRecord} from './transaction.view';
+} from './transaction-types'
+import {CellRecord} from './transaction.view'
 
 /**
  * @param  {Transaction} transaction
@@ -49,10 +49,10 @@ import {CellRecord} from './transaction.view';
  */
 export const transactionDetailViewFactory = (tx: Transaction): CellRecord => {
  try {
-  const type: TransactionType = tx.type;
+  const type: TransactionType = tx.type
 
   if (type === TransactionType.RESERVED) {
-   throw new Error('The transaction type can not be reserved');
+   throw new Error('The transaction type can not be reserved')
   }
 
   const formatters: Record<TransactionType, any> = {
@@ -78,11 +78,11 @@ export const transactionDetailViewFactory = (tx: Transaction): CellRecord => {
    [TransactionType.ACCOUNT_METADATA_TRANSACTION]: AccountMetadataView,
    [TransactionType.MOSAIC_METADATA_TRANSACTION]: MosaicMetadataView,
    [TransactionType.NAMESPACE_METADATA_TRANSACTION]: NamespaceMetadataView,
-  };
+  }
 
-  const formatter = formatters[type];
-  return formatter.get(tx);
+  const formatter = formatters[type]
+  return formatter.get(tx)
  } catch (error) {
-  throw new Error(`Transaction type not found: ${tx.type}`);
+  throw new Error(`Transaction type not found: ${tx.type}`)
  }
-};
+}

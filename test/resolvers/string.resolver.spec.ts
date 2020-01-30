@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {StringResolver} from '../../src/resolvers/string.resolver';
+import {expect} from 'chai'
+import {StringResolver} from '../../src/resolvers/string.resolver'
 
 describe('Value resolver', () => {
 
     it('should return string', () => {
-        const value = 'test';
-        const profileOptions = {value} as any;
+        const value = 'test'
+        const profileOptions = {value} as any
         expect(new StringResolver().resolve(profileOptions))
-            .to.be.equal(value);
-    });
-});
+            .to.be.equal(value)
+    })
+})

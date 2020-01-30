@@ -16,9 +16,9 @@
  *
  */
 
-import {Mosaic, MosaicId, NamespaceId} from 'nem2-sdk';
-import {NamespacesView} from './namespaces.view';
-import {CellRecord} from './transactions/details/transaction.view';
+import {Mosaic, MosaicId, NamespaceId} from 'nem2-sdk'
+import {NamespacesView} from './namespaces.view'
+import {CellRecord} from './transactions/details/transaction.view'
 
 export class MosaicsView {
  /**
@@ -28,7 +28,7 @@ export class MosaicsView {
   * @returns {CellRecord}
   */
  static get(mosaics: Mosaic[]): CellRecord {
-  return new MosaicsView(mosaics).render();
+  return new MosaicsView(mosaics).render()
  }
 
  /**
@@ -39,8 +39,8 @@ export class MosaicsView {
   * @returns {string}
   */
  static getMosaicLabel(id: MosaicId | NamespaceId): string {
-  if (id instanceof MosaicId) {return id.toHex(); }
-  return NamespacesView.getNamespaceLabel(id);
+  if (id instanceof MosaicId) {return id.toHex() }
+  return NamespacesView.getNamespaceLabel(id)
  }
 
  /**
@@ -58,7 +58,7 @@ export class MosaicsView {
   return this.mosaics.reduce((acc, mosaic, index) => ({
    ...acc,
    ...this.getRenderedMosaic(mosaic, index),
-  }), {});
+  }), {})
  }
 
  /**
@@ -69,12 +69,12 @@ export class MosaicsView {
   * @returns {CellRecord}
   */
  private getRenderedMosaic(mosaic: Mosaic, index: number): CellRecord {
-  const mosaicPrefix = MosaicsView.getMosaicLabel(mosaic.id);
-  const positionInList = `${index + 1}/${this.mosaics.length}`;
-  const amount = mosaic.amount.compact().toLocaleString();
+  const mosaicPrefix = MosaicsView.getMosaicLabel(mosaic.id)
+  const positionInList = `${index + 1}/${this.mosaics.length}`
+  const amount = mosaic.amount.compact().toLocaleString()
 
   return {
    [`Mosaic (${positionInList})`]: `${amount} ${mosaicPrefix}`,
-  };
+  }
  }
 }

@@ -16,9 +16,9 @@
  *
  */
 
-import {AggregateTransaction, Deadline, NetworkType} from 'nem2-sdk';
-import {account1} from '../accounts.mock';
-import {unsignedTransfer1, unsignedTransfer2} from '../transactions/transfer.mock';
+import {AggregateTransaction, Deadline, NetworkType} from 'nem2-sdk'
+import {account1} from '../accounts.mock'
+import {unsignedTransfer1, unsignedTransfer2} from '../transactions/transfer.mock'
 
 export const unsignedAggregateBonded1 = AggregateTransaction.createBonded(
  Deadline.create(),
@@ -28,4 +28,4 @@ export const unsignedAggregateBonded1 = AggregateTransaction.createBonded(
  ],
  NetworkType.MIJIN_TEST,
  [],
-);
+)

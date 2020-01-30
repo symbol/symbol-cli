@@ -16,8 +16,8 @@
  *
  */
 
-import {MosaicMetadataTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {MosaicMetadataTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class MosaicMetadataView {
   /**
@@ -32,6 +32,6 @@ export class MosaicMetadataView {
       'Target mosaic Id': tx.targetMosaicId.toHex(),
       'Value size delta': tx.valueSizeDelta.toString(),
       'Value': tx.value,
-    };
+    }
   }
 }

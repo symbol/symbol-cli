@@ -16,9 +16,9 @@
  *
  */
 
-import {NamespaceMetadataTransaction} from 'nem2-sdk';
-import {NamespacesView} from '../../../namespaces.view';
-import {CellRecord} from '../transaction.view';
+import {NamespaceMetadataTransaction} from 'nem2-sdk'
+import {NamespacesView} from '../../../namespaces.view'
+import {CellRecord} from '../transaction.view'
 
 export class NamespaceMetadataView {
   /**
@@ -33,6 +33,6 @@ export class NamespaceMetadataView {
       'Target namespace Id': NamespacesView.getNamespaceLabel(tx.targetNamespaceId),
       'Value size delta': tx.valueSizeDelta.toString(),
       'Value': tx.value,
-    };
+    }
   }
 }

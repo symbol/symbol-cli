@@ -15,35 +15,35 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {HeightValidator} from '../../src/validators/block.validator';
+import {expect} from 'chai'
+import {HeightValidator} from '../../src/validators/block.validator'
 
 describe('block height validator', () => {
 
     it('default case', () => {
-        const height = '1';
+        const height = '1'
         expect(new HeightValidator().validate(height))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if height is 0', () => {
-        const height = '0';
+        const height = '0'
         expect(() => {
-            new HeightValidator().validate(height);
-        }).to.throws('The block height must be a positive integer');
-    });
+            new HeightValidator().validate(height)
+        }).to.throws('The block height must be a positive integer')
+    })
 
     it('should throw error if height is negative', () => {
-        const height = '-1';
+        const height = '-1'
         expect(() => {
-            new HeightValidator().validate(height);
-        }).to.throws('The block height must be a positive integer');
-    });
+            new HeightValidator().validate(height)
+        }).to.throws('The block height must be a positive integer')
+    })
 
     it('should throw error if height is decimal', () => {
-        const height = '1.3';
+        const height = '1.3'
         expect(() => {
-            new HeightValidator().validate(height);
-        }).to.throws('The block height must be a positive integer');
-    });
-});
+            new HeightValidator().validate(height)
+        }).to.throws('The block height must be a positive integer')
+    })
+})

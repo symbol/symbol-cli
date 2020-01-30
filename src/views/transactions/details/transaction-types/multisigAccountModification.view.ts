@@ -16,8 +16,8 @@
  *
  */
 
-import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class MultisigAccountModificationView {
   /**
@@ -26,7 +26,7 @@ export class MultisigAccountModificationView {
    * @returns {CellRecord}
    */
   static get(tx: MultisigAccountModificationTransaction): CellRecord {
-    return new MultisigAccountModificationView(tx).render();
+    return new MultisigAccountModificationView(tx).render()
   }
 
   /**
@@ -44,7 +44,7 @@ export class MultisigAccountModificationView {
       'Min approval delta': `${this.tx.minApprovalDelta}`,
       'Min removal delta': `${this.tx.minRemovalDelta}`,
       ...this.getModifications(),
-    };
+    }
   }
 
   /**
@@ -55,7 +55,7 @@ export class MultisigAccountModificationView {
     return {
       ...this.renderModifications(CosignatoryModificationAction.Add),
       ...this.renderModifications(CosignatoryModificationAction.Remove),
-    };
+    }
   }
 
   /**
@@ -65,21 +65,21 @@ export class MultisigAccountModificationView {
    */
   private renderModifications(type: CosignatoryModificationAction): CellRecord {
     const targetProperty = type === CosignatoryModificationAction.Add
-      ? 'publicKeyAdditions' : 'publicKeyDeletions';
+      ? 'publicKeyAdditions' : 'publicKeyDeletions'
 
     const targetPropertyName = type === CosignatoryModificationAction.Add
-      ? 'Public key addition' : 'Public key deletion';
+      ? 'Public key addition' : 'Public key deletion'
 
-    const modifications = this.tx[targetProperty];
-    const modificationNumber = modifications.length;
+    const modifications = this.tx[targetProperty]
+    const modificationNumber = modifications.length
 
-    if (modificationNumber === 0) {return {}; }
+    if (modificationNumber === 0) {return {} }
 
-    const getKey = (index: number) => `${targetPropertyName} (${index + 1} / ${modificationNumber})`;
+    const getKey = (index: number) => `${targetPropertyName} (${index + 1} / ${modificationNumber})`
 
     return modifications.reduce((acc, publicAccount, index) => ({
       ...acc,
       [getKey(index)]: publicAccount.address.pretty(),
-    }), {});
+    }), {})
   }
 }

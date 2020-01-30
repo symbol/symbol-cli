@@ -15,23 +15,23 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {PasswordResolver} from '../../src/resolvers/password.resolver';
+import {expect} from 'chai'
+import {PasswordResolver} from '../../src/resolvers/password.resolver'
 
 describe('Password resolver', () => {
 
     it('should return password', () => {
-        const password = '12345678';
-        const profileOptions = {password} as any;
+        const password = '12345678'
+        const profileOptions = {password} as any
         expect(new PasswordResolver().resolve(profileOptions).value)
-            .to.be.equal(password);
-    });
+            .to.be.equal(password)
+    })
 
     it('should throw error if password invalid', () => {
-        const password = '12345';
-        const profileOptions = {password} as any;
+        const password = '12345'
+        const profileOptions = {password} as any
         expect(() => new PasswordResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

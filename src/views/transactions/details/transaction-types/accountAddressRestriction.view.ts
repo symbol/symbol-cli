@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class AccountAddressRestrictionView {
   /**
@@ -26,7 +26,7 @@ export class AccountAddressRestrictionView {
    * @returns {CellRecord}
    */
   static get(tx: AccountAddressRestrictionTransaction): CellRecord {
-    return new AccountAddressRestrictionView(tx).render();
+    return new AccountAddressRestrictionView(tx).render()
   }
 
   /**
@@ -43,7 +43,7 @@ export class AccountAddressRestrictionView {
     return {
       'Account restriction flag': AccountRestrictionFlags[this.tx.restrictionFlags],
       ...this.getRestrictions(),
-    };
+    }
   }
 
   /**
@@ -51,8 +51,8 @@ export class AccountAddressRestrictionView {
    * @returns {CellRecord}
    */
   private getRestrictions(): CellRecord {
-    const numberOfAdditions = this.tx.restrictionAdditions.length;
-    const numberOfDeletions = this.tx.restrictionDeletions.length;
+    const numberOfAdditions = this.tx.restrictionAdditions.length
+    const numberOfDeletions = this.tx.restrictionDeletions.length
     return {
       ...this.tx.restrictionAdditions.reduce((acc, account, index) => ({
         ...acc,
@@ -66,7 +66,7 @@ export class AccountAddressRestrictionView {
           account, index, numberOfDeletions, 'Deletion',
         ),
       }), {}),
-    };
+    }
   }
 
   /**
@@ -83,8 +83,8 @@ export class AccountAddressRestrictionView {
     numberOfRestrictions: number,
     additionOrDeletion: 'Addition' | 'Deletion',
   ): CellRecord {
-    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`;
-    const target = account instanceof Address ? account.pretty() : account.toHex();
-    return {[key]: target};
+    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`
+    const target = account instanceof Address ? account.pretty() : account.toHex()
+    return {[key]: target}
   }
 }

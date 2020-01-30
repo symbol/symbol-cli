@@ -17,8 +17,8 @@
  *
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
 import {
     AccountHttp,
     Address,
@@ -27,44 +27,44 @@ import {
     CosignatureTransaction,
     QueryParams,
     TransactionHttp,
-} from 'nem2-sdk';
-import {filter, flatMap, switchMap} from 'rxjs/operators';
-import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
-import {ProfileCommand} from '../../interfaces/profile.command';
-import {Profile} from '../../models/profile';
-import {HashResolver} from '../../resolvers/hash.resolver';
-import {MultisigService} from '../../services/multisig.service';
-import {SequentialFetcher} from '../../services/sequentialFetcher.service';
+} from 'nem2-sdk'
+import {filter, flatMap, switchMap} from 'rxjs/operators'
+import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {ProfileCommand} from '../../interfaces/profile.command'
+import {Profile} from '../../models/profile'
+import {HashResolver} from '../../resolvers/hash.resolver'
+import {MultisigService} from '../../services/multisig.service'
+import {SequentialFetcher} from '../../services/sequentialFetcher.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'h',
         description: 'Aggregate bonded transaction hash to be signed.',
     })
-    hash: string;
+    hash: string
 }
 
 @command({
     description: 'Cosign an aggregate bonded transaction',
 })
 export default class extends ProfileCommand {
-    private profile: Profile;
-    private options: CommandOptions;
+    private profile: Profile
+    private options: CommandOptions
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
-        this.options = options;
-        this.profile = this.getProfile(this.options);
+        this.spinner.start()
+        this.options = options
+        this.profile = this.getProfile(this.options)
 
         const hash = new HashResolver()
-            .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ');
+            .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ')
 
-        const sequentialFetcher = this.getSequentialFetcher();
+        const sequentialFetcher = this.getSequentialFetcher()
 
         new MultisigService(this.profile).getSelfAndChildrenAddresses()
             .pipe(
@@ -75,16 +75,16 @@ export default class extends ProfileCommand {
                     && _.transactionInfo.hash === hash),
             )
             .subscribe((transaction: AggregateTransaction) => {
-                sequentialFetcher.kill();
-                const signedCosignature = this.getSignedAggregateBondedCosignature(transaction, hash);
+                sequentialFetcher.kill()
+                const signedCosignature = this.getSignedAggregateBondedCosignature(transaction, hash)
                 if (signedCosignature) {
-                    this.announceAggregateBondedCosignature(signedCosignature);
+                    this.announceAggregateBondedCosignature(signedCosignature)
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 
     /**
@@ -95,9 +95,9 @@ export default class extends ProfileCommand {
     private getSequentialFetcher(): SequentialFetcher {
         const networkCall = (address: Address) => new AccountHttp(this.profile.url)
             .getAccountPartialTransactions(address, new QueryParams(100))
-            .toPromise();
+            .toPromise()
 
-        return SequentialFetcher.create(networkCall);
+        return SequentialFetcher.create(networkCall)
     }
 
     /**
@@ -112,14 +112,14 @@ export default class extends ProfileCommand {
         hash: string,
     ): CosignatureSignedTransaction | null {
         try {
-            const cosignatureTransaction = CosignatureTransaction.create(transaction);
-            const account = this.profile.decrypt(this.options);
-            return account.signCosignatureTransaction(cosignatureTransaction);
+            const cosignatureTransaction = CosignatureTransaction.create(transaction)
+            const account = this.profile.decrypt(this.options)
+            return account.signCosignatureTransaction(cosignatureTransaction)
         } catch (err) {
-            this.spinner.stop(true);
-            const text = `${chalk.red('Error')}`;
-            console.log(text, 'The profile', this.profile.name, 'cannot cosign the transaction with hash', hash, '.');
-            return null;
+            this.spinner.stop(true)
+            const text = `${chalk.red('Error')}`
+            console.log(text, 'The profile', this.profile.name, 'cannot cosign the transaction with hash', hash, '.')
+            return null
         }
     }
 
@@ -133,13 +133,13 @@ export default class extends ProfileCommand {
         try {
             await new TransactionHttp(this.profile.url)
                 .announceAggregateBondedCosignature(signedCosignature)
-                .toPromise();
-            this.spinner.stop(true);
-            console.log(chalk.green('Transaction cosigned and announced correctly.'));
+                .toPromise()
+            this.spinner.stop(true)
+            console.log(chalk.green('Transaction cosigned and announced correctly.'))
         } catch (err) {
-            this.spinner.stop(true);
-            err = err.message ? JSON.parse(err.message) : err;
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
+            this.spinner.stop(true)
+            err = err.message ? JSON.parse(err.message) : err
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
         }
     }
 }

@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Secret resolver
@@ -19,7 +19,7 @@ export class SecretResolver implements Resolver {
         const resolution = OptionsResolver(options,
         'secret',
         () => undefined,
-        altText ? altText : 'Enter proof hashed in hexadecimal format: ').trim();
-        return resolution;
+        altText ? altText : 'Enter proof hashed in hexadecimal format: ').trim()
+        return resolution
     }
 }

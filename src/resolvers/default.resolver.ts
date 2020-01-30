@@ -1,7 +1,7 @@
-import * as readlineSync from 'readline-sync';
-import {CreateProfileOptions} from '../interfaces/create.profile.command';
-import {Profile} from '../models/profile';
-import {Resolver} from './resolver';
+import * as readlineSync from 'readline-sync'
+import {CreateProfileOptions} from '../interfaces/create.profile.command'
+import {Profile} from '../models/profile'
+import {Resolver} from './resolver'
 
 /**
  * Default resolver
@@ -17,8 +17,8 @@ export class DefaultResolver implements Resolver {
      */
     resolve(options: CreateProfileOptions, secondSource?: Profile, altText?: string): boolean {
         if (!options.default && readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
-            options.default = true;
+            options.default = true
         }
-        return options.default;
+        return options.default
     }
 }

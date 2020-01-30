@@ -15,17 +15,17 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {ProfileNameResolver} from '../../src/resolvers/profile.resolver';
-import {ProofResolver} from '../../src/resolvers/proof.resolver';
+import {expect} from 'chai'
+import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
+import {ProofResolver} from '../../src/resolvers/proof.resolver'
 
 describe('Proof resolver', () => {
 
     it('should return proof', () => {
-        const proof = 'proof';
-        const profileOptions = {proof} as any;
+        const proof = 'proof'
+        const profileOptions = {proof} as any
         expect(new ProofResolver().resolve(profileOptions))
-            .to.be.equal(proof);
-    });
+            .to.be.equal(proof)
+    })
 
-});
+})

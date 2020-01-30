@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {KeyGenerator} from 'nem2-sdk';
-import {KeyResolver} from '../../src/resolvers/key.resolver';
+import {expect} from 'chai'
+import {KeyGenerator} from 'nem2-sdk'
+import {KeyResolver} from '../../src/resolvers/key.resolver'
 
 describe('Key resolver', () => {
 
     it('should return key', () => {
-        const key = KeyGenerator.generateUInt64Key('test').toHex();
-        const profileOptions = {key} as any;
+        const key = KeyGenerator.generateUInt64Key('test').toHex()
+        const profileOptions = {key} as any
         expect(new KeyResolver().resolve(profileOptions).toHex())
-            .to.be.equal(key);
-    });
-});
+            .to.be.equal(key)
+    })
+})

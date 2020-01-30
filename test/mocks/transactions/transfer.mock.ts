@@ -16,9 +16,9 @@
  *
  */
 
-import {Address, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64} from 'nem2-sdk';
-import {mosaic1, mosaic2} from '../mosaics.mock';
-import {namespaceId2} from '../namespaces.mock';
+import {Address, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64} from 'nem2-sdk'
+import {mosaic1, mosaic2} from '../mosaics.mock'
+import {namespaceId2} from '../namespaces.mock'
 
 export const unsignedTransfer1 = new TransferTransaction(
  NetworkType.MAIN_NET,
@@ -28,7 +28,7 @@ export const unsignedTransfer1 = new TransferTransaction(
  Address.createFromRawAddress('TALRJL-Z2FDOI-B7JCZJ-ANUJCM-GCJA6R-BRIYK4-NTDM'),
  [mosaic1],
  PlainMessage.create('This is a mock message!'),
-);
+)
 
 export const unsignedTransfer2 = new TransferTransaction(
  NetworkType.MAIN_NET,
@@ -38,4 +38,4 @@ export const unsignedTransfer2 = new TransferTransaction(
  namespaceId2,
  [mosaic1, mosaic2],
  PlainMessage.create('This is a mock message!'),
-);
+)

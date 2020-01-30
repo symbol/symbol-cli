@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, MultisigAccountModificationTransaction, NetworkType} from 'nem2-sdk';
-import {account1, account2, account3} from '../accounts.mock';
+import {Deadline, MultisigAccountModificationTransaction, NetworkType} from 'nem2-sdk'
+import {account1, account2, account3} from '../accounts.mock'
 
 export const unsignedMultisigAccountModification1 = MultisigAccountModificationTransaction.create(
  Deadline.create(),
@@ -29,4 +29,4 @@ export const unsignedMultisigAccountModification1 = MultisigAccountModificationT
  ],
  [account3.publicAccount],
  NetworkType.MIJIN_TEST,
-);
+)

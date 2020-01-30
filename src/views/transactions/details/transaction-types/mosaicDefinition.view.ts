@@ -16,8 +16,8 @@
  *
  */
 
-import {MosaicDefinitionTransaction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {MosaicDefinitionTransaction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class MosaicDefinitionView {
   /**
@@ -33,6 +33,6 @@ export class MosaicDefinitionView {
       ['Supply mutable']: `${tx.flags.supplyMutable}`,
       ['Transferable']: `${tx.flags.transferable}`,
       ['Restrictable']: `${tx.flags.restrictable}`,
-    };
+    }
   }
 }

@@ -1,8 +1,8 @@
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {TransactionTypeValidator} from '../validators/transactionType.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {TransactionTypeValidator} from '../validators/transactionType.validator'
+import {Resolver} from './resolver'
 
 /**
  * Transaction type resolver
@@ -20,8 +20,8 @@ export class TransactionTypeResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'transactionType',
             () => undefined,
-            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ').trim();
-        new TransactionTypeValidator().validate(resolution);
-        return parseInt(resolution, 16);
+            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ').trim()
+        new TransactionTypeValidator().validate(resolution)
+        return parseInt(resolution, 16)
     }
 }

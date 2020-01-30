@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class AccountOperationRestrictionView {
   /**
@@ -26,7 +26,7 @@ export class AccountOperationRestrictionView {
    * @returns {CellRecord}
    */
   static get(tx: AccountOperationRestrictionTransaction): CellRecord {
-    return new AccountOperationRestrictionView(tx).render();
+    return new AccountOperationRestrictionView(tx).render()
   }
 
   /**
@@ -43,7 +43,7 @@ export class AccountOperationRestrictionView {
     return {
       'Account restriction flag': AccountRestrictionFlags[this.tx.restrictionFlags],
       ...this.getRestrictions(),
-    };
+    }
   }
 
   /**
@@ -51,8 +51,8 @@ export class AccountOperationRestrictionView {
    * @returns {CellRecord}
    */
   private getRestrictions(): CellRecord {
-    const numberOfAdditions = this.tx.restrictionAdditions.length;
-    const numberOfDeletions = this.tx.restrictionDeletions.length;
+    const numberOfAdditions = this.tx.restrictionAdditions.length
+    const numberOfDeletions = this.tx.restrictionDeletions.length
     return {
       ...this.tx.restrictionAdditions.reduce((acc, transactionType, index) => ({
         ...acc,
@@ -66,7 +66,7 @@ export class AccountOperationRestrictionView {
           transactionType, index, numberOfDeletions, 'Deletion',
         ),
       }), {}),
-    };
+    }
   }
 
   /**
@@ -83,7 +83,7 @@ export class AccountOperationRestrictionView {
     numberOfRestrictions: number,
     additionOrDeletion: 'Addition' | 'Deletion',
   ): CellRecord {
-    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`;
-    return {[key]: TransactionType[transactionType]};
+    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`
+    return {[key]: TransactionType[transactionType]}
   }
 }

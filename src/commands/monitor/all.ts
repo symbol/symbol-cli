@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk';
-import {merge} from 'rxjs';
-import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {TransactionView} from '../../views/transactions/details/transaction.view';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk'
+import {merge} from 'rxjs'
+import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',
@@ -29,16 +29,16 @@ import {TransactionView} from '../../views/transactions/details/transaction.view
 export default class extends MonitorAddressCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new Listener(profile.url);
+        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
+        const listener = new Listener(profile.url)
         listener.open().then(() => {
             merge(
                 listener.newBlock(),
@@ -49,23 +49,23 @@ export default class extends MonitorAddressCommand {
                     if (response instanceof AggregateTransaction &&
                         response.transactionInfo &&
                         response.transactionInfo.height.compact() === 0) {
-                        console.log(chalk.green('\nNew aggregate bonded transaction added:'));
-                        new TransactionView(response).print();
+                        console.log(chalk.green('\nNew aggregate bonded transaction added:'))
+                        new TransactionView(response).print()
                     } else if (response instanceof Transaction) {
-                        console.log(chalk.green('\nNew transaction confirmed:'));
-                        new TransactionView(response).print();
+                        console.log(chalk.green('\nNew transaction confirmed:'))
+                        new TransactionView(response).print()
                     } else if (response instanceof BlockInfo) {
-                        console.log(chalk.green('\nNew block:'), response.height.toString());
+                        console.log(chalk.green('\nNew block:'), response.height.toString())
                     } else if (response instanceof TransactionStatusError) {
-                        console.log(chalk.green('\nTransaction error:'), response.hash);
-                        console.log('\n' + response.code);
+                        console.log(chalk.green('\nTransaction error:'), response.hash)
+                        console.log('\n' + response.code)
                     }
                 }, (err) => {
-                    err = err.message ? JSON.parse(err.message) : err;
-                    console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-                });
+                    err = err.message ? JSON.parse(err.message) : err
+                    console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                })
         }, (err) => {
-            console.log(chalk.red('Error'), err);
-        });
+            console.log(chalk.red('Error'), err)
+        })
     }
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {option} from 'clime';
+import chalk from 'chalk'
+import {option} from 'clime'
 import {
     Address,
     Listener,
@@ -24,10 +24,10 @@ import {
     SignedTransaction,
     TransactionHttp,
     TransactionService,
-} from 'nem2-sdk';
-import {merge} from 'rxjs';
-import {filter, mergeMap, tap} from 'rxjs/operators';
-import {ProfileCommand, ProfileOptions} from './profile.command';
+} from 'nem2-sdk'
+import {merge} from 'rxjs'
+import {filter, mergeMap, tap} from 'rxjs/operators'
+import {ProfileCommand, ProfileOptions} from './profile.command'
 
 /**
  * Base command class to announce transactions.
@@ -35,7 +35,7 @@ import {ProfileCommand, ProfileOptions} from './profile.command';
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
     protected constructor() {
-        super();
+        super()
     }
 
     /**
@@ -44,17 +44,17 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @param {string} url - Node URL.
      */
     protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        this.spinner.start();
-        const transactionHttp = new TransactionHttp(url);
+        this.spinner.start()
+        const transactionHttp = new TransactionHttp(url)
         transactionHttp
             .announce(signedTransaction)
             .subscribe((ignored) => {
-                this.spinner.stop(true);
-                console.log(chalk.green('\nTransaction announced correctly.'));
+                this.spinner.stop(true)
+                console.log(chalk.green('\nTransaction announced correctly.'))
             }, (err) => {
-                this.spinner.stop(true);
-                console.log(chalk.red('Error'), err.message);
-            });
+                this.spinner.stop(true)
+                console.log(chalk.red('Error'), err.message)
+            })
     }
 
     /**
@@ -64,11 +64,11 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @param {string} url - Node URL.
      */
     protected announceTransactionSync(signedTransaction: SignedTransaction, senderAddress: Address, url: string) {
-        this.spinner.start();
-        const transactionHttp = new TransactionHttp(url);
-        const receiptHttp = new ReceiptHttp(url);
-        const listener = new Listener(url);
-        const transactionService = new TransactionService(transactionHttp, receiptHttp);
+        this.spinner.start()
+        const transactionHttp = new TransactionHttp(url)
+        const receiptHttp = new ReceiptHttp(url)
+        const listener = new Listener(url)
+        const transactionService = new TransactionService(transactionHttp, receiptHttp)
         listener.open().then(() => {
             merge(transactionService.announce(signedTransaction, listener),
                 listener
@@ -76,23 +76,23 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     .pipe(
                         filter((error) => error.hash === signedTransaction.hash),
                         tap((error) => {
-                            throw new Error(error.code);
+                            throw new Error(error.code)
                         })))
                 .subscribe((ignored) => {
-                    listener.close();
-                    this.spinner.stop(true);
-                    console.log(chalk.green('\nTransaction confirmed.'));
+                    listener.close()
+                    this.spinner.stop(true)
+                    console.log(chalk.green('\nTransaction confirmed.'))
                 }, (err) => {
-                    listener.close();
-                    this.spinner.stop(true);
-                    listener.close();
-                    console.log(chalk.red('Error'), err.message);
-                });
+                    listener.close()
+                    this.spinner.stop(true)
+                    listener.close()
+                    console.log(chalk.red('Error'), err.message)
+                })
         }, (err) => {
-            this.spinner.stop(true);
-            listener.close();
-            console.log(chalk.red('Error'), err.message);
-        });
+            this.spinner.stop(true)
+            listener.close()
+            console.log(chalk.red('Error'), err.message)
+        })
     }
 
     /**
@@ -106,10 +106,10 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                                            signedAggregateTransaction: SignedTransaction,
                                            senderAddress: Address,
                                            url: string) {
-        this.spinner.start();
-        let confirmations = 0;
-        const transactionHttp = new TransactionHttp(url);
-        const listener = new Listener(url);
+        this.spinner.start()
+        let confirmations = 0
+        const transactionHttp = new TransactionHttp(url)
+        const listener = new Listener(url)
         listener.open().then(() => {
             merge(
                 transactionHttp.announce(signedHashLockTransaction),
@@ -118,7 +118,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     .pipe(
                         filter((error) => error.hash === signedHashLockTransaction.hash),
                         tap((error) => {
-                            throw new Error(error.code);
+                            throw new Error(error.code)
                         })),
                 listener
                     .confirmed(senderAddress)
@@ -129,28 +129,28 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     ),
             )
                 .subscribe((ignored) => {
-                    listener.close();
-                    confirmations = confirmations + 1;
+                    listener.close()
+                    confirmations = confirmations + 1
                     if (confirmations === 1) {
-                        this.spinner.stop(true);
-                        console.log(chalk.green('\n Hash lock transaction announced.'));
-                        this.spinner.start();
+                        this.spinner.stop(true)
+                        console.log(chalk.green('\n Hash lock transaction announced.'))
+                        this.spinner.start()
                     } else if (confirmations === 2) {
-                        listener.close();
-                        this.spinner.stop(true);
-                        console.log(chalk.green('\n Hash lock transaction confirmed.'));
-                        console.log(chalk.green('\n Aggregate transaction announced.'));
+                        listener.close()
+                        this.spinner.stop(true)
+                        console.log(chalk.green('\n Hash lock transaction confirmed.'))
+                        console.log(chalk.green('\n Aggregate transaction announced.'))
                     }
                 }, (err) => {
-                    this.spinner.stop(true);
-                    listener.close();
-                    console.log(chalk.red('Error'), err.message);
-                });
+                    this.spinner.stop(true)
+                    listener.close()
+                    console.log(chalk.red('Error'), err.message)
+                })
         }, (err) => {
-            this.spinner.stop(true);
-            listener.close();
-            console.log(chalk.red('Error'), err.message);
-        });
+            this.spinner.stop(true)
+            listener.close()
+            console.log(chalk.red('Error'), err.message)
+        })
     }
 }
 
@@ -162,25 +162,25 @@ export class AnnounceTransactionsOptions extends ProfileOptions {
         flag: 'p',
         description: 'Profile password.',
     })
-    password: string;
+    password: string
 
     @option({
         flag: 'f',
         description: 'Maximum fee (absolute amount).',
     })
-    maxFee: string;
+    maxFee: string
 
     @option({
         description: '(Optional) Wait until the server confirms or rejects the transaction.',
         toggle: true,
     })
-    sync: any;
+    sync: any
 
     @option({
         description: '(Optional) Announce the transaction without double confirmation.',
         toggle: true,
     })
-    announce: any;
+    announce: any
 
 }
 
@@ -193,19 +193,19 @@ export class AnnounceAggregateTransactionsOptions extends AnnounceTransactionsOp
         flag: 'F',
         description: 'Maximum fee (absolute amount) to announce the hash lock transaction.',
     })
-    maxFeeHashLock: string;
+    maxFeeHashLock: string
 
     @option({
         flag: 'D',
         description: 'Hash lock duration expressed in blocks.',
         default: '480',
     })
-    duration: string;
+    duration: string
 
     @option({
         flag: 'L',
         description: 'Relative amount of network mosaic to lock.',
         default: '10',
     })
-    amount: string;
+    amount: string
 }

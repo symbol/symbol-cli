@@ -15,19 +15,19 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
-import {TransactionHttp} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command';
-import {HashResolver} from '../../resolvers/hash.resolver';
-import {TransactionView} from '../../views/transactions/details/transaction.view';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
+import {TransactionHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HashResolver} from '../../resolvers/hash.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Transaction hash.',
     })
-    hash: string;
+    hash: string
 }
 
 @command({
@@ -36,25 +36,25 @@ export class CommandOptions extends ProfileOptions {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
+        this.spinner.start()
+        const profile = this.getProfile(options)
         const hash = new HashResolver()
-            .resolve(options);
+            .resolve(options)
 
-        const transactionHttp = new TransactionHttp(profile.url);
+        const transactionHttp = new TransactionHttp(profile.url)
         transactionHttp.getTransaction(hash)
             .subscribe((transaction) => {
-                this.spinner.stop(true);
-                new TransactionView(transaction).print();
+                this.spinner.stop(true)
+                new TransactionView(transaction).print()
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

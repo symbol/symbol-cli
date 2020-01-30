@@ -15,34 +15,34 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command';
-import {ActionResolver} from '../../resolvers/action.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
-import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver';
-import {TransactionView} from '../../views/transactions/details/transaction.view';
+import {command, metadata, option} from 'clime'
+import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {ActionResolver} from '../../resolvers/action.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
+import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
         description: 'Restriction flag. (0: AllowOutgoingTransactionType, 1: BlockOutgoingTransactionType)',
     })
-    flags: number;
+    flags: number
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
     })
-    action: number;
+    action: number
 
     @option({
         flag: 'v',
         description: 'Transaction type formatted as hex.',
     })
-    transactionType: string;
+    transactionType: string
 }
 
 @command({
@@ -51,17 +51,17 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends AnnounceTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const action = new ActionResolver().resolve(options);
-        const flags = new RestrictionAccountOperationFlagsResolver().resolve(options);
-        const transactionType = new TransactionTypeResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
+        const action = new ActionResolver().resolve(options)
+        const flags = new RestrictionAccountOperationFlagsResolver().resolve(options)
+        const transactionType = new TransactionTypeResolver().resolve(options)
+        const maxFee = new MaxFeeResolver().resolve(options)
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
@@ -69,16 +69,16 @@ export default class extends AnnounceTransactionsCommand {
             (action === 1) ? [transactionType] : [],
             (action === 0) ? [transactionType] : [],
             profile.networkType,
-            maxFee);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        new TransactionView(transaction, signedTransaction).print();
+        new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 }

@@ -15,51 +15,51 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {Address, NamespaceId} from 'nem2-sdk';
-import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver';
+import {expect} from 'chai'
+import {Address, NamespaceId} from 'nem2-sdk'
+import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver'
 
 describe('Address resolver', () => {
 
     it('should return address', () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        const profileOptions = {address} as any;
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const profileOptions = {address} as any
         expect(new AddressResolver().resolve(profileOptions).plain())
-            .to.be.equal(address);
-    });
+            .to.be.equal(address)
+    })
 
     it('should throw error if cannot create address', () => {
-        const address = 'S';
-        const profileOptions = {address} as any;
+        const address = 'S'
+        const profileOptions = {address} as any
         expect(() => new AddressResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})
 
 describe('Recipient address alias resolver', () => {
 
     it('should return alias', () => {
-        const recipientAddress = '@alias';
-        const profileOptions = {recipientAddress} as any;
+        const recipientAddress = '@alias'
+        const profileOptions = {recipientAddress} as any
         expect(new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
-            .to.be.instanceOf(NamespaceId);
-    });
+            .to.be.instanceOf(NamespaceId)
+    })
 
     it('should return address', () => {
-        const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        const profileOptions = {recipientAddress} as any;
+        const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const profileOptions = {recipientAddress} as any
         expect((new AddressAliasResolver()
             .resolve(profileOptions, undefined, undefined, 'recipientAddress') as Address).plain())
-            .to.be.equal(recipientAddress);
-    });
+            .to.be.equal(recipientAddress)
+    })
 
     it('should throw error if cannot create address', () => {
-        const recipientAddress = 'test';
-        const profileOptions = {recipientAddress} as any;
+        const recipientAddress = 'test'
+        const profileOptions = {recipientAddress} as any
         expect(() => new AddressAliasResolver()
             .resolve(profileOptions, undefined, undefined, 'recipientAddress'))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

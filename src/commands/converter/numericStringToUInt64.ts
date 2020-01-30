@@ -15,16 +15,16 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {ProfileOptions} from '../../interfaces/profile.command';
-import {AmountResolver} from '../../resolvers/amount.resolver';
+import {Command, command, metadata, option} from 'clime'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {AmountResolver} from '../../resolvers/amount.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Numeric string. Example: 12345678',
     })
-    amount: string;
+    amount: string
 }
 
 @command({
@@ -33,12 +33,12 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const value = new AmountResolver().resolve(options);
-        console.log(value.toHex());
+        const value = new AmountResolver().resolve(options)
+        console.log(value.toHex())
     }
 }

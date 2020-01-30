@@ -1,7 +1,7 @@
-import {Address, MultisigAccountGraphInfo, MultisigHttp} from 'nem2-sdk';
-import {from, Observable, of} from 'rxjs';
-import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators';
-import {Profile} from '../models/profile';
+import {Address, MultisigAccountGraphInfo, MultisigHttp} from 'nem2-sdk'
+import {from, Observable, of} from 'rxjs'
+import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators'
+import {Profile} from '../models/profile'
 
 /*
  *
@@ -39,7 +39,7 @@ export class MultisigService {
    .pipe(
     switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
     catchError((ignored) => of([this.profile.address])),
-   );
+   )
  }
 
  /**
@@ -51,7 +51,7 @@ export class MultisigService {
  private getAddressesFromGraphInfo(
   graphInfo: MultisigAccountGraphInfo,
  ): Observable<Address[]> {
-  const {multisigAccounts} = graphInfo;
+  const {multisigAccounts} = graphInfo
   return from(
    [...multisigAccounts.keys()]
     .sort((a, b) => b - a), // Get addresses from top to bottom
@@ -62,6 +62,6 @@ export class MultisigService {
     flatMap((multisigAccountInfo) => multisigAccountInfo),
     map(({account}) => account.address),
     toArray(),
-   );
+   )
  }
 }

@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {option} from 'clime';
-import {QueryParams} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from './profile.command';
+import {option} from 'clime'
+import {QueryParams} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from './profile.command'
 
 /**
  * Base command class to retrieve transactions from an account.
@@ -28,7 +28,7 @@ export abstract class AccountTransactionsCommand extends ProfileCommand {
      * Constructor.
      */
     protected constructor() {
-        super();
+        super()
     }
 }
 
@@ -40,20 +40,20 @@ export class AccountTransactionsOptions extends ProfileOptions {
         flag: 'a',
         description: 'Account address.',
     })
-    address: string;
+    address: string
 
     @option({
         flag: 'n',
         description: '(Optional) Number of transactions.',
         default: 10,
     })
-    numTransactions: number;
+    numTransactions: number
 
     @option({
         flag: 'i',
         description: '(Optional) Identifier of the transaction after which we want the transactions to be returned.',
     })
-    id: string;
+    id: string
 
     /**
      * Creates QueryParams object based on options.
@@ -61,8 +61,8 @@ export class AccountTransactionsOptions extends ProfileOptions {
      */
     getQueryParams(): QueryParams {
         if (this.id === undefined) {
-            return new QueryParams(this.numTransactions);
+            return new QueryParams(this.numTransactions)
         }
-        return new QueryParams(this.numTransactions, this.id);
+        return new QueryParams(this.numTransactions, this.id)
     }
 }

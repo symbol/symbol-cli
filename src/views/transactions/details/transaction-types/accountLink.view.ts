@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountLinkTransaction, LinkAction} from 'nem2-sdk';
-import {CellRecord} from '../transaction.view';
+import {AccountLinkTransaction, LinkAction} from 'nem2-sdk'
+import {CellRecord} from '../transaction.view'
 
 export class AccountLinkView {
   /**
@@ -29,6 +29,6 @@ export class AccountLinkView {
     return {
       ['Action']: LinkAction[tx.linkAction],
       ['Remote public key']: tx.remotePublicKey,
-    };
+    }
   }
 }

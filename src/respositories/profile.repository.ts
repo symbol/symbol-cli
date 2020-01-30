@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import * as fs from 'fs';
-import {SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../models/profile';
+import * as fs from 'fs'
+import {SimpleWallet} from 'nem2-sdk'
+import {Profile} from '../models/profile'
 
 /**
  * Profile repository
@@ -38,11 +38,11 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     public find(name: string): Profile {
-        const profiles = this.getProfiles();
+        const profiles = this.getProfiles()
         if (profiles[name]) {
-            return Profile.createFromDTO(profiles[name]);
+            return Profile.createFromDTO(profiles[name])
         }
-        throw new Error(`${name} not found`);
+        throw new Error(`${name} not found`)
     }
 
     /**
@@ -50,14 +50,14 @@ export class ProfileRepository {
      * @returns {Profile[]}
      */
     public all(): Profile[] {
-        const profiles = this.getProfiles();
-        const list: Profile[] = [];
+        const profiles = this.getProfiles()
+        const list: Profile[] = []
         for (const name in profiles) {
             if (profiles.hasOwnProperty(name)) {
-                list.push(Profile.createFromDTO(profiles[name]));
+                list.push(Profile.createFromDTO(profiles[name]))
             }
         }
-        return list;
+        return list
     }
 
     /**
@@ -68,10 +68,10 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
-        const profiles = this.getProfiles();
-        const {name, network} = simpleWallet;
+        const profiles = this.getProfiles()
+        const {name, network} = simpleWallet
         if (profiles.hasOwnProperty(name)) {
-            throw new Error(`A profile named ${name} already exists.`);
+            throw new Error(`A profile named ${name} already exists.`)
         }
         profiles[name] = {
             networkType: network,
@@ -79,9 +79,9 @@ export class ProfileRepository {
             url,
             networkGenerationHash,
             default: '0',
-        };
-        this.saveProfiles(profiles);
-        return new Profile(simpleWallet, url, networkGenerationHash);
+        }
+        this.saveProfiles(profiles)
+        return new Profile(simpleWallet, url, networkGenerationHash)
     }
 
     /**
@@ -90,18 +90,18 @@ export class ProfileRepository {
      * @throws {Error}
      */
     public setDefault(name: string) {
-        const profiles = this.getProfiles();
+        const profiles = this.getProfiles()
         if (profiles.hasOwnProperty(name)) {
             for (const item in profiles) {
                 if (item !== name) {
-                    profiles[item].default = '0';
+                    profiles[item].default = '0'
                 } else {
-                    profiles[item].default = '1';
+                    profiles[item].default = '1'
                 }
             }
-            this.saveProfiles(profiles);
+            this.saveProfiles(profiles)
         } else {
-            throw new Error(`${name} not found`);
+            throw new Error(`${name} not found`)
         }
     }
 
@@ -110,17 +110,17 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     public getDefaultProfile(): Profile {
-        const profiles = this.getProfiles();
-        let defaultProfile = '';
+        const profiles = this.getProfiles()
+        let defaultProfile = ''
         for (const name in profiles) {
             if ('1' === profiles[name].default) {
-                defaultProfile = name;
+                defaultProfile = name
             }
         }
         if ('' === defaultProfile) {
-            throw new Error('default profile not found');
+            throw new Error('default profile not found')
         }
-        return this.find(defaultProfile);
+        return this.find(defaultProfile)
     }
 
     /**
@@ -128,13 +128,13 @@ export class ProfileRepository {
      * @returns {object}
      */
     private getProfiles(): any {
-        let accounts = {};
+        let accounts = {}
         try {
-            accounts = JSON.parse(fs.readFileSync(require('os').homedir() + '/' + this.fileUrl, 'utf-8'));
+            accounts = JSON.parse(fs.readFileSync(require('os').homedir() + '/' + this.fileUrl, 'utf-8'))
         } catch (err) {
-            fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, '{}', 'utf-8');
+            fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, '{}', 'utf-8')
         }
-        return accounts;
+        return accounts
     }
 
     /**
@@ -142,6 +142,6 @@ export class ProfileRepository {
      * @param {JSON} profiles
      */
     private saveProfiles(profiles: JSON) {
-        fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, JSON.stringify(profiles), 'utf-8');
+        fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, JSON.stringify(profiles), 'utf-8')
     }
 }

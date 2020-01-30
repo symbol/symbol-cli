@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime';
-import { MosaicRestrictionType } from 'nem2-sdk';
+import { ExpectedError, ValidationContext, Validator } from 'clime'
+import { MosaicRestrictionType } from 'nem2-sdk'
 
 /**
  * Validator of mosaic restriction type
@@ -30,7 +30,7 @@ export class MosaicRestrictionTypeValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         if (!(value in MosaicRestrictionType)) {
-            throw new ExpectedError('Wrong mosaic restriction type');
+            throw new ExpectedError('Wrong mosaic restriction type')
         }
     }
 }

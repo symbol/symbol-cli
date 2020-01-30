@@ -1,11 +1,11 @@
-import {NamespaceId, NamespaceRegistrationType, UInt64} from 'nem2-sdk';
-import * as readlineSync from 'readline-sync';
-import {CommandOptions} from '../commands/transaction/namespace';
-import {ProfileOptions} from '../interfaces/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {NamespaceIdValidator} from '../validators/namespaceId.validator';
-import {Resolver} from './resolver';
+import {NamespaceId, NamespaceRegistrationType, UInt64} from 'nem2-sdk'
+import * as readlineSync from 'readline-sync'
+import {CommandOptions} from '../commands/transaction/namespace'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {NamespaceIdValidator} from '../validators/namespaceId.validator'
+import {Resolver} from './resolver'
 
 /**
  * Namespace name resolver
@@ -24,8 +24,8 @@ export class NamespaceNameResolver {
         const resolution = OptionsResolver(options,
         altKey ? altKey : 'namespaceName',
         () =>  undefined,
-        altText ? altText : 'Enter the namespace name: ').trim();
-        return new NamespaceId(resolution);
+        altText ? altText : 'Enter the namespace name: ').trim()
+        return new NamespaceId(resolution)
     }
 }
 
@@ -45,10 +45,10 @@ export class NamespaceIdResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'namespaceId',
             () =>  undefined,
-            altText ? altText : 'Enter the namespace id in hexadecimal: ').trim();
-        new NamespaceIdValidator().validate(resolution);
-        const namespaceIdUInt64 = UInt64.fromHex(resolution);
-        return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
+            altText ? altText : 'Enter the namespace id in hexadecimal: ').trim()
+        new NamespaceIdValidator().validate(resolution)
+        const namespaceIdUInt64 = UInt64.fromHex(resolution)
+        return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher])
     }
 }
 
@@ -66,12 +66,12 @@ export class NamespaceTypeResolver  implements Resolver {
      */
     resolve(options: CommandOptions, secondSource?: Profile, altText?: string): NamespaceRegistrationType {
         if (!options.subnamespace && !options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
-            options.rootnamespace = true;
+            options.rootnamespace = true
         }
-        let namespaceType = NamespaceRegistrationType.SubNamespace;
+        let namespaceType = NamespaceRegistrationType.SubNamespace
         if (options.rootnamespace) {
-            namespaceType = NamespaceRegistrationType.RootNamespace;
+            namespaceType = NamespaceRegistrationType.RootNamespace
         }
-        return namespaceType;
+        return namespaceType
     }
 }

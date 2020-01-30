@@ -16,7 +16,7 @@
  *
  */
 
-import {NamespaceId} from 'nem2-sdk';
+import {NamespaceId} from 'nem2-sdk'
 
 export class NamespacesView {
  /**
@@ -27,8 +27,8 @@ export class NamespacesView {
   * @returns {string}
   */
  static getNamespaceLabel(namespaceId: NamespaceId): string {
-  const hexId = namespaceId.toHex();
-  if (namespaceId.fullName) {return `${namespaceId.fullName} (${hexId})`; }
-  return hexId;
+  const hexId = namespaceId.toHex()
+  if (namespaceId.fullName) {return `${namespaceId.fullName} (${hexId})` }
+  return hexId
  }
 }

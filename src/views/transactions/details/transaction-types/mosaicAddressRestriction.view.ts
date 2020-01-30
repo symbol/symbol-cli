@@ -16,9 +16,9 @@
  *
  */
 
-import {MosaicAddressRestrictionTransaction} from 'nem2-sdk';
-import {RecipientsView} from '../../../recipients.view';
-import {CellRecord} from '../transaction.view';
+import {MosaicAddressRestrictionTransaction} from 'nem2-sdk'
+import {RecipientsView} from '../../../recipients.view'
+import {CellRecord} from '../transaction.view'
 
 export class MosaicAddressRestrictionView {
   /**
@@ -33,6 +33,6 @@ export class MosaicAddressRestrictionView {
       'Target address': RecipientsView.get(tx.targetAddress),
       'Previous restriction value': tx.previousRestrictionValue.toString(),
       'New restriction value': tx.newRestrictionValue.toString(),
-    };
+    }
   }
 }

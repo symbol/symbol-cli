@@ -16,9 +16,9 @@
  *
  */
 
-import {Cell} from 'cli-table3';
-import {SignedTransaction} from 'nem2-sdk';
-import {CellRecord} from './transaction.view';
+import {Cell} from 'cli-table3'
+import {SignedTransaction} from 'nem2-sdk'
+import {CellRecord} from './transaction.view'
 
 export interface ITransactionViewSignature extends CellRecord {
  SignatureDetailsTitle: Cell;
@@ -34,7 +34,7 @@ export class TransactionSignatureView {
   * @returns {ITransactionHeaderView}
   */
  static get(signedTransaction: SignedTransaction): ITransactionViewSignature {
-  return new TransactionSignatureView(signedTransaction).render();
+  return new TransactionSignatureView(signedTransaction).render()
  }
 
  /**
@@ -53,7 +53,7 @@ export class TransactionSignatureView {
    Payload: this.formattedPayload,
    Hash: this.tx.hash,
    Signer: this.tx.signerPublicKey,
-  };
+  }
  }
 
  /**
@@ -66,7 +66,7 @@ export class TransactionSignatureView {
    content: 'Signature details',
    colSpan: 2,
    hAlign: 'center',
-  };
+  }
  }
 
  /**
@@ -76,8 +76,8 @@ export class TransactionSignatureView {
   * @type {(string | undefined)}
   */
  protected get formattedPayload(): string | undefined {
-  const payload = this.tx.payload.match(/.{1,64}/g)?.join('\n');
-  if (!payload) { return 'N/A'; }
-  return payload;
+  const payload = this.tx.payload.match(/.{1,64}/g)?.join('\n')
+  if (!payload) { return 'N/A' }
+  return payload
  }
 }
