@@ -10,7 +10,8 @@
         "build:win": "del build && tsc",
         "dev": "nodemon --config \"./nodemon-config.json\"/",
         "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
-        "test:coveralls": "npm run test:cov | coveralls"
+        "test:coveralls": "npm run test:cov | coveralls",
+        "lint": "npx eslint ./**/*.ts --fix"
     },
     "bin": {
         "nem2-cli": "./bin/nem2-cli"

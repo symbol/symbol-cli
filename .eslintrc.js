@@ -76,7 +76,7 @@ module.exports = {
         ],
         "@typescript-eslint/semi": [
             "error",
-            "always"
+            "never"
         ],
         "@typescript-eslint/require-await": "off",
         "@typescript-eslint/triple-slash-reference": "error",
