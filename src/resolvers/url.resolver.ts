@@ -20,6 +20,7 @@ export class URLResolver implements Resolver {
             'url',
             () => secondSource ? secondSource.url : undefined,
             altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim()
-        return resolution
+
+        return resolution.endsWith('/') ? resolution.slice(0, -1) : resolution
     }
 }

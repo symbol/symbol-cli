@@ -26,4 +26,12 @@ describe('Url resolver', () => {
         expect(new URLResolver().resolve(profileOptions))
             .to.be.equal(url)
     })
+
+    it('should return url without trailing backslash', () => {
+        const url = 'https://localhost:3000/'
+        const profileOptions = {url} as any
+        expect(new URLResolver().resolve(profileOptions))
+            .to.be.equal('https://localhost:3000')
+    })
+
 })
