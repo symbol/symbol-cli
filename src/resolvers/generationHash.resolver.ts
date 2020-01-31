@@ -1,5 +1,5 @@
 import {ExpectedError} from 'clime'
-import {BlockHttp} from 'nem2-sdk'
+import {BlockHttp, UInt64} from 'nem2-sdk'
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
@@ -22,7 +22,7 @@ export class GenerationHashResolver implements Resolver {
         const blockHttp = new BlockHttp(options.url)
         try {
             generationHash = options.generationHash
-                ? options.generationHash : (await blockHttp.getBlockByHeight('1').toPromise()).generationHash
+                ? options.generationHash : (await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()).generationHash
         } catch (ignored) {
             throw new ExpectedError('Check if you can reach the NEM2 url provided: ' + options.url + '/block/1')
         }

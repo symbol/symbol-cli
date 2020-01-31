@@ -19,7 +19,7 @@
 import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType, TransactionType} from 'nem2-sdk'
 
 export const operation1 = TransactionType.ADDRESS_ALIAS
-export const operation2 = TransactionType.LINK_ACCOUNT
+export const operation2 = TransactionType.ACCOUNT_LINK
 export const operation3 = TransactionType.TRANSFER
 
 export const unsignedAccountOperationRestriction1 = AccountRestrictionTransaction

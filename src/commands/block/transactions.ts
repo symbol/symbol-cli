@@ -63,7 +63,7 @@ export default class extends ProfileCommand {
 
         this.spinner.start()
         const profile = this.getProfile(options)
-        const height = new HeightResolver().resolve(options).toString()
+        const height = new HeightResolver().resolve(options)
 
         let pageSize = options.pageSize || 10
         if (pageSize < 10) {
