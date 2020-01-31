@@ -53,7 +53,7 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options)
         const account = profile.decrypt(options)
         const remotePrivateKey = new PrivateKeyResolver()
-            .resolve(options, undefined, 'Enter your account private key: ', 'remotePrivateKey')
+            .resolve(options, undefined, 'Enter the remote account private key: ', 'remotePrivateKey')
         const recipientPublicAccount = new PublicKeyResolver()
             .resolve(options, profile.networkType,
                 'Enter the public key of the node: ', 'recipientPublicKey')
