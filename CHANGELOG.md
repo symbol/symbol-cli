@@ -10,6 +10,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 - ``transactions`` responses formatted as a table.
 - ``eslint`` deprecated in favor of ``ts-lint``.
+- ``persistentharvestdelegation`` command split.
 - ``nem2-sdk`` dependency to 0.16.5.
 
 ## [0.16.3] - 17-Jan-2020
