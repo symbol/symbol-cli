@@ -13,7 +13,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - ``persistentharvestdelegation`` command split.
 - ``nem2-sdk`` dependency to 0.16.5.
 
-## [0.16.3] - 17-Jan-2020
+## [0.17.1] - 17-Jan-2020
 
 ### Added
 
@@ -226,7 +226,7 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 ### Added
 - Initial code release.
 
-[0.16.4]: https://github.com/nemtech/nem2-cli/compare/v0.16.3...v0.16.4
+[0.16.4]: https://github.com/nemtech/nem2-cli/compare/v0.16.3...v0.17.1
 [0.16.3]: https://github.com/nemtech/nem2-cli/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/nemtech/nem2-cli/compare/v0.16.1...v0.16.2
 [0.16.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.0...v0.16.1

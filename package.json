@@ -1,6 +1,6 @@
 {
     "name": "nem2-cli",
-    "version": "0.16.4",
+    "version": "0.17.1",
     "description": "Command Line Interface (CLI) to interact with Catapult",
     "main": "index.js",
     "scripts": {
