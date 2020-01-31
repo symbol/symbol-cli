@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.16.4] - 31-Jan-2020
+## [0.17.1] - 31-Jan-2020
 
 ### Changed
 
@@ -13,7 +13,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 - ``persistentharvestdelegation`` command split.
 - ``nem2-sdk`` dependency to 0.16.5.
 
-## [0.17.1] - 17-Jan-2020
+## [0.16.4] - 17-Jan-2020
 
 ### Added
 
