@@ -227,7 +227,6 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 - Initial code release.
 
 [0.17.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.3...v0.17.1
-[0.16.3]: https://github.com/nemtech/nem2-cli/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/nemtech/nem2-cli/compare/v0.16.1...v0.16.2
 [0.16.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/nemtech/nem2-cli/compare/v0.15.1...v0.16.0
