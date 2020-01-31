@@ -39,7 +39,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Request persistent harvest delegation',
+    description: 'Requests a node to add a remote account as a delegated harvester',
 })
 
 export default class extends AnnounceTransactionsCommand {
