@@ -84,7 +84,7 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
         this.spinner.start()
         const profile = this.getProfile(options)
-        const height = new HeightResolver().resolve(options).toString()
+        const height = new HeightResolver().resolve(options)
 
         const blockHttp = new BlockHttp(profile.url)
         blockHttp.getBlockByHeight(height)

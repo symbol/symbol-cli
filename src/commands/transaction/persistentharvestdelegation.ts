@@ -16,52 +16,30 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'nem2-sdk'
+import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'nem2-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
-import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MessageResolver} from '../../resolvers/message.resolver'
-import {MosaicsResolver} from '../../resolvers/mosaic.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
-        description: 'Recipient address or @alias.',
+        description: 'Private key of the remote account.',
     })
-    recipientAddress: string
-
-    @option({
-        flag: 'm',
-        description: 'Transaction message.',
-    })
-    message: string
-
-    @option({
-        flag: 'e',
-        description: '(Optional) Send an encrypted message. ' +
-            'If you set this value, you should set the value of \'recipientPublicKey\' as well).',
-        toggle: true,
-    })
-    encrypted: any
-
-    @option({
-        flag: 'c',
-        description: 'Mosaic to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount. Add multiple mosaics with commas.',
-    })
-    mosaics: string
+    remotePrivateKey: string
 
     @option({
         flag: 'u',
-        description: '(Optional) Recipient public key in an encrypted message.',
+        description: 'Public key of the node to request persistent harvesting delegation.',
     })
     recipientPublicKey: string
 }
 
 @command({
-    description: 'Send transfer transaction',
+    description: 'Requests a node to add a remote account as a delegated harvester',
 })
 
 export default class extends AnnounceTransactionsCommand {
@@ -74,33 +52,21 @@ export default class extends AnnounceTransactionsCommand {
     execute(options: CommandOptions) {
         const profile = this.getProfile(options)
         const account = profile.decrypt(options)
-        const mosaics = new MosaicsResolver().resolve(options)
-        let recipientAddress: Address | NamespaceId
-        let message = EmptyMessage
-        if (options.encrypted) {
-            const recipientPublicAccount = new PublicKeyResolver()
-                .resolve(options, profile.networkType,
-                    'Enter the recipient public key: ', 'recipientPublicKey')
-            recipientAddress = recipientPublicAccount.address
-            const rawMessage = new MessageResolver().resolve(options)
-            message = account.encryptMessage(
-                rawMessage,
-                recipientPublicAccount,
-                profile.networkType)
-        } else {
-            recipientAddress =  new AddressAliasResolver()
-                .resolve(options, undefined, 'Enter the recipient address or @alias: ', 'recipientAddress')
-            const rawMessage = new MessageResolver().resolve(options)
-            if (rawMessage) {
-                message = PlainMessage.create(rawMessage)
-            }
-        }
+        const remotePrivateKey = new PrivateKeyResolver()
+            .resolve(options, undefined, 'Enter the remote account private key: ', 'remotePrivateKey')
+        const recipientPublicAccount = new PublicKeyResolver()
+            .resolve(options, profile.networkType,
+                'Enter the public key of the node: ', 'recipientPublicKey')
+       const message = PersistentHarvestingDelegationMessage.create(
+            remotePrivateKey,
+            recipientPublicAccount.publicKey,
+            profile.networkType)
         const maxFee = new MaxFeeResolver().resolve(options)
 
         const transaction = TransferTransaction.create(
             Deadline.create(),
-            recipientAddress,
-            mosaics,
+            recipientPublicAccount.address,
+            [],
             message,
             profile.networkType,
             maxFee)
