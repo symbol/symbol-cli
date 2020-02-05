@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {Listener} from 'nem2-sdk';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transaction.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {Listener} from 'nem2-sdk'
+import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 @command({
     description: 'Monitor unconfirmed transactions added',
@@ -27,27 +28,27 @@ import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transacti
 export default class extends MonitorAddressCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options);
-        const address = await new AddressResolver().resolve(options, profile);
+        const profile = this.getProfile(options)
+        const address = await new AddressResolver().resolve(options, profile)
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new Listener(profile.url);
+        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
+        const listener = new Listener(profile.url)
         listener.open().then(() => {
             listener.unconfirmedAdded(address).subscribe((transaction) => {
-                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction));
+                new TransactionView(transaction).print()
             }, (err) => {
-                listener.close();
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                listener.close()
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
         }, (err) => {
-            listener.close();
-            console.log(chalk.red('Error'), err);
-        });
+            listener.close()
+            console.log(chalk.red('Error'), err)
+        })
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {StringResolver} from '../../src/resolvers/string.resolver';
+import {expect} from 'chai'
+import {StringResolver} from '../../src/resolvers/string.resolver'
 
 describe('Value resolver', () => {
 
     it('should return string', () => {
-        const value = 'test';
-        const profileOptions = {value} as any;
+        const value = 'test'
+        const profileOptions = {value} as any
         expect(new StringResolver().resolve(profileOptions))
-            .to.be.equal(value);
-    });
-});
+            .to.be.equal(value)
+    })
+})

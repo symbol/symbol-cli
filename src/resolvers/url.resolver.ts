@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * URL resolver
@@ -16,10 +16,10 @@ export class URLResolver implements Resolver {
      * @returns {string}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        const resolution = await OptionsResolver(options,
+        const resolution = (await OptionsResolver(options,
             'url',
             () => secondSource ? secondSource.url : undefined,
-            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ');
-        return resolution;
+            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ')).trim()
+        return resolution.endsWith('/') ? resolution.slice(0, -1) : resolution
     }
 }

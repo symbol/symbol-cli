@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,29 +15,29 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {BlockHttp, BlockInfo, NetworkType} from 'nem2-sdk';
-import {HeightResolver} from '../../resolvers/height.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata, option} from 'clime'
+import {BlockHttp, BlockInfo, NetworkType} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HeightResolver} from '../../resolvers/height.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
     })
-    height: string;
+    height: string
 }
 
 export class BlockHeaderTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
     constructor(public readonly blockInfo: BlockInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
         this.table.push(
             ['Generation Hash:', blockInfo.generationHash],
             ['Total Fee:', blockInfo.totalFee.toString()],
@@ -55,19 +55,19 @@ export class BlockHeaderTable {
             ['Block Transactions Hash:', blockInfo.blockTransactionsHash],
             ['Block Receipts Hash:', blockInfo.blockReceiptsHash],
             ['State Hash:', blockInfo.stateHash],
-        );
+        )
         if (blockInfo.beneficiaryPublicKey) {
             this.table.push(
                 ['Beneficiary Public Key', blockInfo.beneficiaryPublicKey.publicKey],
-            );
+            )
         }
     }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Block Header') + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Block Header') + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
@@ -77,24 +77,24 @@ export class BlockHeaderTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const blockHttp = new BlockHttp(profile.url);
-        const height = (await new HeightResolver().resolve(options)).toString();
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const blockHttp = new BlockHttp(profile.url)
+        const height = (await new HeightResolver().resolve(options)).toString()
 
         blockHttp.getBlockByHeight(height)
             .subscribe((blockInfo) => {
-                this.spinner.stop(true);
-                console.log(new BlockHeaderTable(blockInfo).toString());
+                this.spinner.stop(true)
+                console.log(new BlockHeaderTable(blockInfo).toString())
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

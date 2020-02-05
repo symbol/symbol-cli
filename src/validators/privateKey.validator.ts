@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
 
 /**
  * Private key validator
@@ -30,7 +30,7 @@ export class PrivateKeyValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
-            throw new ExpectedError('Private key should be a 64 characters hexadecimal string');
+            throw new ExpectedError('Private key should be a 64 characters hexadecimal string')
         }
     }
 }

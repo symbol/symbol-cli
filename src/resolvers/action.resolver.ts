@@ -1,9 +1,9 @@
-import chalk from 'chalk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsChoiceResolver} from '../options-resolver';
-import {BinaryValidator} from '../validators/binary.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {ProfileOptions} from '../commands/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsChoiceResolver} from '../options-resolver'
+import {BinaryValidator} from '../validators/binary.validator'
+import {Resolver} from './resolver'
 
 /**
  * Link action resolver
@@ -21,19 +21,19 @@ export class ActionResolver implements Resolver {
         const choices = [
             {title: 'Remove', value: 0},
             {title: 'Add', value: 1},
-        ];
+        ]
         const index = +(await OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        ));
+        ))
         try {
-            new BinaryValidator().validate(index);
+            new BinaryValidator().validate(index)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return index;
+        return index
     }
 }
 
@@ -53,19 +53,19 @@ export class LinkActionResolver implements Resolver {
         const choices = [
             {title: 'Unlink', value: 0},
             {title: 'Link', value: 1},
-        ];
+        ]
         const index = +(await OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        ));
+        ))
         try {
-            new BinaryValidator().validate(index);
+            new BinaryValidator().validate(index)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return index;
+        return index
     }
 }
 
@@ -82,18 +82,18 @@ export class SupplyActionResolver implements Resolver {
         const choices = [
             {title: 'Decrease', value: 0},
             {title: 'Increase', value: 1},
-        ];
+        ]
         const index = +(await OptionsChoiceResolver(options,
             'action',
             altText ? altText : 'Select an action: ',
             choices,
-        ));
+        ))
         try {
-            new BinaryValidator().validate(index);
+            new BinaryValidator().validate(index)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return index;
+        return index
     }
 }

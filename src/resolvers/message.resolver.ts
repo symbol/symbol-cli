@@ -1,10 +1,10 @@
-import chalk from 'chalk';
-import {NetworkType, PublicAccount} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {PublicKeyValidator} from '../validators/publicKey.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {NetworkType, PublicAccount} from 'nem2-sdk'
+import {ProfileOptions} from '../commands/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {PublicKeyValidator} from '../validators/publicKey.validator'
+import {Resolver} from './resolver'
 
 /**
  * Message resolver
@@ -22,8 +22,8 @@ export class MessageResolver implements Resolver {
         const resolution = await OptionsResolver(options,
         'message',
         () =>  undefined,
-        'Enter a message: ');
-        return resolution;
+        'Enter a message: ')
+        return resolution
     }
 }
 
@@ -43,14 +43,14 @@ export class RecipientPublicKeyResolver implements Resolver {
         const recipientPublicKey = await OptionsResolver(options,
             'recipientPublicKey',
             () => undefined,
-            'Enter the recipient public key: ');
+            'Enter the recipient public key: ')
         try {
-            new PublicKeyValidator().validate(recipientPublicKey);
+            new PublicKeyValidator().validate(recipientPublicKey)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
         return PublicAccount
-            .createFromPublicKey(recipientPublicKey, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
+            .createFromPublicKey(recipientPublicKey, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST)
     }
 }

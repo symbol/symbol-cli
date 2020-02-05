@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
 
 /**
  * Binary validator
@@ -30,7 +30,7 @@ export class BinaryValidator implements Validator<number> {
      */
     validate(value: number, context?: ValidationContext): void {
         if (value !== 0 && value !== 1) {
-            throw new ExpectedError('The value must be 0 or 1');
+            throw new ExpectedError('The value must be 0 or 1')
         }
     }
 }

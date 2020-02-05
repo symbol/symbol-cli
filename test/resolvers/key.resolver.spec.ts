@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {KeyGenerator} from 'nem2-sdk';
-import {KeyResolver} from '../../src/resolvers/key.resolver';
+import {expect} from 'chai'
+import {KeyGenerator} from 'nem2-sdk'
+import {KeyResolver} from '../../src/resolvers/key.resolver'
 
 describe('Key resolver', () => {
 
     it('should return key', async () => {
-        const key = KeyGenerator.generateUInt64Key('test').toHex();
-        const profileOptions = {key} as any;
+        const key = KeyGenerator.generateUInt64Key('test').toHex()
+        const profileOptions = {key} as any
         expect((await new KeyResolver().resolve(profileOptions)).toHex())
-            .to.be.equal(key);
-    });
-});
+            .to.be.equal(key)
+    })
+})

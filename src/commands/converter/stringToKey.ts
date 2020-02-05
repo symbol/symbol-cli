@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
@@ -15,17 +15,17 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {KeyGenerator} from 'nem2-sdk';
-import {StringResolver} from '../../resolvers/string.resolver';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {KeyGenerator} from 'nem2-sdk'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {StringResolver} from '../../resolvers/string.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'v',
         description: 'String value.',
     })
-    value: string;
+    value: string
 }
 
 @command({
@@ -34,12 +34,12 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const value = await new StringResolver().resolve(options);
-        console.log(KeyGenerator.generateUInt64Key(value).toHex());
+        const value = await new StringResolver().resolve(options)
+        console.log(KeyGenerator.generateUInt64Key(value).toHex())
     }
 }

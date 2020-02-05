@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
@@ -15,16 +15,16 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespaceName: string;
+    namespaceName: string
 }
 
 @command({
@@ -33,12 +33,12 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const namespace = await new NamespaceNameResolver().resolve(options);
-        console.log(namespace.toHex());
+        const namespace = await new NamespaceNameResolver().resolve(options)
+        console.log(namespace.toHex())
     }
 }

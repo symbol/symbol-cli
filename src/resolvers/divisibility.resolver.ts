@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Divisibility resolver
@@ -19,7 +19,7 @@ export class DivisibilityResolver implements Resolver {
         const resolution = +(await OptionsResolver(options,
         'divisibility',
         () =>  undefined,
-        altText ? altText : 'Enter the mosaic divisibility: '));
-        return resolution;
+        altText ? altText : 'Enter the mosaic divisibility: '))
+        return resolution
     }
 }

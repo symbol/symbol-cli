@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import { option } from 'clime';
-import { Address, Listener, SignedTransaction, TransactionHttp } from 'nem2-sdk';
-import { merge } from 'rxjs';
-import { filter, mergeMap } from 'rxjs/operators';
-import { AnnounceTransactionFieldsTable } from './commands/announce.transactions.command';
-import { ProfileCommand, ProfileOptions } from './commands/profile.command';
-import { OptionsConfirmResolver } from './options-resolver';
-import { NumericStringValidator } from './validators/numericString.validator';
-import { PasswordValidator } from './validators/password.validator';
+import chalk from 'chalk'
+import { option } from 'clime'
+import { Address, Listener, SignedTransaction, TransactionHttp } from 'nem2-sdk'
+import { merge } from 'rxjs'
+import { filter, mergeMap } from 'rxjs/operators'
+import { AnnounceTransactionFieldsTable } from './commands/announce.transactions.command'
+import { ProfileCommand, ProfileOptions } from './commands/profile.command'
+import { OptionsConfirmResolver } from './options-resolver'
+import { NumericStringValidator } from './validators/numericString.validator'
+import { PasswordValidator } from './validators/password.validator'
 
 /**
  * Base command class to announce aggregate transactions.
@@ -42,11 +42,11 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
                                                  signedAggregateTransaction: SignedTransaction,
                                                  senderAddress: Address,
                                                  url: string) {
-        const transactionHttp = new TransactionHttp(url);
-        const listener = new Listener(url);
-        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'));
-        console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'));
-        const shouldAnnounceTransaction = await OptionsConfirmResolver('Do you want to announce this transaction? ');
+        const transactionHttp = new TransactionHttp(url)
+        const listener = new Listener(url)
+        console.log(new AnnounceTransactionFieldsTable(signedHashLockTransaction, url).toString('HashLock Transaction'))
+        console.log(new AnnounceTransactionFieldsTable(signedAggregateTransaction, url).toString('Aggregate Transaction'))
+        const shouldAnnounceTransaction = await OptionsConfirmResolver('Do you want to announce this transaction? ')
 
         if (shouldAnnounceTransaction) {
             listener.open().then(() => {
@@ -58,17 +58,17 @@ export abstract class AnnounceAggregateTransactionsCommand extends ProfileComman
                             filter((transaction) => transaction.transactionInfo !== undefined
                                 && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
                             mergeMap((ignored) => {
-                                listener.close();
-                                return transactionHttp.announceAggregateBonded(signedAggregateTransaction);
+                                listener.close()
+                                return transactionHttp.announceAggregateBonded(signedAggregateTransaction)
                             }),
                         )).subscribe((x) => console.log(chalk.green('Transaction confirmed:'), x.message),
                             (err) => {
-                                let text = '';
-                                text += chalk.red('Error');
-                                err = err.message ? JSON.parse(err.message) : err;
-                                console.log(text, err.body && err.body.message ? err.body.message : err);
-                            });
-            });
+                                let text = ''
+                                text += chalk.red('Error')
+                                err = err.message ? JSON.parse(err.message) : err
+                                console.log(text, err.body && err.body.message ? err.body.message : err)
+                            })
+            })
         }
     }
 }
@@ -81,21 +81,21 @@ export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
         description: '(Optional) Profile password',
         validator: new PasswordValidator(),
     })
-    password: string;
+    password: string
 
     @option({
         flag: 'f',
         description: 'Maximum fee you want to pay to announce the transaction.',
         validator: new NumericStringValidator(),
     })
-    maxFee: string;
+    maxFee: string
 
     @option({
         flag: 'F',
         description: 'Maximum fee you want to pay to announce the hash lock transaction.',
         validator: new NumericStringValidator(),
     })
-    maxFeeHashLock: string;
+    maxFeeHashLock: string
 
     @option({
         flag: 'D',
@@ -103,7 +103,7 @@ export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
         validator: new NumericStringValidator(),
         default: '480',
     })
-    duration: string;
+    duration: string
 
     @option({
         flag: 'L',
@@ -111,5 +111,5 @@ export class AnnounceAggregateTransactionsOptions extends ProfileOptions {
         validator: new NumericStringValidator(),
         default: '10',
     })
-    amount: string;
+    amount: string
 }

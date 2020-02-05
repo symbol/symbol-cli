@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {ProfileNameResolver} from '../../src/resolvers/profile.resolver';
-import {ProofResolver} from '../../src/resolvers/proof.resolver';
-import {SecretResolver} from '../../src/resolvers/secret.resolver';
+import {expect} from 'chai'
+import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
+import {ProofResolver} from '../../src/resolvers/proof.resolver'
+import {SecretResolver} from '../../src/resolvers/secret.resolver'
 
 describe('Secret resolver', () => {
 
     it('should return public key', () => {
-        const secret = 'secret';
-        const profileOptions = {secret} as any;
+        const secret = 'secret'
+        const profileOptions = {secret} as any
         expect(new SecretResolver().resolve(profileOptions))
-            .to.be.equal(secret);
-    });
+            .to.be.equal(secret)
+    })
 
-});
+})

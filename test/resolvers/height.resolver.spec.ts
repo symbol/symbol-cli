@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,23 +15,23 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {DurationResolver} from '../../src/resolvers/duration.resolver';
-import {HeightResolver} from '../../src/resolvers/height.resolver';
+import {expect} from 'chai'
+import {DurationResolver} from '../../src/resolvers/duration.resolver'
+import {HeightResolver} from '../../src/resolvers/height.resolver'
 
 describe('Height resolver', () => {
 
     it('should return height', async () => {
-        const height = '10';
-        const profileOptions = {height} as any;
+        const height = '10'
+        const profileOptions = {height} as any
         expect((await new HeightResolver().resolve(profileOptions)).compact())
-            .to.be.equal(10);
-    });
+            .to.be.equal(10)
+    })
 
     it('should throw error if height invalid', () => {
-        const height = '-1';
-        const profileOptions = {height} as any;
+        const height = '-1'
+        const profileOptions = {height} as any
         expect(() => new HeightResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
-});
+            .to.throws(Error)
+    })
+})

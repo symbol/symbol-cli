@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {NamespaceIdValidator} from '../../src/validators/namespaceId.validator';
+import {expect} from 'chai'
+import {NamespaceIdValidator} from '../../src/validators/namespaceId.validator'
 
 describe('Mosaic id validator', () => {
 
     it('default case ', () => {
-        const value = '85BBEA6CC462B244';
+        const value = '85BBEA6CC462B244'
         expect(new NamespaceIdValidator().validate(value))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if namespaceId is not a valid UInt64 value', () => {
-        const value = 'test';
+        const value = 'test'
         expect(() => {
-            new NamespaceIdValidator().validate(value);
-        }).to.throws('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244');
-    });
+            new NamespaceIdValidator().validate(value)
+        }).to.throws('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244')
+    })
 
-});
+})

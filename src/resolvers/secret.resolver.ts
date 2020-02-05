@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Secret resolver
@@ -16,10 +16,10 @@ export class SecretResolver implements Resolver {
      * @returns {string}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        const resolution = await OptionsResolver(options,
+        const resolution = (await OptionsResolver(options,
         'secret',
         () => undefined,
-        altText ? altText : 'Enter proof hashed in hexadecimal format: ');
-        return resolution;
+        altText ? altText : 'Enter proof hashed in hexadecimal format: ')).trim()
+        return resolution
     }
 }

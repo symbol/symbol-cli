@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {SimpleWallet} from 'nem2-sdk';
-import {Profile} from '../models/profile';
-import {ProfileRepository} from '../respositories/profile.repository';
+import {SimpleWallet} from 'nem2-sdk'
+import {Profile} from '../models/profile'
+import {ProfileRepository} from '../respositories/profile.repository'
 
 /**
  * Profile service
  */
 export class ProfileService {
-    private readonly profileRepository: ProfileRepository;
+    private readonly profileRepository: ProfileRepository
 
     /**
      * Constructor
      * @param {ProfileRepository} profileRepository
      */
     constructor(profileRepository: ProfileRepository) {
-        this.profileRepository = profileRepository;
+        this.profileRepository = profileRepository
     }
 
     /**
@@ -41,7 +41,7 @@ export class ProfileService {
      * @returns {Profile}
      */
     createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
-        return this.profileRepository.save(simpleWallet, url, networkGenerationHash);
+        return this.profileRepository.save(simpleWallet, url, networkGenerationHash)
     }
 
     /**
@@ -50,7 +50,7 @@ export class ProfileService {
      * @returns {Profile}
      */
     findProfileNamed(name: string): Profile {
-        return this.profileRepository.find(name);
+        return this.profileRepository.find(name)
     }
 
     /**
@@ -58,7 +58,7 @@ export class ProfileService {
      * @returns {Profile[]}
      */
     findAllProfiles(): Profile[] {
-        return this.profileRepository.all();
+        return this.profileRepository.all()
     }
 
     /**
@@ -66,7 +66,7 @@ export class ProfileService {
      * @param {string} name - Profile name.
      */
     setDefaultProfile(name: string) {
-        this.profileRepository.setDefault(name);
+        this.profileRepository.setDefault(name)
     }
 
     /**
@@ -74,6 +74,6 @@ export class ProfileService {
      * @returns {Profile}
      */
     getDefaultProfile(): Profile {
-        return this.profileRepository.getDefaultProfile();
+        return this.profileRepository.getDefaultProfile()
     }
 }

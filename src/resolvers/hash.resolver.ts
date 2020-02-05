@@ -1,7 +1,9 @@
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {HashValidator} from '../validators/hash.validator'
+import {Resolver} from './resolver'
+import chalk from 'chalk'
 
 /**
  * Hash resolver
@@ -19,7 +21,13 @@ export class HashResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             'hash',
             () => undefined,
-            altText ? altText : 'Enter a transaction hash: ');
-        return resolution;
+            altText ? altText : 'Enter a transaction hash: ')
+        try {
+            new HashValidator().validate(resolution)
+        } catch (err) {
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
+        }
+        return resolution
     }
 }

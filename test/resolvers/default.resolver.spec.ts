@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {DefaultResolver} from '../../src/resolvers/default.resolver';
+import {expect} from 'chai'
+import {DefaultResolver} from '../../src/resolvers/default.resolver'
 
 describe('Default resolver', () => {
 
     it('should return boolean', () => {
-        const profileOptions = {save: false, url: '', network: '', profile: '', password: '', default: true, generationHash: '1'};
-        expect(new DefaultResolver().resolve(profileOptions)).to.be.equal(true);
-    });
+        const profileOptions = {save: false, url: '', network: '', profile: '', password: '', default: true, generationHash: '1'}
+        expect(new DefaultResolver().resolve(profileOptions)).to.be.equal(true)
+    })
 
-});
+})

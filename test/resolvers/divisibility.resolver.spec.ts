@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {DivisibilityResolver} from '../../src/resolvers/divisibility.resolver';
+import {expect} from 'chai'
+import {DivisibilityResolver} from '../../src/resolvers/divisibility.resolver'
 
 describe('Divisibility resolver', () => {
 
     it('should return divisibility', async () => {
-        const divisibility = '6';
-        const profileOptions = {divisibility} as any;
+        const divisibility = '6'
+        const profileOptions = {divisibility} as any
         expect(await new DivisibilityResolver().resolve(profileOptions))
-            .to.be.equal(6);
-    });
+            .to.be.equal(6)
+    })
 
-});
+})

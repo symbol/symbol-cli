@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {command, metadata} from 'clime';
-import {AccountCredentialsTable} from '../create.profile.command';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import {command, metadata} from 'clime'
+import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 
 @command({
     description: 'View profile credentials',
@@ -25,14 +25,14 @@ import {ProfileCommand, ProfileOptions} from '../profile.command';
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: ProfileOptions) {
-        const profile = this.getProfile(options);
-        const account = await profile.decrypt(options);
-        const text = new AccountCredentialsTable(account).toString();
-        console.log(text);
+        const profile = this.getProfile(options)
+        const account = await profile.decrypt(options)
+        const text = new AccountCredentialsTable(account).toString()
+        console.log(text)
     }
 }

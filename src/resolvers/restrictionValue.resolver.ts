@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {NumericStringValidator} from '../validators/numericString.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {NumericStringValidator} from '../validators/numericString.validator'
+import {Resolver} from './resolver'
 
 /**
  * Restriction value resolver
@@ -32,14 +32,15 @@ export class RestrictionValueResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
+     * @return {string}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
         const value = await OptionsResolver(options,
             altKey ? altKey : 'newRestrictionValue',
             () => undefined,
             altText ? altText : 'Enter new restriction value: ',
-        );
-        new NumericStringValidator().validate(value);
-        return value;
+        )
+        new NumericStringValidator().validate(value)
+        return value
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,15 +15,23 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {URLResolver} from '../../src/resolvers/url.resolver';
+import {expect} from 'chai'
+import {URLResolver} from '../../src/resolvers/url.resolver'
 
 describe('Url resolver', () => {
 
     it('should return url', () => {
-        const url = 'https://localhost:3000';
-        const profileOptions = {url} as any;
+        const url = 'https://localhost:3000'
+        const profileOptions = {url} as any
         expect(new URLResolver().resolve(profileOptions))
-            .to.be.equal(url);
-    });
-});
+            .to.be.equal(url)
+    })
+
+    it('should return url without trailing backslash', () => {
+        const url = 'https://localhost:3000/'
+        const profileOptions = {url} as any
+        expect(new URLResolver().resolve(profileOptions))
+            .to.be.equal('https://localhost:3000')
+    })
+
+})

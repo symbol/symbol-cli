@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
+import chalk from 'chalk'
 import {
     Address,
     ArtifactExpiryReceipt,
@@ -27,7 +27,7 @@ import {
     ResolutionStatement,
     Statement,
     TransactionStatement,
-} from 'nem2-sdk';
+} from 'nem2-sdk'
 
 /**
  * Receipt service
@@ -45,43 +45,43 @@ export class ReceiptService {
      * @returns {string}
      */
     public formatTransactionStatements(statement: Statement): string {
-        let txt = '';
+        let txt = ''
         if (statement.transactionStatements.length > 0) {
-            txt += chalk.green('transactionStatements:\t') + '\n';
-            txt += '-'.repeat('transactionStatements:\t'.length) + '\n\n';
+            txt += chalk.green('transactionStatements:\t') + '\n'
+            txt += '-'.repeat('transactionStatements:\t'.length) + '\n\n'
         }
         statement.transactionStatements.map((transaction: TransactionStatement, transactionIndex: number) => {
-            txt += 'height:\t\t' + transaction.height + '\n';
+            txt += 'height:\t\t' + transaction.height + '\n'
             transaction.receipts.map((receipt: any, receiptIndex: number) => {
-                txt += '<index: ' + transactionIndex + '-' + receiptIndex + '>\t';
+                txt += '<index: ' + transactionIndex + '-' + receiptIndex + '>\t'
                 if (receipt instanceof BalanceTransferReceipt) {
-                    txt += 'version:\t' + receipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
+                    txt += 'version:\t' + receipt.version + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n'
                     txt += '\t\trecipientAddress:\t' +
                         (receipt.recipientAddress instanceof Address ?
-                            receipt.recipientAddress.pretty() : receipt.recipientAddress.toHex()) + '\n';
-                    txt += '\t\tsenderPublickey:\t' + receipt.sender.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n';
-                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n';
+                            receipt.recipientAddress.pretty() : receipt.recipientAddress.toHex()) + '\n'
+                    txt += '\t\tsenderPublickey:\t' + receipt.sender.publicKey + '\n'
+                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n'
+                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n'
                 } else if (receipt instanceof BalanceChangeReceipt) {
-                    txt += 'version:\t' + receipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n';
-                    txt += '\t\ttargetPublicKey:\t' + receipt.targetPublicAccount.publicKey + '\n';
-                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n';
-                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n';
+                    txt += 'version:\t' + receipt.version + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n'
+                    txt += '\t\ttargetPublicKey:\t' + receipt.targetPublicAccount.publicKey + '\n'
+                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n'
+                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n'
                 }  else if (receipt instanceof ArtifactExpiryReceipt) {
-                    txt += 'version:\t' + receipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
-                    txt += '\t\tartifactId:\t' + receipt.artifactId.toHex() + '\n';
+                    txt += 'version:\t' + receipt.version + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n'
+                    txt += '\t\tartifactId:\t' + receipt.artifactId.toHex() + '\n'
                 }  else if (receipt instanceof InflationReceipt) {
-                    txt += 'version:\t' + receipt.version + '\n';
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n';
-                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n';
-                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n';
+                    txt += 'version:\t' + receipt.version + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n'
+                    txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n'
+                    txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n'
                 }
-            });
-        });
-        return txt;
+            })
+        })
+        return txt
     }
 
     /**
@@ -90,22 +90,22 @@ export class ReceiptService {
      * @returns {string}
      */
     public formatAddressResolutionStatements(statement: Statement): string {
-        let txt = '';
+        let txt = ''
         if (statement.addressResolutionStatements.length > 0) {
-            txt += chalk.green('addressResolutionStatements:\t') + '\n';
-            txt += '-'.repeat('addressResolutionStatements:\t'.length) + '\n\n';
+            txt += chalk.green('addressResolutionStatements:\t') + '\n'
+            txt += '-'.repeat('addressResolutionStatements:\t'.length) + '\n\n'
         }
         statement.addressResolutionStatements.map((addressResolution: ResolutionStatement, addressResolutionIndex: number) => {
-            txt += 'height:\t\t' + addressResolution.height + '\n';
-            txt += 'unresolved:\t' + addressResolution.unresolved + '\n\n';
+            txt += 'height:\t\t' + addressResolution.height + '\n'
+            txt += 'unresolved:\t' + addressResolution.unresolved + '\n\n'
             addressResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
-                txt += '<index:' + addressResolutionIndex + '-' + resolutionEntryIndex + '>\t';
-                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n';
-                txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n';
-                txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n';
-            });
-        });
-        return txt;
+                txt += '<index:' + addressResolutionIndex + '-' + resolutionEntryIndex + '>\t'
+                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n'
+                txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n'
+                txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n'
+            })
+        })
+        return txt
     }
 
     /**
@@ -114,21 +114,21 @@ export class ReceiptService {
      * @returns {string}
      */
     public formatMosaicResolutionStatements(statement: Statement): string {
-        let txt = '';
+        let txt = ''
         if (statement.mosaicResolutionStatements.length > 0) {
-            txt += chalk.green('mosaicResolutionStatements:\t') + '\n';
-            txt += '-'.repeat('mosaicResolutionStatements:\t'.length) + '\n\n';
+            txt += chalk.green('mosaicResolutionStatements:\t') + '\n'
+            txt += '-'.repeat('mosaicResolutionStatements:\t'.length) + '\n\n'
         }
         statement.mosaicResolutionStatements.map((mosaicResolution: ResolutionStatement, mosaicResolutionIndex: number) => {
-            txt += 'height:\t\t' + mosaicResolution.height + '\n';
-            txt += 'unresolved:\t' + mosaicResolution.unresolved + '\n\n';
+            txt += 'height:\t\t' + mosaicResolution.height + '\n'
+            txt += 'unresolved:\t' + mosaicResolution.unresolved + '\n\n'
             mosaicResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
-                txt += '<index:' + mosaicResolutionIndex + '-' + resolutionEntryIndex + '>\t';
-                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n';
-                txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n';
-                txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n';
-            });
-        });
-        return txt;
+                txt += '<index:' + mosaicResolutionIndex + '-' + resolutionEntryIndex + '>\t'
+                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n'
+                txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n'
+                txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n'
+            })
+        })
+        return txt
     }
 }

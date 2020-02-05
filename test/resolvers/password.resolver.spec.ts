@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,23 +15,23 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {PasswordResolver} from '../../src/resolvers/password.resolver';
+import {expect} from 'chai'
+import {PasswordResolver} from '../../src/resolvers/password.resolver'
 
 describe('Password resolver', () => {
 
     it('should return password', async () => {
-        const password = '12345678';
-        const profileOptions = {password} as any;
+        const password = '12345678'
+        const profileOptions = {password} as any
         expect((await new PasswordResolver().resolve(profileOptions)).value)
-            .to.be.equal(password);
-    });
+            .to.be.equal(password)
+    })
 
     it('should throw error if password invalid', () => {
-        const password = '12345';
-        const profileOptions = {password} as any;
+        const password = '12345'
+        const profileOptions = {password} as any
         expect(() => new PasswordResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,19 +15,19 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
-import {Metadata, MetadataHttp} from 'nem2-sdk';
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
-import {MetadataEntryTable} from './account';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
+import {Metadata, MetadataHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
+import {MetadataEntryTable} from './account'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string;
+    mosaicId: string
 }
 
 @command({
@@ -36,31 +36,31 @@ export class CommandOptions extends ProfileOptions {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const mosaicId = await new MosaicIdResolver().resolve(options);
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const mosaicId = await new MosaicIdResolver().resolve(options)
 
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = new MetadataHttp(profile.url)
         metadataHttp.getMosaicMetadata(mosaicId)
             .subscribe((metadataEntries) => {
-                this.spinner.stop(true);
+                this.spinner.stop(true)
                 if (metadataEntries.length > 0) {
                     metadataEntries
                         .map((entry: Metadata) => {
-                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
-                        });
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString())
+                        })
                 } else {
-                    console.log('\n The mosaic does not have metadata entries assigned.');
+                    console.log('\n The mosaic does not have metadata entries assigned.')
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {NetworkValidator} from '../../src/validators/network.validator';
+import {expect} from 'chai'
+import {NetworkValidator} from '../../src/validators/network.validator'
 
 describe('Network type validator', () => {
 
     it('default case', () => {
-        const networkType = 'MIJIN_TEST';
+        const networkType = 'MIJIN_TEST'
         expect(new NetworkValidator().validate(networkType))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if network type is unknown', () => {
-        const networkType = 'TEST';
+        const networkType = 'TEST'
         expect(() => {
-            new NetworkValidator().validate(networkType);
-        }).to.throws('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)');
-    });
+            new NetworkValidator().validate(networkType)
+        }).to.throws('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
+    })
 
-});
+})

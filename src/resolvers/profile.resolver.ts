@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Profile name resolver
@@ -16,9 +16,9 @@ export class ProfileNameResolver implements Resolver {
      * @returns {string}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        return await OptionsResolver(options,
+        return (await OptionsResolver(options,
             'profile',
             () => undefined,
-            'Enter a profile name: ');
+            'Enter a profile name: ')).trim()
     }
 }

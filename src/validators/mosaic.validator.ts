@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ValidationContext, Validator} from 'clime';
-import {MosaicService} from '../services/mosaic.service';
+import {ValidationContext, Validator} from 'clime'
+import {MosaicService} from '../services/mosaic.service'
 
 /**
  * Mosaic validator
@@ -30,7 +30,7 @@ export class MosaicValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        MosaicService.validate(value);
+        MosaicService.validate(value)
     }
 }
 
@@ -46,9 +46,9 @@ export class MosaicsValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        const mosaics = value.split(',');
+        const mosaics = value.split(',')
         mosaics.forEach((mosaic) => {
-            MosaicService.validate(mosaic);
-        });
+            MosaicService.validate(mosaic)
+        })
     }
 }

@@ -1,9 +1,9 @@
-import {UInt64} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {KeyValidator} from '../validators/key.validator';
-import {Resolver} from './resolver';
+import {UInt64} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {KeyValidator} from '../validators/key.validator'
+import {Resolver} from './resolver'
 
 export class KeyResolver implements Resolver {
     /**
@@ -11,7 +11,7 @@ export class KeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {string}
+     * @returns {UInt64}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const resolution = (await OptionsResolver(options,
@@ -20,8 +20,8 @@ export class KeyResolver implements Resolver {
             altText ?
             altText : 'Enter a UInt64 key in hexadecimal format.' +
                 ' You can use the command \'nem2-cli converter stringtokey\' ' +
-                'to turn an string into a valid key: ')).trim();
-        new KeyValidator().validate(resolution);
-        return UInt64.fromHex(resolution);
+                'to turn an string into a valid key: ')).trim()
+        new KeyValidator().validate(resolution)
+        return UInt64.fromHex(resolution)
     }
 }

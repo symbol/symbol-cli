@@ -1,10 +1,10 @@
-import chalk from 'chalk';
-import {Password} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {PasswordValidator} from '../validators/password.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {Password} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {PasswordValidator} from '../validators/password.validator'
+import {Resolver} from './resolver'
 
 /**
  * Password resolver
@@ -23,13 +23,13 @@ export class PasswordResolver implements Resolver {
             'password',
             () => undefined,
             'Enter your wallet password: ',
-            'password');
+            'password')
         try {
-            new PasswordValidator().validate(resolution);
+            new PasswordValidator().validate(resolution)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return new Password(resolution);
+        return new Password(resolution)
     }
 }

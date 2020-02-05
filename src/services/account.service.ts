@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,14 +16,14 @@
  *
  */
 
-import {Address, NamespaceId} from 'nem2-sdk';
+import {Address, NamespaceId} from 'nem2-sdk'
 
 /**
  * Account service
  */
 export class AccountService {
 
-    public static ALIAS_TAG = '@';
+    public static ALIAS_TAG = '@'
 
     /**
      * Constructor
@@ -36,12 +36,12 @@ export class AccountService {
      * @returns {Address | NamespaceId}
      */
     static getRecipient(rawRecipient: string): Address | NamespaceId {
-        let recipient: Address | NamespaceId;
+        let recipient: Address | NamespaceId
         if (rawRecipient.charAt(0) === AccountService.ALIAS_TAG) {
-            recipient =  new NamespaceId(rawRecipient.substring(1));
+            recipient =  new NamespaceId(rawRecipient.substring(1))
         } else  {
-            recipient = Address.createFromRawAddress(rawRecipient);
+            recipient = Address.createFromRawAddress(rawRecipient)
         }
-        return recipient;
+        return recipient
     }
 }

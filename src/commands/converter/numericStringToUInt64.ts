@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
@@ -15,16 +15,16 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {AmountResolver} from '../../resolvers/amount.resolver';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {AmountResolver} from '../../resolvers/amount.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Numeric string. Example: 12345678',
     })
-    amount: string;
+    amount: string
 }
 
 @command({
@@ -33,12 +33,12 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const value = await new AmountResolver().resolve(options);
-        console.log(value.toHex());
+        const value = await new AmountResolver().resolve(options)
+        console.log(value.toHex())
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,8 +16,9 @@
  *
  */
 
-// tslint:disable-next-line:no-var-requires
-const pkg = require('../../../package.json');
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const pkg = require('../../../package.json')
 export const description = `
                       ____            _ _
  _ __   ___ _ __ ___ |___ \\       ___| (_)
@@ -26,7 +27,7 @@ export const description = `
 |_| |_|\\___|_| |_| |_|_____|     \\___|_|_|
 
                                    v${pkg.version}
-`;
+`
 
 export const subcommands = [
     {
@@ -77,4 +78,4 @@ export const subcommands = [
         name: 'transaction',
         brief: 'Announce transactions',
     },
-];
+]

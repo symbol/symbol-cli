@@ -1,11 +1,11 @@
-import chalk from 'chalk';
-import {HashType} from 'nem2-sdk';
-import {isNumeric} from 'rxjs/internal-compatibility';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsChoiceResolver} from '../options-resolver';
-import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {HashType} from 'nem2-sdk'
+import {isNumeric} from 'rxjs/internal-compatibility'
+import {ProfileOptions} from '../commands/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsChoiceResolver} from '../options-resolver'
+import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator'
+import {Resolver} from './resolver'
 
 /**
  * Link hashAlgorithm resolver
@@ -25,23 +25,23 @@ export class HashAlgorithmResolver implements Resolver {
             {title: 'Op_Keccak_256', value: 1},
             {title: 'Op_Hash_160', value: 2},
             {title: 'Op_Hash_256', value: 3},
-        ];
+        ]
 
         const index = +(await OptionsChoiceResolver(options,
         'hashAlgorithm',
             altText ? altText : 'Select the algorithm used to hash the proof: ',
         choices,
-        ));
+        ))
 
         const hashAlgorithm = choices.find((item) => {
-            return item.value === index;
-        })?.title as any;
+            return item.value === index
+        })?.title as any
         try {
-            new HashAlgorithmValidator().validate(hashAlgorithm);
+            new HashAlgorithmValidator().validate(hashAlgorithm)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return index;
+        return index
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Address} from 'nem2-sdk';
-import {AccountService} from '../services/account.service';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Address} from 'nem2-sdk'
+import {AccountService} from '../services/account.service'
 
 /**
  * Address validator
@@ -32,9 +32,9 @@ export class AddressValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            Address.createFromRawAddress(value);
+            Address.createFromRawAddress(value)
         } catch (err) {
-            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
         }
     }
 }
@@ -52,9 +52,9 @@ export class AddressAliasValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            const ignored = AccountService.getRecipient(value);
+            const ignored = AccountService.getRecipient(value)
         } catch {
-            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
+            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
         }
     }
 }

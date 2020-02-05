@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,29 +15,29 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {AccountHttp, MosaicHttp, MosaicService, MosaicView} from 'nem2-sdk';
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata, option} from 'clime'
+import {AccountHttp, MosaicHttp, MosaicService, MosaicView} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string;
+    mosaicId: string
 }
 
 export class MosaicViewTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
     constructor(public readonly mosaicView: MosaicView) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
         this.table.push(
             ['Id', mosaicView.mosaicInfo.id.toHex()],
             ['Divisibility', mosaicView.mosaicInfo.divisibility],
@@ -50,14 +50,14 @@ export class MosaicViewTable {
             ['Supply (Absolute)', mosaicView.mosaicInfo.supply.toString()],
             ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
                 : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
-        );
+        )
     }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Mosaic Information') + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Mosaic Information') + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
@@ -67,32 +67,32 @@ export class MosaicViewTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const mosaicId = await new MosaicIdResolver().resolve(options);
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const mosaicId = await new MosaicIdResolver().resolve(options)
 
         const mosaicService = new MosaicService(
             new AccountHttp(profile.url),
             new MosaicHttp(profile.url),
-        );
+        )
         mosaicService.mosaicsView([mosaicId])
             .subscribe((mosaicViews) => {
-                this.spinner.stop(true);
+                this.spinner.stop(true)
                 if (mosaicViews.length === 0) {
-                    console.log('No mosaic exists with this id ' + mosaicId.toHex());
+                    console.log('No mosaic exists with this id ' + mosaicId.toHex())
                 } else {
-                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
+                    console.log(new MosaicViewTable(mosaicViews[0]).toString())
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 
 }

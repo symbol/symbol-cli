@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {TransactionType} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {TransactionType} from 'nem2-sdk'
 
 /**
  * Transaction type validator
@@ -30,19 +30,19 @@ export class TransactionTypeValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        let success = true;
+        let success = true
         try {
-            const h = parseInt(value, 16);
+            const h = parseInt(value, 16)
             if (h.toString(16) !== value.toLowerCase()) {
-                success = false;
+                success = false
             } else if (!(h in TransactionType)) {
-                success = false;
+                success = false
             }
         } catch (err) {
-            success = false;
+            success = false
         }
         if (!success) {
-            throw new ExpectedError('Enter a transaction type in hexadecimal. Example: 4154');
+            throw new ExpectedError('Enter a transaction type in hexadecimal. Example: 4154')
         }
     }
 }

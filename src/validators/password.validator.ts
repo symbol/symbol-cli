@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {Password} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Password} from 'nem2-sdk'
 
 /**
  * Password validator
@@ -31,9 +31,9 @@ export class PasswordValidator implements Validator<string> {
       */
      validate(value: string, context?: ValidationContext): void {
         try {
-             const ignored = new Password(value);
+             const ignored = new Password(value)
          } catch (error) {
-              throw new ExpectedError('Password should have a minimum of 8 characters');
+              throw new ExpectedError('Password should have a minimum of 8 characters')
          }
      }
 }

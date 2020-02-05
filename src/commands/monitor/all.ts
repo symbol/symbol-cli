@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,12 +15,13 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk';
-import {merge} from 'rxjs';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transaction.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk'
+import {merge} from 'rxjs'
+import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',
@@ -28,16 +29,16 @@ import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transacti
 export default class extends MonitorAddressCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options);
-        const address = await new AddressResolver().resolve(options, profile);
+        const profile = this.getProfile(options)
+        const address = await new AddressResolver().resolve(options, profile)
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new Listener(profile.url);
+        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
+        const listener = new Listener(profile.url)
         listener.open().then(() => {
             merge(
                 listener.newBlock(),
@@ -48,23 +49,23 @@ export default class extends MonitorAddressCommand {
                     if (response instanceof AggregateTransaction &&
                         response.transactionInfo &&
                         response.transactionInfo.height.compact() === 0) {
-                        console.log(chalk.green('\nNew aggregate bonded transaction added:'));
-                        console.log(this.transactionService.formatTransactionToFilter(response));
+                        console.log(chalk.green('\nNew aggregate bonded transaction added:'))
+                        new TransactionView(response).print()
                     } else if (response instanceof Transaction) {
-                        console.log(chalk.green('\nNew transaction confirmed:'));
-                        console.log(this.transactionService.formatTransactionToFilter(response));
+                        console.log(chalk.green('\nNew transaction confirmed:'))
+                        new TransactionView(response).print()
                     } else if (response instanceof BlockInfo) {
-                        console.log(chalk.green('\nNew block:'), response.height.toString());
+                        console.log(chalk.green('\nNew block:'), response.height.toString())
                     } else if (response instanceof TransactionStatusError) {
-                        console.log(chalk.green('\nTransaction error:'), response.hash);
-                        console.log('\n' + response.code);
+                        console.log(chalk.green('\nTransaction error:'), response.hash)
+                        console.log('\n' + response.code)
                     }
                 }, (err) => {
-                    err = err.message ? JSON.parse(err.message) : err;
-                    console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-                });
+                    err = err.message ? JSON.parse(err.message) : err
+                    console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                })
         }, (err) => {
-            console.log(chalk.red('Error'), err);
-        });
+            console.log(chalk.red('Error'), err)
+        })
     }
 }

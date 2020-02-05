@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,48 +15,46 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
-import {TransactionHttp} from 'nem2-sdk';
-import {HashResolver} from '../../resolvers/hash.resolver';
-import {TransactionService} from '../../services/transaction.service';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
+import {TransactionHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HashResolver} from '../../resolvers/hash.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Transaction hash.',
     })
-    hash: string;
+    hash: string
 }
 
 @command({
     description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
 
     constructor() {
-        super();
-        this.transactionService = new TransactionService();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
+        this.spinner.start()
+        const profile = this.getProfile(options)
         const hash = await new HashResolver()
-            .resolve(options);
+            .resolve(options)
 
-        const transactionHttp = new TransactionHttp(profile.url);
+        const transactionHttp = new TransactionHttp(profile.url)
         transactionHttp.getTransaction(hash)
             .subscribe((transaction) => {
-                this.spinner.stop(true);
-                console.log('\n' + this.transactionService.formatTransactionToFilter(transaction) + '\n');
+                this.spinner.stop(true)
+                new TransactionView(transaction).print()
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

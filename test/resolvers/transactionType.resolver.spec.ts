@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,24 +15,24 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {TransactionType} from 'nem2-sdk';
-import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver';
+import {expect} from 'chai'
+import {TransactionType} from 'nem2-sdk'
+import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver'
 
 describe('Transaction type resolver', () => {
 
     it('should return Transfer Transaction', () => {
-        const transactionType = '4154';
-        const profileOptions = {transactionType} as any;
+        const transactionType = '4154'
+        const profileOptions = {transactionType} as any
         expect(new TransactionTypeResolver().resolve(profileOptions))
-            .to.be.equal(TransactionType.TRANSFER);
-    });
+            .to.be.equal(TransactionType.TRANSFER)
+    })
 
     it('should throw error if transaction type does not exist', () => {
-        const transactionType = '2121';
-        const profileOptions = {transactionType} as any;
+        const transactionType = '2121'
+        const profileOptions = {transactionType} as any
         expect(() => new TransactionTypeResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

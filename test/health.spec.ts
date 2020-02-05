@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
+import {expect} from 'chai'
 
 describe('Health test', () => {
     it('success test', () => {
-        expect(true).to.be.equal(true);
-    });
-});
+        expect(true).to.be.equal(true)
+    })
+})

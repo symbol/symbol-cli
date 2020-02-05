@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,15 +15,27 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {HashResolver} from '../../src/resolvers/hash.resolver';
+import {expect} from 'chai'
+import {HashResolver} from '../../src/resolvers/hash.resolver'
 
 describe('Hash resolver', () => {
 
     it('should return hash', () => {
-        const hash = '0000000000000000000000000000000000000000000000000000000000000000';
-        const profileOptions = {hash} as any;
+        const hash = '0000000000000000000000000000000000000000000000000000000000000000'
+        const profileOptions = {hash} as any
         expect(new HashResolver().resolve(profileOptions))
-            .to.be.equal(hash);
-    });
-});
+            .to.be.equal(hash)
+    })
+
+    it('should throw when hash is invalid', () => {
+        const hash = 'notAHash'
+        const profileOptions = {hash} as any
+        expect(() => new HashResolver().resolve(profileOptions)).to.throw()
+    })
+
+    it('should throw when hash is empty', () => {
+        const hash = 'notAHash'
+        const profileOptions = {hash} as any
+        expect(() => new HashResolver().resolve(profileOptions)).to.throw()
+    })
+})

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,28 +15,28 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {HashType} from 'nem2-sdk';
-import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver';
+import {expect} from 'chai'
+import {HashType} from 'nem2-sdk'
+import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 
 describe('Hash algorithm resolver', () => {
 
     it('should return hash algorithm', () => {
-        const profileOptions = {hashAlgorithm: 'Op_Sha3_256'} as any;
+        const profileOptions = {hashAlgorithm: 'Op_Sha3_256'} as any
         expect(new HashAlgorithmResolver().resolve(profileOptions))
-            .to.be.equal(HashType.Op_Sha3_256);
-    });
+            .to.be.equal(HashType.Op_Sha3_256)
+    })
 
     it('should return hash algorithm (number)', () => {
-        const profileOptions = {hashAlgorithm: '0'} as any;
+        const profileOptions = {hashAlgorithm: '0'} as any
         expect(new HashAlgorithmResolver().resolve(profileOptions))
-            .to.be.equal(HashType.Op_Sha3_256);
-    });
+            .to.be.equal(HashType.Op_Sha3_256)
+    })
 
     it('should throw error if unknown', () => {
-        const profileOptions = {hashAlgorithm: 6} as any;
+        const profileOptions = {hashAlgorithm: 6} as any
         expect(() => new HashAlgorithmResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

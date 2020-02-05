@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -16,15 +16,15 @@
  *
  */
 
-import {ExpectedError} from 'clime';
-import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk';
+import {ExpectedError} from 'clime'
+import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk'
 
 /**
  * Mosaic service
  */
 export class MosaicService {
 
-    public static ALIAS_TAG = '@';
+    public static ALIAS_TAG = '@'
 
     /**
      * Constructor
@@ -37,20 +37,20 @@ export class MosaicService {
      * @throws {ExpectedError}
      */
     static validate(value: string) {
-        const mosaicParts = value.split('::');
-        let valid = true;
+        const mosaicParts = value.split('::')
+        let valid = true
         try {
             if (isNaN(+mosaicParts[1])) {
-                valid = false;
+                valid = false
             }
             const ignored = new Mosaic(this.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1]));
+                UInt64.fromUint(+mosaicParts[1]))
         } catch (err) {
-            valid = false;
+            valid = false
         }
         if (!valid) {
             throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)');
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)')
         }
     }
 
@@ -60,13 +60,13 @@ export class MosaicService {
      * @returns {MosaicId | NamespaceId}
      */
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
-        let mosaicId: MosaicId | NamespaceId;
+        let mosaicId: MosaicId | NamespaceId
         if (rawMosaicId.charAt(0) === MosaicService.ALIAS_TAG) {
-            mosaicId = new NamespaceId(rawMosaicId.substring(1));
+            mosaicId = new NamespaceId(rawMosaicId.substring(1))
         } else {
-            mosaicId = new MosaicId(rawMosaicId);
+            mosaicId = new MosaicId(rawMosaicId)
         }
-        return mosaicId;
+        return mosaicId
     }
 
     /**
@@ -75,13 +75,13 @@ export class MosaicService {
      * @returns {Mosaic[]}
      */
     static getMosaics(rawMosaics: string): Mosaic[] {
-        const mosaics: Mosaic[] = [];
-        const mosaicsData = rawMosaics.split(',');
+        const mosaics: Mosaic[] = []
+        const mosaicsData = rawMosaics.split(',')
         mosaicsData.forEach((mosaicData) => {
-                const mosaicParts = mosaicData.split('::');
+                const mosaicParts = mosaicData.split('::')
                 mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
-                    UInt64.fromNumericString(mosaicParts[1])));
-            });
-        return mosaics;
+                    UInt64.fromNumericString(mosaicParts[1])))
+            })
+        return mosaics
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,63 +15,63 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {AddressAliasValidator, AddressValidator} from '../../src/validators/address.validator';
+import {expect} from 'chai'
+import {AddressAliasValidator, AddressValidator} from '../../src/validators/address.validator'
 
 describe('Address validator', () => {
 
     it('default case', () => {
-        const uppercaseAddres = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
-        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
+        const uppercaseAddres = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3'
+        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3'
         expect(new AddressValidator().validate(uppercaseAddres))
-            .to.be.equal(undefined);
+            .to.be.equal(undefined)
         expect(new AddressValidator().validate(lowercaseAddress))
-            .to.be.equal(undefined);
+            .to.be.equal(undefined)
         expect(new AddressValidator().validate(dashedAddress))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw an error if the address is invalid', () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF'
         expect(() => {
-            new AddressValidator().validate(address);
-        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-    });
+            new AddressValidator().validate(address)
+        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
+    })
 
-});
+})
 
 describe('Address alias validator', () => {
     it('default case', () => {
-        const uppercaseAddres = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
-        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
+        const uppercaseAddres = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3'
+        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3'
         expect(new AddressAliasValidator().validate(uppercaseAddres))
-            .to.be.equal(undefined);
+            .to.be.equal(undefined)
         expect(new AddressAliasValidator().validate(lowercaseAddress))
-            .to.be.equal(undefined);
+            .to.be.equal(undefined)
         expect(new AddressAliasValidator().validate(dashedAddress))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('default case alias', () => {
-        const alias = '@nem';
+        const alias = '@nem'
         expect(new AddressAliasValidator().validate(alias))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw an error if the address is invalid', () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF'
         expect(() => {
-            new AddressAliasValidator().validate(address);
-        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-    });
+            new AddressAliasValidator().validate(address)
+        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
+    })
 
     it('should throw an error if the alias is invalid', () => {
-        const alias = '@myOwnAlias';
+        const alias = '@myOwnAlias'
         expect(() => {
-            new AddressAliasValidator().validate(alias);
-        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP');
-    });
+            new AddressAliasValidator().validate(alias)
+        }).to.throws('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
+    })
 
-});
+})

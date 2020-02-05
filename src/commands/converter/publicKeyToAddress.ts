@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
 * you may not use this file except in compliance with the License.
 * You may obtain a copy of the License at
 *
@@ -15,23 +15,23 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {NetworkResolver} from '../../resolvers/network.resolver';
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {NetworkResolver} from '../../resolvers/network.resolver'
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
         description: 'Public Key.',
     })
-    publicKey: string;
+    publicKey: string
 
     @option({
         flag: 'n',
         description: 'Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
     })
-    network: string;
+    network: string
 
 }
 
@@ -41,13 +41,13 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = await new NetworkResolver().resolve(options);
-        const publicAccount = await new PublicKeyResolver().resolve(options, networkType);
-        console.log(publicAccount.address.pretty());
+        const networkType = await new NetworkResolver().resolve(options)
+        const publicAccount = await new PublicKeyResolver().resolve(options, networkType)
+        console.log(publicAccount.address.pretty())
     }
 }

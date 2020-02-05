@@ -1,7 +1,7 @@
 /*
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -14,59 +14,56 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk';
-import {AddressAliasResolver} from '../../resolvers/address.resolver';
-import {AmountResolver} from '../../resolvers/amount.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {DurationResolver} from '../../resolvers/duration.resolver';
-import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver';
-import {SecretResolver} from '../../resolvers/secret.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
+import {command, metadata, option} from 'clime'
+import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AddressAliasResolver} from '../../resolvers/address.resolver'
+import {AmountResolver} from '../../resolvers/amount.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {DurationResolver} from '../../resolvers/duration.resolver'
+import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
+import {SecretResolver} from '../../resolvers/secret.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: 'Locked mosaic identifier or @alias.',
         flag: 'm',
     })
-    mosaicId: string;
+    mosaicId: string
 
     @option({
         description: 'Amount of mosaic units to lock.',
         flag: 'a',
     })
-    amount: string;
+    amount: string
 
     @option({
         description: 'Number of blocks for which a lock should be valid. ' +
             'Duration is allowed to lie up to 30 days. If reached, the mosaics will be returned to the initiator.',
         flag: 'd',
     })
-    duration: string;
+    duration: string
 
     @option({
         description: 'Proof hashed in hexadecimal format.',
         flag: 's',
     })
-    secret: string;
+    secret: string
 
     @option({
         description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256).',
         flag: 'H',
     })
-    hashAlgorithm: string;
+    hashAlgorithm: string
 
     @option({
         description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
     })
-    recipientAddress: string;
+    recipientAddress: string
 }
 
 @command({
@@ -74,24 +71,24 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = await profile.decrypt(options);
+        const profile = this.getProfile(options)
+        const account = await profile.decrypt(options)
         const mosaicId = await new MosaicIdAliasResolver()
-            .resolve(options, undefined, 'Enter the locked mosaic identifier or alias: ');
+            .resolve(options, undefined, 'Enter the locked mosaic identifier or alias: ')
         const amount = await new AmountResolver()
-            .resolve(options, undefined, 'Enter the absolute amount of mosaic units to lock: ');
+            .resolve(options, undefined, 'Enter the absolute amount of mosaic units to lock: ')
         const recipientAddress = await new AddressAliasResolver()
-            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress');
+            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress')
         const duration = await new DurationResolver()
-            .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid: ');
-        const secret = await new SecretResolver().resolve(options);
-        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
-        const maxFee = await new MaxFeeResolver().resolve(options);
+            .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid: ')
+        const secret = await new SecretResolver().resolve(options)
+        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = SecretLockTransaction.create(
             Deadline.create(),
@@ -101,15 +98,16 @@ export default class extends AnnounceTransactionsCommand {
             secret,
             recipientAddress,
             profile.networkType,
-            maxFee);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        new TransactionView(transaction, signedTransaction).print()
+
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 }

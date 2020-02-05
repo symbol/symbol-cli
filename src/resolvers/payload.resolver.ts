@@ -1,8 +1,8 @@
-import {InnerTransaction, Transaction, TransactionMapping} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {InnerTransaction, Transaction, TransactionMapping} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Payload resolver
@@ -20,8 +20,8 @@ export class PayloadResolver implements Resolver {
         const resolution = (await OptionsResolver(options,
             'payload',
             () => undefined,
-            altText ? altText : 'Enter a transaction payload: ')).trim();
-        const transaction = TransactionMapping.createFromPayload(resolution);
-        return transaction;
+            altText ? altText : 'Enter a transaction payload: ')).trim()
+        const transaction = TransactionMapping.createFromPayload(resolution)
+        return transaction
     }
 }

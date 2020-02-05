@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {UInt64} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {UInt64} from 'nem2-sdk'
 
 /**
  * Height validator
@@ -30,17 +30,17 @@ export class HeightValidator implements Validator<string> {
      * @throws {ExpectedError}
      */
     validate(value: string, context?: ValidationContext): void {
-        let valid = true;
+        let valid = true
         if (value === '0') {
-            valid = false;
+            valid = false
         }
         try {
-            UInt64.fromNumericString(value);
+            UInt64.fromNumericString(value)
         } catch (e) {
-            valid = false;
+            valid = false
         }
         if (!valid) {
-            throw new ExpectedError('The block height must be a positive integer');
+            throw new ExpectedError('The block height must be a positive integer')
         }
     }
 }

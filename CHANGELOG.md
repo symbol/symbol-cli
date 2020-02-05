@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.17.1] - 31-Jan-2020
+
+### Changed
+
+- ``transactions`` responses formatted as a table.
+- ``eslint`` deprecated in favor of ``ts-lint``.
+- ``persistentharvestdelegation`` command split.
+- ``nem2-sdk`` dependency to 0.16.5.
+
+## [0.16.3] - 17-Jan-2020
+
+### Added
+
+- ``transaction mosaicglobalrestriction`` command.
+- ``transaction mosaicaddressrestriction`` command.
+
+### Changed
+
+- ``transaction cosign`` aggregate transactions are fetched sequentially.
+
+### Fixed
+
+- ``transaction accountlink`` and ``block`` commands by adding typed resolvers.
+
 ## [0.16.2] - 15-Jan-2020
 
 ### Added
@@ -202,6 +226,8 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 ### Added
 - Initial code release.
 
+[0.17.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.3...v0.17.1
+[0.16.3]: https://github.com/nemtech/nem2-cli/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/nemtech/nem2-cli/compare/v0.16.1...v0.16.2
 [0.16.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.0...v0.16.1
 [0.16.0]: https://github.com/nemtech/nem2-cli/compare/v0.15.1...v0.16.0

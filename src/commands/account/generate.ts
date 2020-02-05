@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,17 +15,17 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
-import {Account, SimpleWallet} from 'nem2-sdk';
-import {DefaultResolver} from '../../resolvers/default.resolver';
-import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
-import {NetworkResolver} from '../../resolvers/network.resolver';
-import {PasswordResolver} from '../../resolvers/password.resolver';
-import {ProfileNameResolver} from '../../resolvers/profile.resolver';
-import {SaveResolver} from '../../resolvers/save.resolver';
-import {URLResolver} from '../../resolvers/url.resolver';
-import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../create.profile.command';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
+import {Account, SimpleWallet} from 'nem2-sdk'
+import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
+import {DefaultResolver} from '../../resolvers/default.resolver'
+import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
+import {NetworkResolver} from '../../resolvers/network.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {ProfileNameResolver} from '../../resolvers/profile.resolver'
+import {SaveResolver} from '../../resolvers/save.resolver'
+import {URLResolver} from '../../resolvers/url.resolver'
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -33,7 +33,7 @@ export class CommandOptions extends CreateProfileOptions {
         description: '(Optional) Saves the profile.',
         toggle: true,
     })
-    save: any;
+    save: any
 }
 
 @command({
@@ -42,30 +42,30 @@ export class CommandOptions extends CreateProfileOptions {
 export default class extends CreateProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = await new NetworkResolver().resolve(options);
-        const save = new SaveResolver().resolve(options);
+        const networkType = await new NetworkResolver().resolve(options)
+        const save = new SaveResolver().resolve(options)
 
-        const account = Account.generateNewAccount(networkType);
-        console.log(new AccountCredentialsTable(account).toString());
+        const account = Account.generateNewAccount(networkType)
+        console.log(new AccountCredentialsTable(account).toString())
         if (save) {
-            options.url = await new URLResolver().resolve(options);
-            const profileName = await new ProfileNameResolver().resolve(options);
-            const password = await new PasswordResolver().resolve(options);
-            const isDefault = await new DefaultResolver().resolve(options);
-            const generationHash = await new GenerationHashResolver().resolve(options);
+            options.url = await new URLResolver().resolve(options)
+            const profileName = await new ProfileNameResolver().resolve(options)
+            const password = await new PasswordResolver().resolve(options)
+            const isDefault = await new DefaultResolver().resolve(options)
+            const generationHash = await new GenerationHashResolver().resolve(options)
 
             const simpleWallet = SimpleWallet.createFromPrivateKey(
                 profileName,
                 password,
                 account.privateKey,
-                networkType);
-            this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash);
-            console.log( chalk.green('\nStored ' + profileName + ' profile'));
+                networkType)
+            this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash)
+            console.log( chalk.green('\nStored ' + profileName + ' profile'))
         }
     }
 }

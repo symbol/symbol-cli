@@ -1,6 +1,6 @@
-import {Options} from 'clime';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
+import {Options} from 'clime'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
 
 /**
  * URL resolver
@@ -14,5 +14,5 @@ export interface Resolver {
      * @param {string} altText - Alternative text.
      * @returns {any}
      */
-    resolve(options: Options, secondSource?: any, altText?: string): any;
+    resolve(options: Options, secondSource?: any, altText?: string): any
 }

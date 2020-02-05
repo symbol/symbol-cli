@@ -1,11 +1,11 @@
-import chalk from 'chalk';
-import {NetworkType} from 'nem2-sdk';
-import {isNumeric} from 'rxjs/internal-compatibility';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsChoiceResolver} from '../options-resolver';
-import {NetworkValidator} from '../validators/network.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {NetworkType} from 'nem2-sdk'
+import {isNumeric} from 'rxjs/internal-compatibility'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsChoiceResolver} from '../options-resolver'
+import {NetworkValidator} from '../validators/network.validator'
+import {Resolver} from './resolver'
 
 /**
  * Restriction account address flags resolver
@@ -25,21 +25,21 @@ export class NetworkResolver implements Resolver {
             {title: 'TEST_NET', value: 1},
             {title: 'MIJIN', value: 2},
             {title: 'MIJIN_TEST', value: 3},
-        ];
+        ]
         const index = +(await OptionsChoiceResolver(options,
             'network',
             altText ? altText : 'Select the network type: ',
             choices,
-        ));
+        ))
         const networkFriendlyName = choices.find((item) => {
-            return item.value === index;
-        })?.title as any;
+            return item.value === index
+        })?.title as any
         try {
-            new NetworkValidator().validate(networkFriendlyName);
+            new NetworkValidator().validate(networkFriendlyName)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return NetworkType[networkFriendlyName];
+        return NetworkType[networkFriendlyName]
     }
 }

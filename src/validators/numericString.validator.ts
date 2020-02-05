@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {UInt64} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {UInt64} from 'nem2-sdk'
 
 /**
  * Numeric string
@@ -31,9 +31,9 @@ export class NumericStringValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            UInt64.fromNumericString(value);
+            UInt64.fromNumericString(value)
         } catch (err) {
-            throw new ExpectedError('Enter a number');
+            throw new ExpectedError('Enter a number')
         }
     }
 }

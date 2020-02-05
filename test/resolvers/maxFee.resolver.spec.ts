@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,34 +15,34 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {MaxFeeResolver} from '../../src/resolvers/maxFee.resolver';
+import {expect} from 'chai'
+import {MaxFeeResolver} from '../../src/resolvers/maxFee.resolver'
 
 describe('Max fee resolver', () => {
 
     it('default case', async () => {
-        const maxFee = '10';
-        const profileOptions = {maxFee} as any;
+        const maxFee = '10'
+        const profileOptions = {maxFee} as any
         expect((await new MaxFeeResolver().resolve(profileOptions)).compact())
-            .to.be.equal(10);
-    });
+            .to.be.equal(10)
+    })
 
     it('should return 0 if invalid', async () => {
-        const maxFee = 'test';
-        const profileOptions = {maxFee} as any;
+        const maxFee = 'test'
+        const profileOptions = {maxFee} as any
         expect((await new MaxFeeResolver().resolve(profileOptions)).compact())
-            .to.be.equal(0);
-    });
-});
+            .to.be.equal(0)
+    })
+})
 
 describe('Max fee hash lock resolver', () => {
 
     it('should return maxFee', async () => {
-        const maxFeeHashLock = '10';
-        const profileOptions = {maxFeeHashLock} as any;
+        const maxFeeHashLock = '10'
+        const profileOptions = {maxFeeHashLock} as any
         expect((await new MaxFeeResolver().resolve(profileOptions, undefined,
             'test', 'maxFeeHashLock')).compact())
-            .to.be.equal(10);
-    });
+            .to.be.equal(10)
+    })
 
-});
+})

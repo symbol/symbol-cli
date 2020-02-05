@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {GenerationHashResolver} from '../../src/resolvers/generationHash.resolver';
+import {expect} from 'chai'
+import {GenerationHashResolver} from '../../src/resolvers/generationHash.resolver'
 
 describe('Generation hash resolver', () => {
 
     it('should return generation hash', async () => {
-        const profileOptions = {generationHash: '1'} as any;
+        const profileOptions = {generationHash: '1'} as any
         expect(await new GenerationHashResolver().resolve(profileOptions))
-            .to.be.equal('1');
-    });
-});
+            .to.be.equal('1')
+    })
+})

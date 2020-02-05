@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 
 export class CommandOptions extends ProfileOptions {}
 
@@ -27,25 +27,25 @@ export class CommandOptions extends ProfileOptions {}
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        let message = '';
+        let message = ''
         if (options.profile) {
-           const profile = this.getProfile(options);
-           console.log('\n' + profile.toString());
+           const profile = this.getProfile(options)
+           console.log('\n' + profile.toString())
         } else {
             this.findAllProfiles().map((profile) => {
-                message += '\n' + profile.toString();
-            });
-            console.log(message);
+                message += '\n' + profile.toString()
+            })
+            console.log(message)
             try {
-                const currentProfile = this.getDefaultProfile();
-                console.log(chalk.green('\n Default profile:', currentProfile.name));
+                const currentProfile = this.getDefaultProfile()
+                console.log(chalk.green('\n Default profile:', currentProfile.name))
             } catch {
-                console.log(chalk.green('\n Default profile: None'));
+                console.log(chalk.green('\n Default profile: None'))
             }
         }
     }

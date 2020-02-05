@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,37 +15,37 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
-import {BlockHttp, Order, QueryParams} from 'nem2-sdk';
-import {HeightResolver} from '../../resolvers/height.resolver';
-import {TransactionService} from '../../services/transaction.service';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
+import {BlockHttp, Order, QueryParams, Transaction} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HeightResolver} from '../../resolvers/height.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
     })
-    height: string;
+    height: string
 
     @option({
         flag: 's',
         description: '(Optional) Page size between 10 and 100. Default: 10',
     })
-    pageSize: number;
+    pageSize: number
 
     @option({
         flag: 'i',
         description: '(Optional) Id after which we want objects to be returned.',
     })
-    id: string;
+    id: string
 
     @option({
         flag: 'o',
         description: '(Optional): Order of transactions. DESC. Newer to older. ASC. Older to newer. Default: DESC',
     })
-    order: string;
+    order: string
 }
 
 @command({
@@ -53,52 +53,48 @@ export class CommandOptions extends ProfileOptions {
 })
 
 export default class extends ProfileCommand {
-    private readonly transactionService: TransactionService;
 
     constructor() {
-        super();
-        this.transactionService = new TransactionService();
+        super()
     }
 
     @metadata
     async execute(options: CommandOptions) {
 
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const height = (await new HeightResolver().resolve(options)).toString();
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const height = (await new HeightResolver().resolve(options)).toString()
 
-        let pageSize = options.pageSize || 10;
+        let pageSize = options.pageSize || 10
         if (pageSize < 10) {
-            pageSize = 10;
+            pageSize = 10
         } else if (pageSize > 100) {
-            pageSize = 100;
+            pageSize = 100
         }
 
-        const id =  options.id || '';
+        const id =  options.id || ''
 
-        let order = options.order;
+        let order = options.order
         if (order !== 'ASC') {
-            order = 'DESC';
+            order = 'DESC'
         }
 
-        const blockHttp = new BlockHttp(profile.url);
+        const blockHttp = new BlockHttp(profile.url)
         blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
             .subscribe((transactions: any) => {
-                this.spinner.stop(true);
-                let txt = '\n';
+                this.spinner.stop(true)
                 if (transactions.length > 0) {
-                    transactions.map((transaction: any, index: number) => {
-                        txt += `(${index + 1}) - `;
-                        txt +=  this.transactionService.formatTransactionToFilter(transaction) + '\n\n';
-                    });
+                    transactions.forEach((transaction: Transaction, index: number) => {
+                        console.log(`(${index + 1}) - `)
+                        new TransactionView(transaction).print()
+                    })
                 } else {
-                    txt = '[]';
+                    console.log('[]')
                 }
-                console.log(txt);
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

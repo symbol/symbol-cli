@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,24 +15,24 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {Address, NamespaceId} from 'nem2-sdk';
-import {AccountService} from '../../src/services/account.service';
+import {expect} from 'chai'
+import {Address, NamespaceId} from 'nem2-sdk'
+import {AccountService} from '../../src/services/account.service'
 
 describe('Account service', () => {
 
     it('should create account service', () => {
-        expect(new AccountService()).to.not.be.equal(undefined);
-    });
+        expect(new AccountService()).to.not.be.equal(undefined)
+    })
 
     it('should return an alias', () => {
-        const rawRecipient = '@foo';
-        expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
-    });
+        const rawRecipient = '@foo'
+        expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId)
+    })
 
     it('should return an address', () => {
-        const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRAM';
-        expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(Address);
-    });
+        const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRAM'
+        expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(Address)
+    })
 
-});
+})

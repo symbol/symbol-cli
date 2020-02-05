@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
+import {expect} from 'chai'
 import {
     MosaicRestrictionTypeValidator,
-} from '../../src/validators/restrictionType.validator';
+} from '../../src/validators/restrictionType.validator'
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {
-        const mosaic = 'EQ';
+        const mosaic = 'EQ'
         expect(new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic }))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('invalid mosaic restriction type', () => {
-        const mosaic = 'error';
+        const mosaic = 'error'
         expect(() => {
-            new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic });
-        }).to.throws('Wrong mosaic restriction type');
-    });
-});
+            new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic })
+        }).to.throws('Wrong mosaic restriction type')
+    })
+})

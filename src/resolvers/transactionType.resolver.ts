@@ -1,9 +1,9 @@
-import chalk from 'chalk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {TransactionTypeValidator} from '../validators/transactionType.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {TransactionTypeValidator} from '../validators/transactionType.validator'
+import {Resolver} from './resolver'
 
 /**
  * Transaction type resolver
@@ -18,16 +18,16 @@ export class TransactionTypeResolver implements Resolver {
      * @returns {number}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<number> {
-        const resolution = await OptionsResolver(options,
+        const resolution = (await OptionsResolver(options,
             'transactionType',
             () => undefined,
-            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ');
+            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ')).trim()
         try {
-            new TransactionTypeValidator().validate(resolution);
+            new TransactionTypeValidator().validate(resolution)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        return parseInt(resolution, 16);
+        return parseInt(resolution, 16)
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {AmountResolver} from '../../src/resolvers/amount.resolver';
+import {expect} from 'chai'
+import {AmountResolver} from '../../src/resolvers/amount.resolver'
 
 describe('Amount resolver', () => {
 
     it('should return amount', async () => {
-        const amount = '10';
-        const profileOptions = {amount} as any;
+        const amount = '10'
+        const profileOptions = {amount} as any
         expect((await new AmountResolver().resolve(profileOptions)).compact())
-            .to.be.equal(10);
-    });
+            .to.be.equal(10)
+    })
 
     it('should throw error if amount invalid', () => {
-        const amount = '-1';
-        const profileOptions = {amount} as any;
+        const amount = '-1'
+        const profileOptions = {amount} as any
         expect(() => new AmountResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
-});
+            .to.throws(Error)
+    })
+})

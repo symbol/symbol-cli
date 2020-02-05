@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,33 +15,34 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {MessageResolver, RecipientPublicKeyResolver} from '../../src/resolvers/message.resolver';
+import {expect} from 'chai'
+import {MessageResolver} from '../../src/resolvers/message.resolver'
+import {RecipientPublicKeyResolver} from '../../src/resolvers/publicKey.resolver'
 
 describe('Message resolver', () => {
 
     it('should return message', () => {
-        const message = '10';
-        const profileOptions = {message} as any;
+        const message = '10'
+        const profileOptions = {message} as any
         expect(new MessageResolver().resolve(profileOptions))
-            .to.be.equal('10');
-    });
-});
+            .to.be.equal('10')
+    })
+})
 
 describe('Recipient public key resolver', () => {
 
     it('should return public account', async () => {
-        const recipientPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
-        const profileOptions = {recipientPublicKey} as any;
+        const recipientPublicKey = '0000000000000000000000000000000000000000000000000000000000000000'
+        const profileOptions = {recipientPublicKey} as any
         expect((await new RecipientPublicKeyResolver().resolve(profileOptions)).publicKey)
-            .to.be.equal(recipientPublicKey);
-    });
+            .to.be.equal(recipientPublicKey)
+    })
 
     it('should throw error if invalid public key', () => {
-        const recipientPublicKey = '00000';
-        const profileOptions = {recipientPublicKey} as any;
+        const recipientPublicKey = '00000'
+        const profileOptions = {recipientPublicKey} as any
         expect(() => new RecipientPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

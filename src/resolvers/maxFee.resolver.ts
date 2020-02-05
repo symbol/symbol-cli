@@ -1,8 +1,8 @@
-import {UInt64} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {UInt64} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Max fee resolver
@@ -21,11 +21,11 @@ export class MaxFeeResolver implements Resolver {
         const resolution = await OptionsResolver(options,
         altKey ? altKey : 'maxFee',
         () => undefined,
-        altText ? altText : 'Enter the maximum fee (absolute amount): ');
+        altText ? altText : 'Enter the maximum fee (absolute amount): ')
         try {
-           return UInt64.fromNumericString(resolution);
+           return UInt64.fromNumericString(resolution)
         }  catch {
-           return UInt64.fromUint(0);
+           return UInt64.fromUint(0)
         }
     }
 }

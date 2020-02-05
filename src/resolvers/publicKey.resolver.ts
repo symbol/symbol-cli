@@ -1,10 +1,10 @@
-import chalk from 'chalk';
-import {NetworkType, PublicAccount} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator';
-import {Resolver} from './resolver';
+import chalk from 'chalk'
+import {NetworkType, PublicAccount} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator'
+import {Resolver} from './resolver'
 /**
  * Public key resolver
  */
@@ -22,9 +22,9 @@ export class PublicKeyResolver implements Resolver {
         const resolution = (await OptionsResolver(options,
             altKey ? altKey : 'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ')).trim();
-        new PublicKeyValidator().validate(resolution);
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST);
+            altText ? altText : 'Enter the account public key: ')).trim()
+        new PublicKeyValidator().validate(resolution)
+        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST)
     }
 }
 
@@ -41,23 +41,23 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @returns {PublicAccount[]}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount[]> {
-        const resolution = await OptionsResolver(options,
+        const resolution = (await OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ');
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ')).trim()
         try {
-            new PublicKeyValidator().validate(resolution);
+            new PublicKeyValidator().validate(resolution)
         } catch (err) {
-            console.log(chalk.red('ERR'), err);
-            return process.exit();
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
         }
-        const cosignatoryPublicKeys = resolution.split(',');
-        const cosignatories: PublicAccount[] = [];
+        const cosignatoryPublicKeys = resolution.split(',')
+        const cosignatories: PublicAccount[] = []
         cosignatoryPublicKeys.map((cosignatory: string) => {
             cosignatories.push(PublicAccount
-                .createFromPublicKey(cosignatory, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST));
-        });
-        return cosignatories;
+                .createFromPublicKey(cosignatory, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST))
+        })
+        return cosignatories
     }
 
 }

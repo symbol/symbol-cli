@@ -1,7 +1,7 @@
-import * as readlineSync from 'readline-sync';
-import {CommandOptions} from '../commands/account/generate';
-import {Profile} from '../models/profile';
-import {Resolver} from './resolver';
+import * as readlineSync from 'readline-sync'
+import {CommandOptions} from '../commands/account/generate'
+import {Profile} from '../models/profile'
+import {Resolver} from './resolver'
 
 /**
  * Save resolver
@@ -9,16 +9,16 @@ import {Resolver} from './resolver';
 export class SaveResolver implements Resolver {
 
     /**
-     * Resolves an action provided by the user.
+     * Resolves if the account has to be saved.
      * @param {CommandOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @returns {boolean}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): boolean {
         if (!options.save && readlineSync.keyInYN('Do you want to save the account?')) {
-            options.save = true;
+            options.save = true
         }
-        return options.save;
+        return options.save
     }
 }

@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -15,53 +15,53 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {PublicKeysValidator, PublicKeyValidator} from '../../src/validators/publicKey.validator';
+import {expect} from 'chai'
+import {PublicKeysValidator, PublicKeyValidator} from '../../src/validators/publicKey.validator'
 
 describe('Public key validator', () => {
 
     it('default case', () => {
-        const upperCasePublicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C347';
-        const lowercasePublicKey = '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347';
+        const upperCasePublicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C347'
+        const lowercasePublicKey = '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347'
         expect(new PublicKeyValidator().validate(upperCasePublicKey))
-            .to.be.equal(undefined);
+            .to.be.equal(undefined)
         expect(new PublicKeyValidator().validate(lowercasePublicKey))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if public key length is not 64', () => {
-        const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34';
+        const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34'
         expect(() => {
-            new PublicKeyValidator().validate(publicKey, { name: 'publicKey', source: publicKey });
-        }).to.throws('Public key should be a 64 characters hexadecimal string');
-    });
+            new PublicKeyValidator().validate(publicKey, { name: 'publicKey', source: publicKey })
+        }).to.throws('Public key should be a 64 characters hexadecimal string')
+    })
 
     it('should throw error if public key has a special char', () => {
-        const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079!72738DD3B3C6DF400DE796D7C34';
+        const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079!72738DD3B3C6DF400DE796D7C34'
         expect(() => {
-            new PublicKeyValidator().validate(publicKey, { name: 'publicKey', source: publicKey });
-        }).to.throws('Public key should be a 64 characters hexadecimal string');
-    });
+            new PublicKeyValidator().validate(publicKey, { name: 'publicKey', source: publicKey })
+        }).to.throws('Public key should be a 64 characters hexadecimal string')
+    })
 
-});
+})
 
 describe('Public key validator', () => {
 
     it('should be possible to validate multiple public keys at the same time', () => {
         const publicKeys = '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347,' +
             '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347,' +
-            '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347';
+            '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347'
         expect(new PublicKeysValidator().validate(publicKeys, { name: 'publicKeys', source: publicKeys }))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if one public key is invalid', () => {
         const publicKeys = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34,' +
             '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34,' +
-            '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34';
+            '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34'
         expect(() => {
-            new PublicKeysValidator().validate(publicKeys, { name: 'publicKeys', source: publicKeys });
-        }).to.throws('Public key should be a 64 characters hexadecimal string');
-    });
+            new PublicKeysValidator().validate(publicKeys, { name: 'publicKeys', source: publicKeys })
+        }).to.throws('Public key should be a 64 characters hexadecimal string')
+    })
 
-});
+})
