@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk'
 import * as readlineSync from 'readline-sync'
-import {ProfileOptions} from '../commands/profile.command'
+import {ProfileOptions} from '../interfaces/profile.command'
 import {CommandOptions} from '../commands/transaction/mosaic'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'

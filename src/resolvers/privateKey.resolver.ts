@@ -19,11 +19,11 @@ export class PrivateKeyResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
-            'privateKey',
+            altKey ? altKey : 'privateKey',
             () => undefined,
-            'Enter your account private key: ',
+            altText ? altText : 'Enter your account private key: ',
             'password')
         try {
             new PrivateKeyValidator().validate(resolution)

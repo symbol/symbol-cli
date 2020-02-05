@@ -1,6 +1,6 @@
 import chalk from 'chalk'
 import {UInt64} from 'nem2-sdk'
-import {ProfileOptions} from '../commands/profile.command'
+import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {HeightValidator} from '../validators/block.validator'

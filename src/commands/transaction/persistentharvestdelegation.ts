@@ -49,19 +49,19 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const remotePrivateKey = new PrivateKeyResolver()
+        const account = await profile.decrypt(options)
+        const remotePrivateKey = await new PrivateKeyResolver()
             .resolve(options, undefined, 'Enter the remote account private key: ', 'remotePrivateKey')
-        const recipientPublicAccount = new PublicKeyResolver()
+        const recipientPublicAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
                 'Enter the public key of the node: ', 'recipientPublicKey')
        const message = PersistentHarvestingDelegationMessage.create(
             remotePrivateKey,
             recipientPublicAccount.publicKey,
             profile.networkType)
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = TransferTransaction.create(
             Deadline.create(),

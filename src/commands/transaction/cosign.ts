@@ -74,9 +74,9 @@ export default class extends ProfileCommand {
                     && _.transactionInfo.hash !== undefined
                     && _.transactionInfo.hash === hash),
             )
-            .subscribe((transaction: AggregateTransaction) => {
+            .subscribe(async (transaction: AggregateTransaction) => {
                 sequentialFetcher.kill()
-                const signedCosignature = this.getSignedAggregateBondedCosignature(transaction, hash)
+                const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction, hash)
                 if (signedCosignature) {
                     this.announceAggregateBondedCosignature(signedCosignature)
                 }
@@ -107,13 +107,13 @@ export default class extends ProfileCommand {
      * @param {string} hash of the transaction to be cosigned
      * @returns {(CosignatureSignedTransaction | null)}
      */
-    private getSignedAggregateBondedCosignature(
+    private async getSignedAggregateBondedCosignature(
         transaction: AggregateTransaction,
         hash: string,
-    ): CosignatureSignedTransaction | null {
+    ): Promise<CosignatureSignedTransaction | null> {
         try {
             const cosignatureTransaction = CosignatureTransaction.create(transaction)
-            const account = this.profile.decrypt(this.options)
+            const account = await this.profile.decrypt(this.options)
             return account.signCosignatureTransaction(cosignatureTransaction)
         } catch (err) {
             this.spinner.stop(true)

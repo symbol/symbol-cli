@@ -23,7 +23,12 @@ export class PublicKeyResolver implements Resolver {
             altKey ? altKey : 'publicKey',
             () => undefined,
             altText ? altText : 'Enter the account public key: ')).trim()
-        new PublicKeyValidator().validate(resolution)
+        try {
+            new PublicKeyValidator().validate(resolution)
+        } catch (err) {
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
+        }
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST)
     }
 }

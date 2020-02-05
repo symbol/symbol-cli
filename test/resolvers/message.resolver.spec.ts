@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai'
 import {MessageResolver} from '../../src/resolvers/message.resolver'
-import {RecipientPublicKeyResolver} from '../../src/resolvers/publicKey.resolver'
+import {RecipientPublicKeyResolver} from '../../src/resolvers/message.resolver'
 
 describe('Message resolver', () => {
 
