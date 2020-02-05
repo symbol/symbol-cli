@@ -1,9 +1,9 @@
-import {NetworkType, PublicAccount} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator';
-import {Resolver} from './resolver';
+import {NetworkType, PublicAccount} from 'nem2-sdk'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator'
+import {Resolver} from './resolver'
 
 /**
  * Public key resolver
@@ -18,13 +18,13 @@ export class PublicKeyResolver implements Resolver {
      * @param {string} altKey - Alternative text.
      * @returns {PublicAccount}
      */
-    resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): any {
+    resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): PublicAccount {
         const resolution = OptionsResolver(options,
             altKey ? altKey : 'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ').trim();
-        new PublicKeyValidator().validate(resolution);
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST);
+            altText ? altText : 'Enter the account public key: ').trim()
+        new PublicKeyValidator().validate(resolution)
+        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST)
     }
 }
 
@@ -40,19 +40,19 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {PublicAccount[]}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): PublicAccount [] {
         const resolution = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ').trim();
-        new PublicKeysValidator().validate(resolution);
-        const cosignatoryPublicKeys = resolution.split(',');
-        const cosignatories: PublicAccount[] = [];
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ').trim()
+        new PublicKeysValidator().validate(resolution)
+        const cosignatoryPublicKeys = resolution.split(',')
+        const cosignatories: PublicAccount[] = []
         cosignatoryPublicKeys.map((cosignatory: string) => {
             cosignatories.push(PublicAccount
-                .createFromPublicKey(cosignatory, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST));
-        });
-        return cosignatories;
+                .createFromPublicKey(cosignatory, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST))
+        })
+        return cosignatories
     }
 
 }

@@ -1,6 +1,6 @@
 {
     "name": "nem2-cli",
-    "version": "0.16.2",
+    "version": "0.17.1",
     "description": "Command Line Interface (CLI) to interact with Catapult",
     "main": "index.js",
     "scripts": {
@@ -10,7 +10,9 @@
         "build:win": "del build && tsc",
         "dev": "nodemon --config \"./nodemon-config.json\"/",
         "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
-        "test:coveralls": "npm run test:cov | coveralls"
+        "test:coveralls": "npm run test:cov | coveralls",
+        "lint:all": "eslint src/ --ext .ts && eslint test/ --ext .ts",
+        "lint:all:fix": "eslint src/ --ext .ts --fix && eslint test/ --ext .ts --fix"
     },
     "bin": {
         "nem2-cli": "./bin/nem2-cli"
@@ -43,7 +45,7 @@
         "cli-spinner": "^0.2.7",
         "cli-table3": "^0.5.1",
         "clime": "^0.5.9",
-        "nem2-sdk": "^0.16.3",
+        "nem2-sdk": "^0.16.5",
         "path": "^0.12.7",
         "readline-sync": "^1.4.9",
         "rxjs": "^6.5.3"
@@ -51,14 +53,18 @@
     "devDependencies": {
         "@types/chai": "^4.0.4",
         "@types/mocha": "^2.2.44",
+        "@typescript-eslint/eslint-plugin": "^2.18.0",
+        "@typescript-eslint/parser": "^2.18.0",
         "chai": "^4.1.2",
         "coveralls": "^3.0.0",
+        "eslint": "^6.8.0",
+        "eslint-plugin-import": "^2.20.0",
+        "eslint-plugin-prefer-arrow": "^1.1.7",
         "mocha": "^4.0.1",
         "nodemon": "^2.0.2",
-        "nyc": "^11.3.0",
+        "nyc": "^15.0.0",
         "ts-mockito": "^2.2.8",
         "ts-node": "^5.0.1",
-        "tslint": "^5.8.0",
         "typescript": "^3.7.2"
     },
     "nyc": {

@@ -15,17 +15,17 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {PayloadResolver} from '../../resolvers/payload.resolver';
-import {TransactionService} from '../../services/transaction.service';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {PayloadResolver} from '../../resolvers/payload.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
         description: 'Transaction payload.',
     })
-    payload: string;
+    payload: string
 }
 
 @command({
@@ -33,15 +33,13 @@ export class CommandOptions extends ProfileOptions {
 })
 export default class extends Command {
 
-    private readonly transactionService: TransactionService;
     constructor() {
-        super();
-        this.transactionService = new TransactionService();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const transaction = new PayloadResolver().resolve(options);
-        console.log(this.transactionService.formatTransactionToFilter(transaction));
+        const transaction = new PayloadResolver().resolve(options)
+        new TransactionView(transaction).print()
     }
 }

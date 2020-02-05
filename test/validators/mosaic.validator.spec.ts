@@ -15,36 +15,36 @@
  * limitations under the License.
  *
  */
-import { expect } from 'chai';
-import { MosaicValidator } from '../../src/validators/mosaic.validator';
+import { expect } from 'chai'
+import { MosaicValidator } from '../../src/validators/mosaic.validator'
 
 describe('Mosaic validator', () => {
 
     it('default case (@aliasName)', () => {
-        const mosaic = '@cat.currency::1000000';
+        const mosaic = '@cat.currency::1000000'
         expect(new MosaicValidator().validate(mosaic))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('default case (hex)', () => {
-        const mosaic = '85BBEA6CC462B244::1000000';
+        const mosaic = '85BBEA6CC462B244::1000000'
         expect(new MosaicValidator().validate(mosaic))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if alias does not start with @ symbol', () => {
-        const mosaic = 'cat.currencxy::1000000';
+        const mosaic = 'cat.currencxy::1000000'
         expect(() => {
-            new MosaicValidator().validate(mosaic);
+            new MosaicValidator().validate(mosaic)
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
-            '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
-    });
+            '(Ex: sending 1 cat.currency, @cat.currency::1000000)')
+    })
 
     it('should throw error if format is invalid', () => {
-        const mosaic = 'cat.currencxy:1000000';
+        const mosaic = 'cat.currencxy:1000000'
         expect(() => {
-            new MosaicValidator().validate(mosaic);
+            new MosaicValidator().validate(mosaic)
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
-            '(Ex: sending 1 cat.currency, @cat.currency::1000000)');
-    });
-});
+            '(Ex: sending 1 cat.currency, @cat.currency::1000000)')
+    })
+})

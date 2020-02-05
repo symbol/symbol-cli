@@ -15,24 +15,24 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {Account} from 'nem2-sdk';
-import {NetworkResolver} from '../../resolvers/network.resolver';
-import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {Account} from 'nem2-sdk'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {NetworkResolver} from '../../resolvers/network.resolver'
+import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'p',
         description: 'Private Key.',
     })
-    privateKey: string;
+    privateKey: string
 
     @option({
         flag: 'n',
         description: 'Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
     })
-    network: string;
+    network: string
 
 }
 
@@ -42,13 +42,13 @@ export class CommandOptions extends ProfileOptions {
 export default class extends Command {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const privateKey = new PrivateKeyResolver().resolve(options);
-        const network = new NetworkResolver().resolve(options);
-        console.log(Account.createFromPrivateKey(privateKey, network).publicKey);
+        const privateKey = new PrivateKeyResolver().resolve(options)
+        const network = new NetworkResolver().resolve(options)
+        console.log(Account.createFromPrivateKey(privateKey, network).publicKey)
     }
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {AnnounceResolver} from '../../src/resolvers/announce.resolver';
+import {expect} from 'chai'
+import {AnnounceResolver} from '../../src/resolvers/announce.resolver'
 
 describe('Announce resolver', () => {
 
@@ -29,8 +29,8 @@ describe('Announce resolver', () => {
             password: '',
             generationHash: '1',
             maxFee: '1',
-            sync: false};
-        expect(new AnnounceResolver().resolve(profileOptions)).to.be.equal(true);
-    });
+            sync: false}
+        expect(new AnnounceResolver().resolve(profileOptions)).to.be.equal(true)
+    })
 
-});
+})

@@ -1,9 +1,7 @@
-import {NetworkType, PublicAccount} from 'nem2-sdk';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {PublicKeyValidator} from '../validators/publicKey.validator';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Message resolver
@@ -17,34 +15,11 @@ export class MessageResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
         const resolution = OptionsResolver(options,
         'message',
         () =>  undefined,
-        'Enter a message: ');
-        return resolution;
-    }
-}
-
-/**
- * Recipient public key resolver
- */
-export class RecipientPublicKeyResolver implements Resolver {
-
-    /**
-     * Resolves an public key provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {PublicAccount}
-     */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const recipientPublicKey = OptionsResolver(options,
-            'recipientPublicKey',
-            () => undefined,
-            'Enter the recipient public key: ');
-        new PublicKeyValidator().validate(recipientPublicKey);
-        return PublicAccount
-            .createFromPublicKey(recipientPublicKey, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST);
+        'Enter a message: ')
+        return resolution
     }
 }

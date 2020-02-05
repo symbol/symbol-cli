@@ -14,37 +14,34 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, MosaicSupplyChangeTransaction} from 'nem2-sdk';
-import {SupplyActionResolver} from '../../resolvers/action.resolver';
-import {AmountResolver} from '../../resolvers/amount.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
+import {command, metadata, option} from 'clime'
+import {Deadline, MosaicSupplyChangeTransaction} from 'nem2-sdk'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {SupplyActionResolver} from '../../resolvers/action.resolver'
+import {AmountResolver} from '../../resolvers/amount.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Mosaic supply change action (1: Increase, 0: Decrease).',
     })
-    action: number;
+    action: number
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string;
+    mosaicId: string
 
     @option({
         flag: 'd',
         description: 'Atomic amount of supply change.',
     })
-    amount: string;
+    amount: string
 }
 
 @command({
@@ -54,18 +51,18 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends AnnounceTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const mosaicId = new MosaicIdResolver().resolve(options);
-        const action = new SupplyActionResolver().resolve(options);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
+        const mosaicId = new MosaicIdResolver().resolve(options)
+        const action = new SupplyActionResolver().resolve(options)
         const amount = new AmountResolver()
-            .resolve(options, undefined, 'Enter absolute amount of supply change: ');
-        const maxFee = new MaxFeeResolver().resolve(options);
+            .resolve(options, undefined, 'Enter absolute amount of supply change: ')
+        const maxFee = new MaxFeeResolver().resolve(options)
 
         const transaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
@@ -73,15 +70,16 @@ export default class extends AnnounceTransactionsCommand {
             action,
             amount,
             profile.networkType,
-            maxFee);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        new TransactionView(transaction, signedTransaction).print()
+
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 }

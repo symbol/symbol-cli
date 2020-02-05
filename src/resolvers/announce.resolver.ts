@@ -1,8 +1,8 @@
-import * as readlineSync from 'readline-sync';
-import {AnnounceTransactionsOptions} from '../commands/announce.transactions.command';
-import {CreateProfileOptions} from '../commands/create.profile.command';
-import {Profile} from '../models/profile';
-import {Resolver} from './resolver';
+import * as readlineSync from 'readline-sync'
+import {AnnounceTransactionsOptions} from '../interfaces/announce.transactions.command'
+import {CreateProfileOptions} from '../interfaces/create.profile.command'
+import {Profile} from '../models/profile'
+import {Resolver} from './resolver'
 
 /**
  * Announce resolver
@@ -14,12 +14,12 @@ export class AnnounceResolver implements Resolver {
      * @param {CreateProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @returns {boolean}
      */
-    resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): boolean {
         if (!options.announce && readlineSync.keyInYN('Do you want to announce this transaction?')) {
-            options.announce = true;
+            options.announce = true
         }
-        return options.announce;
+        return options.announce
     }
 }

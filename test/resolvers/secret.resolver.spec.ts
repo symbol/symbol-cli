@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {ProfileNameResolver} from '../../src/resolvers/profile.resolver';
-import {ProofResolver} from '../../src/resolvers/proof.resolver';
-import {SecretResolver} from '../../src/resolvers/secret.resolver';
+import {expect} from 'chai'
+import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
+import {ProofResolver} from '../../src/resolvers/proof.resolver'
+import {SecretResolver} from '../../src/resolvers/secret.resolver'
 
 describe('Secret resolver', () => {
 
     it('should return public key', () => {
-        const secret = 'secret';
-        const profileOptions = {secret} as any;
+        const secret = 'secret'
+        const profileOptions = {secret} as any
         expect(new SecretResolver().resolve(profileOptions))
-            .to.be.equal(secret);
-    });
+            .to.be.equal(secret)
+    })
 
-});
+})

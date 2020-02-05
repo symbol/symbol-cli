@@ -15,73 +15,73 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {NetworkType} from 'nem2-sdk';
-import {NetworkResolver} from '../../src/resolvers/network.resolver';
+import {expect} from 'chai'
+import {NetworkType} from 'nem2-sdk'
+import {NetworkResolver} from '../../src/resolvers/network.resolver'
 
 describe('Network type resolver', () => {
 
     it('should return MAIN_NET', () => {
-        const network = 'MAIN_NET';
-        const profileOptions = {network} as any;
+        const network = 'MAIN_NET'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.MAIN_NET);
-    });
+            .to.be.equal(NetworkType.MAIN_NET)
+    })
 
     it('should return MAIN_NET (number)', () => {
-        const network = '0';
-        const profileOptions = {network} as any;
+        const network = '0'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.MAIN_NET);
-    });
+            .to.be.equal(NetworkType.MAIN_NET)
+    })
 
     it('should return TEST_NET', () => {
-        const network = 'TEST_NET';
-        const profileOptions = {network} as any;
+        const network = 'TEST_NET'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.TEST_NET);
-    });
+            .to.be.equal(NetworkType.TEST_NET)
+    })
 
     it('should return TESTNET (number)', () => {
-        const network = '1';
-        const profileOptions = {network} as any;
+        const network = '1'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.TEST_NET);
-    });
+            .to.be.equal(NetworkType.TEST_NET)
+    })
 
     it('should return MIJIN', () => {
-        const network = 'MIJIN';
-        const profileOptions = {network} as any;
+        const network = 'MIJIN'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.MIJIN);
-    });
+            .to.be.equal(NetworkType.MIJIN)
+    })
 
     it('should return MIJIN (number)', () => {
-        const network = '2';
-        const profileOptions = {network} as any;
+        const network = '2'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.MIJIN);
-    });
+            .to.be.equal(NetworkType.MIJIN)
+    })
 
     it('should return MIJIN_TEST', () => {
-        const network = 'MIJIN_TEST';
-        const profileOptions = {network} as any;
+        const network = 'MIJIN_TEST'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.MIJIN_TEST);
-    });
+            .to.be.equal(NetworkType.MIJIN_TEST)
+    })
 
     it('should return MIJIN_TEST (number)', () => {
-        const network = '3';
-        const profileOptions = {network} as any;
+        const network = '3'
+        const profileOptions = {network} as any
         expect(new NetworkResolver().resolve(profileOptions))
-            .to.be.equal(NetworkType.MIJIN_TEST);
-    });
+            .to.be.equal(NetworkType.MIJIN_TEST)
+    })
 
     it('should throw error if network does not exist', () => {
-        const network = '4';
-        const profileOptions = {network} as any;
+        const network = '4'
+        const profileOptions = {network} as any
         expect(() => new NetworkResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
+            .to.throws(Error)
+    })
 
-});
+})

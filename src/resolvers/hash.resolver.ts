@@ -1,7 +1,8 @@
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsResolver} from '../options-resolver';
-import {Resolver} from './resolver';
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsResolver} from '../options-resolver'
+import {HashValidator} from '../validators/hash.validator'
+import {Resolver} from './resolver'
 
 /**
  * Hash resolver
@@ -15,11 +16,12 @@ export class HashResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {string}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
         const resolution = OptionsResolver(options,
             'hash',
             () => undefined,
-            altText ? altText : 'Enter a transaction hash: ').trim();
-        return resolution;
+            altText ? altText : 'Enter a transaction hash: ').trim()
+        new HashValidator().validate(resolution)
+        return resolution
     }
 }

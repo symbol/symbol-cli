@@ -15,18 +15,15 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk';
-import {ActionResolver} from '../../resolvers/action.resolver';
-import {AddressAliasResolver} from '../../resolvers/address.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
+import {command, metadata, option} from 'clime'
+import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {ActionResolver} from '../../resolvers/action.resolver'
+import {AddressAliasResolver} from '../../resolvers/address.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -34,19 +31,19 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Restriction flags.' +
             '(0: AllowOutgoingAddress, 1: BlockOutgoingAddress, 2: AllowIncomingAddress, 3: BlockIncomingAddress)',
     })
-    flags: number;
+    flags: number
 
     @option({
         flag: 'a',
         description: 'Modification action. (1: Add, 0: Remove).',
     })
-    action: number;
+    action: number
 
     @option({
         flag: 'v',
         description: 'Address or @alias to allow/block.',
     })
-    recipientAddress: string;
+    recipientAddress: string
 }
 
 @command({
@@ -54,18 +51,18 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const action = new ActionResolver().resolve(options);
-        const flags = new RestrictionAccountAddressFlagsResolver().resolve(options);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
+        const action = new ActionResolver().resolve(options)
+        const flags = new RestrictionAccountAddressFlagsResolver().resolve(options)
         const address = new AddressAliasResolver()
-        .resolve(options, undefined, 'Enter the recipient address (or @alias): ', 'recipientAddress');
-        const maxFee = new MaxFeeResolver().resolve(options);
+        .resolve(options, undefined, 'Enter the recipient address (or @alias): ', 'recipientAddress')
+        const maxFee = new MaxFeeResolver().resolve(options)
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -73,15 +70,16 @@ export default class extends AnnounceTransactionsCommand {
             (action === 1) ? [address] : [],
             (action === 0) ? [address] : [],
             profile.networkType,
-            maxFee);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        new TransactionView(transaction, signedTransaction).print()
+
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 

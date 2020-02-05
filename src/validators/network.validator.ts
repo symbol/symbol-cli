@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime';
-import {NetworkType} from 'nem2-sdk';
+import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {NetworkType} from 'nem2-sdk'
 
 /**
  * Network validator
@@ -32,7 +32,7 @@ export class NetworkValidator implements Validator<string> {
     validate(value: string, context?: ValidationContext): void {
         if (!(value in NetworkType)) {
             throw new ExpectedError('Enter a valid network type. ' +
-                'Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)');
+                'Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
         }
     }
 }

@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {SimpleWallet} from 'nem2-sdk';
-import {DefaultResolver} from '../../resolvers/default.resolver';
-import {GenerationHashResolver} from '../../resolvers/generationHash.resolver';
-import {NetworkResolver} from '../../resolvers/network.resolver';
-import {PasswordResolver} from '../../resolvers/password.resolver';
-import {ProfileNameResolver} from '../../resolvers/profile.resolver';
-import {URLResolver} from '../../resolvers/url.resolver';
-import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../create.profile.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {SimpleWallet} from 'nem2-sdk'
+import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
+import {DefaultResolver} from '../../resolvers/default.resolver'
+import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
+import {NetworkResolver} from '../../resolvers/network.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {ProfileNameResolver} from '../../resolvers/profile.resolver'
+import {URLResolver} from '../../resolvers/url.resolver'
 
 export class CommandOptions extends CreateProfileOptions {}
 
@@ -35,24 +35,24 @@ export class CommandOptions extends CreateProfileOptions {}
 export default class extends CreateProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
      async execute(options: CommandOptions) {
-        const networkType = new NetworkResolver().resolve(options);
-        options.url = new URLResolver().resolve(options);
-        const profileName = new ProfileNameResolver().resolve(options);
-        const password = new PasswordResolver().resolve(options);
-        const isDefault = new DefaultResolver().resolve(options);
-        const generationHash = await new GenerationHashResolver().resolve(options);
+        const networkType = new NetworkResolver().resolve(options)
+        options.url = new URLResolver().resolve(options)
+        const profileName = new ProfileNameResolver().resolve(options)
+        const password = new PasswordResolver().resolve(options)
+        const isDefault = new DefaultResolver().resolve(options)
+        const generationHash = await new GenerationHashResolver().resolve(options)
 
         const simpleWallet = SimpleWallet.create(
             profileName,
             password,
-            networkType);
-        console.log(new AccountCredentialsTable(simpleWallet.open(password), password).toString());
-        this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash);
-        console.log( chalk.green('\nStored ' + profileName + ' profile'));
+            networkType)
+        console.log(new AccountCredentialsTable(simpleWallet.open(password), password).toString())
+        this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash)
+        console.log( chalk.green('\nStored ' + profileName + ' profile'))
     }
 }

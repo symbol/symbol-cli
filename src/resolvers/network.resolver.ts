@@ -1,10 +1,10 @@
-import {NetworkType} from 'nem2-sdk';
-import {isNumeric} from 'rxjs/internal-compatibility';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsChoiceResolver} from '../options-resolver';
-import {NetworkValidator} from '../validators/network.validator';
-import {Resolver} from './resolver';
+import {NetworkType} from 'nem2-sdk'
+import {isNumeric} from 'rxjs/internal-compatibility'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsChoiceResolver} from '../options-resolver'
+import {NetworkValidator} from '../validators/network.validator'
+import {Resolver} from './resolver'
 
 /**
  * Restriction account address flags resolver
@@ -18,20 +18,20 @@ export class NetworkResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['MAIN_NET', 'TEST_NET', 'MIJIN', 'MIJIN_TEST'];
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
+        const choices = ['MAIN_NET', 'TEST_NET', 'MIJIN', 'MIJIN_TEST']
         const resolution = OptionsChoiceResolver(options,
             'network',
             altText ? altText : 'Select the network type: ',
             choices,
-        );
-        let networkFriendlyName;
+        )
+        let networkFriendlyName
         if (isNumeric(resolution)) {
-            networkFriendlyName = choices[+resolution] as any;
+            networkFriendlyName = choices[+resolution] as any
         } else {
-            networkFriendlyName = resolution;
+            networkFriendlyName = resolution
         }
-        new NetworkValidator().validate(networkFriendlyName);
-        return NetworkType[networkFriendlyName];
+        new NetworkValidator().validate(networkFriendlyName)
+        return parseInt(NetworkType[networkFriendlyName], 10)
     }
 }

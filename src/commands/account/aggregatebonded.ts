@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {AccountHttp} from 'nem2-sdk';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../account.transactions.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {AccountHttp} from 'nem2-sdk'
+import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 @command({
     description: 'Fetch aggregate bonded transactions from account',
@@ -27,28 +28,30 @@ import {AccountTransactionsCommand, AccountTransactionsOptions} from '../account
 export default class extends AccountTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: AccountTransactionsOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
 
-        const accountHttp =  new AccountHttp(profile.url);
+        const accountHttp = new AccountHttp(profile.url)
         accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
-                this.spinner.stop(true);
-                let text = '';
-                transactions.map((transaction) => {
-                    text += this.transactionService.formatTransactionToFilter(transaction) + '\n';
-                });
-                console.log(text === '' ? 'There aren\'t aggregate bonded transaction' : text);
+                this.spinner.stop(true)
+                transactions.forEach((transaction) => {
+                    new TransactionView(transaction).print()
+                })
+
+                if (!transactions.length) {
+                    console.log('There aren\'t aggregate bonded transaction')
+                }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime';
-import { KeyGenerator, UInt64 } from 'nem2-sdk';
+import { ExpectedError, ValidationContext, Validator } from 'clime'
+import { KeyGenerator, UInt64 } from 'nem2-sdk'
 
 /**
  * Validator of mosaic restriction key
@@ -30,9 +30,9 @@ export class MosaicRestrictionKeyValidator implements Validator<string> {
      */
     validate(value: string, context?: ValidationContext): void {
         try {
-            UInt64.fromNumericString(value);
+            UInt64.fromNumericString(value)
         } catch (err) {
-            throw new ExpectedError('Restriction key is an invalid UInt64 string');
+            throw new ExpectedError('Restriction key is an invalid UInt64 string')
         }
     }
 }

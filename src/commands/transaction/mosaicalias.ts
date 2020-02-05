@@ -14,37 +14,34 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime';
-import {Deadline, MosaicAliasTransaction} from 'nem2-sdk';
-import {LinkActionResolver} from '../../resolvers/action.resolver';
-import {AnnounceResolver} from '../../resolvers/announce.resolver';
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver';
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver';
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver';
-import {
-    AnnounceTransactionFieldsTable,
-    AnnounceTransactionsCommand,
-    AnnounceTransactionsOptions,
-} from '../announce.transactions.command';
+import {command, metadata, option} from 'clime'
+import {Deadline, MosaicAliasTransaction} from 'nem2-sdk'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {LinkActionResolver} from '../../resolvers/action.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Alias action (1: Link, 0: Unlink).',
     })
-    action: string;
+    action: string
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string;
+    mosaicId: string
 
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespaceName: string;
+    namespaceName: string
 }
 
 @command({
@@ -54,17 +51,17 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends AnnounceTransactionsCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const namespaceId = new NamespaceNameResolver().resolve(options);
-        const mosaicId = new MosaicIdResolver().resolve(options);
-        const action = new LinkActionResolver().resolve(options);
-        const maxFee = new MaxFeeResolver().resolve(options);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
+        const namespaceId = new NamespaceNameResolver().resolve(options)
+        const mosaicId = new MosaicIdResolver().resolve(options)
+        const action = new LinkActionResolver().resolve(options)
+        const maxFee = new MaxFeeResolver().resolve(options)
 
         const transaction = MosaicAliasTransaction.create(
             Deadline.create(),
@@ -72,15 +69,16 @@ export default class extends AnnounceTransactionsCommand {
             namespaceId,
             mosaicId,
             profile.networkType,
-            maxFee);
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash);
+            maxFee)
+        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        console.log(new AnnounceTransactionFieldsTable(signedTransaction, profile.url).toString('Transaction Information'));
-        const shouldAnnounce = new AnnounceResolver().resolve(options);
+        new TransactionView(transaction, signedTransaction).print()
+
+        const shouldAnnounce = new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url);
+            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url);
+            this.announceTransaction(signedTransaction, profile.url)
         }
     }
 }

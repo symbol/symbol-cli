@@ -15,46 +15,46 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
-import {Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata, option} from 'clime'
+import {Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string;
+    address: string
 }
 
 export class MetadataEntryTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
 
     constructor(public readonly entry: MetadataEntry) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Type', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
 
         this.table.push(
             ['Sender Public Key', entry.senderPublicKey],
             ['Target Public Key', entry.targetPublicKey],
             ['Value', entry.value],
-        );
+        )
         if (entry.targetId) {
-            this.table.push(['Target Id', entry.targetId.toHex()]);
+            this.table.push(['Target Id', entry.targetId.toHex()])
         }
     }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
@@ -64,31 +64,31 @@ export class MetadataEntryTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        this.spinner.start()
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
 
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = new MetadataHttp(profile.url)
         metadataHttp.getAccountMetadata(address)
             .subscribe((metadataEntries) => {
-                this.spinner.stop(true);
+                this.spinner.stop(true)
                 if (metadataEntries.length > 0) {
                     metadataEntries
                         .map((entry: Metadata) => {
-                            console.log(new MetadataEntryTable(entry.metadataEntry).toString());
-                        });
+                            console.log(new MetadataEntryTable(entry.metadataEntry).toString())
+                        })
                 } else {
-                    console.log('\n The address does not have metadata entries assigned.');
+                    console.log('\n The address does not have metadata entries assigned.')
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

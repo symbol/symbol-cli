@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {Listener} from 'nem2-sdk';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transaction.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {Listener} from 'nem2-sdk'
+import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
 
 @command({
     description: 'Monitor cosignatures added',
@@ -27,30 +27,30 @@ import {MonitorAddressCommand, MonitorAddressOptions} from '../monitor.transacti
 export default class extends MonitorAddressCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new Listener(profile.url);
+        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
+        const listener = new Listener(profile.url)
         listener.open().then(() => {
             listener.cosignatureAdded(address).subscribe((transaction) => {
                 const transactionFormatted = '\nCosignatureSignedTransaction: ParentHash:' + transaction.parentHash +
                     ' SignerPublicKey:' + transaction.signerPublicKey +
-                    ' Signature:' + transaction.signature;
-                console.log(transactionFormatted);
+                    ' Signature:' + transaction.signature
+                console.log(transactionFormatted)
             }, (err) => {
-                listener.close();
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                listener.close()
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
         }, (err) => {
-            listener.close();
-            console.log(chalk.red('Error'), err);
-        });
+            listener.close()
+            console.log(chalk.red('Error'), err)
+        })
     }
 }

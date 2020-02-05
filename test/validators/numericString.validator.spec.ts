@@ -15,32 +15,32 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {NumericStringValidator} from '../../src/validators/numericString.validator';
+import {expect} from 'chai'
+import {NumericStringValidator} from '../../src/validators/numericString.validator'
 
 describe('Numeric string validator', () => {
 
     it('default case', () => {
-        const zeroValue = '0';
-        const largePositiveValue = '10000000000000000000000000';
+        const zeroValue = '0'
+        const largePositiveValue = '10000000000000000000000000'
         expect(new NumericStringValidator().validate(zeroValue))
-            .to.be.equal(undefined);
+            .to.be.equal(undefined)
         expect(new NumericStringValidator().validate(largePositiveValue))
-            .to.be.equal(undefined);
-    });
+            .to.be.equal(undefined)
+    })
 
     it('should throw error if not a numeric string', () => {
-        const value = 'test';
+        const value = 'test'
         expect(() => {
-            new NumericStringValidator().validate(value);
-        }).to.throws('Enter a number');
-    });
+            new NumericStringValidator().validate(value)
+        }).to.throws('Enter a number')
+    })
 
     it('should throw error if numeric string is negative', () => {
-        const value = '-1';
+        const value = '-1'
         expect(() => {
-            new NumericStringValidator().validate(value);
-        }).to.throws('Enter a number');
-    });
+            new NumericStringValidator().validate(value)
+        }).to.throws('Enter a number')
+    })
 
-});
+})

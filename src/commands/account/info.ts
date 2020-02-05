@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import * as Table from 'cli-table3';
-import {HorizontalTable} from 'cli-table3';
-import {command, metadata, option} from 'clime';
+import chalk from 'chalk'
+import * as Table from 'cli-table3'
+import {HorizontalTable} from 'cli-table3'
+import {command, metadata, option} from 'clime'
 import {
     AccountHttp,
     AccountInfo,
@@ -29,27 +29,27 @@ import {
     MultisigAccountInfo,
     MultisigHttp,
     PublicAccount,
-} from 'nem2-sdk';
-import {forkJoin, of} from 'rxjs';
-import {catchError, mergeMap, toArray} from 'rxjs/operators';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+} from 'nem2-sdk'
+import {forkJoin, of} from 'rxjs'
+import {catchError, mergeMap, toArray} from 'rxjs/operators'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string;
+    address: string
 }
 
 export class AccountInfoTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
     constructor(public readonly accountInfo: AccountInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
-        }) as HorizontalTable;
+        }) as HorizontalTable
         this.table.push(
             ['Address', accountInfo.address.pretty()],
             ['Address Height', accountInfo.addressHeight.toString()],
@@ -57,26 +57,26 @@ export class AccountInfoTable {
             ['Public Key Height', accountInfo.publicKeyHeight.toString()],
             ['Importance', accountInfo.importance.toString()],
             ['Importance Height', accountInfo.importanceHeight.toString()],
-        );
+        )
     }
 
     toString(): string {
-        let text = '';
-        text += '\n' + chalk.green('Account Information') + '\n';
-        text += this.table.toString();
-        return text;
+        let text = ''
+        text += '\n' + chalk.green('Account Information') + '\n'
+        text += this.table.toString()
+        return text
     }
 }
 
 export class BalanceInfoTable {
-    private readonly table: HorizontalTable;
+    private readonly table: HorizontalTable
 
     constructor(public readonly mosaicsInfo: MosaicAmountView[]) {
         if (mosaicsInfo.length > 0) {
             this.table = new Table({
                 style: {head: ['cyan']},
                 head: ['Mosaic Id', 'Relative Amount', 'Absolute Amount', 'Expiration Height'],
-            }) as HorizontalTable;
+            }) as HorizontalTable
             mosaicsInfo.map((mosaic: MosaicAmountView) => {
                 this.table.push(
                     [mosaic.fullName(),
@@ -85,73 +85,73 @@ export class BalanceInfoTable {
                         (mosaic.mosaicInfo.duration.compact() === 0 ?
                             'Never' : ((mosaic.mosaicInfo.height.add(mosaic.mosaicInfo.duration).toString()))),
                     ],
-                );
-            });
+                )
+            })
         }
     }
 
     toString(): string {
-        let text = '';
+        let text = ''
         if (this.table) {
-            text += '\n' + chalk.green('Balance Information') + '\n';
-            text += this.table.toString();
+            text += '\n' + chalk.green('Balance Information') + '\n'
+            text += this.table.toString()
         }
-        return text;
+        return text
     }
 }
 
 export class MultisigInfoTable {
-    private readonly multisigTable: HorizontalTable;
-    private readonly cosignatoriesTable: HorizontalTable;
-    private readonly cosignatoryOfTable: HorizontalTable;
+    private readonly multisigTable: HorizontalTable
+    private readonly cosignatoriesTable: HorizontalTable
+    private readonly cosignatoryOfTable: HorizontalTable
 
     constructor(public readonly multisigAccountInfo: MultisigAccountInfo | null) {
         if (multisigAccountInfo && multisigAccountInfo.cosignatories.length > 0) {
             this.multisigTable = new Table({
                 style: {head: ['cyan']},
                 head: ['Property', 'Value'],
-            }) as HorizontalTable;
+            }) as HorizontalTable
             this.multisigTable.push(
                 ['Min Approval', multisigAccountInfo.minApproval.toString()],
                 ['Min Removal', multisigAccountInfo.minRemoval.toString()],
-            );
+            )
             this.cosignatoriesTable = new Table({
                 style: {head: ['cyan']},
                 head: ['Public Key', 'Address'],
-            }) as HorizontalTable;
+            }) as HorizontalTable
             multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
                 this.cosignatoriesTable.push(
                     [publicAccount.publicKey, publicAccount.address.pretty()],
-                );
-            });
+                )
+            })
         }
         if (multisigAccountInfo && multisigAccountInfo.multisigAccounts.length > 0) {
             this.cosignatoryOfTable = new Table({
                 style: {head: ['cyan']},
                 head: ['Public Key', 'Address'],
-            }) as HorizontalTable;
+            }) as HorizontalTable
 
             multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
                 this.cosignatoryOfTable.push(
                     [publicAccount.publicKey, publicAccount.address.pretty()],
-                );
-            });
+                )
+            })
         }
     }
 
     toString(): string {
-        let text = '';
+        let text = ''
         if (this.multisigTable) {
-            text += chalk.green('\n' + 'Multisig Account Information') + '\n';
-            text += this.multisigTable.toString();
-            text += chalk.green('\n' + 'Cosignatories') + '\n';
-            text += this.cosignatoriesTable.toString();
+            text += chalk.green('\n' + 'Multisig Account Information') + '\n'
+            text += this.multisigTable.toString()
+            text += chalk.green('\n' + 'Cosignatories') + '\n'
+            text += this.cosignatoriesTable.toString()
         }
         if (this.cosignatoryOfTable) {
-            text += chalk.green('\n' + 'Is cosignatory of') + '\n';
-            text += this.cosignatoryOfTable.toString();
+            text += chalk.green('\n' + 'Is cosignatory of') + '\n'
+            text += this.cosignatoryOfTable.toString()
         }
-        return text;
+        return text
     }
 }
 
@@ -161,38 +161,38 @@ export class MultisigInfoTable {
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
+        this.spinner.start()
 
-        const profile = this.getProfile(options);
-        const address = new AddressResolver().resolve(options, profile);
+        const profile = this.getProfile(options)
+        const address = new AddressResolver().resolve(options, profile)
 
-        const accountHttp = new AccountHttp(profile.url);
-        const multisigHttp = new MultisigHttp(profile.url);
-        const mosaicHttp = new MosaicHttp(profile.url);
-        const mosaicService = new MosaicService(accountHttp, mosaicHttp);
+        const accountHttp = new AccountHttp(profile.url)
+        const multisigHttp = new MultisigHttp(profile.url)
+        const mosaicHttp = new MosaicHttp(profile.url)
+        const mosaicService = new MosaicService(accountHttp, mosaicHttp)
 
         forkJoin(
             accountHttp.getAccountInfo(address),
             mosaicService.mosaicsAmountViewFromAddress(address).pipe(mergeMap((_) => _), toArray()),
             multisigHttp.getMultisigAccountInfo(address).pipe(catchError((ignored) => of(null))))
             .subscribe((res) => {
-                const accountInfo = res[0];
-                const mosaicsInfo = res[1];
-                const multisigInfo = res[2];
+                const accountInfo = res[0]
+                const mosaicsInfo = res[1]
+                const multisigInfo = res[2]
                 console.log(
                     new AccountInfoTable(accountInfo).toString(),
                     new BalanceInfoTable(mosaicsInfo).toString(),
-                    new MultisigInfoTable(multisigInfo).toString());
-                this.spinner.stop(true);
+                    new MultisigInfoTable(multisigInfo).toString())
+                this.spinner.stop(true)
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 }

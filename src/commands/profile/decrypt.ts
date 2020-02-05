@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {command, metadata} from 'clime';
-import {AccountCredentialsTable} from '../create.profile.command';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import {command, metadata} from 'clime'
+import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 
 @command({
     description: 'View profile credentials',
@@ -25,14 +25,14 @@ import {ProfileCommand, ProfileOptions} from '../profile.command';
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: ProfileOptions) {
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const text = new AccountCredentialsTable(account).toString();
-        console.log(text);
+        const profile = this.getProfile(options)
+        const account = profile.decrypt(options)
+        const text = new AccountCredentialsTable(account).toString()
+        console.log(text)
     }
 }

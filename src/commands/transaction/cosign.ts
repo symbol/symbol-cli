@@ -14,107 +14,132 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
+ *
+ *
  */
-import chalk from 'chalk';
-import {command, metadata, option} from 'clime';
+import chalk from 'chalk'
+import {command, metadata, option} from 'clime'
 import {
     AccountHttp,
     Address,
     AggregateTransaction,
+    CosignatureSignedTransaction,
     CosignatureTransaction,
-    MultisigAccountInfo,
-    MultisigHttp,
     QueryParams,
     TransactionHttp,
-} from 'nem2-sdk';
-import {Observable, of} from 'rxjs';
-import {catchError, filter, map, mergeMap, toArray} from 'rxjs/operators';
-import {Profile} from '../../models/profile';
-import {HashResolver} from '../../resolvers/hash.resolver';
-import {AnnounceTransactionsOptions} from '../announce.transactions.command';
-import {ProfileCommand} from '../profile.command';
+} from 'nem2-sdk'
+import {filter, flatMap, switchMap} from 'rxjs/operators'
+import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {ProfileCommand} from '../../interfaces/profile.command'
+import {Profile} from '../../models/profile'
+import {HashResolver} from '../../resolvers/hash.resolver'
+import {MultisigService} from '../../services/multisig.service'
+import {SequentialFetcher} from '../../services/sequentialFetcher.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'h',
         description: 'Aggregate bonded transaction hash to be signed.',
     })
-    hash: string;
+    hash: string
 }
 
 @command({
     description: 'Cosign an aggregate bonded transaction',
 })
 export default class extends ProfileCommand {
+    private profile: Profile
+    private options: CommandOptions
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        this.spinner.start();
-        const profile = this.getProfile(options);
-        const account = profile.decrypt(options);
-        const accountHttp = new AccountHttp(profile.url);
-        const transactionHttp = new TransactionHttp(profile.url);
+        this.spinner.start()
+        this.options = options
+        this.profile = this.getProfile(this.options)
+
         const hash = new HashResolver()
-            .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ');
+            .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ')
 
-        this.getGraphAccounts(profile)
+        const sequentialFetcher = this.getSequentialFetcher()
+
+        new MultisigService(this.profile).getSelfAndChildrenAddresses()
             .pipe(
-                mergeMap((_) => _),
-                mergeMap((address) => accountHttp.getAccountPartialTransactions(address, new QueryParams(100))),
-                mergeMap((_) => _),
-                filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined &&
-                    _.transactionInfo.hash === hash), // Filter transaction
-                toArray(),
+                switchMap((addresses) => sequentialFetcher.getResults(addresses)),
+                flatMap((transaction: AggregateTransaction[]) => transaction),
+                filter((_) => _.transactionInfo !== undefined
+                    && _.transactionInfo.hash !== undefined
+                    && _.transactionInfo.hash === hash),
             )
-            .subscribe((transactions: AggregateTransaction[]) => {
-                if (!transactions.length) {
-                    this.spinner.stop(true);
-
-                    let text = '';
-                    text += chalk.red('Error');
-                    console.log(text, 'The profile', profile.name, 'cannot cosign the transaction with hash', hash, '.');
-                } else {
-
-                    const transaction = transactions[0];
-
-                    const cosignatureTransaction = CosignatureTransaction.create(transaction);
-                    const signedCosignature = account.signCosignatureTransaction(cosignatureTransaction);
-
-                    transactionHttp.announceAggregateBondedCosignature(signedCosignature).subscribe(
-                        () => {
-                            this.spinner.stop(true);
-                            console.log(chalk.green('Transaction cosigned and announced correctly.'));
-                        }, (err) => {
-                            this.spinner.stop(true);
-                            err = err.message ? JSON.parse(err.message) : err;
-                            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-                        });
-
+            .subscribe((transaction: AggregateTransaction) => {
+                sequentialFetcher.kill()
+                const signedCosignature = this.getSignedAggregateBondedCosignature(transaction, hash)
+                if (signedCosignature) {
+                    this.announceAggregateBondedCosignature(signedCosignature)
                 }
             }, (err) => {
-                this.spinner.stop(true);
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                this.spinner.stop(true)
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
     }
 
-    private getGraphAccounts(profile: Profile): Observable<Address[]> {
-        return new MultisigHttp(profile.url).getMultisigAccountGraphInfo(profile.address)
-            .pipe(
-                map((_) => {
-                    let addresses: Address[] = [];
-                    _.multisigAccounts.forEach((value: MultisigAccountInfo[], key: number) => {
-                        if (key <= 0) {
-                            addresses = addresses.concat(
-                                value.map((cosignatory) => cosignatory.account.address));
-                        }
-                    });
-                    return addresses;
-                }),
-                catchError((ignored) => of([profile.address])));
+    /**
+     * Creates a sequential fetcher instance loaded with a getAccountPartialTransactions function
+     * @private
+     * @returns {SequentialFetcher}
+     */
+    private getSequentialFetcher(): SequentialFetcher {
+        const networkCall = (address: Address) => new AccountHttp(this.profile.url)
+            .getAccountPartialTransactions(address, new QueryParams(100))
+            .toPromise()
+
+        return SequentialFetcher.create(networkCall)
+    }
+
+    /**
+     * Attempts to cosign an aggregated transaction cosignature
+     * @private
+     * @param {AggregateTransaction} transaction
+     * @param {string} hash of the transaction to be cosigned
+     * @returns {(CosignatureSignedTransaction | null)}
+     */
+    private getSignedAggregateBondedCosignature(
+        transaction: AggregateTransaction,
+        hash: string,
+    ): CosignatureSignedTransaction | null {
+        try {
+            const cosignatureTransaction = CosignatureTransaction.create(transaction)
+            const account = this.profile.decrypt(this.options)
+            return account.signCosignatureTransaction(cosignatureTransaction)
+        } catch (err) {
+            this.spinner.stop(true)
+            const text = `${chalk.red('Error')}`
+            console.log(text, 'The profile', this.profile.name, 'cannot cosign the transaction with hash', hash, '.')
+            return null
+        }
+    }
+
+    /**
+     * Announces aggregate bonded cosignature
+     * @private
+     * @param {CosignatureSignedTransaction} signedCosignature
+     * @returns {Promise<void>}
+     */
+    private async announceAggregateBondedCosignature(signedCosignature: CosignatureSignedTransaction): Promise<void> {
+        try {
+            await new TransactionHttp(this.profile.url)
+                .announceAggregateBondedCosignature(signedCosignature)
+                .toPromise()
+            this.spinner.stop(true)
+            console.log(chalk.green('Transaction cosigned and announced correctly.'))
+        } catch (err) {
+            this.spinner.stop(true)
+            err = err.message ? JSON.parse(err.message) : err
+            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+        }
     }
 }

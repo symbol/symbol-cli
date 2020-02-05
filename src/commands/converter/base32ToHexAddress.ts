@@ -15,17 +15,17 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime';
-import {Convert, RawAddress} from 'nem2-sdk';
-import {AddressResolver} from '../../resolvers/address.resolver';
-import {ProfileOptions} from '../profile.command';
+import {Command, command, metadata, option} from 'clime'
+import {Convert, RawAddress} from 'nem2-sdk'
+import {ProfileOptions} from '../../interfaces/profile.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Address.',
     })
-    address: string;
+    address: string
 }
 
 @command({
@@ -33,12 +33,12 @@ export class CommandOptions extends ProfileOptions {
 })
 export default class extends Command {
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: CommandOptions) {
-        const address = new AddressResolver().resolve(options);
-        console.log(Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())));
+        const address = new AddressResolver().resolve(options)
+        console.log(Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())))
     }
 }

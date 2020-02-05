@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
-import {command, metadata} from 'clime';
-import {Listener} from 'nem2-sdk';
-import {ProfileCommand, ProfileOptions} from '../profile.command';
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {Listener} from 'nem2-sdk'
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 
 @command({
     description: 'Monitor new blocks',
@@ -26,27 +26,27 @@ import {ProfileCommand, ProfileOptions} from '../profile.command';
 export default class extends ProfileCommand {
 
     constructor() {
-        super();
+        super()
     }
 
     @metadata
     execute(options: ProfileOptions) {
-        const profile = this.getProfile(options);
+        const profile = this.getProfile(options)
 
-        console.log(`Using ${profile.url}`);
-        const listener = new Listener(profile.url);
+        console.log(`Using ${profile.url}`)
+        const listener = new Listener(profile.url)
         listener.open().then(() => {
             listener.newBlock().subscribe((block) => {
-                console.log('\n');
-                console.log(block);
+                console.log('\n')
+                console.log(block)
             }, (err) => {
-                listener.close();
-                err = err.message ? JSON.parse(err.message) : err;
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err);
-            });
+                listener.close()
+                err = err.message ? JSON.parse(err.message) : err
+                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            })
         }, (err) => {
-            listener.close();
-            console.log(chalk.red('Error'), err);
-        });
+            listener.close()
+            console.log(chalk.red('Error'), err)
+        })
     }
 }

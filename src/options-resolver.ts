@@ -16,32 +16,32 @@
  *
  */
 
-import * as readlineSync from 'readline-sync';
+import * as readlineSync from 'readline-sync'
 
 export const OptionsResolver = (options: any,
                                 key: string,
                                 secondSource: () => string | undefined,
                                 promptText: string,
                                 readlineDependency?: any,
-                                hide?: boolean) => {
-    const readline = readlineDependency || readlineSync;
-    const hideEchoBack = hide ? true : false;
+                                hide?: boolean): any => {
+    const readline = readlineDependency || readlineSync
+    const hideEchoBack = hide ? true : false
     return options[key] !== undefined ? options[key] : (secondSource() ||
-        readline.question(promptText, {hideEchoBack}));
-};
+        readline.question(promptText, {hideEchoBack}))
+}
 
 export const OptionsChoiceResolver = (options: any,
                                       key: string,
                                       promptText: string,
                                       choices: string[],
-                                      readlineDependency?: any) => {
-    const readline = readlineDependency || readlineSync;
+                                      readlineDependency?: any): any => {
+    const readline = readlineDependency || readlineSync
     if (options[key] !== undefined) {
-        return options[key];
+        return options[key]
     }
-    const choiceIndex = readline.keyInSelect(choices, promptText);
+    const choiceIndex = readline.keyInSelect(choices, promptText)
     if (-1 === choiceIndex) {
-        return process.exit();
+        return process.exit()
     }
-    return choiceIndex;
-};
+    return choiceIndex
+}

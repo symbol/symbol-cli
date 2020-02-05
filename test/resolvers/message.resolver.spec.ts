@@ -15,33 +15,15 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {MessageResolver, RecipientPublicKeyResolver} from '../../src/resolvers/message.resolver';
+import {expect} from 'chai'
+import {MessageResolver} from '../../src/resolvers/message.resolver'
 
 describe('Message resolver', () => {
 
     it('should return message', () => {
-        const message = '10';
-        const profileOptions = {message} as any;
+        const message = '10'
+        const profileOptions = {message} as any
         expect(new MessageResolver().resolve(profileOptions))
-            .to.be.equal('10');
-    });
-});
-
-describe('Recipient public key resolver', () => {
-
-    it('should return public account', () => {
-        const recipientPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
-        const profileOptions = {recipientPublicKey} as any;
-        expect(new RecipientPublicKeyResolver().resolve(profileOptions).publicKey)
-            .to.be.equal(recipientPublicKey);
-    });
-
-    it('should throw error if invalid public key', () => {
-        const recipientPublicKey = '00000';
-        const profileOptions = {recipientPublicKey} as any;
-        expect(() => new RecipientPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error);
-    });
-
-});
+            .to.be.equal('10')
+    })
+})

@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import {MosaicRestrictionType} from 'nem2-sdk';
-import {isNumeric} from 'rxjs/internal-compatibility';
-import {ProfileOptions} from '../commands/profile.command';
-import {Profile} from '../models/profile';
-import {OptionsChoiceResolver} from '../options-resolver';
-import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator';
-import {Resolver} from './resolver';
+import {MosaicRestrictionType} from 'nem2-sdk'
+import {isNumeric} from 'rxjs/internal-compatibility'
+import {ProfileOptions} from '../interfaces/profile.command'
+import {Profile} from '../models/profile'
+import {OptionsChoiceResolver} from '../options-resolver'
+import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator'
+import {Resolver} from './resolver'
 
 /**
  * Restriction type resolver
@@ -32,21 +32,22 @@ export class RestrictionTypeResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @return {number}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): any {
-        const choices = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE'];
+    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
+        const choices = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE']
         const index = OptionsChoiceResolver(options,
             'newRestrictionType',
             altText ? altText : 'Select the new restriction type: ',
             choices,
-        );
-        let restrictionName;
+        )
+        let restrictionName
         if (isNumeric(index)) {
-            restrictionName = choices[+index] as any;
+            restrictionName = choices[+index] as any
         } else {
-            restrictionName = index;
+            restrictionName = index
         }
-        new MosaicRestrictionTypeValidator().validate(restrictionName);
-        return MosaicRestrictionType[restrictionName];
+        new MosaicRestrictionTypeValidator().validate(restrictionName)
+        return parseInt(MosaicRestrictionType[restrictionName], 10)
     }
 }

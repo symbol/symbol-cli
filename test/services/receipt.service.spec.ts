@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai';
-import {ReceiptService} from '../../src/services/receipt.service';
+import {expect} from 'chai'
+import {ReceiptService} from '../../src/services/receipt.service'
 
 describe('Receipt service', () => {
 
     it('should create receipt service', () => {
-        expect(new ReceiptService()).to.not.be.equal(undefined);
-    });
+        expect(new ReceiptService()).to.not.be.equal(undefined)
+    })
 
-});
+})
