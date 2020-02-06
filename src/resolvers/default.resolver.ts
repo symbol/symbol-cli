@@ -1,4 +1,3 @@
-import * as readlineSync from 'readline-sync'
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
 import {Profile} from '../models/profile'
 import {Resolver} from './resolver'

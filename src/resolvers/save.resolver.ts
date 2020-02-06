@@ -1,4 +1,3 @@
-import * as readlineSync from 'readline-sync'
 import {CommandOptions} from '../commands/account/generate'
 import {Profile} from '../models/profile'
 import {Resolver} from './resolver'

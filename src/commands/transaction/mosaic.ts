@@ -27,7 +27,6 @@ import {
     MosaicSupplyChangeTransaction,
     UInt64,
 } from 'nem2-sdk'
-import * as readlineSync from 'readline-sync'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AmountResolver} from '../../resolvers/amount.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -36,6 +35,7 @@ import {DurationResolver} from '../../resolvers/duration.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import { OptionsConfirmResolver } from '../../options-resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -103,7 +103,7 @@ export default class extends AnnounceTransactionsCommand {
         const nonce = MosaicNonce.createRandom()
         let blocksDuration
         if (!options.nonExpiring) {
-            if (!readlineSync.keyInYN('Do you want a non-expiring mosaic?')) {
+            if (!(await OptionsConfirmResolver('Do you want a non-expiring mosaic?'))) {
                 blocksDuration = await new DurationResolver().resolve(options)
             }
         }
