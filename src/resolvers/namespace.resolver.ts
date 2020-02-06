@@ -19,12 +19,33 @@ export class NamespaceNameResolver {
      * @param {string} altKey - Alternative key.
      * @returns {NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<NamespaceId> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<NamespaceId> {
         const resolution = (await OptionsResolver(options,
-        'namespaceName',
+        altKey ? altKey : 'namespaceName',
         () =>  undefined,
         altText ? altText : 'Enter the namespace name: ')).trim()
         return new NamespaceId(resolution)
+    }
+}
+
+/**
+ * Namespace name string resolver
+ */
+export class NamespaceNameStringResolver {
+    /**
+     * Resolves a namespace name provided by the user.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
+     * @returns {string}
+     */
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+        const resolution = (await OptionsResolver(options,
+        altKey ? altKey : 'namespaceName',
+        () =>  undefined,
+        altText ? altText : 'Enter the namespace name: ')).trim()
+        return resolution
     }
 }
 

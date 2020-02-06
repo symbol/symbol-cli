@@ -21,7 +21,7 @@ import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../in
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {DurationResolver} from '../../resolvers/duration.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {NamespaceNameResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
+import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {OptionsResolver} from '../../options-resolver'
 
@@ -74,11 +74,7 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options)
         const account = await profile.decrypt(options)
 
-        const namespaceId = await OptionsResolver(options,
-            'name',
-            () => undefined,
-            'Enter namespace name: ')
-        const name = namespaceId.fullName ? namespaceId.fullName : ''
+        const name = await new NamespaceNameStringResolver().resolve(options, undefined, undefined, 'name')
         const namespaceType = await new NamespaceTypeResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
 
