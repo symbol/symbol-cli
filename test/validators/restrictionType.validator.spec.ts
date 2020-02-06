@@ -19,18 +19,19 @@ import {expect} from 'chai'
 import {
     MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator'
+import { MosaicRestrictionType } from 'nem2-sdk'
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {
-        const mosaic = 'EQ'
-        expect(new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic }))
+        const mosaic = MosaicRestrictionType.EQ
+        expect(new MosaicRestrictionTypeValidator().validate(mosaic))
             .to.be.equal(undefined)
     })
 
     it('invalid mosaic restriction type', () => {
-        const mosaic = 'error'
+        const mosaic = 9999999999999
         expect(() => {
-            new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic })
+            new MosaicRestrictionTypeValidator().validate(mosaic)
         }).to.throws('Wrong mosaic restriction type')
     })
 })
