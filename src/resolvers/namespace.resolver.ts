@@ -2,9 +2,10 @@ import chalk from 'chalk'
 import {NamespaceId, NamespaceRegistrationType, UInt64} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
-import {OptionsResolver} from '../options-resolver'
+import {OptionsResolver, OptionsConfirmResolver} from '../options-resolver'
 import {NamespaceIdValidator} from '../validators/namespaceId.validator'
 import {Resolver} from './resolver'
+import {CommandOptions} from '../commands/transaction/namespace'
 /**
  * Namespace name resolver
  */
@@ -52,5 +53,32 @@ export class NamespaceIdResolver implements Resolver {
         }
         const namespaceIdUInt64 = UInt64.fromHex(resolution)
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher])
+    }
+}
+
+/**
+ * Namespace type resolver
+ */
+export class NamespaceTypeResolver  implements Resolver {
+
+    /**
+     * Resolves the namespace type.
+     * @param {ProfileOptions} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @returns {NamespaceRegistrationType}
+     */
+    async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<NamespaceRegistrationType> {
+        if (!options.subnamespace && !options.rootnamespace) {
+            const resolution = await OptionsConfirmResolver(altText ? altText : 'Do you want to create a root namespace?')
+            if (resolution) {
+                options.rootnamespace = true
+            }
+        }
+        let namespaceType = NamespaceRegistrationType.SubNamespace
+        if (options.rootnamespace) {
+            namespaceType = NamespaceRegistrationType.RootNamespace
+        }
+        return namespaceType
     }
 }
