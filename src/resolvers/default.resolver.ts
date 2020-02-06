@@ -18,7 +18,7 @@ export class DefaultResolver implements Resolver {
      */
     async resolve(options: CreateProfileOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
         if (!options.default) {
-            const resolution = await OptionsConfirmResolver(altText ? altText : 'Do you want to set the account as the default profile?');
+            const resolution = await OptionsConfirmResolver(altText ? altText : 'Do you want to set the account as the default profile?')
             if (resolution) {
                 options.default = true
             }

@@ -31,9 +31,7 @@ export class NetworkResolver implements Resolver {
             altText ? altText : 'Select the network type: ',
             choices,
         ))
-        const networkFriendlyName = choices.find((item) => {
-            return item.value === index
-        })?.title as any
+        const networkFriendlyName = choices.find((item) => item.value === index)?.title as any
         try {
             new NetworkValidator().validate(networkFriendlyName)
         } catch (err) {

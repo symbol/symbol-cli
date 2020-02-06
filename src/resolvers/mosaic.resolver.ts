@@ -122,9 +122,9 @@ export class MosaicFlagsResolver implements Resolver {
      * @returns {MosaicFlags}
      */
     async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<MosaicFlags> {
-        const supplyMutableResolution = await OptionsConfirmResolver('Do you want mosaic to have supply mutable?');
-        const transferableResolution = await OptionsConfirmResolver('Do you want mosaic to be transferable?');
-        const restrictableResolution = await OptionsConfirmResolver('Do you want mosaic to be restrictable?');
+        const supplyMutableResolution = await OptionsConfirmResolver('Do you want mosaic to have supply mutable?')
+        const transferableResolution = await OptionsConfirmResolver('Do you want mosaic to be transferable?')
+        const restrictableResolution = await OptionsConfirmResolver('Do you want mosaic to be restrictable?')
 
         return MosaicFlags.create(
             options.supplyMutable ? options.supplyMutable : supplyMutableResolution,

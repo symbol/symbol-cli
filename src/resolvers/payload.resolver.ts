@@ -17,7 +17,10 @@ export class PayloadResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Transaction}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Transaction | InnerTransaction> {
+    async resolve(options: ProfileOptions,
+                secondSource?: Profile,
+                altText?: string,
+                altKey?: string): Promise<Transaction | InnerTransaction> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'payload',
             () => undefined,

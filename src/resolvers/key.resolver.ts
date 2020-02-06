@@ -23,7 +23,7 @@ export class KeyResolver implements Resolver {
             altText : 'Enter a UInt64 key in hexadecimal format.' +
                 ' You can use the command \'nem2-cli converter stringtokey\' ' +
                 'to turn an string into a valid key: ')
-        
+
         try {
             new KeyValidator().validate(resolution)
         } catch (err) {

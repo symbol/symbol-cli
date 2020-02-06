@@ -26,9 +26,9 @@ import {PasswordResolver} from '../resolvers/password.resolver'
  * Profile data transfer object.
  */
 interface ProfileDTO {
-    simpleWallet: ISimpleWalletDTO
-    url: string
-    networkGenerationHash: string
+    simpleWallet: ISimpleWalletDTO;
+    url: string;
+    networkGenerationHash: string;
 }
 
 /**

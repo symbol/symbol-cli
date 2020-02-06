@@ -90,7 +90,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(mosaicAddressRestrictionTransaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

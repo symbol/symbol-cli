@@ -15,5 +15,5 @@ export interface Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {any}
      */
-    resolve(options: Options, secondSource?: any, altText?: string, altKey?: string): any
+    resolve(options: Options, secondSource?: any, altText?: string, altKey?: string): any;
 }

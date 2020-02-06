@@ -53,7 +53,7 @@ export const OptionsResolver = async (options: any,
                                       key: string,
                                       secondSource: () => string | undefined,
                                       promptText: string,
-                                      type: PromptType = 'text'): Promise<string> => {
+                                      type: PromptType = 'text') => {
     if (!['text', 'password', 'number'].includes(type)) {
         console.log(chalk.red('ERR'), 'Invalid options resolver type')
         return process.exit()
@@ -68,8 +68,8 @@ export const OptionsResolver = async (options: any,
 
 export const OptionsConfirmResolver = async (promptText: string,
                                              type: PromptType = 'confirm',
-                                             initial: boolean = true,
-                                             name: string = 'value'): Promise<boolean> => {
+                                             initial = true,
+                                             name = 'value') => {
     const response = await prompts({
         type,
         name,

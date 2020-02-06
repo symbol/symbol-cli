@@ -90,7 +90,7 @@ export default class extends AnnounceTransactionsCommand {
 
             new TransactionView(aggregateTransaction, signedTransaction).print()
 
-            const shouldAnnounce = new AnnounceResolver().resolve(options)
+            const shouldAnnounce = await new AnnounceResolver().resolve(options)
             if (shouldAnnounce && options.sync) {
                 this.announceTransactionSync(
                     signedTransaction,
@@ -125,7 +125,7 @@ export default class extends AnnounceTransactionsCommand {
             new TransactionView(hashLockTransaction, signedHashLockTransaction).print()
             new TransactionView(aggregateTransaction, signedTransaction).print()
 
-            const shouldAnnounce = new AnnounceResolver().resolve(options)
+            const shouldAnnounce = await new AnnounceResolver().resolve(options)
             if (shouldAnnounce) {
                 this.announceAggregateTransaction(
                     signedHashLockTransaction,

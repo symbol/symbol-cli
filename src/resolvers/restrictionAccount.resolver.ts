@@ -35,9 +35,7 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
             console.log(chalk.red('ERR'), 'Unknown restriction flag.')
             return process.exit()
         }
-        const accountRestriction = choices.find((item) => {
-            return item.value === index
-        })?.title as any;
+        const accountRestriction = choices.find((item) => item.value === index)?.title as any
         return AccountRestrictionFlags[accountRestriction]
     }
 }

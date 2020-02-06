@@ -48,7 +48,7 @@ export default class extends CreateProfileCommand {
     @metadata
     async execute(options: CommandOptions) {
         const networkType = await new NetworkResolver().resolve(options)
-        const save = new SaveResolver().resolve(options)
+        const save = await new SaveResolver().resolve(options)
 
         const account = Account.generateNewAccount(networkType)
         console.log(new AccountCredentialsTable(account).toString())

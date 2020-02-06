@@ -31,9 +31,7 @@ export class HashAlgorithmResolver implements Resolver {
             altText ? altText : 'Select the algorithm used to hash the proof: ',
             choices))
 
-        const hashAlgorithm = choices.find((item) => {
-            return item.value === index
-        })?.title as any
+        const hashAlgorithm = choices.find((item) => item.value === index)?.title as any
         try {
             new HashAlgorithmValidator().validate(hashAlgorithm)
         } catch (err) {
