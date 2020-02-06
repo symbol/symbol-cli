@@ -31,7 +31,7 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    async execute(options: CommandOptions) {
+    execute(options: CommandOptions) {
         let message = ''
         if (options.profile) {
            const profile = this.getProfile(options)

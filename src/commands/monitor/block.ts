@@ -30,7 +30,7 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    async execute(options: ProfileOptions) {
+    execute(options: ProfileOptions) {
         const profile = this.getProfile(options)
 
         console.log(`Using ${profile.url}`)

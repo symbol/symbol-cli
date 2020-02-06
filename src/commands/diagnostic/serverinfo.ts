@@ -53,7 +53,7 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    async execute(options: ProfileOptions) {
+    execute(options: ProfileOptions) {
         this.spinner.start()
 
         const profile = this.getProfile(options)

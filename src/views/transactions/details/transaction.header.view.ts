@@ -2,7 +2,7 @@
  *
  * Copyright 2018-present NEM
  *
- * Licensed under the Apache License, Version 2.0 (the "License")
+ * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -22,12 +22,12 @@ import {CellRecord} from './transaction.view'
 import {transactionNameFromType} from './transactionNameFromType'
 
 export interface ITransactionHeaderView extends CellRecord {
-  'Title': Cell
-  'Hash': string | null
-  'Network type': string
-  'Deadline': string
-  'Max fee': string
-  'Signer': string | null
+  'Title': Cell;
+  'Hash': string | null;
+  'Network type': string;
+  'Deadline': string;
+  'Max fee': string;
+  'Signer': string | null;
 }
 
 export class TransactionHeaderView {

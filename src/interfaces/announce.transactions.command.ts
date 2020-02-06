@@ -43,7 +43,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @param {SignedTransaction} signedTransaction
      * @param {string} url - Node URL.
      */
-    protected async announceTransaction(signedTransaction: SignedTransaction, url: string) {
+    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
         this.spinner.start()
         const transactionHttp = new TransactionHttp(url)
         transactionHttp
