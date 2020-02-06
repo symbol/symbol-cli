@@ -17,15 +17,15 @@
  */
 import chalk from 'chalk'
 import * as prompts from 'prompts'
-import { Choice, PromptType } from 'prompts'
+import {Choices, InputOptionType, SelectOptionType, ConfirmOptionType} from './interfaces/options.resolver'
 
 export const EXIT_FLAG = '@EXIT'
 
 export const OptionsChoiceResolver = async (options: any,
                                             key: string,
                                             promptText: string,
-                                            choices: Choice[],
-                                            type: PromptType = 'select') => {
+                                            choices: Choices[],
+                                            type: SelectOptionType = 'select') => {
     if (!['select', 'multiselect'].includes(type)) {
         console.log(chalk.red('ERR'), 'Invalid options choice resolver type')
         return process.exit()
@@ -53,7 +53,7 @@ export const OptionsResolver = async (options: any,
                                       key: string,
                                       secondSource: () => string | undefined,
                                       promptText: string,
-                                      type: PromptType = 'text') => {
+                                      type: InputOptionType = 'text') => {
     if (!['text', 'password', 'number'].includes(type)) {
         console.log(chalk.red('ERR'), 'Invalid options resolver type')
         return process.exit()
@@ -67,7 +67,7 @@ export const OptionsResolver = async (options: any,
 }
 
 export const OptionsConfirmResolver = async (promptText: string,
-                                             type: PromptType = 'confirm',
+                                             type: ConfirmOptionType = 'confirm',
                                              initial = true,
                                              name = 'value') => {
     const response = await prompts({

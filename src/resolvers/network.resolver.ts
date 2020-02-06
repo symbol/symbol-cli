@@ -21,10 +21,10 @@ export class NetworkResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const choices = [
-            {title: 'MAIN_NET', value: 0},
-            {title: 'TEST_NET', value: 1},
-            {title: 'MIJIN', value: 2},
-            {title: 'MIJIN_TEST', value: 3},
+            {title: 'MAIN_NET', value: NetworkType.MAIN_NET},
+            {title: 'TEST_NET', value: NetworkType.TEST_NET},
+            {title: 'MIJIN', value: NetworkType.MIJIN},
+            {title: 'MIJIN_TEST', value: NetworkType.MIJIN_TEST},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'network',

@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk'
+import {AccountRestrictionTransaction, AccountRestrictionFlags, Deadline} from 'nem2-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
@@ -24,18 +24,24 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {ActionType} from '../../interfaces/action.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flags.' +
-            '(0: AllowOutgoingAddress, 1: BlockOutgoingAddress, 2: AllowIncomingAddress, 3: BlockIncomingAddress)',
+        description: 'Restriction flags.(' +
+            AccountRestrictionFlags.AllowOutgoingAddress + ': AllowOutgoingAddress, ' +
+            AccountRestrictionFlags.BlockOutgoingAddress + ': BlockOutgoingAddress, ' +
+            AccountRestrictionFlags.AllowIncomingAddress + ': AllowIncomingAddress, ' +
+            AccountRestrictionFlags.BlockIncomingAddress + ': BlockIncomingAddress)',
     })
     flags: number
 
     @option({
         flag: 'a',
-        description: 'Modification action. (1: Add, 0: Remove).',
+        description: 'Modification action. (' +
+            ActionType.Add + ': Add, ' +
+            ActionType.Remove + ': Remove).',
     })
     action: number
 
@@ -67,8 +73,8 @@ export default class extends AnnounceTransactionsCommand {
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === 1) ? [address] : [],
-            (action === 0) ? [address] : [],
+            (action === ActionType.Add) ? [address] : [],
+            (action === ActionType.Remove) ? [address] : [],
             profile.networkType,
             maxFee)
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash)

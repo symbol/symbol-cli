@@ -167,10 +167,8 @@ export default class extends ProfileCommand {
     @metadata
     async execute(options: CommandOptions) {
         this.spinner.start()
-
         const profile = this.getProfile(options)
         const address = await new AddressResolver().resolve(options, profile)
-
         const accountHttp = new AccountHttp(profile.url)
         const multisigHttp = new MultisigHttp(profile.url)
         const mosaicHttp = new MosaicHttp(profile.url)

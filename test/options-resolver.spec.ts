@@ -30,16 +30,6 @@ describe('OptionsResolver', () => {
         expect(value).to.be.equal(0)
     })
 
-    // TODO: To be finish
-    // it('should return the value inserted via console if it is not in the command options object', async () => {
-    //     const promptText = 'Insert your name'
-    //     const readlineSyncMock = {
-    //         question : (text: string) => text === promptText ? 'nem' : undefined,
-    //     }
-    //     const value = await OptionsResolver({}, 'name', () => undefined, promptText, readlineSyncMock)
-    //     expect(value).to.be.equal('nem')
-    // })
-
     it('should return the secondSource value if command options object have not it and secondValue is not undefined', async () => {
         const value = await OptionsResolver({}, 'name', () => 'nem', 'Insert your name')
         expect(value).to.be.equal('nem')
@@ -55,17 +45,4 @@ describe('OptionsChoicesResolver', () => {
         const value = await OptionsChoiceResolver({name: 'nem'}, 'name', 'Select name: ', choices)
         expect(value).to.be.equal('nem')
     })
-
-    // TODO: finish this test
-    // it('should return the value inserted via console if it is not in the command options object', () => {
-    //     const choices = [
-    //         {title: 'nem', value: 0},
-    //         {title: 'mijin', value: 1},
-    //     ]
-    //     const readlineSyncMock = {
-    //         keyInSelect : (ignored: number) => 0,
-    //     }
-    //     const index = OptionsChoiceResolver({}, 'name', 'Select name: ', choices, readlineSyncMock)
-    //     expect(choices[index]).to.be.equal('nem')
-    // })
 })

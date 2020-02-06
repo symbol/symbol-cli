@@ -17,7 +17,6 @@
  */
 import chalk from 'chalk'
 import {MosaicRestrictionType} from 'nem2-sdk'
-import {isNumeric} from 'rxjs/internal-compatibility'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
@@ -38,13 +37,13 @@ export class RestrictionTypeResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'NONE', value: 0},
-            {title: 'EQ', value: 1},
-            {title: 'NE', value: 2},
-            {title: 'LT', value: 3},
-            {title: 'LE', value: 4},
-            {title: 'GT', value: 5},
-            {title: 'GE', value: 6},
+            {title: 'NONE', value: MosaicRestrictionType.NONE},
+            {title: 'EQ', value: MosaicRestrictionType.EQ},
+            {title: 'NE', value: MosaicRestrictionType.NE},
+            {title: 'LT', value: MosaicRestrictionType.LT},
+            {title: 'LE', value: MosaicRestrictionType.LE},
+            {title: 'GT', value: MosaicRestrictionType.GT},
+            {title: 'GE', value: MosaicRestrictionType.GE},
 
         ]
         const index = +(await OptionsChoiceResolver(options,
@@ -52,18 +51,12 @@ export class RestrictionTypeResolver implements Resolver {
             altText ? altText : 'Select the new restriction type: ',
             choices,
         ))
-        let restrictionName
-        if (isNumeric(index)) {
-            restrictionName = choices[+index] as any
-        } else {
-            restrictionName = index
-        }
         try {
-            new MosaicRestrictionTypeValidator().validate(restrictionName)
+            new MosaicRestrictionTypeValidator().validate(index)
         } catch (err) {
             console.log(chalk.red('ERR'), err)
             return process.exit()
         }
-        return parseInt(MosaicRestrictionType[restrictionName], 10)
+        return index
     }
 }

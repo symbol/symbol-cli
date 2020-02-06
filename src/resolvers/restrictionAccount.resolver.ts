@@ -3,8 +3,8 @@ import {AccountRestrictionFlags} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
-import {BinaryValidator} from '../validators/binary.validator'
 import {Resolver} from './resolver'
+import {AccountRestrictionFlagsValidator} from '../validators/restrictionType.validator'
 
 /**
  * Restriction account address flags resolver
@@ -19,24 +19,25 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'AllowOutgoingAddress', value: 0},
-            {title: 'BlockOutgoingAddress', value: 1},
-            {title: 'AllowIncomingAddress', value: 2},
-            {title: 'BlockIncomingAddress', value: 3},
+            {title: 'AllowOutgoingAddress', value: AccountRestrictionFlags.AllowOutgoingAddress},
+            {title: 'BlockOutgoingAddress', value: AccountRestrictionFlags.BlockOutgoingAddress},
+            {title: 'AllowIncomingAddress', value: AccountRestrictionFlags.AllowIncomingAddress},
+            {title: 'BlockIncomingAddress', value: AccountRestrictionFlags.BlockIncomingAddress},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'flags',
             altText ? altText : 'Select the restriction flags: ',
             choices,
         ))
-        if (index < 0 || index > 3) {
-            console.log(chalk.red('ERR'), 'Unknown restriction flag.')
+        try {
+            new AccountRestrictionFlagsValidator().validate(index)
+        } catch (err) {
+            console.log(chalk.red('ERR'), err)
             return process.exit()
         }
-        const accountRestriction = choices.find((item) => item.value === index)?.title as any
-        return AccountRestrictionFlags[accountRestriction]
+        return index
     }
 }
 
@@ -53,10 +54,10 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'AllowMosaic', value: 0},
-            {title: 'BlockMosaic', value: 1},
+            {title: 'AllowMosaic', value: AccountRestrictionFlags.AllowMosaic},
+            {title: 'BlockMosaic', value: AccountRestrictionFlags.BlockMosaic},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'flags',
@@ -64,12 +65,12 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
             choices,
         ))
         try {
-            new BinaryValidator().validate(index)
+            new AccountRestrictionFlagsValidator().validate(index)
         } catch (err) {
             console.log(chalk.red('ERR'), err)
             return process.exit()
         }
-        return AccountRestrictionFlags[choices[index] as any]
+        return index
     }
 }
 
@@ -88,8 +89,8 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'AllowOutgoingTransactionType', value: 0},
-            {title: 'BlockOutgoingTransactionType', value: 1},
+            {title: 'AllowOutgoingTransactionType', value: AccountRestrictionFlags.AllowOutgoingTransactionType},
+            {title: 'BlockOutgoingTransactionType', value: AccountRestrictionFlags.BlockOutgoingTransactionType},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'flags',
@@ -97,11 +98,11 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
             choices,
         ))
         try {
-            new BinaryValidator().validate(index)
+            new AccountRestrictionFlagsValidator().validate(index)
         } catch (err) {
             console.log(chalk.red('ERR'), err)
             return process.exit()
         }
-        return parseInt(AccountRestrictionFlags[choices[index] as any], 10)
+        return index
     }
 }

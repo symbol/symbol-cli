@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk'
+import {AccountRestrictionTransaction, AccountRestrictionFlags, Deadline} from 'nem2-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -24,18 +24,22 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {ActionType} from '../../interfaces/action.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flags.' +
-            '(0: AllowMosaic, 1: BlockMosaic)',
+        description: 'Restriction flags.(' +
+            AccountRestrictionFlags.AllowMosaic + ': AllowMosaic, ' +
+            AccountRestrictionFlags.BlockMosaic + ': BlockMosaic)',
     })
     flags: number
 
     @option({
         flag: 'a',
-        description: 'Modification action. (1: Add, 0: Remove).',
+        description: 'Modification action. (' +
+            ActionType.Add + ': Add, ' +
+            ActionType.Remove + ': Remove).',
     })
     action: number
 
@@ -66,8 +70,8 @@ export default class extends AnnounceTransactionsCommand {
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === 1) ? [mosaic] : [],
-            (action === 0) ? [mosaic] : [],
+            (action === ActionType.Add) ? [mosaic] : [],
+            (action === ActionType.Remove) ? [mosaic] : [],
             profile.networkType,
             maxFee)
 

@@ -30,6 +30,7 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {ActionType} from '../../interfaces/action.resolver'
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -91,8 +92,8 @@ export default class extends AnnounceTransactionsCommand {
             Deadline.create(),
             options.minApprovalDelta,
             options.minRemovalDelta,
-            (action === 1) ? cosignatories : [],
-            (action === 0) ? cosignatories : [],
+            (action === ActionType.Add) ? cosignatories : [],
+            (action === ActionType.Remove) ? cosignatories : [],
             profile.networkType)
 
         const aggregateTransaction = AggregateTransaction.createBonded(

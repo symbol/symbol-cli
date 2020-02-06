@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'nem2-sdk'
+import {Deadline, MosaicRestrictionTransactionService, MosaicRestrictionType, NamespaceHttp, RestrictionMosaicHttp} from 'nem2-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {KeyResolver} from '../../resolvers/key.resolver'
@@ -54,7 +54,14 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'T',
-        description: 'New restriction type.',
+        description: 'New restriction type. (' +
+            MosaicRestrictionType.NONE + ': NONE, ' +
+            MosaicRestrictionType.EQ + ': EQ-equal,' +
+            MosaicRestrictionType.GE + ': GE-greater than or equal,' +
+            MosaicRestrictionType.GT + ': GT-greater than,' +
+            MosaicRestrictionType.LE + ': LE-less than or equal,' +
+            MosaicRestrictionType.LT + ': LT-less than,' +
+            MosaicRestrictionType.NE + ': NE-not equal )',
     })
     newRestrictionType: string
 }

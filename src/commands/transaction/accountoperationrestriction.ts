@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'nem2-sdk'
+import {AccountRestrictionTransaction, AccountRestrictionFlags, Deadline} from 'nem2-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -24,17 +24,22 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {ActionType} from '../../interfaces/action.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flag. (0: AllowOutgoingTransactionType, 1: BlockOutgoingTransactionType)',
+        description: 'Restriction flag. (' +
+            AccountRestrictionFlags.AllowOutgoingTransactionType + ': AllowOutgoingTransactionType, ' +
+            AccountRestrictionFlags.BlockOutgoingTransactionType + ': BlockOutgoingTransactionType)',
     })
     flags: number
 
     @option({
         flag: 'a',
-        description: 'Modification action. (1: Add, 0: Remove).',
+        description: 'Modification action. (' +
+            ActionType.Add + ': Add, ' +
+            ActionType.Remove + ': Remove).',
     })
     action: number
 
@@ -66,8 +71,8 @@ export default class extends AnnounceTransactionsCommand {
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === 1) ? [transactionType] : [],
-            (action === 0) ? [transactionType] : [],
+            (action === ActionType.Add) ? [transactionType] : [],
+            (action === ActionType.Remove) ? [transactionType] : [],
             profile.networkType,
             maxFee)
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash)

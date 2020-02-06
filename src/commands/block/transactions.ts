@@ -60,7 +60,6 @@ export default class extends ProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-
         this.spinner.start()
         const profile = this.getProfile(options)
         const height = await new HeightResolver().resolve(options)

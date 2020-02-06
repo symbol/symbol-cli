@@ -4,6 +4,9 @@ import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {BinaryValidator} from '../validators/binary.validator'
 import {Resolver} from './resolver'
+import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {ActionType} from '../interfaces/action.resolver'
+import {ActionValidator, LinkActionValidator, MosaicSupplyChangeActionValidator} from '../validators/action.validator'
 
 /**
  * Link action resolver
@@ -20,8 +23,8 @@ export class ActionResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'Remove', value: 0},
-            {title: 'Add', value: 1},
+            {title: 'Remove', value: ActionType.Remove},
+            {title: 'Add', value: ActionType.Add},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
@@ -29,7 +32,7 @@ export class ActionResolver implements Resolver {
             choices,
         ))
         try {
-            new BinaryValidator().validate(index)
+            new ActionValidator().validate(index)
         } catch (err) {
             console.log(chalk.red('ERR'), err)
             return process.exit()
@@ -53,8 +56,8 @@ export class LinkActionResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'Unlink', value: 0},
-            {title: 'Link', value: 1},
+            {title: 'Unlink', value: LinkAction.Unlink},
+            {title: 'Link', value: LinkAction.Link},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
@@ -62,7 +65,7 @@ export class LinkActionResolver implements Resolver {
             choices,
         ))
         try {
-            new BinaryValidator().validate(index)
+            new LinkActionValidator().validate(index)
         } catch (err) {
             console.log(chalk.red('ERR'), err)
             return process.exit()
@@ -83,8 +86,8 @@ export class SupplyActionResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'Decrease', value: 0},
-            {title: 'Increase', value: 1},
+            {title: 'Decrease', value: MosaicSupplyChangeAction.Decrease},
+            {title: 'Increase', value: MosaicSupplyChangeAction.Increase},
         ]
         const index = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
@@ -92,7 +95,7 @@ export class SupplyActionResolver implements Resolver {
             choices,
         ))
         try {
-            new BinaryValidator().validate(index)
+            new MosaicSupplyChangeActionValidator().validate(index)
         } catch (err) {
             console.log(chalk.red('ERR'), err)
             return process.exit()

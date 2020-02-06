@@ -7,7 +7,7 @@ describe('Restriction type resolver', () => {
     describe('resolve', () => {
 
         it('should return one of MosaicRestrictionType', () => {
-            const newRestrictionType = 'EQ'
+            const newRestrictionType = MosaicRestrictionType.EQ
             const profileOptions = { newRestrictionType } as any
             expect(new RestrictionTypeResolver().resolve(profileOptions))
                 .to.be.equal(MosaicRestrictionType['EQ'])
