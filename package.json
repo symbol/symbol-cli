@@ -4,7 +4,7 @@
     "description": "Command Line Interface (CLI) to interact with Catapult",
     "main": "index.js",
     "scripts": {
-        "pretest": "npm run build:win",
+        "pretest": "npm run build",
         "test": "mocha --ui bdd --recursive ./build/test",
         "build": "rm -rf build/ && tsc",
         "build:win": "del build && tsc",
