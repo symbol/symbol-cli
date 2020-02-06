@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import {ExpectedError} from 'clime'
 import {AccountRestrictionFlags} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
@@ -17,9 +16,10 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const choices = [
             {title: 'AllowOutgoingAddress', value: 0},
             {title: 'BlockOutgoingAddress', value: 1},
@@ -27,12 +27,11 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
             {title: 'BlockIncomingAddress', value: 3},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'flags',
+            altKey ? altKey : 'flags',
             altText ? altText : 'Select the restriction flags: ',
             choices,
         ))
         if (index < 0 || index > 3) {
-            // throw new ExpectedError('Unknown restriction flag.')
             console.log(chalk.red('ERR'), 'Unknown restriction flag.')
             return process.exit()
         }
@@ -53,15 +52,16 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const choices = [
             {title: 'AllowMosaic', value: 0},
             {title: 'BlockMosaic', value: 1},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'flags',
+            altKey ? altKey : 'flags',
             altText ? altText : 'Select the restriction flags: ',
             choices,
         ))
@@ -85,15 +85,16 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'AllowOutgoingTransactionType', value: 0},
             {title: 'BlockOutgoingTransactionType', value: 1},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'flags',
+            altKey ? altKey : 'flags',
             altText ? altText : 'Select the restriction flags: ',
             choices,
         ))

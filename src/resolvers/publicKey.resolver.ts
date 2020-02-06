@@ -3,7 +3,7 @@ import {NetworkType, PublicAccount} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
-import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator'
+import {PublicKeyValidator} from '../validators/publicKey.validator'
 import {Resolver} from './resolver'
 /**
  * Public key resolver
@@ -15,14 +15,14 @@ export class PublicKeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {NetworkType} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @param {string} altKey - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {PublicAccount}
      */
-    async resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): Promise<any> {
-        const resolution = (await OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): Promise<PublicAccount> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ')).trim()
+            altText ? altText : 'Enter the account public key: ')
         try {
             new PublicKeyValidator().validate(resolution)
         } catch (err) {
@@ -43,13 +43,14 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {PublicAccount[]}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount[]> {
-        const resolution = (await OptionsResolver(options,
-            'cosignatoryPublicKey',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<PublicAccount[]> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ')).trim()
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ')
         try {
             new PublicKeyValidator().validate(resolution)
         } catch (err) {

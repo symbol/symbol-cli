@@ -12,7 +12,8 @@ export interface Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {any}
      */
-    resolve(options: Options, secondSource?: any, altText?: string): any
+    resolve(options: Options, secondSource?: any, altText?: string, altKey?: string): any
 }

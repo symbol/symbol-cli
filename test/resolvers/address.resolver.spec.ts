@@ -49,7 +49,9 @@ describe('Recipient address alias resolver', () => {
     it('should return address', async () => {
         const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
         const profileOptions = {recipientAddress} as any
-        expect((await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress')).plain())
+        const address = await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress')
+        expect(address).instanceof(Address)
+        expect((address as Address).plain())
             .to.be.equal(recipientAddress)
     })
 

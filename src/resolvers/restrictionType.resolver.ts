@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+import chalk from 'chalk'
 import {MosaicRestrictionType} from 'nem2-sdk'
 import {isNumeric} from 'rxjs/internal-compatibility'
 import {ProfileOptions} from '../interfaces/profile.command'
@@ -32,9 +33,10 @@ export class RestrictionTypeResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @return {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'NONE', value: 0},
             {title: 'EQ', value: 1},
@@ -46,7 +48,7 @@ export class RestrictionTypeResolver implements Resolver {
 
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'newRestrictionType',
+            altKey ? altKey : 'newRestrictionType',
             altText ? altText : 'Select the new restriction type: ',
             choices,
         ))
@@ -56,7 +58,12 @@ export class RestrictionTypeResolver implements Resolver {
         } else {
             restrictionName = index
         }
-        new MosaicRestrictionTypeValidator().validate(restrictionName)
+        try {
+            new MosaicRestrictionTypeValidator().validate(restrictionName)
+        } catch (err) {
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
+        }
         return parseInt(MosaicRestrictionType[restrictionName], 10)
     }
 }

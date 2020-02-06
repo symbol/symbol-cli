@@ -16,13 +16,14 @@ export class HeightResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
-        'height',
-        () =>  undefined,
-        altText ? altText : 'Enter the block height: ')
+            altKey ? altKey : 'height',
+            () =>  undefined,
+            altText ? altText : 'Enter the block height: ')
         try {
             new HeightValidator().validate(resolution)
         } catch (err) {

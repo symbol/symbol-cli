@@ -14,13 +14,14 @@ export class PayloadResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {Transaction}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<Transaction | InnerTransaction> {
-        const resolution = (await OptionsResolver(options,
-            'payload',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Transaction | InnerTransaction> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'payload',
             () => undefined,
-            altText ? altText : 'Enter a transaction payload: ')).trim()
+            altText ? altText : 'Enter a transaction payload: ')
         const transaction = TransactionMapping.createFromPayload(resolution)
         return transaction
     }

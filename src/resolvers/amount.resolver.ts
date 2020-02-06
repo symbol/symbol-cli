@@ -16,13 +16,14 @@ export class AmountResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
-        'amount',
-        () =>  undefined,
-        altText ? altText : 'Enter an absolute amount: ')
+            altKey ? altKey : 'amount',
+            () =>  undefined,
+            altText ? altText : 'Enter an absolute amount: ')
         try {
             new NumericStringValidator().validate(resolution)
         } catch (err) {

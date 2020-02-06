@@ -13,13 +13,14 @@ export class DivisibilityResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const resolution = +(await OptionsResolver(options,
-        'divisibility',
-        () =>  undefined,
-        altText ? altText : 'Enter the mosaic divisibility: '))
+            altKey ? altKey : 'divisibility',
+            () =>  undefined,
+            altText ? altText : 'Enter the mosaic divisibility: '))
         return resolution
     }
 }

@@ -20,7 +20,7 @@ export class AddressResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Address}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
@@ -44,11 +44,11 @@ export class AddressAliasResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Address | NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
-        const resolution = (await OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address | NamespaceId> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an address (or @alias): ')).trim()
+            altText ? altText : 'Enter an address (or @alias): ')
         try {
             new AddressAliasValidator().validate(resolution)
         } catch (err) {

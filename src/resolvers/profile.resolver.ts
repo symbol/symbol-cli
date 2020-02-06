@@ -13,12 +13,13 @@ export class ProfileNameResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        return (await OptionsResolver(options,
-            'profile',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+        return await OptionsResolver(options,
+            altKey ? altKey : 'profile',
             () => undefined,
-            'Enter a profile name: ')).trim()
+            altText ? altText : 'Enter a profile name: ')
     }
 }

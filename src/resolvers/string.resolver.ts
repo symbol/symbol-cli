@@ -13,13 +13,14 @@ export class StringResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        const resolution = (await OptionsResolver(options,
-            'value',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'value',
             () => undefined,
-            altText ? altText : 'Enter a string value: ')).trim()
+            altText ? altText : 'Enter a string value: ')
         return resolution
     }
 }

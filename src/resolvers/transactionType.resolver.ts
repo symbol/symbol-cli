@@ -15,13 +15,14 @@ export class TransactionTypeResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<number> {
-        const resolution = (await OptionsResolver(options,
-            'transactionType',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'transactionType',
             () => undefined,
-            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ')).trim()
+            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ')
         try {
             new TransactionTypeValidator().validate(resolution)
         } catch (err) {

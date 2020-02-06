@@ -13,13 +13,14 @@ export class ProofResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        const resolution = (await OptionsResolver(options,
-        'proof',
-        () => undefined,
-        altText ? altText : 'Enter the original random set of bytes in hexadecimal: ')).trim()
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'proof',
+            () => undefined,
+            altText ? altText : 'Enter the original random set of bytes in hexadecimal: ')
         return resolution
     }
 }

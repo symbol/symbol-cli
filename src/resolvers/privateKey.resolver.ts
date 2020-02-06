@@ -1,5 +1,4 @@
 import chalk from 'chalk'
-import {Password} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'

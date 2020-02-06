@@ -16,13 +16,14 @@ export class MessageResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
-        'message',
-        () =>  undefined,
-        'Enter a message: ')
+            altKey ? altKey : 'message',
+            () =>  undefined,
+            altText ? altText : 'Enter a message: ')
         return resolution
     }
 }
@@ -37,13 +38,14 @@ export class RecipientPublicKeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {PublicAccount}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<PublicAccount> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<PublicAccount> {
         const recipientPublicKey = await OptionsResolver(options,
-            'recipientPublicKey',
+            altKey ? altKey : 'recipientPublicKey',
             () => undefined,
-            'Enter the recipient public key: ')
+            altText ? altText : 'Enter the recipient public key: ')
         try {
             new PublicKeyValidator().validate(recipientPublicKey)
         } catch (err) {

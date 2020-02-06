@@ -1,6 +1,4 @@
 import chalk from 'chalk'
-import {HashType} from 'nem2-sdk'
-import {isNumeric} from 'rxjs/internal-compatibility'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
@@ -17,9 +15,10 @@ export class HashAlgorithmResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Op_Sha3_256', value: 0},
             {title: 'Op_Keccak_256', value: 1},
@@ -28,10 +27,9 @@ export class HashAlgorithmResolver implements Resolver {
         ]
 
         const index = +(await OptionsChoiceResolver(options,
-        'hashAlgorithm',
+            altKey ? altKey : 'hashAlgorithm',
             altText ? altText : 'Select the algorithm used to hash the proof: ',
-        choices,
-        ))
+            choices))
 
         const hashAlgorithm = choices.find((item) => {
             return item.value === index

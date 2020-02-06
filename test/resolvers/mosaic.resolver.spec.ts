@@ -85,12 +85,12 @@ describe('Mosaics resolver', () => {
 
 describe('MosaicFlag resolver', () => {
 
-    it('should return mosaic flags', () => {
+    it('should return mosaic flags', async () => {
         const transferable = true
         const supplyMutable = true
         const restrictable = true
         const profileOptions = {transferable, supplyMutable, restrictable} as any
-        const resolution = new MosaicFlagsResolver().resolve(profileOptions)
+        const resolution = await new MosaicFlagsResolver().resolve(profileOptions)
 
         expect(resolution.transferable).to.be.equal(transferable)
         expect(resolution.supplyMutable).to.be.equal(supplyMutable)

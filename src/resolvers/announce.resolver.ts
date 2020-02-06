@@ -3,6 +3,7 @@ import {AnnounceTransactionsOptions} from '../interfaces/announce.transactions.c
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
 import {Profile} from '../models/profile'
 import {Resolver} from './resolver'
+import {OptionsConfirmResolver} from '../options-resolver'
 
 /**
  * Announce resolver
@@ -16,10 +17,8 @@ export class AnnounceResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {boolean}
      */
-    resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): boolean {
-        if (!options.announce && readlineSync.keyInYN('Do you want to announce this transaction?')) {
-            options.announce = true
-        }
-        return options.announce
+    async resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
+        const resolution = await OptionsConfirmResolver(altText ? altText : 'Do you want to announce this transaction?');
+        return resolution
     }
 }

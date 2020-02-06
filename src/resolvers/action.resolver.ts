@@ -15,15 +15,16 @@ export class ActionResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Remove', value: 0},
             {title: 'Add', value: 1},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'action',
+            altKey ? altKey : 'action',
             altText ? altText : 'Select an action: ',
             choices,
         ))
@@ -47,15 +48,16 @@ export class LinkActionResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Unlink', value: 0},
             {title: 'Link', value: 1},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'action',
+            altKey ? altKey : 'action',
             altText ? altText : 'Select an action: ',
             choices,
         ))
@@ -76,15 +78,16 @@ export class SupplyActionResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Decrease', value: 0},
             {title: 'Increase', value: 1},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'action',
+            altKey ? altKey : 'action',
             altText ? altText : 'Select an action: ',
             choices,
         ))

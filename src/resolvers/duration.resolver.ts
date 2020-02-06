@@ -16,13 +16,14 @@ export class DurationResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<UInt64> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
-        'duration',
-        () =>  undefined,
-        altText ? altText : 'Enter the duration in number of blocks: ')
+            altKey ? altKey : 'duration',
+            () =>  undefined,
+            altText ? altText : 'Enter the duration in number of blocks: ')
         try {
             new NumericStringValidator().validate(resolution)
         } catch (err) {

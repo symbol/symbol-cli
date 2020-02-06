@@ -64,24 +64,24 @@ describe('Restriction account address flags resolver', () => {
 
 describe('Restriction account mosaic flags resolver', () => {
 
-    it('should return AllowMosaic', () => {
+    it('should return AllowMosaic', async () => {
         const flags = '0'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowMosaic)
     })
 
-    it('should return BlockMosaic', () => {
+    it('should return BlockMosaic', async () => {
         const flags = '1'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.BlockMosaic)
     })
 
     it('should throw error if flag not exist', () => {
         const flags = '4'
         const profileOptions = {flags} as any
-        expect(() => new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
+        expect(async () => await new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
             .to.throws(Error)
     })
 

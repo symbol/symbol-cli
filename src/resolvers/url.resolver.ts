@@ -13,13 +13,14 @@ export class URLResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
-        const resolution = (await OptionsResolver(options,
-            'url',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'url',
             () => secondSource ? secondSource.url : undefined,
-            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ')).trim()
+            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ')
         return resolution.endsWith('/') ? resolution.slice(0, -1) : resolution
     }
 }

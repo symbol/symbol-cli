@@ -1,3 +1,4 @@
+import chalk from 'chalk'
 import {UInt64} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
@@ -11,17 +12,24 @@ export class KeyResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
-        const resolution = (await OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'key',
             () => undefined,
             altText ?
             altText : 'Enter a UInt64 key in hexadecimal format.' +
                 ' You can use the command \'nem2-cli converter stringtokey\' ' +
-                'to turn an string into a valid key: ')).trim()
-        new KeyValidator().validate(resolution)
+                'to turn an string into a valid key: ')
+        
+        try {
+            new KeyValidator().validate(resolution)
+        } catch (err) {
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
+        }
         return UInt64.fromHex(resolution)
     }
 }

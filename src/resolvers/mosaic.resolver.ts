@@ -1,10 +1,9 @@
 import chalk from 'chalk'
 import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk'
-import * as readlineSync from 'readline-sync'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {CommandOptions} from '../commands/transaction/mosaic'
 import {Profile} from '../models/profile'
-import {OptionsResolver} from '../options-resolver'
+import {OptionsResolver, OptionsConfirmResolver} from '../options-resolver'
 import {MosaicService} from '../services/mosaic.service'
 import {MosaicsValidator} from '../validators/mosaic.validator'
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../validators/mosaicId.validator'
@@ -20,13 +19,14 @@ export class MosaicIdResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {MosaicId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<MosaicId> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<MosaicId> {
         const resolution = await OptionsResolver(options,
-        'mosaicId',
-        () =>  undefined,
-        altText ? altText : 'Enter the mosaic id in hexadecimal format: ')
+            altKey ? altKey : 'mosaicId',
+            () =>  undefined,
+            altText ? altText : 'Enter the mosaic id in hexadecimal format: ')
         try {
             new MosaicIdValidator().validate(resolution)
         } catch (err) {
@@ -47,13 +47,14 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {MosaicId | NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<MosaicId | NamespaceId> {
-        const resolution = (await OptionsResolver(options,
-            'mosaicId',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<MosaicId | NamespaceId> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'mosaicId',
             () =>  undefined,
-            altText ? altText : 'Enter the mosaic id or alias: ')).trim()
+            altText ? altText : 'Enter the mosaic id or alias: ')
         try {
             new MosaicIdAliasValidator().validate(resolution)
         } catch (err) {
@@ -89,14 +90,15 @@ export class MosaicsResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {Mosaic[]}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<Mosaic[]> {
-        const resolution = (await OptionsResolver(options,
-            'mosaics',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Mosaic[]> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ')).trim()
+                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ')
         try {
             new MosaicsValidator().validate(resolution)
         } catch (err) {
@@ -119,13 +121,14 @@ export class MosaicFlagsResolver implements Resolver {
      * @param {string} altText - Alternative text.
      * @returns {MosaicFlags}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): MosaicFlags {
+    async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<MosaicFlags> {
+        const supplyMutableResolution = await OptionsConfirmResolver('Do you want mosaic to have supply mutable?');
+        const transferableResolution = await OptionsConfirmResolver('Do you want mosaic to be transferable?');
+        const restrictableResolution = await OptionsConfirmResolver('Do you want mosaic to be restrictable?');
+
         return MosaicFlags.create(
-            options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
-                'Do you want mosaic to have supply mutable?'),
-            options.transferable ? options.transferable : readlineSync.keyInYN(
-                'Do you want mosaic to be transferable?'),
-            options.restrictable ? options.restrictable : readlineSync.keyInYN(
-                'Do you want mosaic to be restrictable?'))
+            options.supplyMutable ? options.supplyMutable : supplyMutableResolution,
+            options.transferable ? options.transferable : transferableResolution,
+            options.restrictable ? options.restrictable : restrictableResolution)
     }
 }

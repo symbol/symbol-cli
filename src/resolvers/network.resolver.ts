@@ -1,6 +1,5 @@
 import chalk from 'chalk'
 import {NetworkType} from 'nem2-sdk'
-import {isNumeric} from 'rxjs/internal-compatibility'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
@@ -17,9 +16,10 @@ export class NetworkResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {number}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const choices = [
             {title: 'MAIN_NET', value: 0},
             {title: 'TEST_NET', value: 1},
@@ -27,7 +27,7 @@ export class NetworkResolver implements Resolver {
             {title: 'MIJIN_TEST', value: 3},
         ]
         const index = +(await OptionsChoiceResolver(options,
-            'network',
+            altKey ? altKey : 'network',
             altText ? altText : 'Select the network type: ',
             choices,
         ))

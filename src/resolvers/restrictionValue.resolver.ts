@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+import chalk from 'chalk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
@@ -40,7 +41,12 @@ export class RestrictionValueResolver implements Resolver {
             () => undefined,
             altText ? altText : 'Enter new restriction value: ',
         )
-        new NumericStringValidator().validate(value)
+        try {
+            new NumericStringValidator().validate(value)
+        } catch (err) {
+            console.log(chalk.red('ERR'), err)
+            return process.exit()
+        }
         return value
     }
 }

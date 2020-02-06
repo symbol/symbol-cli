@@ -17,14 +17,14 @@ export class MaxFeeResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {UInt64}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
-        altKey ? altKey : 'maxFee',
-        () => undefined,
-        altText ? altText : 'Enter the maximum fee (absolute amount): ')
+            altKey ? altKey : 'maxFee',
+            () => undefined,
+            altText ? altText : 'Enter the maximum fee (absolute amount): ')
         try {
            return UInt64.fromNumericString(resolution)
-        }  catch {
+        } catch {
            return UInt64.fromUint(0)
         }
     }

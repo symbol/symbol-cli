@@ -15,13 +15,14 @@ export class HexAddressResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {string}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<any> {
-        const resolution = (await OptionsResolver(options,
-            'address',
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an hex address: ')).trim()
+            altText ? altText : 'Enter an hex address: ')
         try {
             new HexAddressValidator().validate(resolution)
         } catch (err) {

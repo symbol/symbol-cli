@@ -20,10 +20,10 @@ export class NamespaceNameResolver {
      * @returns {NamespaceId}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<NamespaceId> {
-        const resolution = (await OptionsResolver(options,
-        altKey ? altKey : 'namespaceName',
-        () =>  undefined,
-        altText ? altText : 'Enter the namespace name: ')).trim()
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'namespaceName',
+            () =>  undefined,
+            altText ? altText : 'Enter the namespace name: ')
         return new NamespaceId(resolution)
     }
 }
@@ -41,10 +41,10 @@ export class NamespaceNameStringResolver {
      * @returns {string}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
-        const resolution = (await OptionsResolver(options,
-        altKey ? altKey : 'namespaceName',
-        () =>  undefined,
-        altText ? altText : 'Enter the namespace name: ')).trim()
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'namespaceName',
+            () =>  undefined,
+            altText ? altText : 'Enter the namespace name: ')
         return resolution
     }
 }
@@ -59,11 +59,12 @@ export class NamespaceIdResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {NamespaceId}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<NamespaceId> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<NamespaceId> {
         const resolution = await OptionsResolver(options,
-            'namespaceId',
+            altKey ? altKey : 'namespaceId',
             () =>  undefined,
             altText ? altText : 'Enter the namespace id in hexadecimal: ')
         try {

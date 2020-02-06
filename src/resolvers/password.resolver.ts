@@ -16,13 +16,14 @@ export class PasswordResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
      * @returns {Password}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Promise<Password> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Password> {
         const resolution = await OptionsResolver(options,
-            'password',
+            altKey ? altKey : 'password',
             () => undefined,
-            'Enter your wallet password: ',
+            altText ? altText : 'Enter your wallet password: ',
             'password')
         try {
             new PasswordValidator().validate(resolution)
