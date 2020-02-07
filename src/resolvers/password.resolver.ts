@@ -17,7 +17,7 @@ export class PasswordResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Password}
+     * @returns {Promise<Password>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Password> {
         const resolution = await OptionsResolver(options,

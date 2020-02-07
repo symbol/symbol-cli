@@ -13,7 +13,7 @@ export class SaveResolver implements Resolver {
      * @param {CommandOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
     async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
         if (!options.save) {

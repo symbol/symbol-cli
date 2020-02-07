@@ -16,7 +16,7 @@ export class PublicKeyResolver implements Resolver {
      * @param {NetworkType} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {PublicAccount}
+     * @returns {Promise<PublicAccount>}
      */
     async resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): Promise<PublicAccount> {
         const resolution = await OptionsResolver(options,
@@ -44,7 +44,7 @@ export class CosignatoryPublicKeyResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {PublicAccount[]}
+     * @returns {Promise<PublicAccount[]>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<PublicAccount[]> {
         const resolution = await OptionsResolver(options,

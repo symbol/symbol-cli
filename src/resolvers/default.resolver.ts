@@ -13,7 +13,7 @@ export class DefaultResolver implements Resolver {
      * @param {CreateProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
     async resolve(options: CreateProfileOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
         if (!options.default) {

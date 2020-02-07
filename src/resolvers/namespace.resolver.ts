@@ -17,7 +17,7 @@ export class NamespaceNameResolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {NamespaceId}
+     * @returns {Promise<NamespaceId>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<NamespaceId> {
         const resolution = await OptionsResolver(options,
@@ -38,7 +38,7 @@ export class NamespaceNameStringResolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {string}
+     * @returns {Promise<string>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
@@ -60,7 +60,7 @@ export class NamespaceIdResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {NamespaceId}
+     * @returns {Promise<NamespaceId>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<NamespaceId> {
         const resolution = await OptionsResolver(options,
@@ -88,7 +88,7 @@ export class NamespaceTypeResolver  implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {NamespaceRegistrationType}
+     * @returns {Promise<NamespaceRegistrationType>}
      */
     async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<NamespaceRegistrationType> {
         if (!options.subnamespace && !options.rootnamespace) {

@@ -14,7 +14,7 @@ export class ProfileNameResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {string}
+     * @returns {Promise<string>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
         return await OptionsResolver(options,

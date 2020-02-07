@@ -13,7 +13,7 @@ export class AnnounceResolver implements Resolver {
      * @param {CreateProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
     async resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
         const resolution = await OptionsConfirmResolver(altText ? altText : 'Do you want to announce this transaction?')

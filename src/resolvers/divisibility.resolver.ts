@@ -14,7 +14,7 @@ export class DivisibilityResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {number}
+     * @returns {Promise<number>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const resolution = +(await OptionsResolver(options,

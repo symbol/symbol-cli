@@ -15,7 +15,7 @@ export class MaxFeeResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {UInt64}
+     * @returns {Promise<UInt64>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,

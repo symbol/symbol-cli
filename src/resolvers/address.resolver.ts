@@ -18,7 +18,7 @@ export class AddressResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Address}
+     * @returns {Promise<Address>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address> {
         const resolution = await OptionsResolver(options,
@@ -42,7 +42,7 @@ export class AddressAliasResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Address | NamespaceId}
+     * @returns {Promise<Address | NamespaceId>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address | NamespaceId> {
         const resolution = await OptionsResolver(options,

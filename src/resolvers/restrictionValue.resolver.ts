@@ -33,7 +33,7 @@ export class RestrictionValueResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @return {string}
+     * @return {Promise<string>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
         const value = await OptionsResolver(options,

@@ -20,7 +20,7 @@ export class MosaicIdResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {MosaicId}
+     * @returns {Promise<MosaicId>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<MosaicId> {
         const resolution = await OptionsResolver(options,
@@ -48,7 +48,7 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {MosaicId | NamespaceId}
+     * @returns {Promise<MosaicId | NamespaceId>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<MosaicId | NamespaceId> {
         const resolution = await OptionsResolver(options,
@@ -68,7 +68,7 @@ export class MosaicIdAliasResolver implements Resolver {
      * Resolves an optional mosaic id or alias provided by the user.
      * @param {any} options - Command options.
      * @param {string} altKey - Alternative key.
-     * @param {string} defaultValue - Default value.
+     * @param {MosaicId | NamespaceId} defaultValue - Default value.
      */
     optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicId | NamespaceId {
         const key = altKey ? altKey : 'referenceMosaicId'
@@ -91,7 +91,7 @@ export class MosaicsResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Mosaic[]}
+     * @returns {Promise<Mosaic[]>}
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Mosaic[]> {
         const resolution = await OptionsResolver(options,
@@ -119,7 +119,7 @@ export class MosaicFlagsResolver implements Resolver {
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {MosaicFlags}
+     * @returns {Promise<MosaicFlags>}
      */
     async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<MosaicFlags> {
         const supplyMutableResolution = await OptionsConfirmResolver('Do you want mosaic to have supply mutable?')

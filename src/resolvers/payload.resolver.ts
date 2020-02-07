@@ -15,7 +15,7 @@ export class PayloadResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Transaction}
+     * @returns {Promise<Transaction | InnerTransaction>}
      */
     async resolve(options: ProfileOptions,
                 secondSource?: Profile,
