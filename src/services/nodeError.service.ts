@@ -15,6 +15,8 @@
  * limitations under the License.
  *
  */
+import chalk from 'chalk'
+
 export class NodeErrorService {
     /**
      * Handle connect ECONNREFUSED error.
@@ -22,14 +24,16 @@ export class NodeErrorService {
      * @param {function} callback  - callback for command to complete this error handler.
      */
     public static connectErrorHandler(err: any, callback?: Function) {
-        const regexp = /^Error: connect ECONNREFUSED/g
+        const regexp = /^(Error: )?connect ECONNREFUSED/g
         if (err.message.match(regexp)) {
             const nodeIP = err.message.replace(regexp, '').trim()
             console.log('\nError: Can\'t reach the node: ' + nodeIP)
             process.exit()
         }
+        err = err.message ? JSON.parse(err.message) : err
+        console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
         if (callback) {
-            callback(err)
+            return callback(err)
         }
     }
 }

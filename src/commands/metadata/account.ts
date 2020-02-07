@@ -22,6 +22,7 @@ import {command, metadata, option} from 'clime'
 import {Metadata, MetadataEntry, MetadataHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
+import { NodeErrorService } from '../../services/nodeError.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -86,9 +87,9 @@ export default class extends ProfileCommand {
                     console.log('\n The address does not have metadata entries assigned.')
                 }
             }, (err) => {
-                this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                NodeErrorService.connectErrorHandler(err, () => {
+                    this.spinner.stop(true)
+                })
             })
     }
 }

@@ -19,6 +19,7 @@ import chalk from 'chalk'
 import {command, metadata} from 'clime'
 import {Listener} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import { NodeErrorService } from '../../services/nodeError.service'
 
 @command({
     description: 'Monitor new blocks',
@@ -45,8 +46,9 @@ export default class extends ProfileCommand {
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
             })
         }, (err) => {
-            listener.close()
-            console.log(chalk.red('Error'), err)
+            NodeErrorService.connectErrorHandler(err, () => {
+                listener.close()
+            })
         })
     }
 }

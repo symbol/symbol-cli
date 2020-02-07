@@ -21,6 +21,7 @@ import {AccountHttp} from 'nem2-sdk'
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import { NodeErrorService } from '../../services/nodeError.service'
 
 @command({
     description: 'Fetch aggregate bonded transactions from account',
@@ -49,9 +50,9 @@ export default class extends AccountTransactionsCommand {
                     console.log('There aren\'t aggregate bonded transaction')
                 }
             }, (err) => {
-                this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                NodeErrorService.connectErrorHandler(err, () => {
+                    this.spinner.stop(true)
+                })
             })
     }
 }

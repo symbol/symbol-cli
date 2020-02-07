@@ -28,6 +28,7 @@ import {
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from './profile.command'
+import { NodeErrorService } from '../services/nodeError.service'
 
 /**
  * Base command class to announce transactions.
@@ -52,8 +53,9 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(chalk.green('\nTransaction announced correctly.'))
             }, (err) => {
-                this.spinner.stop(true)
-                console.log(chalk.red('Error'), err.message)
+                NodeErrorService.connectErrorHandler(err, () => {
+                    this.spinner.stop(true)
+                })
             })
     }
 
@@ -83,10 +85,10 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     this.spinner.stop(true)
                     console.log(chalk.green('\nTransaction confirmed.'))
                 }, (err) => {
-                    listener.close()
-                    this.spinner.stop(true)
-                    listener.close()
-                    console.log(chalk.red('Error'), err.message)
+                    NodeErrorService.connectErrorHandler(err, () => {
+                        listener.close()
+                        this.spinner.stop(true)
+                    })
                 })
         }, (err) => {
             this.spinner.stop(true)
@@ -142,14 +144,16 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                         console.log(chalk.green('\n Aggregate transaction announced.'))
                     }
                 }, (err) => {
-                    this.spinner.stop(true)
-                    listener.close()
-                    console.log(chalk.red('Error'), err.message)
+                    NodeErrorService.connectErrorHandler(err, () => {
+                        listener.close()
+                        this.spinner.stop(true)
+                    })
                 })
         }, (err) => {
-            this.spinner.stop(true)
-            listener.close()
-            console.log(chalk.red('Error'), err.message)
+            NodeErrorService.connectErrorHandler(err, () => {
+                listener.close()
+                this.spinner.stop(true)
+            })
         })
     }
 }

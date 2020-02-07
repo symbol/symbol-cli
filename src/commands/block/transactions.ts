@@ -21,6 +21,7 @@ import {BlockHttp, Order, QueryParams, Transaction} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import { NodeErrorService } from '../../services/nodeError.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -92,9 +93,9 @@ export default class extends ProfileCommand {
                     console.log('[]')
                 }
             }, (err) => {
-                this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                NodeErrorService.connectErrorHandler(err, () => {
+                    this.spinner.stop(true)
+                })
             })
     }
 }

@@ -21,6 +21,7 @@ import {TransactionHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import { NodeErrorService } from '../../services/nodeError.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -52,9 +53,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 new TransactionView(transaction).print()
             }, (err) => {
-                this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                NodeErrorService.connectErrorHandler(err, () => {
+                    this.spinner.stop(true)
+                })
             })
     }
 }

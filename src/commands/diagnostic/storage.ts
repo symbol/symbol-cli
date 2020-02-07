@@ -21,6 +21,7 @@ import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
 import {BlockchainStorageInfo, DiagnosticHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import { NodeErrorService } from '../../services/nodeError.service'
 
 export class StorageTable {
     private readonly table: HorizontalTable
@@ -65,9 +66,9 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(new StorageTable(storage).toString())
             }, (err) => {
-                this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                NodeErrorService.connectErrorHandler(err, () => {
+                    this.spinner.stop(true)
+                })
             })
     }
 }

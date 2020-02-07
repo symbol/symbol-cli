@@ -193,8 +193,6 @@ export default class extends ProfileCommand {
             }, (err) => {
                 NodeErrorService.connectErrorHandler(err, () => {
                     this.spinner.stop(true)
-                    err = err.message ? JSON.parse(err.message) : err
-                    console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
                 })
             })
         }
