@@ -123,6 +123,22 @@ export class ProfileRepository {
         return this.find(defaultProfile)
     }
 
+    public updateProfile(originName: string, newName: string, newUrl: string): boolean {
+        const profiles = this.getProfiles()
+        console.log(profiles)
+        if (profiles[originName]) {
+            profiles[newName] = JSON.parse(JSON.stringify(profiles[originName]))
+            profiles[newName].url = newUrl
+            if (newName !== originName) {
+                delete profiles[originName]
+            }
+            console.log(profiles)
+            this.saveProfiles(profiles)
+            return true
+        }
+        return false
+    }
+
     /**
      * Get all profiles as JSON objects.
      * @returns {object}

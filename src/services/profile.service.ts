@@ -76,4 +76,11 @@ export class ProfileService {
     getDefaultProfile(): Profile {
         return this.profileRepository.getDefaultProfile()
     }
+
+    /**
+     * Update the profile.
+     */
+    updateProfile(originName: string, newName: string, newUrl: string): boolean {
+        return this.profileRepository.updateProfile(originName, newName, newUrl)
+    }
 }
