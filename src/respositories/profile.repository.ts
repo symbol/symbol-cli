@@ -16,7 +16,7 @@
  *
  */
 import * as fs from 'fs'
-import {SimpleWallet} from 'nem2-sdk'
+import {SimpleWallet, NetworkType} from 'nem2-sdk'
 import {Profile} from '../models/profile'
 
 /**
@@ -123,16 +123,22 @@ export class ProfileRepository {
         return this.find(defaultProfile)
     }
 
-    public updateProfile(originName: string, newName: string, newUrl: string): boolean {
+    public updateProfile(originName: string,
+        newName: string,
+        newUrl: string,
+        newNetworkType: NetworkType,
+        simpleWallet: SimpleWallet,
+        generationHash: string): boolean {
         const profiles = this.getProfiles()
-        console.log(profiles)
         if (profiles[originName]) {
             profiles[newName] = JSON.parse(JSON.stringify(profiles[originName]))
             profiles[newName].url = newUrl
+            profiles[newName].newNetworkType = newNetworkType
+            profiles[newName].simpleWallet = simpleWallet
+            profiles[newName].generationHash = generationHash
             if (newName !== originName) {
                 delete profiles[originName]
             }
-            console.log(profiles)
             this.saveProfiles(profiles)
             return true
         }

@@ -24,6 +24,9 @@ export class UpdateProfileOptionsResolver implements Resolver {
         const choices = [
             {title: 'Name', value: UpdateProfileAction.Name},
             {title: 'Url', value: UpdateProfileAction.Url},
+            {title: 'NetworkType', value: UpdateProfileAction.NetworkType},
+            {title: 'Password', value: UpdateProfileAction.Password},
+
         ]
         const resolution = await OptionsChoiceResolver(options,
             altKey ? altKey : 'updateOptions',

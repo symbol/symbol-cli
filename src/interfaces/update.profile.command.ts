@@ -25,6 +25,7 @@ import { ProfileRepository } from '../respositories/profile.repository'
 import { ProfileService } from '../services/profile.service'
 import { ProfileOptions } from './profile.command'
 import { Profile } from '../models/profile'
+import {CommandOptions} from '../commands/profile/update'
 /**
  * Update profile options.
  */
@@ -41,6 +42,21 @@ export class UpdateProfileOptions extends ProfileOptions {
         description: 'New profile name.',
     })
     newName: string
+
+    @option({
+        flag: 'p',
+        description: 'New profile password.',
+    })
+    newPassword: string
+
+    @option({
+        description: 'New profile network type. (' +
+            NetworkType.MAIN_NET + ': MAIN_NET, ' +
+            NetworkType.MIJIN + ': MIJIN' +
+            NetworkType.MIJIN_TEST + 'MIJIN_TEST' +
+            NetworkType.TEST_NET + 'TEST_NET',
+    })
+    newNetworkType: NetworkType
 
 }
 
@@ -80,7 +96,12 @@ export abstract class UpdateProfileCommand extends Command {
         }
     }
 
-    protected updateProfile(originName: string, newName: string, newUrl: string): boolean {
-        return this.profileService.updateProfile(originName, newName, newUrl)
+    protected updateProfile(originName: string, options: CommandOptions, simpleWallet: SimpleWallet, generationHash: string): boolean {
+        return this.profileService.updateProfile(originName,
+            options.newName,
+            options.url,
+            options.newNetworkType,
+            simpleWallet,
+            generationHash)
     }
 }

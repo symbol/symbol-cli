@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {SimpleWallet} from 'nem2-sdk'
+import {SimpleWallet, NetworkType} from 'nem2-sdk'
 import {Profile} from '../models/profile'
 import {ProfileRepository} from '../respositories/profile.repository'
 
@@ -80,7 +80,12 @@ export class ProfileService {
     /**
      * Update the profile.
      */
-    updateProfile(originName: string, newName: string, newUrl: string): boolean {
-        return this.profileRepository.updateProfile(originName, newName, newUrl)
+    updateProfile(originName: string,
+        newName: string,
+        newUrl: string,
+        newNetworkType: NetworkType,
+        simpleWallet: SimpleWallet,
+        generationHash: string): boolean {
+        return this.profileRepository.updateProfile(originName, newName, newUrl, newNetworkType, simpleWallet, generationHash)
     }
 }
