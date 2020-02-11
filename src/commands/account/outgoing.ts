@@ -51,9 +51,8 @@ export default class extends AccountTransactionsCommand {
                     console.log('There aren\'t outgoing transaction')
                 }
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 }

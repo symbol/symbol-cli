@@ -61,9 +61,8 @@ export default class extends ProfileCommand {
                 })
 
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 }

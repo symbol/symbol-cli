@@ -63,9 +63,8 @@ export default class extends ProfileCommand {
             this.spinner.stop(true)
             console.log(new ChainScoreTable(score).toString())
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
-                this.spinner.stop(true)
-            })
+            NodeErrorService.connectErrorHandler(err)
+            this.spinner.stop(true)
         })
     }
 }

@@ -48,9 +48,8 @@ export default class extends MonitorAddressCommand {
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
             })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
-                listener.close()
-            })
+            NodeErrorService.connectErrorHandler(err)
+            listener.close()
         })
     }
 }

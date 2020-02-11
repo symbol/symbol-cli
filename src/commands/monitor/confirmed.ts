@@ -43,14 +43,12 @@ export default class extends MonitorAddressCommand {
            listener.confirmed(address).subscribe((transaction) => {
                new TransactionView(transaction).print()
            }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    listener.close()
-                })
+                NodeErrorService.connectErrorHandler(err)
+                listener.close()
            })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
-                listener.close()
-            })
+            NodeErrorService.connectErrorHandler(err)
+            listener.close()
         })
     }
 }

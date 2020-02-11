@@ -53,9 +53,8 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(chalk.green('\nTransaction announced correctly.'))
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 
@@ -85,10 +84,9 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     this.spinner.stop(true)
                     console.log(chalk.green('\nTransaction confirmed.'))
                 }, (err) => {
-                    NodeErrorService.connectErrorHandler(err, () => {
-                        listener.close()
-                        this.spinner.stop(true)
-                    })
+                    NodeErrorService.connectErrorHandler(err)
+                    listener.close()
+                    this.spinner.stop(true)
                 })
         }, (err) => {
             this.spinner.stop(true)
@@ -144,16 +142,14 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                         console.log(chalk.green('\n Aggregate transaction announced.'))
                     }
                 }, (err) => {
-                    NodeErrorService.connectErrorHandler(err, () => {
-                        listener.close()
-                        this.spinner.stop(true)
-                    })
+                    NodeErrorService.connectErrorHandler(err)
+                    listener.close()
+                    this.spinner.stop(true)
                 })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
-                listener.close()
-                this.spinner.stop(true)
-            })
+            NodeErrorService.connectErrorHandler(err)
+            listener.close()
+            this.spinner.stop(true)
         })
     }
 }

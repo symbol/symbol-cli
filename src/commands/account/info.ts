@@ -191,9 +191,8 @@ export default class extends ProfileCommand {
                     new MultisigInfoTable(multisigInfo).toString())
                 this.spinner.stop(true)
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
         }
 }

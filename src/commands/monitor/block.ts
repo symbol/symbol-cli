@@ -46,9 +46,8 @@ export default class extends ProfileCommand {
                 console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
             })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
-                listener.close()
-            })
+            NodeErrorService.connectErrorHandler(err)
+            listener.close()
         })
     }
 }

@@ -91,9 +91,8 @@ export default class extends ProfileCommand {
                     console.log('\n The address does not have mosaic address restrictions assigned.')
                 }
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 }

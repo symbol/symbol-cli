@@ -82,9 +82,8 @@ export default class extends ProfileCommand {
                     this.announceAggregateBondedCosignature(signedCosignature)
                 }
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 
@@ -138,9 +137,8 @@ export default class extends ProfileCommand {
             this.spinner.stop(true)
             console.log(chalk.green('Transaction cosigned and announced correctly.'))
         } catch (err) {
-            NodeErrorService.connectErrorHandler(err, () => {
-                this.spinner.stop(true)
-            })
+            NodeErrorService.connectErrorHandler(err)
+            this.spinner.stop(true)
         }
     }
 }

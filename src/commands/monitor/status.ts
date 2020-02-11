@@ -46,14 +46,12 @@ export default class extends MonitorAddressCommand {
                     transactionStatusError.deadline.value.toLocalTime().toString()
                 console.log(text)
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    listener.close()
-                })
-            })
-        }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
+                NodeErrorService.connectErrorHandler(err)
                 listener.close()
             })
+        }, (err) => {
+            NodeErrorService.connectErrorHandler(err)
+            listener.close()
         })
     }
 }

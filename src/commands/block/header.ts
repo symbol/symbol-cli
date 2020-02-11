@@ -93,9 +93,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(new BlockHeaderTable(blockInfo).toString())
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 }

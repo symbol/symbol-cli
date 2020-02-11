@@ -59,9 +59,8 @@ export default class extends ProfileCommand {
                     console.log('\n The mosaic does not have metadata entries assigned.')
                 }
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err, () => {
-                    this.spinner.stop(true)
-                })
+                NodeErrorService.connectErrorHandler(err)
+                this.spinner.stop(true)
             })
     }
 }

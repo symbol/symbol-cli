@@ -62,14 +62,12 @@ export default class extends MonitorAddressCommand {
                         console.log('\n' + response.code)
                     }
                 }, (err) => {
-                    NodeErrorService.connectErrorHandler(err, () => {
-                        listener.close()
-                    })
+                    NodeErrorService.connectErrorHandler(err)
+                    listener.close()
                 })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err, () => {
-                listener.close()
-            })
+            NodeErrorService.connectErrorHandler(err)
+            listener.close()
         })
     }
 }
