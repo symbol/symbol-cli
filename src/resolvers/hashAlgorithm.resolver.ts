@@ -4,6 +4,7 @@ import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator'
 import {Resolver} from './resolver'
+import {HashType} from 'nem2-sdk'
 
 /**
  * Link hashAlgorithm resolver
@@ -20,10 +21,10 @@ export class HashAlgorithmResolver implements Resolver {
      */
     async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
-            {title: 'Op_Sha3_256', value: 0},
-            {title: 'Op_Keccak_256', value: 1},
-            {title: 'Op_Hash_160', value: 2},
-            {title: 'Op_Hash_256', value: 3},
+            {title: 'Op_Sha3_256', value: HashType.Op_Sha3_256},
+            {title: 'Op_Keccak_256', value: HashType.Op_Keccak_256},
+            {title: 'Op_Hash_160', value: HashType.Op_Hash_160},
+            {title: 'Op_Hash_256', value: HashType.Op_Hash_256},
         ]
 
         const index = +(await OptionsChoiceResolver(options,

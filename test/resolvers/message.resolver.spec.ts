@@ -17,7 +17,6 @@
  */
 import {expect} from 'chai'
 import {MessageResolver} from '../../src/resolvers/message.resolver'
-import {RecipientPublicKeyResolver} from '../../src/resolvers/message.resolver'
 
 describe('Message resolver', () => {
 
@@ -27,22 +26,4 @@ describe('Message resolver', () => {
         expect(new MessageResolver().resolve(profileOptions))
             .to.be.equal('10')
     })
-})
-
-describe('Recipient public key resolver', () => {
-
-    it('should return public account', async () => {
-        const recipientPublicKey = '0000000000000000000000000000000000000000000000000000000000000000'
-        const profileOptions = {recipientPublicKey} as any
-        expect((await new RecipientPublicKeyResolver().resolve(profileOptions)).publicKey)
-            .to.be.equal(recipientPublicKey)
-    })
-
-    it('should throw error if invalid public key', () => {
-        const recipientPublicKey = '00000'
-        const profileOptions = {recipientPublicKey} as any
-        expect(() => new RecipientPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
-
 })
