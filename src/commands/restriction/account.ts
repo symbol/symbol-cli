@@ -84,7 +84,8 @@ export default class extends ProfileCommand {
                     console.log('\n The address does not have account restrictions assigned.')
                 }
             }, (err: any) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
     }

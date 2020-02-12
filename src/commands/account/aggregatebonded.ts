@@ -50,7 +50,8 @@ export default class extends AccountTransactionsCommand {
                     console.log('There aren\'t aggregate bonded transaction')
                 }
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
     }

@@ -53,7 +53,8 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(chalk.green('\nTransaction announced correctly.'))
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
     }
@@ -84,7 +85,8 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     this.spinner.stop(true)
                     console.log(chalk.green('\nTransaction confirmed.'))
                 }, (err) => {
-                    NodeErrorService.connectErrorHandler(err)
+                    const errorInfo = NodeErrorService.connectErrorHandler(err)
+                    console.log(errorInfo)
                     listener.close()
                     this.spinner.stop(true)
                 })
@@ -142,12 +144,14 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                         console.log(chalk.green('\n Aggregate transaction announced.'))
                     }
                 }, (err) => {
-                    NodeErrorService.connectErrorHandler(err)
+                    const errorInfo = NodeErrorService.connectErrorHandler(err)
+                    console.log(errorInfo)
                     listener.close()
                     this.spinner.stop(true)
                 })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err)
+            const errorInfo = NodeErrorService.connectErrorHandler(err)
+            console.log(errorInfo)
             listener.close()
             this.spinner.stop(true)
         })

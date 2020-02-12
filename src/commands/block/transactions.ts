@@ -93,7 +93,8 @@ export default class extends ProfileCommand {
                     console.log('[]')
                 }
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
     }

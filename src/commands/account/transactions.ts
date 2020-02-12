@@ -52,7 +52,8 @@ export default class extends AccountTransactionsCommand {
                     new TransactionView(transaction).print()
                 })
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
     }

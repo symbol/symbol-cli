@@ -21,17 +21,15 @@ export class NodeErrorService {
     /**
      * Handle connect ECONNREFUSED error.
      * @param {any} err - err data.
-     * @param {function} callback  - callback for command to complete this error handler.
+     * @returns {string}
      */
-    public static connectErrorHandler(err: any): boolean {
+    public static connectErrorHandler(err: any): string {
         const regexp = /^(Error: )?connect ECONNREFUSED/g
         if (err.message.match(regexp)) {
             const nodeIP = err.message.replace(regexp, '').trim()
-            console.log('\nError: Can\'t reach the node: ' + nodeIP)
-            return false
+            return '\nError: Can\'t reach the node: ' + nodeIP
         }
         err = err.message ? JSON.parse(err.message) : err
-        console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
-        return true
+        return chalk.red('Error') + err.body && err.body.message ? err.body.message : err
     }
 }

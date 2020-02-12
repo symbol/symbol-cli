@@ -45,11 +45,13 @@ export default class extends MonitorAddressCommand {
                     ' Signature:' + transaction.signature
                 console.log(transactionFormatted)
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 listener.close()
             })
         }, (err) => {
-            NodeErrorService.connectErrorHandler(err)
+            const errorInfo = NodeErrorService.connectErrorHandler(err)
+            console.log(errorInfo)
             listener.close()
         })
     }

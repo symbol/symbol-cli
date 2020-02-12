@@ -66,7 +66,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(new StorageTable(storage).toString())
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
     }

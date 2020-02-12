@@ -191,7 +191,8 @@ export default class extends ProfileCommand {
                     new MultisigInfoTable(multisigInfo).toString())
                 this.spinner.stop(true)
             }, (err) => {
-                NodeErrorService.connectErrorHandler(err)
+                const errorInfo = NodeErrorService.connectErrorHandler(err)
+                console.log(errorInfo)
                 this.spinner.stop(true)
             })
         }
