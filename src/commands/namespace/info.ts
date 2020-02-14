@@ -26,7 +26,7 @@ import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namesp
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
-        description: 'Namespace name. Example: cat.currency',
+        description: 'Namespace name. Example: symbol.xym',
     })
     namespaceName: string
 

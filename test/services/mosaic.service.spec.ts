@@ -59,14 +59,14 @@ describe('Mosaic service', () => {
         const string = 'a::1'
         expect(() => { MosaicService.validate(string) } ).to.throws(
             'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-            ' (Ex: sending 1 cat.currency, @cat.currency::1000000)')
+            ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
     })
 
     it('validate should throw exception (format)', () => {
         const string = 'a::1'
         expect(() => { MosaicService.validate(string) } ).to.throws(
             'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-            ' (Ex: sending 1 cat.currency, @cat.currency::1000000)')
+            ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
     })
 
 })

@@ -85,7 +85,7 @@ export class MosaicsResolver implements Resolver {
             'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ').trim()
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics with commas: ').trim()
         new MosaicsValidator().validate(resolution)
         return resolution ? MosaicService.getMosaics(resolution) : []
     }

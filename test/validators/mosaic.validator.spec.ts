@@ -21,7 +21,7 @@ import { MosaicValidator } from '../../src/validators/mosaic.validator'
 describe('Mosaic validator', () => {
 
     it('default case (@aliasName)', () => {
-        const mosaic = '@cat.currency::1000000'
+        const mosaic = '@symbol.xym::1000000'
         expect(new MosaicValidator().validate(mosaic))
             .to.be.equal(undefined)
     })
@@ -37,7 +37,7 @@ describe('Mosaic validator', () => {
         expect(() => {
             new MosaicValidator().validate(mosaic)
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
-            '(Ex: sending 1 cat.currency, @cat.currency::1000000)')
+            '(Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
     })
 
     it('should throw error if format is invalid', () => {
@@ -45,6 +45,6 @@ describe('Mosaic validator', () => {
         expect(() => {
             new MosaicValidator().validate(mosaic)
         }).to.throws('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
-            '(Ex: sending 1 cat.currency, @cat.currency::1000000)')
+            '(Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
     })
 })

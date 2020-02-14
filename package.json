@@ -1,7 +1,7 @@
 {
-    "name": "nem2-cli",
+    "name": "symbol-cli",
     "version": "0.17.1",
-    "description": "Command Line Interface (CLI) to interact with Catapult",
+    "description": "Command Line Interface (CLI) to interact with Symbol",
     "main": "index.js",
     "scripts": {
         "pretest": "npm run build",
@@ -15,7 +15,7 @@
         "lint:all:fix": "eslint src/ --ext .ts --fix && eslint test/ --ext .ts --fix"
     },
     "bin": {
-        "nem2-cli": "./bin/nem2-cli"
+        "symbol-cli": "./bin/symbol-cli"
     },
     "contributors": [
         {
@@ -31,10 +31,10 @@
             "email": "david@nem.foundation"
         }
     ],
-    "bugs": "https://github.com/nemtech/nem2-cli/issues",
+    "bugs": "https://github.com/nemtech/symbol-cli/issues",
     "repository": {
         "type": "git",
-        "url": "https://github.com/nemtech/nem2-cli.git"
+        "url": "https://github.com/nemtech/symbol-cli.git"
     },
     "license": "Apache-2.0",
     "dependencies": {
