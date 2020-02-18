@@ -98,6 +98,9 @@ export class TransactionView {
    * @returns {CellRecord}
    */
   private filterNullValues(cellRecord: CellRecord): CellRecord {
-    return Object.fromEntries(Object.entries(cellRecord).filter(([, v]) => v))
+    Object.keys(cellRecord).forEach(
+        (key) => (cellRecord[key] == null) && delete cellRecord[key],
+    )
+    return cellRecord
   }
 }
