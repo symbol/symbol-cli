@@ -15,14 +15,13 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata, option} from 'clime'
 import {NamespaceHttp} from 'nem2-sdk'
 import {forkJoin, of} from 'rxjs'
 import {catchError} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -61,8 +60,7 @@ export default class extends ProfileCommand {
                     console.log('\nThe namespace is not linked with a mosaic or address.')
                 }
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+            console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

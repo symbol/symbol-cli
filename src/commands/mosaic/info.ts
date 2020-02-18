@@ -22,7 +22,7 @@ import {command, metadata, option} from 'clime'
 import {AccountHttp, MosaicHttp, MosaicService, MosaicView} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -90,8 +90,7 @@ export default class extends ProfileCommand {
                     console.log(new MosaicViewTable(mosaicViews[0]).toString())
                 }
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

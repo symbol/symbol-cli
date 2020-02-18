@@ -22,7 +22,7 @@ import {command, metadata, option} from 'clime'
 import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -81,8 +81,7 @@ export default class extends ProfileCommand {
                     console.log('\n The mosaicId does not have mosaic global restrictions assigned.')
                 }
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

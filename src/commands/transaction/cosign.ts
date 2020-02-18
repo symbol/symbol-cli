@@ -35,7 +35,7 @@ import {Profile} from '../../models/profile'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -82,8 +82,7 @@ export default class extends ProfileCommand {
                     this.announceAggregateBondedCosignature(signedCosignature)
                 }
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }
@@ -138,8 +137,7 @@ export default class extends ProfileCommand {
             this.spinner.stop(true)
             console.log(chalk.green('Transaction cosigned and announced correctly.'))
         } catch (err) {
-            const errorInfo = NodeErrorService.connectErrorHandler(err)
-            console.log(errorInfo)
+            console.log(HttpErrorHandler.handleError(err))
             this.spinner.stop(true)
         }
     }

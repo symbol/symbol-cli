@@ -22,7 +22,7 @@ import {command, metadata, option} from 'clime'
 import {AccountRestriction, AccountRestrictionFlags, RestrictionAccountHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -84,8 +84,7 @@ export default class extends ProfileCommand {
                     console.log('\n The address does not have account restrictions assigned.')
                 }
             }, (err: any) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

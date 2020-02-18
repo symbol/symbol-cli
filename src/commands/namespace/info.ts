@@ -22,7 +22,7 @@ import {command, metadata, option} from 'clime'
 import {NamespaceHttp, NamespaceInfo} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -103,8 +103,7 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(new NamespaceInfoTable(namespaceInfo).toString())
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

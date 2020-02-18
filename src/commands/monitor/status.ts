@@ -20,7 +20,7 @@ import {command, metadata} from 'clime'
 import {Listener} from 'nem2-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitor transaction status error',
@@ -46,13 +46,11 @@ export default class extends MonitorAddressCommand {
                     transactionStatusError.deadline.value.toLocalTime().toString()
                 console.log(text)
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 listener.close()
             })
         }, (err) => {
-            const errorInfo = NodeErrorService.connectErrorHandler(err)
-            console.log(errorInfo)
+            console.log(HttpErrorHandler.handleError(err))
             listener.close()
         })
     }

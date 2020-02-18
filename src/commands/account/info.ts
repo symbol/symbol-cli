@@ -34,7 +34,7 @@ import {forkJoin, of} from 'rxjs'
 import {catchError, mergeMap, toArray} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
-import {NodeErrorService} from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -191,8 +191,7 @@ export default class extends ProfileCommand {
                     new MultisigInfoTable(multisigInfo).toString())
                 this.spinner.stop(true)
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
         }

@@ -22,7 +22,7 @@ import {command, metadata, option} from 'clime'
 import {TransactionHttp, TransactionStatus} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HashResolver} from '../../resolvers/hash.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -90,8 +90,7 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(new TransactionStatusTable(status).toString())
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

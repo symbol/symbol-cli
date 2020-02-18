@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata, option} from 'clime'
 import {TransactionHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -53,8 +52,7 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 new TransactionView(transaction).print()
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

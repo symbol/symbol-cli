@@ -20,7 +20,7 @@ import {command, metadata} from 'clime'
 import {Listener} from 'nem2-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitor cosignatures added',
@@ -45,13 +45,11 @@ export default class extends MonitorAddressCommand {
                     ' Signature:' + transaction.signature
                 console.log(transactionFormatted)
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 listener.close()
             })
         }, (err) => {
-            const errorInfo = NodeErrorService.connectErrorHandler(err)
-            console.log(errorInfo)
+            console.log(HttpErrorHandler.handleError(err))
             listener.close()
         })
     }

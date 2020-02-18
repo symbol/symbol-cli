@@ -17,18 +17,11 @@
  */
 import chalk from 'chalk'
 import {option} from 'clime'
-import {
-    Address,
-    Listener,
-    ReceiptHttp,
-    SignedTransaction,
-    TransactionHttp,
-    TransactionService,
-} from 'nem2-sdk'
+import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService,} from 'nem2-sdk'
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from './profile.command'
-import { NodeErrorService } from '../services/nodeError.service'
+import {HttpErrorHandler} from '../services/httpErrorHandler.service';
 
 /**
  * Base command class to announce transactions.
@@ -53,9 +46,8 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(chalk.green('\nTransaction announced correctly.'))
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 
@@ -85,14 +77,13 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     this.spinner.stop(true)
                     console.log(chalk.green('\nTransaction confirmed.'))
                 }, (err) => {
-                    const errorInfo = NodeErrorService.connectErrorHandler(err)
-                    console.log(errorInfo)
                     listener.close()
                     this.spinner.stop(true)
+                    console.log(HttpErrorHandler.handleError(err))
                 })
         }, (err) => {
-            this.spinner.stop(true)
             listener.close()
+            this.spinner.stop(true)
             console.log(chalk.red('Error'), err.message)
         })
     }
@@ -144,16 +135,14 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                         console.log(chalk.green('\n Aggregate transaction announced.'))
                     }
                 }, (err) => {
-                    const errorInfo = NodeErrorService.connectErrorHandler(err)
-                    console.log(errorInfo)
                     listener.close()
                     this.spinner.stop(true)
+                    console.log(HttpErrorHandler.handleError(err))
                 })
         }, (err) => {
-            const errorInfo = NodeErrorService.connectErrorHandler(err)
-            console.log(errorInfo)
             listener.close()
             this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

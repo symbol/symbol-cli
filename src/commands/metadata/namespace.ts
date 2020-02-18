@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata, option} from 'clime'
 import {Metadata, MetadataHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 import {MetadataEntryTable} from './account'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -59,8 +58,7 @@ export default class extends ProfileCommand {
                     console.log('\n The namespace does not have metadata entries assigned.')
                 }
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

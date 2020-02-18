@@ -21,7 +21,7 @@ import {Listener} from 'nem2-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitor unconfirmed transactions added',
@@ -43,13 +43,11 @@ export default class extends MonitorAddressCommand {
             listener.unconfirmedAdded(address).subscribe((transaction) => {
                 new TransactionView(transaction).print()
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 listener.close()
             })
         }, (err) => {
-            const errorInfo = NodeErrorService.connectErrorHandler(err)
-            console.log(errorInfo)
+            console.log(HttpErrorHandler.handleError(err))
             listener.close()
         })
     }

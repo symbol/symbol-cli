@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata} from 'clime'
 import {AccountHttp} from 'nem2-sdk'
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {NodeErrorService} from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Fetch outgoing transactions from account',
@@ -51,8 +50,7 @@ export default class extends AccountTransactionsCommand {
                     console.log('There aren\'t outgoing transaction')
                 }
             }, (err) => {
-                const errorInfo = NodeErrorService.connectErrorHandler(err)
-                console.log(errorInfo)
+                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
             })
     }

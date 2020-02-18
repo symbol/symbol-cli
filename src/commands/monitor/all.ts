@@ -22,7 +22,7 @@ import {merge} from 'rxjs'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import { NodeErrorService } from '../../services/nodeError.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',
@@ -62,13 +62,11 @@ export default class extends MonitorAddressCommand {
                         console.log('\n' + response.code)
                     }
                 }, (err) => {
-                    const errorInfo = NodeErrorService.connectErrorHandler(err)
-                    console.log(errorInfo)
+                    console.log(HttpErrorHandler.handleError(err))
                     listener.close()
                 })
         }, (err) => {
-            const errorInfo = NodeErrorService.connectErrorHandler(err)
-            console.log(errorInfo)
+            console.log(HttpErrorHandler.handleError(err))
             listener.close()
         })
     }
