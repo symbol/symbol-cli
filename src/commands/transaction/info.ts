@@ -52,8 +52,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 new TransactionView(transaction).print()
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

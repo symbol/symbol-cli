@@ -60,8 +60,8 @@ export default class extends ProfileCommand {
                 })
 
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

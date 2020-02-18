@@ -51,8 +51,8 @@ export default class extends AccountTransactionsCommand {
                     new TransactionView(transaction).print()
                 })
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

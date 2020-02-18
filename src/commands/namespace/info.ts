@@ -103,8 +103,8 @@ export default class extends ProfileCommand {
                 this.spinner.stop(true)
                 console.log(new NamespaceInfoTable(namespaceInfo).toString())
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

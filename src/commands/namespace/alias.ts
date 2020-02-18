@@ -60,8 +60,8 @@ export default class extends ProfileCommand {
                     console.log('\nThe namespace is not linked with a mosaic or address.')
                 }
             }, (err) => {
-            console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

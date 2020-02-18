@@ -87,8 +87,8 @@ export default class extends ProfileCommand {
                     console.log('\n The address does not have metadata entries assigned.')
                 }
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

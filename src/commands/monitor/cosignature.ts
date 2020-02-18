@@ -49,8 +49,8 @@ export default class extends MonitorAddressCommand {
                 listener.close()
             })
         }, (err) => {
+            this.spinner.stop(true)
             console.log(HttpErrorHandler.handleError(err))
-            listener.close()
         })
     }
 }

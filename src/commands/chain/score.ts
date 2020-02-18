@@ -63,8 +63,8 @@ export default class extends ProfileCommand {
             this.spinner.stop(true)
             console.log(new ChainScoreTable(score).toString())
         }, (err) => {
-            console.log(HttpErrorHandler.handleError(err))
             this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

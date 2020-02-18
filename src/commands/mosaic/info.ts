@@ -90,8 +90,8 @@ export default class extends ProfileCommand {
                     console.log(new MosaicViewTable(mosaicViews[0]).toString())
                 }
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 

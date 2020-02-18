@@ -50,8 +50,8 @@ export default class extends AccountTransactionsCommand {
                     console.log('There aren\'t incoming transaction')
                 }
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

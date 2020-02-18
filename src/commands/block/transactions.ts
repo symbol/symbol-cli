@@ -92,8 +92,8 @@ export default class extends ProfileCommand {
                     console.log('[]')
                 }
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

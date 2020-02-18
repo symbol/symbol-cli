@@ -81,8 +81,8 @@ export default class extends ProfileCommand {
                     console.log('\n The mosaicId does not have mosaic global restrictions assigned.')
                 }
             }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
                 this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }
