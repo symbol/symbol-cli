@@ -20,7 +20,7 @@ import {Metadata, MetadataHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 import {MetadataEntryTable} from './account'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service';
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({

@@ -20,7 +20,7 @@ import {NamespaceHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {NamespaceInfoTable} from './info'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service';
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
 
