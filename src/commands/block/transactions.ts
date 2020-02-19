@@ -62,7 +62,9 @@ export default class extends ProfileCommand {
     execute(options: CommandOptions) {
 
         this.spinner.start()
+
         const profile = this.getProfile(options)
+        const queryParams = new QueryParams()
         const height = new HeightResolver().resolve(options)
 
         let pageSize = options.pageSize || 10
@@ -71,16 +73,20 @@ export default class extends ProfileCommand {
         } else if (pageSize > 100) {
             pageSize = 100
         }
+        queryParams.setPageSize(pageSize)
 
         const id =  options.id || ''
+        queryParams.setId(id)
 
         let order = options.order
         if (order !== 'ASC') {
             order = 'DESC'
         }
+        queryParams.setOrder(order === 'ASC' ? Order.ASC : Order.DESC)
+
 
         const blockHttp = new BlockHttp(profile.url)
-        blockHttp.getBlockTransactions(height, new QueryParams(pageSize, id, order === 'ASC' ? Order.ASC : Order.DESC))
+        blockHttp.getBlockTransactions(height, queryParams)
             .subscribe((transactions: any) => {
                 this.spinner.stop(true)
                 if (transactions.length > 0) {

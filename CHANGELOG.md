@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.1] - 19-Feb-2020
+
+:warning: 0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
+Private keys have now a new public key and address associated.
+Before installing ``nem2-cli@0.18.1``, backup and delete the file  ``~ \.nem2rc.json``.
+
+## Added
+
+- ``node info`` command.
+- ``node health`` command.
+- Errors are handled using a dedicated service.
+
+### Changed
+
+- ``diagnostic`` commands moved under ``node`` commands.
+- ``nem2-sdk`` dependency to 0.18.1.
+
 ## [0.17.1] - 31-Jan-2020
 
 ### Changed
