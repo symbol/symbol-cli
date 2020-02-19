@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import chalk from 'chalk'
 import {command, metadata} from 'clime'
 import {ChainHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Get the current height of the chain',
@@ -40,8 +40,7 @@ export default class extends ProfileCommand {
             console.log(height.toString())
         }, (err) => {
             this.spinner.stop(true)
-            err = err.message ? JSON.parse(err.message) : err
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

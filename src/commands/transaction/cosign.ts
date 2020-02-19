@@ -35,6 +35,7 @@ import {Profile} from '../../models/profile'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -82,8 +83,7 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 
@@ -138,8 +138,7 @@ export default class extends ProfileCommand {
             console.log(chalk.green('Transaction cosigned and announced correctly.'))
         } catch (err) {
             this.spinner.stop(true)
-            err = err.message ? JSON.parse(err.message) : err
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            console.log(HttpErrorHandler.handleError(err))
         }
     }
 }

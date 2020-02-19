@@ -21,6 +21,7 @@ import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
 import {BlockchainScore, ChainHttp} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class ChainScoreTable {
     private readonly table: HorizontalTable
@@ -63,8 +64,7 @@ export default class extends ProfileCommand {
             console.log(new ChainScoreTable(score).toString())
         }, (err) => {
             this.spinner.stop(true)
-            err = err.message ? JSON.parse(err.message) : err
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

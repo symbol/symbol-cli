@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata} from 'clime'
 import {Listener} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitor new blocks',
@@ -40,13 +40,12 @@ export default class extends ProfileCommand {
                 console.log('\n')
                 console.log(block)
             }, (err) => {
+                console.log(HttpErrorHandler.handleError(err))
                 listener.close()
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
             })
         }, (err) => {
-            listener.close()
-            console.log(chalk.red('Error'), err)
+            this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }
