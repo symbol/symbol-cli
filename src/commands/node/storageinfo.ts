@@ -19,33 +19,34 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
-import {DiagnosticHttp, ServerInfo} from 'nem2-sdk'
+import {NodeHttp, StorageInfo} from 'nem2-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
-export class ServerInfoTable {
+export class StorageTable {
     private readonly table: HorizontalTable
-    constructor(public readonly serverInfo: ServerInfo) {
+    constructor(public readonly storage: StorageInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable
         this.table.push(
-            ['Rest Version', serverInfo.restVersion],
-            ['SDK Version', serverInfo.sdkVersion],
+            ['Number of Accounts', storage.numAccounts],
+            ['Number of Blocks', storage.numBlocks],
+            ['Number of Transactions', storage.numAccounts],
         )
     }
 
     toString(): string {
         let text = ''
-        text += '\n' + chalk.green('Server Information') + '\n'
+        text += '\n' + chalk.green('Storage Information') + '\n'
         text += this.table.toString()
         return text
     }
 }
 
 @command({
-    description: 'Get the REST server components versions',
+    description: 'Get diagnostic information about the node storage',
 })
 export default class extends ProfileCommand {
 
@@ -59,11 +60,11 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options)
 
-        const diagnosticHttp = new DiagnosticHttp(profile.url)
-        diagnosticHttp.getServerInfo()
-            .subscribe((serverInfo) => {
+        const nodeHttp = new NodeHttp(profile.url)
+        nodeHttp.getStorageInfo()
+            .subscribe((storage) => {
                 this.spinner.stop(true)
-                console.log(new ServerInfoTable(serverInfo).toString())
+                console.log(new StorageTable(storage).toString())
             }, (err) => {
                 this.spinner.stop(true)
                 console.log(HttpErrorHandler.handleError(err))

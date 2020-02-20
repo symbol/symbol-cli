@@ -47,10 +47,6 @@ export const subcommands = [
         brief: 'Convert between data types',
     },
     {
-        name: 'diagnostic',
-        brief: 'Get node diagnostics reports',
-    },
-    {
         name: 'metadata',
         brief: 'Get metadata related information',
     },
@@ -65,6 +61,10 @@ export const subcommands = [
     {
         name: 'namespace',
         brief: 'Get namespace related information',
+    },
+    {
+        name: 'node',
+        brief: 'Get node related information',
     },
     {
         name: 'profile',

@@ -93,8 +93,10 @@ export default class extends ProfileCommand {
      * @returns {SequentialFetcher}
      */
     private getSequentialFetcher(): SequentialFetcher {
+        const queryParams = new QueryParams()
+        queryParams.setPageSize(100)
         const networkCall = (address: Address) => new AccountHttp(this.profile.url)
-            .getAccountPartialTransactions(address, new QueryParams(100))
+            .getAccountPartialTransactions(address, queryParams)
             .toPromise()
 
         return SequentialFetcher.create(networkCall)

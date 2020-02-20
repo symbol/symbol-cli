@@ -21,7 +21,7 @@ import {
     Deadline,
     HashLockTransaction,
     MultisigAccountModificationTransaction,
-    NetworkCurrencyMosaic,
+    NetworkCurrencyPublic,
     UInt64,
 } from 'nem2-sdk'
 import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
@@ -107,7 +107,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyMosaic.createRelative(UInt64.fromNumericString(options.amount)),
+            NetworkCurrencyPublic.createRelative(UInt64.fromNumericString(options.amount)),
             UInt64.fromNumericString(options.duration),
             signedTransaction,
             profile.networkType,

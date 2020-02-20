@@ -60,9 +60,12 @@ export class AccountTransactionsOptions extends ProfileOptions {
      * @returns {QueryParams}
      */
     getQueryParams(): QueryParams {
+        const queryParams = new QueryParams()
+        queryParams.setPageSize(this.numTransactions)
         if (this.id === undefined) {
-            return new QueryParams(this.numTransactions)
+            return queryParams
         }
-        return new QueryParams(this.numTransactions, this.id)
+        queryParams.setId(this.id)
+        return queryParams
     }
 }
