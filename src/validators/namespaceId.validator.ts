@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {NamespaceId, UInt64} from 'nem2-sdk'
+import {NamespaceId, UInt64} from 'symbol-sdk'
 
 /**
  * Namespace id validator

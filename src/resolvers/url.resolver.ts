@@ -19,7 +19,7 @@ export class URLResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'url',
             () => secondSource ? secondSource.url : undefined,
-            altText ? altText : 'Enter the NEM2 node URL. (Example: http://localhost:3000): ').trim()
+            altText ? altText : 'Enter the Symbol node URL. (Example: http://localhost:3000): ').trim()
 
         return resolution.endsWith('/') ? resolution.slice(0, -1) : resolution
     }

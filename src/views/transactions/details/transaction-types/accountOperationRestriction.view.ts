@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'nem2-sdk'
+import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class AccountOperationRestrictionView {

@@ -1,4 +1,4 @@
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'symbol-sdk'
 import {isNumeric} from 'rxjs/internal-compatibility'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'

@@ -16,7 +16,7 @@
  *
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime'
-import { KeyGenerator, UInt64 } from 'nem2-sdk'
+import { KeyGenerator, UInt64 } from 'symbol-sdk'
 
 /**
  * Validator of mosaic restriction key

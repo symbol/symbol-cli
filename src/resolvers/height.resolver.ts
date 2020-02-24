@@ -1,4 +1,4 @@
-import {UInt64} from 'nem2-sdk'
+import {UInt64} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'

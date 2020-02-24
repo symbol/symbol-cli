@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {ReceiptHttp} from 'nem2-sdk'
+import {ReceiptHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {ReceiptService} from '../../services/receipt.service'

@@ -16,7 +16,7 @@
  *
  */
 
-import {NamespaceId} from 'nem2-sdk'
+import {NamespaceId} from 'symbol-sdk'
 
 export class NamespacesView {
  /**

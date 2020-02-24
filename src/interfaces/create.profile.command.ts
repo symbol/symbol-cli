@@ -20,7 +20,7 @@ import {Spinner} from 'cli-spinner'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {Command, ExpectedError, option} from 'clime'
-import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk'
+import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
 import {ProfileOptions} from './profile.command'
@@ -66,7 +66,7 @@ export abstract class CreateProfileCommand extends Command {
      */
     protected constructor(fileUrl?: string) {
         super()
-        const profileRepository = new ProfileRepository(fileUrl || '.nem2rc.json')
+        const profileRepository = new ProfileRepository(fileUrl || '.symbolrc.json')
         this.profileService = new ProfileService(profileRepository)
         this.spinner.setSpinnerString('|/-\\')
     }
@@ -109,8 +109,8 @@ export abstract class CreateProfileCommand extends Command {
             this.profileService.setDefaultProfile(profileName)
         } catch (err) {
             throw new ExpectedError('Can\'t set the profile [' + profileName + '] as the default profile.' +
-                'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile')
+                'Use \'symbol-cli profile list\' to check whether the profile exist, ' +
+                'if not, use \'symbol-cli profile create\' to create a profile')
         }
     }
 }
@@ -122,7 +122,7 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'u',
-        description: '(Optional) When saving profile, provide a NEM2 Node URL. Example: http://localhost:3000',
+        description: '(Optional) When saving profile, provide a Symbol Node URL. Example: http://localhost:3000',
     })
     url: string
 

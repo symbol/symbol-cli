@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {SimpleWallet} from 'nem2-sdk'
+import {SimpleWallet} from 'symbol-sdk'
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
 import {DefaultResolver} from '../../resolvers/default.resolver'
 import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'

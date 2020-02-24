@@ -17,7 +17,7 @@
  */
 
 import {Cell, HorizontalTable} from 'cli-table3'
-import {SignedTransaction, Transaction} from 'nem2-sdk'
+import {SignedTransaction, Transaction} from 'symbol-sdk'
 import {TableBuilder} from '../../../models/tableBuilder'
 import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view'
 import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view'

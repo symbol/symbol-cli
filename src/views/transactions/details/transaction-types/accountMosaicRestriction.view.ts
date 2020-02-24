@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'nem2-sdk'
+import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'symbol-sdk'
 import {MosaicsView} from '../../../mosaics.view'
 import {CellRecord} from '../transaction.view'
 

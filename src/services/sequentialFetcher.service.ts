@@ -16,7 +16,7 @@
  *
  */
 
-import {Address} from 'nem2-sdk'
+import {Address} from 'symbol-sdk'
 import {Observable, Subject} from 'rxjs'
 import {startWith} from 'rxjs/operators'
 

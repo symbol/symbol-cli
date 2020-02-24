@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountLinkTransaction, LinkAction} from 'nem2-sdk'
+import {AccountLinkTransaction, LinkAction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class AccountLinkView {

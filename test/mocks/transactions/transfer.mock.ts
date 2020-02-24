@@ -16,7 +16,7 @@
  *
  */
 
-import {Address, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64} from 'nem2-sdk'
+import {Address, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64} from 'symbol-sdk'
 import {mosaic1, mosaic2} from '../mosaics.mock'
 import {namespaceId2} from '../namespaces.mock'
 

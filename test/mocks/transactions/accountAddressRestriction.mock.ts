@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk'
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'symbol-sdk'
 import {account1, account2, account3} from '../accounts.mock'
 
 export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction

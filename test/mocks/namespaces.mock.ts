@@ -16,7 +16,7 @@
  *
  */
 
-import {NamespaceId} from 'nem2-sdk'
+import {NamespaceId} from 'symbol-sdk'
 
 export const namespaceId1 = new NamespaceId('symbol.xym')
 export const namespaceId2 = new NamespaceId('alice')

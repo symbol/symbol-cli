@@ -16,7 +16,7 @@
  *
  */
 
-import {Mosaic, MosaicId, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicId, UInt64} from 'symbol-sdk'
 import {namespaceId1} from './namespaces.mock'
 
 export const mosaicId1 = new MosaicId([3646934825, 3576016193])

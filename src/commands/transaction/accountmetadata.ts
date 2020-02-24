@@ -8,7 +8,7 @@ import {
     MetadataType,
     NetworkCurrencyPublic,
     UInt64,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {KeyResolver} from '../../resolvers/key.resolver'

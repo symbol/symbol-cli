@@ -17,7 +17,7 @@
  */
 
 import {sha3_256} from 'js-sha3'
-import {Convert, Deadline, HashType, NetworkType, SecretProofTransaction, UInt64} from 'nem2-sdk'
+import {Convert, Deadline, HashType, NetworkType, SecretProofTransaction, UInt64} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 
 const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'

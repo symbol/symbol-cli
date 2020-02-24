@@ -23,7 +23,7 @@ import {
     MultisigAccountModificationTransaction,
     NetworkCurrencyPublic,
     UInt64,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'

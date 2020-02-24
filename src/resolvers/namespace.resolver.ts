@@ -1,4 +1,4 @@
-import {NamespaceId, NamespaceRegistrationType, UInt64} from 'nem2-sdk'
+import {NamespaceId, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
 import * as readlineSync from 'readline-sync'
 import {CommandOptions} from '../commands/transaction/namespace'
 import {ProfileOptions} from '../interfaces/profile.command'

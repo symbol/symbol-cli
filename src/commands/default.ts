@@ -19,15 +19,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require('../../../package.json')
-export const description = `
-                      ____            _ _
- _ __   ___ _ __ ___ |___ \\       ___| (_)
-| \'_ \\ / _ \\ \'_ \` _ \\  __) |____ / __| | |
-| | | |  __/ | | | | |/ __/_____| (__| | |
-|_| |_|\\___|_| |_| |_|_____|     \\___|_|_|
-
-                                   v${pkg.version}
-`
+export const description = `Symbol CLI v${pkg.version}`
 
 export const subcommands = [
     {

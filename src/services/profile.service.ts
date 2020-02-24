@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {SimpleWallet} from 'nem2-sdk'
+import {SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../models/profile'
 import {ProfileRepository} from '../respositories/profile.repository'
 

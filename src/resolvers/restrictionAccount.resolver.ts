@@ -1,5 +1,5 @@
 import {ExpectedError} from 'clime'
-import {AccountRestrictionFlags} from 'nem2-sdk'
+import {AccountRestrictionFlags} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'

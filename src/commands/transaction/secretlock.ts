@@ -15,7 +15,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Deadline, Mosaic, SecretLockTransaction} from 'nem2-sdk'
+import {Deadline, Mosaic, SecretLockTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AmountResolver} from '../../resolvers/amount.resolver'
