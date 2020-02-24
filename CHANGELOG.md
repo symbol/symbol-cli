@@ -8,7 +8,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 :warning: 0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
 Private keys have now a new public key and address associated.
-Before installing ``nem2-cli@0.18.1``, backup and delete the file  ``~ \.nem2rc.json``.
+Before installing ``symbol-cli@0.18.1``, backup and delete the file  ``~ \.nem2rc.json``.
 
 **Milestone**: Fushicho.5(RC4 0.9.3.1)
 
@@ -25,7 +25,7 @@ SDK | v0.17.1 | https://www.npmjs.com/package/symbol-sdk
 ### Changed
 
 - ``diagnostic`` commands moved under ``node`` commands.
-- ``nem2-sdk`` dependency to 0.17.1.
+- ``symbol-sdk`` dependency to 0.17.1.
 
 ## [0.17.1] - 31-Jan-2020
 
@@ -40,7 +40,7 @@ SDK | v0.16.5 | https://www.npmjs.com/package/symbol-sdk
 - ``transactions`` responses formatted as a table.
 - ``eslint`` deprecated in favor of ``ts-lint``.
 - ``persistentharvestdelegation`` command split.
-- ``nem2-sdk`` dependency to 0.16.5.
+- ``symbol-sdk`` dependency to 0.16.5.
 
 ## [0.16.3] - 17-Jan-2020
 
@@ -87,7 +87,7 @@ SDK | v0.16.5 | https://www.npmjs.com/package/symbol-sdk
 
 - ``NetworkType`` and ``HashType`` resolvers now accept strings.
 - Prevent creating multiple profiles with the same name.
-- ``nem2-sdk`` dependency to 0.16.2.
+- ``symbol-sdk`` dependency to 0.16.2.
 
 ### Removed
 
@@ -96,7 +96,7 @@ SDK | v0.16.5 | https://www.npmjs.com/package/symbol-sdk
 ## [0.16.0] - 30-Dec-2019
 
 :warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.
-Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.json``.
+Before installing ``symbol-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.json``.
 
 ### Added
 
@@ -127,7 +127,7 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.16.0.
+- ``symbol-sdk`` dependency to 0.16.0.
 
 ## [0.14.0] - 21-Nov-2019
 
@@ -138,7 +138,7 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.15.0.
+- ``symbol-sdk`` dependency to 0.15.0.
 
 ## [0.13.4] - 28-Oct-2019
 
@@ -189,7 +189,7 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.13.3.
+- ``symbol-sdk`` dependency to 0.13.3.
 - ``account info`` and ``mosaic info`` commands returns mosaic in absolute and relative amounts.
 - ``account info`` and ``mosaic info`` commands returns the block expiration height of the returned mosaics.
 - Command parameters are now in camelCase.
@@ -206,13 +206,13 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.13.0.
+- ``symbol-sdk`` dependency to 0.13.0.
 
 ## [0.12.1] - 05-Jun-2019
 
 ### Changed
 
-- ``nem2-sdk`` dependency to 0.12.1.
+- ``symbol-sdk`` dependency to 0.12.1.
 
 ## [0.12.0] - 04-Jun-2019
 
@@ -229,7 +229,7 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 
 ### Fixed
 
-- Static nem2-sdk & library version.
+- Static symbol-sdk & library version.
 
 ## [0.11.2] - 25-Apr-2019
 
@@ -243,7 +243,7 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 
 ### Changed
 
-- Adapted nem2-sdk 0.11.1 breaking changes.
+- Adapted symbol-sdk 0.11.1 breaking changes.
 - The code is now rxjs 6.0 compatible.
 - ``transaction mosaic`` command does not require to specify a mosaic name.
 - ``mosaic info`` command allows passing mosaics in uint64 and hex format.
@@ -255,19 +255,19 @@ Before installing ``nem2-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.
 ### Added
 - Initial code release.
 
-[0.17.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.3...v0.17.1
-[0.16.3]: https://github.com/nemtech/nem2-cli/compare/v0.16.2...v0.16.3
-[0.16.2]: https://github.com/nemtech/nem2-cli/compare/v0.16.1...v0.16.2
-[0.16.1]: https://github.com/nemtech/nem2-cli/compare/v0.16.0...v0.16.1
-[0.16.0]: https://github.com/nemtech/nem2-cli/compare/v0.15.1...v0.16.0
-[0.15.1]: https://github.com/nemtech/nem2-cli/compare/v0.14.0...v0.15.1
-[0.14.0]: https://github.com/nemtech/nem2-cli/compare/v0.13.4...v0.14.0
-[0.13.4]: https://github.com/nemtech/nem2-cli/compare/v0.13.2...v0.13.4
-[0.13.2]: https://github.com/nemtech/nem2-cli/compare/v0.13.1...v0.13.2
-[0.13.1]: https://github.com/nemtech/nem2-cli/compare/v0.13.0...v0.13.1
-[0.13.0]: https://github.com/nemtech/nem2-cli/compare/v0.12.0...v0.13.0
-[0.12.0]: https://github.com/nemtech/nem2-cli/compare/v0.11.3...v0.12.0
-[0.11.3]: https://github.com/nemtech/nem2-cli/compare/v0.11.2...v0.11.3
-[0.11.2]: https://github.com/nemtech/nem2-cli/compare/v0.11.0...v0.11.2
-[0.11.0]: https://github.com/nemtech/nem2-cli/compare/v0.9.3...v0.11.0
-[0.9.3]: https://github.com/nemtech/nem2-cli/releases/v0.9.3
+[0.17.1]: https://github.com/nemtech/symbol-cli/compare/v0.16.3...v0.17.1
+[0.16.3]: https://github.com/nemtech/symbol-cli/compare/v0.16.2...v0.16.3
+[0.16.2]: https://github.com/nemtech/symbol-cli/compare/v0.16.1...v0.16.2
+[0.16.1]: https://github.com/nemtech/symbol-cli/compare/v0.16.0...v0.16.1
+[0.16.0]: https://github.com/nemtech/symbol-cli/compare/v0.15.1...v0.16.0
+[0.15.1]: https://github.com/nemtech/symbol-cli/compare/v0.14.0...v0.15.1
+[0.14.0]: https://github.com/nemtech/symbol-cli/compare/v0.13.4...v0.14.0
+[0.13.4]: https://github.com/nemtech/symbol-cli/compare/v0.13.2...v0.13.4
+[0.13.2]: https://github.com/nemtech/symbol-cli/compare/v0.13.1...v0.13.2
+[0.13.1]: https://github.com/nemtech/symbol-cli/compare/v0.13.0...v0.13.1
+[0.13.0]: https://github.com/nemtech/symbol-cli/compare/v0.12.0...v0.13.0
+[0.12.0]: https://github.com/nemtech/symbol-cli/compare/v0.11.3...v0.12.0
+[0.11.3]: https://github.com/nemtech/symbol-cli/compare/v0.11.2...v0.11.3
+[0.11.2]: https://github.com/nemtech/symbol-cli/compare/v0.11.0...v0.11.2
+[0.11.0]: https://github.com/nemtech/symbol-cli/compare/v0.9.3...v0.11.0
+[0.9.3]: https://github.com/nemtech/symbol-cli/releases/v0.9.3
