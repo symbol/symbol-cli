@@ -24,7 +24,7 @@ export class GenerationHashResolver implements Resolver {
             generationHash = options.generationHash
                 ? options.generationHash : (await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()).generationHash
         } catch (ignored) {
-            throw new ExpectedError('Check if you can reach the NEM2 url provided: ' + options.url + '/block/1')
+            throw new ExpectedError('Check if you can reach the Symbol url provided: ' + options.url + '/block/1')
         }
         return generationHash
     }

@@ -19,7 +19,7 @@ export class KeyResolver implements Resolver {
             () => undefined,
             altText ?
             altText : 'Enter a UInt64 key in hexadecimal format.' +
-                ' You can use the command \'nem2-cli converter stringtokey\' ' +
+                ' You can use the command \'symbol-cli converter stringtokey\' ' +
                 'to turn an string into a valid key: ').trim()
         new KeyValidator().validate(resolution)
         return UInt64.fromHex(resolution)

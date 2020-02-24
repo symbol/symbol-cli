@@ -109,8 +109,8 @@ export abstract class CreateProfileCommand extends Command {
             this.profileService.setDefaultProfile(profileName)
         } catch (err) {
             throw new ExpectedError('Can\'t set the profile [' + profileName + '] as the default profile.' +
-                'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-                'if not, use \'nem2-cli profile create\' to create a profile')
+                'Use \'symbol-cli profile list\' to check whether the profile exist, ' +
+                'if not, use \'symbol-cli profile create\' to create a profile')
         }
     }
 }
@@ -122,7 +122,7 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'u',
-        description: '(Optional) When saving profile, provide a NEM2 Node URL. Example: http://localhost:3000',
+        description: '(Optional) When saving profile, provide a Symbol Node URL. Example: http://localhost:3000',
     })
     url: string
 

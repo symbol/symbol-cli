@@ -52,8 +52,8 @@ export abstract class ProfileCommand extends Command {
             return this.profileService.getDefaultProfile()
         } catch (err) {
             throw new ExpectedError('Can\'t retrieve the current profile.' +
-            'Use \'nem2-cli profile list\' to check whether the profile exist, ' +
-            'if not, use \'nem2-cli profile create\' to create a new profile')
+            'Use \'symbol-cli profile list\' to check whether the profile exist, ' +
+            'if not, use \'symbol-cli profile create\' to create a new profile')
         }
     }
 
@@ -67,7 +67,7 @@ export abstract class ProfileCommand extends Command {
             return this.profileService.getDefaultProfile()
         } catch (err) {
             throw new ExpectedError('Can\'t retrieve the default profile.' +
-                'Use \'nem2-cli profile create\' to create a new default profile')
+                'Use \'symbol-cli profile create\' to create a new default profile')
         }
     }
 
