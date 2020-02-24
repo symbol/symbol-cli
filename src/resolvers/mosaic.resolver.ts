@@ -1,4 +1,4 @@
-import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk'
+import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'symbol-sdk'
 import * as readlineSync from 'readline-sync'
 import {CommandOptions} from '../commands/transaction/mosaic'
 import {ProfileOptions} from '../interfaces/profile.command'

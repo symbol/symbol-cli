@@ -1,4 +1,4 @@
-import {Address, NamespaceId} from 'nem2-sdk'
+import {Address, NamespaceId} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'

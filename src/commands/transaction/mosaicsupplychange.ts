@@ -15,7 +15,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Deadline, MosaicSupplyChangeTransaction} from 'nem2-sdk'
+import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {SupplyActionResolver} from '../../resolvers/action.resolver'
 import {AmountResolver} from '../../resolvers/amount.resolver'

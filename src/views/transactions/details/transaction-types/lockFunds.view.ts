@@ -16,7 +16,7 @@
  *
  */
 
-import {LockFundsTransaction} from 'nem2-sdk'
+import {LockFundsTransaction} from 'symbol-sdk'
 import {MosaicsView} from '../../../mosaics.view'
 import {CellRecord} from '../transaction.view'
 

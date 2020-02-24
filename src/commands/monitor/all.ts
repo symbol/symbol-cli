@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk'
+import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'

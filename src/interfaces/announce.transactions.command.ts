@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk'
 import {option} from 'clime'
-import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService} from 'nem2-sdk'
+import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService} from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from './profile.command'

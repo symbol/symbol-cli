@@ -1,4 +1,4 @@
-import {Transaction, TransactionMapping} from 'nem2-sdk'
+import {Transaction, TransactionMapping} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'

@@ -16,7 +16,7 @@
  *
  */
 
-import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'nem2-sdk'
+import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'symbol-sdk'
 import {mosaicId1, mosaicId2} from '../mosaics.mock'
 
 export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransaction

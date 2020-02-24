@@ -17,7 +17,7 @@
  */
 
 import {ExpectedError} from 'clime'
-import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
 
 /**
  * Mosaic service

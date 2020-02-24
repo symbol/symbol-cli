@@ -29,7 +29,7 @@ import {
     MultisigAccountInfo,
     MultisigHttp,
     PublicAccount,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {forkJoin, of} from 'rxjs'
 import {catchError, mergeMap, toArray} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'

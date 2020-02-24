@@ -16,7 +16,7 @@
  *
  */
 
-import {HashType, SecretProofTransaction} from 'nem2-sdk'
+import {HashType, SecretProofTransaction} from 'symbol-sdk'
 import {RecipientsView} from '../../../recipients.view'
 import {CellRecord} from '../transaction.view'
 

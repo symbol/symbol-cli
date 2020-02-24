@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {NamespaceHttp} from 'nem2-sdk'
+import {NamespaceHttp} from 'symbol-sdk'
 import {forkJoin, of} from 'rxjs'
 import {catchError} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'

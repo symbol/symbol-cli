@@ -16,7 +16,7 @@
  *
  */
 import {option} from 'clime'
-import {QueryParams} from 'nem2-sdk'
+import {Order, QueryParams} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from './profile.command'
 
 /**
@@ -44,10 +44,10 @@ export class AccountTransactionsOptions extends ProfileOptions {
 
     @option({
         flag: 'n',
-        description: '(Optional) Number of transactions.',
+        description: '(Optional) Number of transactions per page.',
         default: 10,
     })
-    numTransactions: number
+    pageSize: number
 
     @option({
         flag: 'i',
@@ -55,14 +55,22 @@ export class AccountTransactionsOptions extends ProfileOptions {
     })
     id: string
 
+    @option({
+        flag: 'o',
+        description: '(Optional): Order of transactions. DESC. Newer to older. ASC. Older to newer.',
+        default: 'DESC',
+    })
+    order: string
+
     /**
      * Creates QueryParams object based on options.
      * @returns {QueryParams}
      */
     getQueryParams(): QueryParams {
-        if (this.id === undefined) {
-            return new QueryParams(this.numTransactions)
-        }
-        return new QueryParams(this.numTransactions, this.id)
+        const queryParams = new QueryParams({
+            pageSize: this.pageSize,
+            id: this.id,
+            order: this.order === 'ASC' ? Order.ASC : Order.DESC})
+        return queryParams
     }
 }

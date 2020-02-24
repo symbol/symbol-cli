@@ -19,33 +19,33 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
-import {DiagnosticHttp, ServerInfo} from 'nem2-sdk'
+import {NodeHealth, NodeHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
-export class ServerInfoTable {
+export class NodeHealthTable {
     private readonly table: HorizontalTable
-    constructor(public readonly serverInfo: ServerInfo) {
+    constructor(public readonly health: NodeHealth) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable
         this.table.push(
-            ['Rest Version', serverInfo.restVersion],
-            ['SDK Version', serverInfo.sdkVersion],
+            ['API node', health.apiNode],
+            ['DB node', health.db],
         )
     }
 
     toString(): string {
         let text = ''
-        text += '\n' + chalk.green('Server Information') + '\n'
+        text += '\n' + chalk.green('Health Information') + '\n'
         text += this.table.toString()
         return text
     }
 }
 
 @command({
-    description: 'Get the REST server components versions',
+    description: 'Supplies information regarding the connection and services status',
 })
 export default class extends ProfileCommand {
 
@@ -59,11 +59,11 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options)
 
-        const diagnosticHttp = new DiagnosticHttp(profile.url)
-        diagnosticHttp.getServerInfo()
-            .subscribe((serverInfo) => {
+        const nodeHttp = new NodeHttp(profile.url)
+        nodeHttp.getNodeHealth()
+            .subscribe((health) => {
                 this.spinner.stop(true)
-                console.log(new ServerInfoTable(serverInfo).toString())
+                console.log(new NodeHealthTable(health).toString())
             }, (err) => {
                 this.spinner.stop(true)
                 console.log(HttpErrorHandler.handleError(err))

@@ -18,7 +18,7 @@
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {ExpectedError} from 'clime'
-import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'nem2-sdk'
+import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {PasswordResolver} from '../resolvers/password.resolver'
 

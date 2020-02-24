@@ -16,7 +16,7 @@
  *
  */
 import { ExpectedError, ValidationContext, Validator } from 'clime'
-import { MosaicRestrictionType } from 'nem2-sdk'
+import { MosaicRestrictionType } from 'symbol-sdk'
 
 /**
  * Validator of mosaic restriction type

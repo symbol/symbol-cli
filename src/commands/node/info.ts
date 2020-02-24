@@ -18,49 +18,40 @@
 import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {Metadata, MetadataEntry, MetadataHttp} from 'symbol-sdk'
+import {command, metadata} from 'clime'
+import {NodeHttp, NodeInfo} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {AddressResolver} from '../../resolvers/address.resolver'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
-export class CommandOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-    })
-    address: string
-}
-
-export class MetadataEntryTable {
+export class NodeInfoTable {
     private readonly table: HorizontalTable
-
-    constructor(public readonly entry: MetadataEntry) {
+    constructor(public readonly nodeInfo: NodeInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
-            head: ['Type', 'Value'],
+            head: ['Property', 'Value'],
         }) as HorizontalTable
-
         this.table.push(
-            ['Sender Public Key', entry.senderPublicKey],
-            ['Target Public Key', entry.targetPublicKey],
-            ['Value', entry.value],
+            ['Friendly Name', nodeInfo.friendlyName],
+            ['Host', nodeInfo.host],
+            ['Network Generation Hash', nodeInfo.networkGenerationHash],
+            ['Network Identifier', nodeInfo.networkIdentifier],
+            ['Port', nodeInfo.port],
+            ['Public Key', nodeInfo.publicKey],
+            ['Roles', nodeInfo.roles],
+            ['Version', nodeInfo.version],
         )
-        if (entry.targetId) {
-            this.table.push(['Target Id', entry.targetId.toHex()])
-        }
     }
 
     toString(): string {
         let text = ''
-        text += '\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n'
+        text += '\n' + chalk.green('Node Information') + '\n'
         text += this.table.toString()
         return text
     }
 }
 
 @command({
-    description: 'Fetch metadata entries from an account',
+    description: 'Get the REST server components versions',
 })
 export default class extends ProfileCommand {
 
@@ -69,23 +60,16 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    execute(options: ProfileOptions) {
         this.spinner.start()
-        const profile = this.getProfile(options)
-        const address = new AddressResolver().resolve(options, profile)
 
-        const metadataHttp = new MetadataHttp(profile.url)
-        metadataHttp.getAccountMetadata(address)
-            .subscribe((metadataEntries) => {
+        const profile = this.getProfile(options)
+
+        const nodeHttp = new NodeHttp(profile.url)
+        nodeHttp.getNodeInfo()
+            .subscribe((nodeInfo) => {
                 this.spinner.stop(true)
-                if (metadataEntries.length > 0) {
-                    metadataEntries
-                        .map((entry: Metadata) => {
-                            console.log(new MetadataEntryTable(entry.metadataEntry).toString())
-                        })
-                } else {
-                    console.log('\n The address does not have metadata entries assigned.')
-                }
+                console.log(new NodeInfoTable(nodeInfo).toString())
             }, (err) => {
                 this.spinner.stop(true)
                 console.log(HttpErrorHandler.handleError(err))

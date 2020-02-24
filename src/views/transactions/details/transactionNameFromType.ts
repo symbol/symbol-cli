@@ -16,7 +16,7 @@
  *
  */
 
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType} from 'symbol-sdk'
 
 export const transactionNameFromType = (type: TransactionType): string => {
  try {

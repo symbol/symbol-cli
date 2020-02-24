@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType} from 'symbol-sdk'
 import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver'
 
 describe('Transaction type resolver', () => {

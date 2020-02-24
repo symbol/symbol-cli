@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {UInt64} from 'nem2-sdk'
+import {UInt64} from 'symbol-sdk'
 
 /**
  * Numeric string

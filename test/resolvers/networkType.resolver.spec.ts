@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'symbol-sdk'
 import {NetworkResolver} from '../../src/resolvers/network.resolver'
 
 describe('Network type resolver', () => {

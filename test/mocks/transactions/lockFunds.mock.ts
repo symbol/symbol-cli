@@ -16,7 +16,7 @@
  *
  */
 
-import {Deadline, LockFundsTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {Deadline, LockFundsTransaction, NetworkType, UInt64} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 import {mosaic2} from '../mosaics.mock'
 import {unsignedAggregateBonded1} from './aggregateBonded.mock'

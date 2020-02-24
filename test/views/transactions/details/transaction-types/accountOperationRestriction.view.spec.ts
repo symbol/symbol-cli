@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType} from 'symbol-sdk'
 import {AccountOperationRestrictionView} from '../../../../../src/views/transactions/details/transaction-types'
 import {
  operation1, operation2, operation3, unsignedAccountOperationRestriction1,

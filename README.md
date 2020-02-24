@@ -11,14 +11,13 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
+- [0.18.1](CHANGELOG.md#0181-19-Feb-2020) - **Fushicho5 Network Compatibility (catapult-server@0.9.3.1)**
+
+:warning: 0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
+Private keys have now a new public key and address associated.
+Before installing ``symbol-cli@0.18.1``, backup and delete the file ``~ \.nem2rc.json``.
+
 - [0.17.1](CHANGELOG.md#0171-31-Jan-2020) - **Fushicho4 Network Compatibility (catapult-server@0.9.2.1)**
-
-- [0.16.3](CHANGELOG.md#0163-17-Jan-2020) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
-
-:warning: 0.16.x breaks compatibility with the ``profiles`` (private keys) saved using previous versions of the software.
-Before installing ``symbol-cli@0.16.0``, backup and delete the file  ``~ \.nem2rc.json``.
-
-- [0.15.2](CHANGELOG.md#0151-13-Dec-2019) - **Fushicho3 Network Compatibility (catapult-server@0.9.1.1)**
 
 The release notes for the symbol-cli can be found [here](CHANGELOG.md).
 
@@ -31,7 +30,7 @@ The release notes for the symbol-cli can be found [here](CHANGELOG.md).
 The Symbol CLI is distributed using the node package manager npm.
 
 ```
-npm install symbol-cli -g
+npm install -g symbol-cli
 ```
 
 ## Usage

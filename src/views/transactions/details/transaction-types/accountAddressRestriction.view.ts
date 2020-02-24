@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'nem2-sdk'
+import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class AccountAddressRestrictionView {

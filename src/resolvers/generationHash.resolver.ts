@@ -1,5 +1,5 @@
 import {ExpectedError} from 'clime'
-import {BlockHttp, UInt64} from 'nem2-sdk'
+import {BlockHttp, UInt64} from 'symbol-sdk'
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'

@@ -16,7 +16,7 @@
  *
  */
 
-import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'nem2-sdk'
+import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class MosaicGlobalRestrictionView {

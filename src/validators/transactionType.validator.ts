@@ -16,14 +16,14 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType} from 'symbol-sdk'
 
 /**
  * Transaction type validator
  */
 export class TransactionTypeValidator implements Validator<string> {
 
-    /**
+    /*
      * Validates if transaction type is known.
      * @param {string} value - Transaction type.
      * @param {ValidationContext} context

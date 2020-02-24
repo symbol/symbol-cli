@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Convert} from 'nem2-sdk'
+import {Convert} from 'symbol-sdk'
 import {NamespaceMetadataView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {unsignedNamespaceMetadata1} from '../../../../mocks/transactions/namespaceMetadata.mock'

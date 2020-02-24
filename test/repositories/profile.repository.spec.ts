@@ -17,7 +17,7 @@
  */
 import {expect} from 'chai'
 import * as fs from 'fs'
-import {NetworkType, Password, SimpleWallet} from 'nem2-sdk'
+import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 
@@ -33,7 +33,7 @@ describe('ProfileRepository', () => {
 
     before(() => {
         removeAccountsFile()
-        repositoryFileUrl = '.nem2rctest.json'
+        repositoryFileUrl = '.symbolrctest.json'
     })
 
     beforeEach(() => {

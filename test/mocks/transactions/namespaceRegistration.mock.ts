@@ -16,7 +16,7 @@
  *
  */
 
-import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'symbol-sdk'
 import {namespaceId1} from '../namespaces.mock'
 
 export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction

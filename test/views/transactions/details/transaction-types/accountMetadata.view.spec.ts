@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {Convert} from 'nem2-sdk'
+import {Convert} from 'symbol-sdk'
 import {AccountMetadataView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {unsignedAccountMetadata1} from '../../../../mocks/transactions/accountMetadata.mock'

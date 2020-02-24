@@ -16,7 +16,7 @@
  *
  */
 
-import {TransferTransaction} from 'nem2-sdk'
+import {TransferTransaction} from 'symbol-sdk'
 import {MosaicsView} from '../../../mosaics.view'
 import {RecipientsView} from '../../../recipients.view'
 import {CellRecord} from '../transaction.view'

@@ -27,7 +27,7 @@ import {
     CosignatureTransaction,
     QueryParams,
     TransactionHttp,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {filter, flatMap, switchMap} from 'rxjs/operators'
 import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ProfileCommand} from '../../interfaces/profile.command'
@@ -93,8 +93,9 @@ export default class extends ProfileCommand {
      * @returns {SequentialFetcher}
      */
     private getSequentialFetcher(): SequentialFetcher {
+        const queryParams = new QueryParams({pageSize:100})
         const networkCall = (address: Address) => new AccountHttp(this.profile.url)
-            .getAccountPartialTransactions(address, new QueryParams(100))
+            .getAccountPartialTransactions(address, queryParams)
             .toPromise()
 
         return SequentialFetcher.create(networkCall)

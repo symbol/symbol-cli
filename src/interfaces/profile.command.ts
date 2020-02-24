@@ -33,7 +33,7 @@ export abstract class ProfileCommand extends Command {
      */
     constructor(fileUrl?: string) {
         super()
-        const profileRepository = new ProfileRepository(fileUrl || '.nem2rc.json')
+        const profileRepository = new ProfileRepository(fileUrl || '.symbolrc.json')
         this.profileService = new ProfileService(profileRepository)
         this.spinner.setSpinnerString('|/-\\')
     }

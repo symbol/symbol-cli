@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {HashType} from 'nem2-sdk'
+import {HashType} from 'symbol-sdk'
 import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 
 describe('Hash algorithm resolver', () => {
