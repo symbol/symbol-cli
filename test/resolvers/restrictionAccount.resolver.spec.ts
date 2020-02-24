@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {AccountRestrictionFlags} from 'nem2-sdk'
+import {AccountRestrictionFlags} from 'symbol-sdk'
 import {
     RestrictionAccountAddressFlagsResolver,
     RestrictionAccountMosaicFlagsResolver,

@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {Account, Deadline, EmptyMessage, NetworkType, TransferTransaction} from 'nem2-sdk'
+import {Account, Deadline, EmptyMessage, NetworkType, TransferTransaction} from 'symbol-sdk'
 import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 
 describe('Payload resolver', () => {

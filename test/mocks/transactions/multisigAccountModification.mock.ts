@@ -16,7 +16,7 @@
  *
  */
 
-import {Deadline, MultisigAccountModificationTransaction, NetworkType} from 'nem2-sdk'
+import {Deadline, MultisigAccountModificationTransaction, NetworkType} from 'symbol-sdk'
 import {account1, account2, account3} from '../accounts.mock'
 
 export const unsignedMultisigAccountModification1 = MultisigAccountModificationTransaction.create(

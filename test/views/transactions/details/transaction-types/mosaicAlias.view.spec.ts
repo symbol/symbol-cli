@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {AliasAction} from 'nem2-sdk'
+import {AliasAction} from 'symbol-sdk'
 import {MosaicAliasView} from '../../../../../src/views/transactions/details/transaction-types'
 import {mosaicId1} from '../../../../mocks/mosaics.mock'
 import {unsignedMosaicAlias1} from '../../../../mocks/transactions/mosaicAlias.mock'

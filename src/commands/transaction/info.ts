@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {TransactionHttp} from 'nem2-sdk'
+import {TransactionHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'

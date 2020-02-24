@@ -16,7 +16,7 @@
  *
  */
 
-import {Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64} from 'nem2-sdk'
+import {Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 import {mosaicId1} from '../mosaics.mock'
 

@@ -19,7 +19,7 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
-import {NodeHttp, NodeInfo} from 'nem2-sdk'
+import {NodeHttp, NodeInfo} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 

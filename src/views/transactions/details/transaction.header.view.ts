@@ -17,7 +17,7 @@
  */
 
 import {Cell} from 'cli-table3'
-import {AggregateTransactionInfo, NetworkType, Transaction} from 'nem2-sdk'
+import {AggregateTransactionInfo, NetworkType, Transaction} from 'symbol-sdk'
 import {CellRecord} from './transaction.view'
 import {transactionNameFromType} from './transactionNameFromType'
 

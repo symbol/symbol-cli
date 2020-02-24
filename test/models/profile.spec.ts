@@ -17,7 +17,7 @@
  */
 
 import {expect} from 'chai'
-import {Account, NetworkType, Password, SimpleWallet} from 'nem2-sdk'
+import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile'
 
 describe('Profile', () => {

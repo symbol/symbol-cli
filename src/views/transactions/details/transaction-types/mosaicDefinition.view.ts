@@ -16,7 +16,7 @@
  *
  */
 
-import {MosaicDefinitionTransaction} from 'nem2-sdk'
+import {MosaicDefinitionTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class MosaicDefinitionView {

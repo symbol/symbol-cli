@@ -16,7 +16,7 @@
  *
  */
 
-import {Address, NamespaceId} from 'nem2-sdk'
+import {Address, NamespaceId} from 'symbol-sdk'
 
 export class RecipientsView {
   /**

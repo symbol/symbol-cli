@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'nem2-sdk'
+import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'

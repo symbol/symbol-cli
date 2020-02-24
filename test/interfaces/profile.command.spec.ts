@@ -1,6 +1,6 @@
 import {expect} from 'chai'
 import * as fs from 'fs'
-import {NetworkType, Password, SimpleWallet} from 'nem2-sdk'
+import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ProfileCommand} from '../../src/interfaces/profile.command'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 
@@ -27,7 +27,7 @@ describe('Profile Command', () => {
 
     before(() => {
         removeAccountsFile()
-        repositoryFileUrl = '.nem2rctest.json'
+        repositoryFileUrl = '.symbolrctest.json'
         wallet = SimpleWallet.create('test', new Password('12345678'), NetworkType.MIJIN_TEST)
         command = new StubCommand()
     })

@@ -1,5 +1,5 @@
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {HashType} from 'nem2-sdk'
+import {HashType} from 'symbol-sdk'
 
 /**
  * Hash algorithm validator

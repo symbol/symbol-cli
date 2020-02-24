@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Metadata, MetadataHttp} from 'nem2-sdk'
+import {Metadata, MetadataHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 import {MetadataEntryTable} from './account'

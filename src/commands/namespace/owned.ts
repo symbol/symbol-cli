@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {NamespaceHttp} from 'nem2-sdk'
+import {NamespaceHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {NamespaceInfoTable} from './info'

@@ -19,7 +19,7 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
-import {NamespaceHttp, NamespaceInfo} from 'nem2-sdk'
+import {NamespaceHttp, NamespaceInfo} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
@@ -27,7 +27,7 @@ import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
-        description: 'Namespace name. Example: cat.currency',
+        description: 'Namespace name. Example: symbol.xym',
     })
     namespaceName: string
 

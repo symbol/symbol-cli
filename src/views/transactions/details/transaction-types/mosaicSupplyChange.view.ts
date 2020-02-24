@@ -16,7 +16,7 @@
  *
  */
 
-import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'nem2-sdk'
+import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class MosaicSupplyChangeView {

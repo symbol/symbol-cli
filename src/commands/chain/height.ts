@@ -16,7 +16,7 @@
 *
 */
 import {command, metadata} from 'clime'
-import {ChainHttp} from 'nem2-sdk'
+import {ChainHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 

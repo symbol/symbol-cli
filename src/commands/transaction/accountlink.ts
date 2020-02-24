@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {AccountLinkTransaction, Deadline} from 'nem2-sdk'
+import {AccountLinkTransaction, Deadline} from 'symbol-sdk'
 import {
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,

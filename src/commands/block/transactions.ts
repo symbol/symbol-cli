@@ -16,43 +16,25 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {BlockHttp, Order, QueryParams, Transaction} from 'nem2-sdk'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {BlockHttp} from 'symbol-sdk'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
 
-export class CommandOptions extends ProfileOptions {
+export class CommandOptions extends AccountTransactionsOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
     })
     height: string
-
-    @option({
-        flag: 's',
-        description: '(Optional) Page size between 10 and 100. Default: 10',
-    })
-    pageSize: number
-
-    @option({
-        flag: 'i',
-        description: '(Optional) Id after which we want objects to be returned.',
-    })
-    id: string
-
-    @option({
-        flag: 'o',
-        description: '(Optional): Order of transactions. DESC. Newer to older. ASC. Older to newer. Default: DESC',
-    })
-    order: string
 }
 
 @command({
     description: 'Get transactions for a given block height',
 })
 
-export default class extends ProfileCommand {
+export default class extends AccountTransactionsCommand {
 
     constructor() {
         super()
@@ -64,39 +46,20 @@ export default class extends ProfileCommand {
         this.spinner.start()
 
         const profile = this.getProfile(options)
-        const queryParams = new QueryParams()
         const height = new HeightResolver().resolve(options)
 
-        let pageSize = options.pageSize || 10
-        if (pageSize < 10) {
-            pageSize = 10
-        } else if (pageSize > 100) {
-            pageSize = 100
-        }
-        queryParams.setPageSize(pageSize)
-
-        const id =  options.id || ''
-        queryParams.setId(id)
-
-        let order = options.order
-        if (order !== 'ASC') {
-            order = 'DESC'
-        }
-        queryParams.setOrder(order === 'ASC' ? Order.ASC : Order.DESC)
-
-
         const blockHttp = new BlockHttp(profile.url)
-        blockHttp.getBlockTransactions(height, queryParams)
-            .subscribe((transactions: any) => {
+        blockHttp.getBlockTransactions(height, options.getQueryParams())
+            .subscribe((transactions) => {
                 this.spinner.stop(true)
-                if (transactions.length > 0) {
-                    transactions.forEach((transaction: Transaction, index: number) => {
-                        console.log(`(${index + 1}) - `)
-                        new TransactionView(transaction).print()
-                    })
-                } else {
-                    console.log('[]')
+
+                if (!transactions.length) {
+                    console.log('There aren\'t transactions')
                 }
+
+                transactions.forEach((transaction) => {
+                    new TransactionView(transaction).print()
+                })
             }, (err) => {
                 this.spinner.stop(true)
                 console.log(HttpErrorHandler.handleError(err))

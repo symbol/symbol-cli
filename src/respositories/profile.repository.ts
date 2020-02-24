@@ -16,7 +16,7 @@
  *
  */
 import * as fs from 'fs'
-import {SimpleWallet} from 'nem2-sdk'
+import {SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../models/profile'
 
 /**

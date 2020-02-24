@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {TransactionType} from 'nem2-sdk'
+import {TransactionType} from 'symbol-sdk'
 import {transactionNameFromType} from '../../../../../src/views/transactions/details/transactionNameFromType'
 
 describe('Transaction name from type', () => {

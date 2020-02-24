@@ -17,7 +17,7 @@
  */
 import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {Listener} from 'nem2-sdk'
+import {Listener} from 'symbol-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'

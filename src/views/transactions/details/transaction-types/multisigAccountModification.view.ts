@@ -16,7 +16,7 @@
  *
  */
 
-import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'nem2-sdk'
+import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class MultisigAccountModificationView {

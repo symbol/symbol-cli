@@ -16,7 +16,7 @@
  *
  */
 
-import {AddressAliasTransaction, AliasAction} from 'nem2-sdk'
+import {AddressAliasTransaction, AliasAction} from 'symbol-sdk'
 import {NamespacesView} from '../../../namespaces.view'
 import {CellRecord} from '../transaction.view'
 

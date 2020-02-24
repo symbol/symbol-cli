@@ -27,7 +27,7 @@ import {
     ResolutionStatement,
     Statement,
     TransactionStatement,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 
 /**
  * Receipt service

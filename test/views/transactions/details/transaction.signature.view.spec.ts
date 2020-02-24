@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {NetworkType, SignedTransaction, TransactionType} from 'nem2-sdk'
+import {NetworkType, SignedTransaction, TransactionType} from 'symbol-sdk'
 import {TransactionSignatureView} from '../../../../src/views/transactions/details/transaction.signature.view'
 
 const mockSignedTransaction = new SignedTransaction(

@@ -26,7 +26,7 @@ import {
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
     UInt64,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import * as readlineSync from 'readline-sync'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AmountResolver} from '../../resolvers/amount.resolver'

@@ -16,7 +16,7 @@
  *
  */
 
-import {Transaction, TransactionType} from 'nem2-sdk'
+import {Transaction, TransactionType} from 'symbol-sdk'
 
 import {
  AccountAddressRestrictionView,
