@@ -44,7 +44,7 @@ export class CosignatoryPublicKeyResolver implements Resolver {
         const resolution = OptionsResolver(options,
             'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ').trim()
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma): ').trim()
         new PublicKeysValidator().validate(resolution)
         const cosignatoryPublicKeys = resolution.split(',')
         const cosignatories: PublicAccount[] = []
