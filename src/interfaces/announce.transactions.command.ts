@@ -122,7 +122,6 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     ),
             )
                 .subscribe((ignored) => {
-                    listener.close()
                     confirmations = confirmations + 1
                     if (confirmations === 1) {
                         this.spinner.stop(true)
