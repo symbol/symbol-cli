@@ -72,13 +72,13 @@ export default class extends ProfileCommand {
             .pipe(
                 switchMap((addresses) => sequentialFetcher.getResults(addresses)),
                 flatMap((transaction: AggregateTransaction[]) => transaction),
+                filter((_) => _.transactionInfo !== undefined
+                    && _.transactionInfo.hash !== undefined
+                    && _.transactionInfo.hash === hash),
                 tap((transaction) => {
                     console.log('\n \n Transaction to cosign:')
                     new TransactionView(transaction).print()
                 }),
-                filter((_) => _.transactionInfo !== undefined
-                    && _.transactionInfo.hash !== undefined
-                    && _.transactionInfo.hash === hash),
             )
             .subscribe((transaction: AggregateTransaction) => {
                 sequentialFetcher.kill()
