@@ -28,13 +28,14 @@ import {
     QueryParams,
     TransactionHttp,
 } from 'symbol-sdk'
-import {filter, flatMap, switchMap} from 'rxjs/operators'
+import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
 import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ProfileCommand} from '../../interfaces/profile.command'
 import {Profile} from '../../models/profile'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -74,6 +75,10 @@ export default class extends ProfileCommand {
                 filter((_) => _.transactionInfo !== undefined
                     && _.transactionInfo.hash !== undefined
                     && _.transactionInfo.hash === hash),
+                tap((transaction) => {
+                    console.log('\n \n Transaction to cosign:')
+                    new TransactionView(transaction).print()
+                }),
             )
             .subscribe((transaction: AggregateTransaction) => {
                 sequentialFetcher.kill()
