@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {KeyGenerator} from 'nem2-sdk'
+import {KeyGenerator} from 'symbol-sdk'
 import {KeyResolver} from '../../src/resolvers/key.resolver'
 
 describe('Key resolver', () => {

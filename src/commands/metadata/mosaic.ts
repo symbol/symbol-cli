@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata, option} from 'clime'
-import {Metadata, MetadataHttp} from 'nem2-sdk'
+import {Metadata, MetadataHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 import {MetadataEntryTable} from './account'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -59,8 +59,7 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

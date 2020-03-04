@@ -17,17 +17,11 @@
  */
 import chalk from 'chalk'
 import {option} from 'clime'
-import {
-    Address,
-    Listener,
-    ReceiptHttp,
-    SignedTransaction,
-    TransactionHttp,
-    TransactionService,
-} from 'nem2-sdk'
+import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService} from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from './profile.command'
+import {HttpErrorHandler} from '../services/httpErrorHandler.service'
 
 /**
  * Base command class to announce transactions.
@@ -53,7 +47,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 console.log(chalk.green('\nTransaction announced correctly.'))
             }, (err) => {
                 this.spinner.stop(true)
-                console.log(chalk.red('Error'), err.message)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 
@@ -85,12 +79,11 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                 }, (err) => {
                     listener.close()
                     this.spinner.stop(true)
-                    listener.close()
-                    console.log(chalk.red('Error'), err.message)
+                    console.log(HttpErrorHandler.handleError(err))
                 })
         }, (err) => {
-            this.spinner.stop(true)
             listener.close()
+            this.spinner.stop(true)
             console.log(chalk.red('Error'), err.message)
         })
     }
@@ -129,7 +122,6 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     ),
             )
                 .subscribe((ignored) => {
-                    listener.close()
                     confirmations = confirmations + 1
                     if (confirmations === 1) {
                         this.spinner.stop(true)
@@ -142,14 +134,14 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                         console.log(chalk.green('\n Aggregate transaction announced.'))
                     }
                 }, (err) => {
-                    this.spinner.stop(true)
                     listener.close()
-                    console.log(chalk.red('Error'), err.message)
+                    this.spinner.stop(true)
+                    console.log(HttpErrorHandler.handleError(err))
                 })
         }, (err) => {
-            this.spinner.stop(true)
             listener.close()
-            console.log(chalk.red('Error'), err.message)
+            this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

@@ -16,7 +16,7 @@
 *
 */
 import {Command, command, metadata, option} from 'clime'
-import {Account} from 'nem2-sdk'
+import {Account} from 'symbol-sdk'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'

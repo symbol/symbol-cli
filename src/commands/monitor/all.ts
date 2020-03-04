@@ -17,11 +17,12 @@
  */
 import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'nem2-sdk'
+import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',
@@ -61,11 +62,12 @@ export default class extends MonitorAddressCommand {
                         console.log('\n' + response.code)
                     }
                 }, (err) => {
-                    err = err.message ? JSON.parse(err.message) : err
-                    console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                    console.log(HttpErrorHandler.handleError(err))
+                    listener.close()
                 })
         }, (err) => {
-            console.log(chalk.red('Error'), err)
+            this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

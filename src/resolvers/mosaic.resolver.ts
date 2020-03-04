@@ -1,5 +1,7 @@
 import chalk from 'chalk'
-import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'nem2-sdk'
+import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'symbol-sdk'
+import * as readlineSync from 'readline-sync'
+import {CommandOptions} from '../commands/transaction/mosaic'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {CommandOptions} from '../commands/transaction/mosaic'
 import {Profile} from '../models/profile'
@@ -98,7 +100,7 @@ export class MosaicsResolver implements Resolver {
             altKey ? altKey : 'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000). Add multiple mosaics with commas: ')
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics with commas: ').trim()
         try {
             new MosaicsValidator().validate(resolution)
         } catch (err) {

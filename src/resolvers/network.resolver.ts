@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'

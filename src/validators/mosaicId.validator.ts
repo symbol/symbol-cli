@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {MosaicId, NamespaceId} from 'nem2-sdk'
+import {MosaicId, NamespaceId} from 'symbol-sdk'
 
 /**
  * Mosaic id validator

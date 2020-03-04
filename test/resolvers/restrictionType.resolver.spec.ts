@@ -1,5 +1,5 @@
 import {expect} from 'chai'
-import {MosaicRestrictionType} from 'nem2-sdk'
+import {MosaicRestrictionType} from 'symbol-sdk'
 import {RestrictionTypeResolver} from '../../src/resolvers/restrictionType.resolver'
 
 describe('Restriction type resolver', () => {

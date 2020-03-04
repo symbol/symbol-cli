@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'nem2-sdk'
+import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'

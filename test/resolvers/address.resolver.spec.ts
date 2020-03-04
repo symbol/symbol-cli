@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {Address, NamespaceId} from 'nem2-sdk'
+import {Address, NamespaceId} from 'symbol-sdk'
 import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver'
 
 describe('Address resolver', () => {

@@ -1,4 +1,5 @@
 import chalk from 'chalk'
+import {HashType} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'

@@ -16,7 +16,7 @@
 *
 */
 import {Command, command, metadata, option} from 'clime'
-import {Address} from 'nem2-sdk'
+import {Address} from 'symbol-sdk'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {HexAddressResolver} from '../../resolvers/hexAddress.resolver'
 

@@ -19,33 +19,33 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
-import {BlockchainStorageInfo, DiagnosticHttp} from 'nem2-sdk'
+import {NodeHealth, NodeHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
-export class StorageTable {
+export class NodeHealthTable {
     private readonly table: HorizontalTable
-    constructor(public readonly storage: BlockchainStorageInfo) {
+    constructor(public readonly health: NodeHealth) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable
         this.table.push(
-            ['Number of Accounts', storage.numAccounts],
-            ['Number of Blocks', storage.numBlocks],
-            ['Number of Transactions', storage.numAccounts],
+            ['API node', health.apiNode],
+            ['DB node', health.db],
         )
     }
 
     toString(): string {
         let text = ''
-        text += '\n' + chalk.green('Storage Information') + '\n'
+        text += '\n' + chalk.green('Health Information') + '\n'
         text += this.table.toString()
         return text
     }
 }
 
 @command({
-    description: 'Get diagnostic information about the node storage',
+    description: 'Supplies information regarding the connection and services status',
 })
 export default class extends ProfileCommand {
 
@@ -59,15 +59,14 @@ export default class extends ProfileCommand {
 
         const profile = this.getProfile(options)
 
-        const diagnosticHttp = new DiagnosticHttp(profile.url)
-        diagnosticHttp.getDiagnosticStorage()
-            .subscribe((storage) => {
+        const nodeHttp = new NodeHttp(profile.url)
+        nodeHttp.getNodeHealth()
+            .subscribe((health) => {
                 this.spinner.stop(true)
-                console.log(new StorageTable(storage).toString())
+                console.log(new NodeHealthTable(health).toString())
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

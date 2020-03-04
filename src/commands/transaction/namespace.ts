@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk'
+import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {DurationResolver} from '../../resolvers/duration.resolver'

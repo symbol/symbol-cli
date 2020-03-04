@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'nem2-sdk'
+import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 
 export const unsignedAccountLink1 = AccountLinkTransaction.create(

@@ -16,7 +16,7 @@
  *
  */
 
-import {NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'nem2-sdk'
+import {NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class NamespaceRegistrationView {

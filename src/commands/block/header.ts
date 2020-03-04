@@ -19,9 +19,10 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
-import {BlockHttp, BlockInfo, NetworkType} from 'nem2-sdk'
+import {BlockHttp, BlockInfo, NetworkType} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HeightResolver} from '../../resolvers/height.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -93,8 +94,7 @@ export default class extends ProfileCommand {
                 console.log(new BlockHeaderTable(blockInfo).toString())
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

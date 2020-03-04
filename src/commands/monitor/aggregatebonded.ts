@@ -17,10 +17,11 @@
  */
 import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {Listener} from 'nem2-sdk'
+import {Listener} from 'symbol-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitor aggregate bonded transactions added',
@@ -42,13 +43,12 @@ export default class extends MonitorAddressCommand {
             listener.aggregateBondedAdded(address).subscribe((transaction) => {
                 new TransactionView(transaction).print()
             }, (err) => {
+                console.log(HttpErrorHandler.handleError(err))
                 listener.close()
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
             })
         }, (err) => {
-            listener.close()
-            console.log(chalk.red('Error'), err)
+            this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

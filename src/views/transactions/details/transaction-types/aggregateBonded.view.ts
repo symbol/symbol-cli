@@ -16,7 +16,7 @@
  *
  */
 
-import {AggregateTransaction} from 'nem2-sdk'
+import {AggregateTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 import {AggregateView} from './aggregate.view'
 

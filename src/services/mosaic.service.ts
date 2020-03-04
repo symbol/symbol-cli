@@ -17,7 +17,7 @@
  */
 
 import {ExpectedError} from 'clime'
-import {Mosaic, MosaicId, NamespaceId, UInt64} from 'nem2-sdk'
+import {Mosaic, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
 
 /**
  * Mosaic service
@@ -50,7 +50,7 @@ export class MosaicService {
         }
         if (!valid) {
             throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 cat.currency, @cat.currency::1000000)')
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
         }
     }
 

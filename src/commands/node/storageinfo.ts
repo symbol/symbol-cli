@@ -19,20 +19,21 @@ import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata} from 'clime'
-import {BlockchainScore, ChainHttp} from 'symbol-sdk'
+import {NodeHttp, StorageInfo} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
-export class ChainScoreTable {
+export class StorageTable {
     private readonly table: HorizontalTable
-    constructor(public readonly score: BlockchainScore) {
+    constructor(public readonly storage: StorageInfo) {
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable
         this.table.push(
-            ['Score Low', score.scoreLow.toString()],
-            ['Score High', score.scoreHigh.toString()],
+            ['Number of Accounts', storage.numAccounts],
+            ['Number of Blocks', storage.numBlocks],
+            ['Number of Transactions', storage.numAccounts],
         )
     }
 
@@ -45,7 +46,7 @@ export class ChainScoreTable {
 }
 
 @command({
-    description: 'Gets the current score of the chain',
+    description: 'Get diagnostic information about the node storage',
 })
 export default class extends ProfileCommand {
 
@@ -56,15 +57,17 @@ export default class extends ProfileCommand {
     @metadata
     execute(options: ProfileOptions) {
         this.spinner.start()
-        const profile = this.getProfile(options)
-        const chainHttp = new ChainHttp(profile.url)
 
-        chainHttp.getChainScore().subscribe((score) => {
-            this.spinner.stop(true)
-            console.log(new ChainScoreTable(score).toString())
-        }, (err) => {
-            this.spinner.stop(true)
-            console.log(HttpErrorHandler.handleError(err))
-        })
+        const profile = this.getProfile(options)
+
+        const nodeHttp = new NodeHttp(profile.url)
+        nodeHttp.getStorageInfo()
+            .subscribe((storage) => {
+                this.spinner.stop(true)
+                console.log(new StorageTable(storage).toString())
+            }, (err) => {
+                this.spinner.stop(true)
+                console.log(HttpErrorHandler.handleError(err))
+            })
     }
 }

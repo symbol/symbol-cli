@@ -16,7 +16,7 @@
  *
  */
 
-import {AggregateTransaction, Deadline, NetworkType} from 'nem2-sdk'
+import {AggregateTransaction, Deadline, NetworkType} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 import {unsignedTransfer1, unsignedTransfer2} from '../transactions/transfer.mock'
 

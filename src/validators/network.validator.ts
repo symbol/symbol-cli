@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {NetworkType} from 'nem2-sdk'
+import {NetworkType} from 'symbol-sdk'
 
 /**
  * Network validator

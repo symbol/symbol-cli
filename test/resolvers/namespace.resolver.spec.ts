@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {NamespaceId, NamespaceRegistrationType} from 'nem2-sdk'
+import {NamespaceId, NamespaceRegistrationType} from 'symbol-sdk'
 import {NamespaceIdResolver, NamespaceNameResolver, NamespaceTypeResolver} from '../../src/resolvers/namespace.resolver'
 
 describe('Namespace name resolver', () => {

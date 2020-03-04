@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata, option} from 'clime'
-import {NamespaceHttp} from 'nem2-sdk'
+import {NamespaceHttp} from 'symbol-sdk'
 import {forkJoin, of} from 'rxjs'
 import {catchError} from 'rxjs/operators'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -61,8 +61,7 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

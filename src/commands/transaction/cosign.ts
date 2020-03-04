@@ -27,14 +27,16 @@ import {
     CosignatureTransaction,
     QueryParams,
     TransactionHttp,
-} from 'nem2-sdk'
-import {filter, flatMap, switchMap} from 'rxjs/operators'
+} from 'symbol-sdk'
+import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
 import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ProfileCommand} from '../../interfaces/profile.command'
 import {Profile} from '../../models/profile'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -73,6 +75,10 @@ export default class extends ProfileCommand {
                 filter((_) => _.transactionInfo !== undefined
                     && _.transactionInfo.hash !== undefined
                     && _.transactionInfo.hash === hash),
+                tap((transaction) => {
+                    console.log('\n \n Transaction to cosign:')
+                    new TransactionView(transaction).print()
+                }),
             )
             .subscribe(async (transaction: AggregateTransaction) => {
                 sequentialFetcher.kill()
@@ -82,8 +88,7 @@ export default class extends ProfileCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 
@@ -93,8 +98,9 @@ export default class extends ProfileCommand {
      * @returns {SequentialFetcher}
      */
     private getSequentialFetcher(): SequentialFetcher {
+        const queryParams = new QueryParams({pageSize:100})
         const networkCall = (address: Address) => new AccountHttp(this.profile.url)
-            .getAccountPartialTransactions(address, new QueryParams(100))
+            .getAccountPartialTransactions(address, queryParams)
             .toPromise()
 
         return SequentialFetcher.create(networkCall)
@@ -138,8 +144,7 @@ export default class extends ProfileCommand {
             console.log(chalk.green('Transaction cosigned and announced correctly.'))
         } catch (err) {
             this.spinner.stop(true)
-            err = err.message ? JSON.parse(err.message) : err
-            console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+            console.log(HttpErrorHandler.handleError(err))
         }
     }
 }

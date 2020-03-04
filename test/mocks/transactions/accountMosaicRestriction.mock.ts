@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'nem2-sdk'
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'symbol-sdk'
 import {mosaicId1, mosaicId2} from '../mosaics.mock'
 import {namespaceId1} from '../namespaces.mock'
 

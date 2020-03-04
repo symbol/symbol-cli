@@ -26,7 +26,7 @@ import {
     MosaicSupplyChangeAction,
     MosaicSupplyChangeTransaction,
     UInt64,
-} from 'nem2-sdk'
+} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AmountResolver} from '../../resolvers/amount.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'

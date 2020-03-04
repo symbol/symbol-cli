@@ -17,9 +17,10 @@
  */
 import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {Listener} from 'nem2-sdk'
+import {Listener} from 'symbol-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Monitor cosignatures added',
@@ -43,13 +44,12 @@ export default class extends MonitorAddressCommand {
                     ' Signature:' + transaction.signature
                 console.log(transactionFormatted)
             }, (err) => {
+                console.log(HttpErrorHandler.handleError(err))
                 listener.close()
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
             })
         }, (err) => {
-            listener.close()
-            console.log(chalk.red('Error'), err)
+            this.spinner.stop(true)
+            console.log(HttpErrorHandler.handleError(err))
         })
     }
 }

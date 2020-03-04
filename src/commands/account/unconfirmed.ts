@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {command, metadata} from 'clime'
-import {AccountHttp} from 'nem2-sdk'
+import {AccountHttp} from 'symbol-sdk'
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 @command({
     description: 'Fetch unconfirmed transactions from account',
@@ -50,8 +50,7 @@ export default class extends AccountTransactionsCommand {
                 }
             }, (err) => {
                 this.spinner.stop(true)
-                err = err.message ? JSON.parse(err.message) : err
-                console.log(chalk.red('Error'), err.body && err.body.message ? err.body.message : err)
+                console.log(HttpErrorHandler.handleError(err))
             })
     }
 }

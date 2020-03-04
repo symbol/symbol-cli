@@ -17,7 +17,7 @@
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 import {expect} from 'chai'
-import {Address} from 'nem2-sdk'
+import {Address} from 'symbol-sdk'
 import {toArray} from 'rxjs/operators'
 import {capture, mock, spy, verify} from 'ts-mockito'
 import {SequentialFetcher} from '../../src/services/sequentialFetcher.service'

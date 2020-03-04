@@ -19,15 +19,7 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const pkg = require('../../../package.json')
-export const description = `
-                      ____            _ _
- _ __   ___ _ __ ___ |___ \\       ___| (_)
-| \'_ \\ / _ \\ \'_ \` _ \\  __) |____ / __| | |
-| | | |  __/ | | | | |/ __/_____| (__| | |
-|_| |_|\\___|_| |_| |_|_____|     \\___|_|_|
-
-                                   v${pkg.version}
-`
+export const description = `Symbol CLI v${pkg.version}`
 
 export const subcommands = [
     {
@@ -47,10 +39,6 @@ export const subcommands = [
         brief: 'Convert between data types',
     },
     {
-        name: 'diagnostic',
-        brief: 'Get node diagnostics reports',
-    },
-    {
         name: 'metadata',
         brief: 'Get metadata related information',
     },
@@ -65,6 +53,10 @@ export const subcommands = [
     {
         name: 'namespace',
         brief: 'Get namespace related information',
+    },
+    {
+        name: 'node',
+        brief: 'Get node related information',
     },
     {
         name: 'profile',

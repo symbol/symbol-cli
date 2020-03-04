@@ -16,7 +16,7 @@
  *
  */
 
-import {Deadline, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce, NetworkType, UInt64} from 'nem2-sdk'
+import {Deadline, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce, NetworkType, UInt64} from 'symbol-sdk'
 import {mosaicId1} from '../mosaics.mock'
 
 export const unsignedMosaicDefinition1 = MosaicDefinitionTransaction.create(

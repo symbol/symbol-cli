@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType, TransactionType} from 'nem2-sdk'
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType, TransactionType} from 'symbol-sdk'
 
 export const operation1 = TransactionType.ADDRESS_ALIAS
 export const operation2 = TransactionType.ACCOUNT_LINK

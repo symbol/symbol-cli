@@ -1,5 +1,5 @@
 import chalk from 'chalk'
-import {NetworkType, PublicAccount} from 'nem2-sdk'
+import {NetworkType, PublicAccount} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
@@ -50,7 +50,7 @@ export class CosignatoryPublicKeyResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):: ')
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma): ')
         try {
             new PublicKeyValidator().validate(resolution)
         } catch (err) {

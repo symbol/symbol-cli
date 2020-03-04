@@ -16,7 +16,7 @@
  *
  */
 import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {Password} from 'nem2-sdk'
+import {Password} from 'symbol-sdk'
 
 /**
  * Password validator

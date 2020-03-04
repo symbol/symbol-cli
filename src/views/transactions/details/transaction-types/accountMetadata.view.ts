@@ -16,7 +16,7 @@
  *
  */
 
-import {AccountMetadataTransaction} from 'nem2-sdk'
+import {AccountMetadataTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 
 export class AccountMetadataView {

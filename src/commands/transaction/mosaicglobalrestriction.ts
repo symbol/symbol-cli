@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {Deadline, MosaicRestrictionTransactionService, MosaicRestrictionType, NamespaceHttp, RestrictionMosaicHttp} from 'nem2-sdk'
+import {Deadline, MosaicRestrictionTransactionService, MosaicRestrictionType, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {KeyResolver} from '../../resolvers/key.resolver'
