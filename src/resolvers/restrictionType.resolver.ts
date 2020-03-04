@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {MosaicRestrictionType} from 'nem2-sdk'
+import {MosaicRestrictionType} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {ProfileModel} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'

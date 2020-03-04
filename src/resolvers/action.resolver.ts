@@ -2,7 +2,7 @@ import {ProfileOptions} from '../interfaces/profile.command'
 import {ProfileModel} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {Resolver} from './resolver'
-import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
 import {ActionValidator, LinkActionValidator, MosaicSupplyChangeActionValidator} from '../validators/action.validator'
 import {ActionType} from '../models/action.enum'
 

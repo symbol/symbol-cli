@@ -3,7 +3,7 @@ import {ProfileModel} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator'
 import {Resolver} from './resolver'
-import {HashType} from 'nem2-sdk'
+import {HashType} from 'symbol-sdk'
 
 /**
  * Link hashAlgorithm resolver

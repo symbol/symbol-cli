@@ -16,7 +16,7 @@
  *
  */
 import {ActionType} from '../models/action.enum'
-import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
 import {Validator} from './validator'
 
 /**
