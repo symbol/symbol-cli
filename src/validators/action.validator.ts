@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {ActionType} from '../interfaces/action.resolver'
+import {ActionType} from '../models/action.enum'
 import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {Validator} from "./validator";
 
 /**
  * Action validator
@@ -27,13 +27,10 @@ export class ActionValidator implements Validator<number> {
     /**
      * Validates if an action is valid.
      * @param {number} value - Action type.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: number, context?: ValidationContext): void {
-        if (!(value in ActionType)) {
-            throw new ExpectedError('Enter a valid action. Add(1) or Remove(0)')
-        }
+    validate(value: number): boolean | string {
+        return value in ActionType ? true : 'Enter a valid action. (Add, Remove)'
     }
 }
 
@@ -45,13 +42,10 @@ export class LinkActionValidator implements Validator<number> {
     /**
      * Validates if a link action is valid.
      * @param {number} value - LinkAction type.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: number, context?: ValidationContext): void {
-        if (!(value in LinkAction)) {
-            throw new ExpectedError('Enter a valid action. Link(1) or Unlink(0)')
-        }
+    validate(value: number): boolean | string {
+        return value in LinkAction ? true : 'Enter a valid action. (Link, Unlink)'
     }
 }
 
@@ -60,12 +54,9 @@ export class MosaicSupplyChangeActionValidator implements Validator<number> {
     /**
      * Validates if a mosaic supply change action is valid.
      * @param {number} value - MosaicSupplyChangeAction type.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: number, context?: ValidationContext): void {
-        if (!(value in MosaicSupplyChangeAction)) {
-            throw new ExpectedError('Enter a valid action. Increase(1) or Decrease(0)')
-        }
+    validate(value: number): boolean | string {
+        return value in MosaicSupplyChangeAction ? true : 'Enter a valid action. (Increase, Decrease)'
     }
 }

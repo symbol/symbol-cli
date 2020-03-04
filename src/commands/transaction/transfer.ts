@@ -25,6 +25,7 @@ import {MessageResolver} from '../../resolvers/message.resolver'
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -73,7 +74,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const mosaics = await new MosaicsResolver().resolve(options)
         let recipientAddress: Address | NamespaceId
         let message = EmptyMessage

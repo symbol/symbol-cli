@@ -1,11 +1,10 @@
-import chalk from 'chalk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
+import {ProfileModel} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
-import {ActionType} from '../interfaces/action.resolver'
 import {ActionValidator, LinkActionValidator, MosaicSupplyChangeActionValidator} from '../validators/action.validator'
+import {ActionType} from "../models/action.enum";
 
 /**
  * Link action resolver
@@ -15,28 +14,24 @@ export class ActionResolver implements Resolver {
     /**
      * Resolves an action provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {ProfileModel} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Remove', value: ActionType.Remove},
             {title: 'Add', value: ActionType.Add},
         ]
-        const index = +(await OptionsChoiceResolver(options,
+        const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
             altText ? altText : 'Select an action: ',
             choices,
+            'select',
+            new ActionValidator()
         ))
-        try {
-            new ActionValidator().validate(index)
-        } catch (err) {
-            console.log(chalk.red('ERR'), err)
-            return process.exit()
-        }
-        return index
+        return value
     }
 }
 
@@ -48,28 +43,24 @@ export class LinkActionResolver implements Resolver {
     /**
      * Resolves an action provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {ProfileModel} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Unlink', value: LinkAction.Unlink},
             {title: 'Link', value: LinkAction.Link},
         ]
-        const index = +(await OptionsChoiceResolver(options,
+        const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
             altText ? altText : 'Select an action: ',
             choices,
+            'select',
+            new LinkActionValidator()
         ))
-        try {
-            new LinkActionValidator().validate(index)
-        } catch (err) {
-            console.log(chalk.red('ERR'), err)
-            return process.exit()
-        }
-        return index
+        return value
     }
 }
 
@@ -78,27 +69,23 @@ export class SupplyActionResolver implements Resolver {
     /**
      * Resolves an action provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {ProfileModel} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Decrease', value: MosaicSupplyChangeAction.Decrease},
             {title: 'Increase', value: MosaicSupplyChangeAction.Increase},
         ]
-        const index = +(await OptionsChoiceResolver(options,
+        const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
             altText ? altText : 'Select an action: ',
             choices,
+            'select',
+            new MosaicSupplyChangeActionValidator()
         ))
-        try {
-            new MosaicSupplyChangeActionValidator().validate(index)
-        } catch (err) {
-            console.log(chalk.red('ERR'), err)
-            return process.exit()
-        }
-        return index
+        return value
     }
 }

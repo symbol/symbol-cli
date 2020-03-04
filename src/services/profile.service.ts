@@ -16,7 +16,7 @@
  *
  */
 import {SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../models/profile'
+import {ProfileModel} from '../models/profile.model'
 import {ProfileRepository} from '../respositories/profile.repository'
 
 /**
@@ -38,26 +38,26 @@ export class ProfileService {
      * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
      * @param {string} url - Node URL by default.
      * @param {string} networkGenerationHash - Network's generation hash.
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
+    createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): ProfileModel {
         return this.profileRepository.save(simpleWallet, url, networkGenerationHash)
     }
 
     /**
      * Find profile by name.
      * @param {string} name - Profile name.
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    findProfileNamed(name: string): Profile {
+    findProfileNamed(name: string): ProfileModel {
         return this.profileRepository.find(name)
     }
 
     /**
      * Gets all profiles.
-     * @returns {Profile[]}
+     * @returns {ProfileModel[]}
      */
-    findAllProfiles(): Profile[] {
+    findAllProfiles(): ProfileModel[] {
         return this.profileRepository.all()
     }
 
@@ -71,9 +71,9 @@ export class ProfileService {
 
     /**
      * Gets the profile set as default.
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    getDefaultProfile(): Profile {
+    getDefaultProfile(): ProfileModel {
         return this.profileRepository.getDefaultProfile()
     }
 }

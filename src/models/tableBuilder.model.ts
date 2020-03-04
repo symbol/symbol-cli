@@ -20,7 +20,7 @@ import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {CellRecord} from '../views/transactions/details/transaction.view'
 
-export class TableBuilder {
+export class TableBuilderModel {
   /**
    * Creates an HorizontalTable from a CellRecord
    * @static
@@ -28,7 +28,7 @@ export class TableBuilder {
    * @returns {HorizontalTable}
    */
   static renderTableFromObject(object: CellRecord): HorizontalTable {
-    const table = TableBuilder.getEmptyTable()
+    const table = TableBuilderModel.getEmptyTable()
     Object.entries(object)
       // Filters out empty items. (eg ITransactionViewSignature)
       .filter((x) => x)

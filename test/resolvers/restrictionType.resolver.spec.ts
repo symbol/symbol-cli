@@ -6,17 +6,11 @@ describe('Restriction type resolver', () => {
 
     describe('resolve', () => {
 
-        it('should return one of MosaicRestrictionType', () => {
-            const newRestrictionType = MosaicRestrictionType.EQ
+        it('should return one of MosaicRestrictionType', async() => {
+            const newRestrictionType = 'EQ'
             const profileOptions = { newRestrictionType } as any
-            expect(new RestrictionTypeResolver().resolve(profileOptions))
+            expect(await new RestrictionTypeResolver().resolve(profileOptions))
                 .to.be.equal(MosaicRestrictionType['EQ'])
-        })
-
-        it('should throw err', () => {
-            const newRestrictionType = '123'
-            const profileOptions = { newRestrictionType } as any
-            expect(() => new RestrictionTypeResolver().resolve(profileOptions)).to.throws(Error)
         })
     })
 

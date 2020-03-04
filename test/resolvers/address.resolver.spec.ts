@@ -28,21 +28,14 @@ describe('Address resolver', () => {
             .to.be.equal(address)
     })
 
-    it('should throw error if cannot create address', () => {
-        const address = 'S'
-        const profileOptions = {address} as any
-        expect(() => new AddressResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
-
 })
 
 describe('Recipient address alias resolver', () => {
 
-    it('should return alias', () => {
+    it('should return alias', async() => {
         const recipientAddress = '@alias'
         const profileOptions = {recipientAddress} as any
-        expect(new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
+        expect(await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
             .to.be.instanceOf(NamespaceId)
     })
 
@@ -54,13 +47,5 @@ describe('Recipient address alias resolver', () => {
         expect((address as Address).plain())
             .to.be.equal(recipientAddress)
     })
-
-    it('should throw error if cannot create address', () => {
-        const recipientAddress = 'test'
-        const profileOptions = {recipientAddress} as any
-        expect(() => new AddressAliasResolver()
-            .resolve(profileOptions, undefined, undefined, 'recipientAddress'))
-            .to.throws(Error)
-    })
-
+    
 })

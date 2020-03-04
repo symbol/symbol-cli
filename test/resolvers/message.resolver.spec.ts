@@ -20,10 +20,10 @@ import {MessageResolver} from '../../src/resolvers/message.resolver'
 
 describe('Message resolver', () => {
 
-    it('should return message', () => {
+    it('should return message', async() => {
         const message = '10'
         const profileOptions = {message} as any
-        expect(new MessageResolver().resolve(profileOptions))
+        expect(await new MessageResolver().resolve(profileOptions))
             .to.be.equal('10')
     })
 })

@@ -15,12 +15,10 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
 import {MosaicRestrictionType} from 'nem2-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
+import {ProfileModel} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
-import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator'
 import {Resolver} from './resolver'
 
 /**
@@ -30,12 +28,12 @@ export class RestrictionTypeResolver implements Resolver {
     /**
      * Resolve a restriction type provided by a user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {ProfileModel} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @return {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'NONE', value: MosaicRestrictionType.NONE},
             {title: 'EQ', value: MosaicRestrictionType.EQ},
@@ -46,17 +44,13 @@ export class RestrictionTypeResolver implements Resolver {
             {title: 'GE', value: MosaicRestrictionType.GE},
 
         ]
-        const index = +(await OptionsChoiceResolver(options,
+        const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'newRestrictionType',
             altText ? altText : 'Select the new restriction type: ',
             choices,
+            'select',
+            undefined
         ))
-        try {
-            new MosaicRestrictionTypeValidator().validate(index)
-        } catch (err) {
-            console.log(chalk.red('ERR'), err)
-            return process.exit()
-        }
-        return index
+        return value
     }
 }

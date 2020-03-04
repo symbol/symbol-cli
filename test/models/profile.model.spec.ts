@@ -18,11 +18,11 @@
 
 import {expect} from 'chai'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../../src/models/profile'
+import {ProfileModel} from '../../src/models/profile.model'
 
 describe('Profile', () => {
     it('should contain the fields', () => {
-        const profile = new Profile(
+        const profile = new ProfileModel(
             SimpleWallet.create('default', new Password('password'), NetworkType.MIJIN_TEST),
             'url',
             'generationHash',
@@ -34,7 +34,7 @@ describe('Profile', () => {
     })
 
     it('should be created from DTO', () => {
-        const profile = Profile.createFromDTO(
+        const profile = ProfileModel.createFromDTO(
             {
                 simpleWallet: {
                     name: 'default',
@@ -67,7 +67,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new Profile(
+        const profile = new ProfileModel(
             simpleWallet,
             'url',
             'generationHash',
@@ -84,13 +84,12 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new Profile(
+        const profile = new ProfileModel(
             simpleWallet,
             'url',
             'generationHash',
         )
-        const profileOptions = {password: 'password'} as any
-        expect((await profile.decrypt(profileOptions)).privateKey).to.be.equal(privateKey)
+        expect(profile.decrypt(password).privateKey).to.be.equal(privateKey)
         expect(profile.address).to.be.equal(simpleWallet.address)
     })
 
@@ -102,13 +101,13 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new Profile(
+        const profile = new ProfileModel(
             simpleWallet,
             'url',
             'generationHash',
         )
-        const profileOptions = {password: 'test12345678'} as any
-        expect(() => profile.decrypt(profileOptions))
+        const password2 = new Password('test12345678')
+        expect(() => profile.decrypt(password2))
             .to.throws('The password provided does not match your account password')
     })
 })

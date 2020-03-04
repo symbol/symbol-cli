@@ -17,7 +17,7 @@
  */
 import * as fs from 'fs'
 import {SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../models/profile'
+import {ProfileModel} from '../models/profile.model'
 
 /**
  * Profile repository
@@ -35,26 +35,26 @@ export class ProfileRepository {
      * Find profile by name.
      * @param {string} name - Profile name.
      * @throws {Error}
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    public find(name: string): Profile {
+    public find(name: string): ProfileModel {
         const profiles = this.getProfiles()
         if (profiles[name]) {
-            return Profile.createFromDTO(profiles[name])
+            return ProfileModel.createFromDTO(profiles[name])
         }
         throw new Error(`${name} not found`)
     }
 
     /**
      * Gets all profiles.
-     * @returns {Profile[]}
+     * @returns {ProfileModel[]}
      */
-    public all(): Profile[] {
+    public all(): ProfileModel[] {
         const profiles = this.getProfiles()
-        const list: Profile[] = []
+        const list: ProfileModel[] = []
         for (const name in profiles) {
             if (profiles.hasOwnProperty(name)) {
-                list.push(Profile.createFromDTO(profiles[name]))
+                list.push(ProfileModel.createFromDTO(profiles[name]))
             }
         }
         return list
@@ -65,9 +65,9 @@ export class ProfileRepository {
      * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
      * @param {string} url - Node URL by default.
      * @param {string} networkGenerationHash - Network's generation hash.
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
+    public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): ProfileModel {
         const profiles = this.getProfiles()
         const {name, network} = simpleWallet
         if (profiles.hasOwnProperty(name)) {
@@ -81,7 +81,7 @@ export class ProfileRepository {
             default: '0',
         }
         this.saveProfiles(profiles)
-        return new Profile(simpleWallet, url, networkGenerationHash)
+        return new ProfileModel(simpleWallet, url, networkGenerationHash)
     }
 
     /**
@@ -107,9 +107,9 @@ export class ProfileRepository {
 
     /**
      * Gets the default profile.
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    public getDefaultProfile(): Profile {
+    public getDefaultProfile(): ProfileModel {
         const profiles = this.getProfiles()
         let defaultProfile = ''
         for (const name in profiles) {

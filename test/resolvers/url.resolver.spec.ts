@@ -20,17 +20,17 @@ import {URLResolver} from '../../src/resolvers/url.resolver'
 
 describe('Url resolver', () => {
 
-    it('should return url', () => {
+    it('should return url', async() => {
         const url = 'https://localhost:3000'
         const profileOptions = {url} as any
-        expect(new URLResolver().resolve(profileOptions))
+        expect(await new URLResolver().resolve(profileOptions))
             .to.be.equal(url)
     })
 
-    it('should return url without trailing backslash', () => {
+    it('should return url without trailing backslash', async() => {
         const url = 'https://localhost:3000/'
         const profileOptions = {url} as any
-        expect(new URLResolver().resolve(profileOptions))
+        expect(await new URLResolver().resolve(profileOptions))
             .to.be.equal('https://localhost:3000')
     })
 

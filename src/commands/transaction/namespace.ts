@@ -23,7 +23,7 @@ import {DurationResolver} from '../../resolvers/duration.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {OptionsResolver} from '../../options-resolver'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -72,8 +72,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
-
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const name = await new NamespaceNameStringResolver().resolve(options, undefined, undefined, 'name')
         const namespaceType = await new NamespaceTypeResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
@@ -84,10 +84,8 @@ export default class extends AnnounceTransactionsCommand {
             transaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(), name, duration, profile.networkType, maxFee)
         } else {
-            const parentName = await OptionsResolver(options,
-                    'parentName',
-                    () => undefined,
-                    'Enter the parent namespace name: ')
+            const parentName = await new NamespaceNameStringResolver()
+                .resolve(options, undefined, 'Enter the parent namespace name: ', 'parentName')
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), name, parentName, profile.networkType, maxFee)
         }

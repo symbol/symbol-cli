@@ -27,13 +27,6 @@ describe('Public key resolver', () => {
             .to.be.equal(publicKey)
     })
 
-    it('should throw error if public key invalid', () => {
-        const publicKey = '000'
-        const profileOptions = {publicKey} as any
-        expect(() => new PublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
-
 })
 
 describe('Multisig account public key resolver', () => {
@@ -59,13 +52,6 @@ describe('Cosignatory public key resolver', () => {
             .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000')
         expect(resolution[1].publicKey)
             .to.be.equal('0000000000000000000000000000000000000000000000000000000000000001')
-    })
-
-    it('should throw error if public key invalid', () => {
-        const cosignatoryPublicKey = '000,000'
-        const profileOptions = {cosignatoryPublicKey} as any
-        expect(() => new CosignatoryPublicKeyResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })

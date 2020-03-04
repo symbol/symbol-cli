@@ -18,7 +18,7 @@
 import {expect} from 'chai'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {instance, mock, when} from 'ts-mockito'
-import {Profile} from '../../src/models/profile'
+import {ProfileModel} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 import {ProfileService} from '../../src/services/profile.service'
 
@@ -41,7 +41,7 @@ describe('Configure service', () => {
 
         const url = 'http://localhost:1234'
         const networkGenerationHash = 'test'
-        const profile = new Profile(simpleWallet, url, networkGenerationHash)
+        const profile = new ProfileModel(simpleWallet, url, networkGenerationHash)
 
         const mockProfileRepository = mock(ProfileRepository)
         when(mockProfileRepository.save(simpleWallet, url,  networkGenerationHash))
@@ -63,14 +63,14 @@ describe('Configure service', () => {
         const url = 'http://localhost:1234'
 
         const networkGenerationHash = 'test'
-        const profile = new Profile(simpleWallet, url, networkGenerationHash)
+        const profile = new ProfileModel(simpleWallet, url, networkGenerationHash)
         const mockProfileRepository = mock(ProfileRepository)
         when(mockProfileRepository.find('default'))
             .thenReturn(profile)
 
         const profileService = new ProfileService(instance(mockProfileRepository))
         const createdProfile = profileService.findProfileNamed('default')
-        if (createdProfile instanceof Profile) {
+        if (createdProfile instanceof ProfileModel) {
             expect(createdProfile.simpleWallet).to.be.equal(simpleWallet)
             expect(createdProfile.url).to.be.equal(url)
             expect(createdProfile.name).to.be.equal('default')
@@ -97,7 +97,7 @@ describe('Configure service', () => {
         const url = 'http://localhost:1234'
 
         const networkGenerationHash = 'test'
-        const profile = new Profile(simpleWallet,
+        const profile = new ProfileModel(simpleWallet,
             url,
             networkGenerationHash)
         const mockProfileRepository = mock(ProfileRepository)
@@ -106,7 +106,7 @@ describe('Configure service', () => {
 
         const profileService = new ProfileService(instance(mockProfileRepository))
         const currentProfile = profileService.getDefaultProfile()
-        if (currentProfile instanceof Profile) {
+        if (currentProfile instanceof ProfileModel) {
             expect(currentProfile.simpleWallet).to.be.equal(simpleWallet)
         }
     })

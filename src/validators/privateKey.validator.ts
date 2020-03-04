@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 
 /**
  * Private key validator
@@ -25,12 +25,10 @@ export class PrivateKeyValidator implements Validator<string> {
     /**
      * Validates a private key format.
      * @param {string} value - Private key.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
-            throw new ExpectedError('Private key should be a 64 characters hexadecimal string')
-        }
+    validate(value: string): boolean | string {
+        return (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) ?
+            'Private key should be a 64 characters hexadecimal string' : true
     }
 }

@@ -18,6 +18,7 @@
 import {command, metadata} from 'clime'
 import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 @command({
     description: 'View profile credentials',
@@ -31,7 +32,8 @@ export default class extends ProfileCommand {
     @metadata
     async execute(options: ProfileOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const text = new AccountCredentialsTable(account).toString()
         console.log(text)
     }

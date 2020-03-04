@@ -24,22 +24,21 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from '../../interfaces/action.resolver'
+import {ActionType} from "../../models/action.enum";
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flags.(' +
-            AccountRestrictionFlags.AllowMosaic + ': AllowMosaic, ' +
-            AccountRestrictionFlags.BlockMosaic + ': BlockMosaic)',
-    })
+    description: 'Restriction flags.(' +
+    AccountRestrictionFlags.AllowMosaic + ': AllowMosaic, ' +
+    AccountRestrictionFlags.BlockMosaic + ': BlockMosaic)',
+})
     flags: number
 
     @option({
         flag: 'a',
-        description: 'Modification action. (' +
-            ActionType.Add + ': Add, ' +
-            ActionType.Remove + ': Remove).',
+        description: 'Modification action. (Add, Remove).',
     })
     action: number
 
@@ -61,7 +60,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const action = await new ActionResolver().resolve(options)
         const flags = await new RestrictionAccountMosaicFlagsResolver().resolve(options)
         const mosaic = await new MosaicIdAliasResolver().resolve(options)

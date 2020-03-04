@@ -16,6 +16,7 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {StringResolver} from '../../resolvers/string.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -48,7 +49,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const targetAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
                 'Enter the target account public key: ', 'targetPublicKey')

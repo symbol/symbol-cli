@@ -23,11 +23,12 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Mosaic supply change action (1: Increase, 0: Decrease).',
+        description: 'Mosaic supply change action (Increase, Decrease).',
     })
     action: number
 
@@ -57,7 +58,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const mosaicId = await new MosaicIdResolver().resolve(options)
         const action = await new SupplyActionResolver().resolve(options)
         const amount = await new AmountResolver()

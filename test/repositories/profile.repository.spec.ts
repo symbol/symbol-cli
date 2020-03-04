@@ -18,7 +18,7 @@
 import {expect} from 'chai'
 import * as fs from 'fs'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../../src/models/profile'
+import {ProfileModel} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 
 describe('ProfileRepository', () => {
@@ -83,7 +83,7 @@ describe('ProfileRepository', () => {
         const savedProfile = profileRepository.find('default')
         expect(savedProfile).to.not.be.equal(undefined)
 
-        if (savedProfile instanceof Profile) {
+        if (savedProfile instanceof ProfileModel) {
             expect(savedProfile.simpleWallet.address.plain())
                 .to.be.equal(simpleWallet.address.plain())
 
@@ -129,7 +129,7 @@ describe('ProfileRepository', () => {
         profileRepository.setDefault('default')
         const currentDefaultProfile = profileRepository.getDefaultProfile()
         expect(currentDefaultProfile).to.not.be.equal(undefined)
-        if (currentDefaultProfile instanceof Profile) {
+        if (currentDefaultProfile instanceof ProfileModel) {
             expect(currentDefaultProfile.simpleWallet.address.plain())
                 .to.be.equal(simpleWallet2.address.plain())
         }

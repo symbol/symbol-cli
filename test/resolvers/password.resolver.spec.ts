@@ -27,11 +27,4 @@ describe('Password resolver', () => {
             .to.be.equal(password)
     })
 
-    it('should throw error if password invalid', () => {
-        const password = '12345'
-        const profileOptions = {password} as any
-        expect(() => new PasswordResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
-
 })

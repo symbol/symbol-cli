@@ -23,14 +23,14 @@ describe('Network type validator', () => {
     it('default case', () => {
         const networkType = 'MIJIN_TEST'
         expect(new NetworkValidator().validate(networkType))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if network type is unknown', () => {
         const networkType = 'TEST'
-        expect(() => {
+        expect(
             new NetworkValidator().validate(networkType)
-        }).to.throws('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
+        ).to.be.equal('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
     })
 
 })

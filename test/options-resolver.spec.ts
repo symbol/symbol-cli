@@ -21,17 +21,20 @@ import {OptionsChoiceResolver, OptionsResolver} from '../src/options-resolver'
 
 describe('OptionsResolver', () => {
     it('should return the value if contains the commands option is passed', async () => {
-        const value = await OptionsResolver({name: 'nem'}, 'name', () => undefined, 'Insert your name')
+        const value = await OptionsResolver({name: 'nem'}, 'name',
+            () => undefined, 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
     })
 
     it('should return the value 0 if contains the commands option is passed', async () => {
-        const value = await OptionsResolver({name: 0}, 'name', () => undefined, 'Insert your name')
-        expect(value).to.be.equal(0)
+        const value = await OptionsResolver({name: '0'}, 'name',
+            () => undefined, 'Insert your name', 'text', undefined)
+        expect(value).to.be.equal('0')
     })
 
     it('should return the secondSource value if command options object have not it and secondValue is not undefined', async () => {
-        const value = await OptionsResolver({}, 'name', () => 'nem', 'Insert your name')
+        const value = await OptionsResolver({}, 'name',
+            () => 'nem', 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
     })
 })
@@ -42,7 +45,8 @@ describe('OptionsChoicesResolver', () => {
             {title: 'nem', value: 0},
             {title: 'mijin', value: 1},
         ]
-        const value = await OptionsChoiceResolver({name: 'nem'}, 'name', 'Select name: ', choices)
-        expect(value).to.be.equal('nem')
+        const value = await OptionsChoiceResolver({name: 'nem'},
+            'name', 'Select name: ', choices, 'select', undefined)
+        expect(value).to.be.equal(0)
     })
 })

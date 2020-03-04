@@ -17,10 +17,10 @@
  */
 
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../../src/models/profile'
+import {ProfileModel} from '../../src/models/profile.model'
 
 const simpleWallet1 = SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST)
 const url1 = 'http://localhost:1234'
 const networkGenerationHash1 = 'test'
 
-export const mockProfile1 = new Profile(simpleWallet1, url1, networkGenerationHash1)
+export const mockProfile1 = new ProfileModel(simpleWallet1, url1, networkGenerationHash1)

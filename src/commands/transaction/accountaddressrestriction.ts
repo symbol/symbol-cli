@@ -16,7 +16,7 @@
  *
  */
 import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, AccountRestrictionFlags, Deadline} from 'symbol-sdk'
+import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
@@ -24,24 +24,25 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from '../../interfaces/action.resolver'
+import {ActionType} from "../../models/action.enum";
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
         description: 'Restriction flags.(' +
-            AccountRestrictionFlags.AllowOutgoingAddress + ': AllowOutgoingAddress, ' +
-            AccountRestrictionFlags.BlockOutgoingAddress + ': BlockOutgoingAddress, ' +
-            AccountRestrictionFlags.AllowIncomingAddress + ': AllowIncomingAddress, ' +
-            AccountRestrictionFlags.BlockIncomingAddress + ': BlockIncomingAddress)',
+            'AllowOutgoingAddress, ' +
+            'BlockOutgoingAddress, ' +
+            'AllowIncomingAddress, ' +
+            'BlockIncomingAddress)',
     })
     flags: number
 
     @option({
         flag: 'a',
         description: 'Modification action. (' +
-            ActionType.Add + ': Add, ' +
-            ActionType.Remove + ': Remove).',
+            'Add, ' +
+            'Remove).',
     })
     action: number
 
@@ -63,7 +64,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const action = await new ActionResolver().resolve(options)
         const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options)
         const address = await new AddressAliasResolver()

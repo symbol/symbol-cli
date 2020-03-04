@@ -20,7 +20,6 @@ import {HorizontalTable} from 'cli-table3'
 import {ExpectedError} from 'clime'
 import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {PasswordResolver} from '../resolvers/password.resolver'
 
 /**
  * Profile data transfer object.
@@ -34,7 +33,7 @@ interface ProfileDTO {
 /**
  * Profile model.
  */
-export class Profile {
+export class ProfileModel {
     private readonly table: HorizontalTable
 
     /**
@@ -87,10 +86,10 @@ export class Profile {
     /**
      * Creates a profile object.
      * @param {ProfileDTO} profileDTO
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    public static createFromDTO(profileDTO: ProfileDTO): Profile {
-        return new Profile(
+    public static createFromDTO(profileDTO: ProfileDTO): ProfileModel {
+        return new ProfileModel(
             SimpleWallet.createFromDTO(profileDTO.simpleWallet),
             profileDTO.url,
             profileDTO.networkGenerationHash,
@@ -121,12 +120,11 @@ export class Profile {
 
     /**
      * Opens a wallet.
-     * @param {ProfileOptions} options - The  attribute "password" should contain the profile's password.
+     * @param {Password} options - The  attribute "password" should contain the profile's password.
      * @throws {ExpectedError}
-     * @returns {Promise<Account>}
+     * @returns {Account}
      */
-    async decrypt(options: ProfileOptions): Promise<Account> {
-        const password = await new PasswordResolver().resolve(options)
+    decrypt(password: Password): Account {
         if (!this.isPasswordValid(password)) {
             throw new ExpectedError('The password provided does not match your account password')
         }

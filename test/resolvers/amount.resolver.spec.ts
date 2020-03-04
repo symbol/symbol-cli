@@ -26,11 +26,4 @@ describe('Amount resolver', () => {
         expect((await new AmountResolver().resolve(profileOptions)).compact())
             .to.be.equal(10)
     })
-
-    it('should throw error if amount invalid', () => {
-        const amount = '-1'
-        const profileOptions = {amount} as any
-        expect(() => new AmountResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
 })

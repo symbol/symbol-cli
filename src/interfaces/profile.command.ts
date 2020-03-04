@@ -17,7 +17,7 @@
  */
 import {Spinner} from 'cli-spinner'
 import {Command, ExpectedError, option, Options} from 'clime'
-import {Profile} from '../models/profile'
+import {ProfileModel} from '../models/profile.model'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
 
@@ -42,9 +42,9 @@ export abstract class ProfileCommand extends Command {
      * Gets profile by name.
      * @param {ProfileOptions} options - The  attribute "profile" should include the name.
      * @throws {ExpectedError}
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    protected getProfile(options: ProfileOptions): Profile {
+    protected getProfile(options: ProfileOptions): ProfileModel {
         try {
             if (options.profile) {
                 return this.profileService.findProfileNamed(options.profile)
@@ -60,9 +60,9 @@ export abstract class ProfileCommand extends Command {
     /**
      * Gets default profile.
      * @throws {ExpectedError}
-     * @returns {Profile}
+     * @returns {ProfileModel}
      */
-    protected getDefaultProfile(): Profile {
+    protected getDefaultProfile(): ProfileModel {
         try {
             return this.profileService.getDefaultProfile()
         } catch (err) {
@@ -74,9 +74,9 @@ export abstract class ProfileCommand extends Command {
     /**
      * Gets all profiles.
      * @throws {ExpectedError}
-     * @returns {Profile[]}
+     * @returns {ProfileModel[]}
      */
-    protected findAllProfiles(): Profile[] {
+    protected findAllProfiles(): ProfileModel[] {
         try {
             return this.profileService.findAllProfiles()
         } catch (err) {

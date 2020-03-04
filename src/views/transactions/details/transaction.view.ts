@@ -18,7 +18,7 @@
 
 import {Cell, HorizontalTable} from 'cli-table3'
 import {SignedTransaction, Transaction} from 'symbol-sdk'
-import {TableBuilder} from '../../../models/tableBuilder'
+import {TableBuilderModel} from '../../../models/tableBuilder.model'
 import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view'
 import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view'
 import {transactionDetailViewFactory} from './transactionDetailViewFactory'
@@ -64,7 +64,7 @@ export class TransactionView {
    * @returns {HorizontalTable}
    */
   render(): HorizontalTable {
-    return TableBuilder.renderTableFromObject(this.sanitizedCellRecord)
+    return TableBuilderModel.renderTableFromObject(this.sanitizedCellRecord)
   }
 
   /**

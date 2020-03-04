@@ -21,18 +21,11 @@ import {PrivateKeyResolver} from '../../src/resolvers/privateKey.resolver'
 
 describe('Private key resolver', () => {
 
-    it('should return private key', () => {
+    it('should return private key', async() => {
         const privateKey = '0000000000000000000000000000000000000000000000000000000000000000'
         const profileOptions = {privateKey} as any
-        expect(new PrivateKeyResolver().resolve(profileOptions))
+        expect(await new PrivateKeyResolver().resolve(profileOptions))
             .to.be.equal(privateKey)
-    })
-
-    it('should throw error if private key invalid', () => {
-        const privateKey = '000'
-        const profileOptions = {privateKey} as any
-        expect(() => new PrivateKeyResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })

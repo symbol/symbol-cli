@@ -27,11 +27,4 @@ describe('Height resolver', () => {
         expect((await new HeightResolver().resolve(profileOptions)).compact())
             .to.be.equal(10)
     })
-
-    it('should throw error if height invalid', () => {
-        const height = '-1'
-        const profileOptions = {height} as any
-        expect(() => new HeightResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
 })

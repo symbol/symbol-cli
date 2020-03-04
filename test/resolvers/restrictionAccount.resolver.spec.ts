@@ -25,39 +25,32 @@ import {
 
 describe('Restriction account address flags resolver', () => {
 
-    it('should return AllowOutgoingAddress', () => {
-        const flags = AccountRestrictionFlags.AllowOutgoingAddress
+    it('should return AllowOutgoingAddress', async() => {
+        const flags = 'AllowOutgoingAddress'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowOutgoingAddress)
     })
 
-    it('should return BlockOutgoingAddress', () => {
-        const flags = AccountRestrictionFlags.BlockOutgoingAddress
+    it('should return BlockOutgoingAddress', async() => {
+        const flags = 'BlockOutgoingAddress'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.BlockOutgoingAddress)
     })
 
-    it('should return AllowIncomingAddress', () => {
-        const flags = AccountRestrictionFlags.AllowIncomingAddress
+    it('should return AllowIncomingAddress', async() => {
+        const flags = 'AllowIncomingAddress'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowIncomingAddress)
     })
 
-    it('should return BlockIncomingAddress', () => {
-        const flags = AccountRestrictionFlags.BlockIncomingAddress
+    it('should return BlockIncomingAddress', async() => {
+        const flags = 'BlockIncomingAddress'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.BlockIncomingAddress)
-    })
-
-    it('should throw error if flag does not exist', () => {
-        const flags = '@'
-        const profileOptions = {flags} as any
-        expect(() => new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })
@@ -65,49 +58,35 @@ describe('Restriction account address flags resolver', () => {
 describe('Restriction account mosaic flags resolver', () => {
 
     it('should return AllowMosaic', async () => {
-        const flags = AccountRestrictionFlags.AllowMosaic
+        const flags = 'AllowMosaic'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowMosaic)
     })
 
     it('should return BlockMosaic', async () => {
-        const flags = AccountRestrictionFlags.BlockMosaic
+        const flags = 'BlockMosaic'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.BlockMosaic)
-    })
-
-    it('should throw error if flag not exist', () => {
-        const flags = '@'
-        const profileOptions = {flags} as any
-        expect(async () => await new RestrictionAccountMosaicFlagsResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })
 
 describe('Restriction account operation flags resolver', () => {
 
-    it('should return AllowOutgoingTransactionType', () => {
-        const flags = AccountRestrictionFlags.AllowOutgoingTransactionType
+    it('should return AllowOutgoingTransactionType', async() => {
+        const flags = 'AllowOutgoingTransactionType'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType)
     })
 
-    it('should return BlockOutgoingTransactionType', () => {
-        const flags = AccountRestrictionFlags.BlockOutgoingTransactionType
+    it('should return BlockOutgoingTransactionType', async() => {
+        const flags = 'BlockOutgoingTransactionType'
         const profileOptions = {flags} as any
-        expect(new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
+        expect(await new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.BlockOutgoingTransactionType)
-    })
-
-    it('should throw error if flag not exist', () => {
-        const flags = '@'
-        const profileOptions = {flags} as any
-        expect(() => new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })

@@ -21,7 +21,7 @@ import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 
 describe('Payload resolver', () => {
 
-    it('should return transaction from payload', () => {
+    it('should return transaction from payload', async() => {
         let transaction: TransferTransaction
         transaction = TransferTransaction.create(
             Deadline.create(),
@@ -31,7 +31,7 @@ describe('Payload resolver', () => {
             NetworkType.MIJIN_TEST)
         const payload = transaction.serialize()
         const profileOptions = {payload} as any
-        expect(new PayloadResolver().resolve(profileOptions))
+        expect(await new PayloadResolver().resolve(profileOptions))
             .to.be.deep.equal(transaction)
     })
 })

@@ -23,14 +23,14 @@ describe('Transaction type validator', () => {
     it('default case', () => {
         const value = '414C'
         expect(new TransactionTypeValidator().validate(value))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if transaction is unknown', () => {
         const value = 'test'
-        expect(() => {
+        expect(
             new TransactionTypeValidator().validate(value)
-        }).to.throws('Enter a transaction type in hexadecimal. Example: 4154')
+        ).to.be.equal('Enter a transaction type in hexadecimal. Example: 4154')
     })
 
 })

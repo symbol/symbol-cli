@@ -22,10 +22,10 @@ import {SecretResolver} from '../../src/resolvers/secret.resolver'
 
 describe('Secret resolver', () => {
 
-    it('should return public key', () => {
+    it('should return public key', async() => {
         const secret = 'secret'
         const profileOptions = {secret} as any
-        expect(new SecretResolver().resolve(profileOptions))
+        expect(await new SecretResolver().resolve(profileOptions))
             .to.be.equal(secret)
     })
 

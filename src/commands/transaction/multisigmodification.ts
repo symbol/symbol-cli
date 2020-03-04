@@ -24,13 +24,17 @@ import {
     NetworkCurrencyPublic,
     UInt64,
 } from 'symbol-sdk'
-import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {
+    AnnounceAggregateTransactionsOptions,
+    AnnounceTransactionsCommand
+} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from '../../interfaces/action.resolver'
+import {ActionType} from "../../models/action.enum";
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -49,7 +53,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
 
     @option({
         flag: 'a',
-        description: 'Modification Action (1: Add, 0: Remove).',
+        description: 'Modification Action (Add, Remove).',
     })
     action: number
 
@@ -78,7 +82,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const action = await new ActionResolver().resolve(options)
         const multisigAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,

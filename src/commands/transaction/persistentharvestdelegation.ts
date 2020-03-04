@@ -23,6 +23,7 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -51,7 +52,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const remotePrivateKey = await new PrivateKeyResolver()
             .resolve(options, undefined, 'Enter the remote account private key: ', 'remotePrivateKey')
         const recipientPublicAccount = await new PublicKeyResolver()

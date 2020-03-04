@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {TransactionType} from 'symbol-sdk'
 
 /**
@@ -26,23 +26,23 @@ export class TransactionTypeValidator implements Validator<string> {
     /*
      * Validates if transaction type is known.
      * @param {string} value - Transaction type.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        let success = true
+    validate(value: string): boolean | string {
+        let valid = true
         try {
             const h = parseInt(value, 16)
             if (h.toString(16) !== value.toLowerCase()) {
-                success = false
+                valid = false
             } else if (!(h in TransactionType)) {
-                success = false
+                valid = false
             }
         } catch (err) {
-            success = false
+            valid = false
         }
-        if (!success) {
-            throw new ExpectedError('Enter a transaction type in hexadecimal. Example: 4154')
+        if (!valid) {
+            return 'Enter a transaction type in hexadecimal. Example: 4154'
         }
+        return valid;
     }
 }

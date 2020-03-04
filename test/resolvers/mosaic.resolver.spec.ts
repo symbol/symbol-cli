@@ -28,13 +28,6 @@ describe('Mosaic id resolver', () => {
             .to.be.equal(mosaicId)
     })
 
-    it('should throw error if invalid mosaicId', () => {
-        const mosaicId = 'test'
-        const profileOptions = {mosaicId} as any
-        expect(() => new MosaicIdResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
-
 })
 
 describe('Mosaic id alias validator', () => {
@@ -46,18 +39,11 @@ describe('Mosaic id alias validator', () => {
             .to.be.equal(mosaicId)
     })
 
-    it('should return alias', () => {
+    it('should return alias', async() => {
         const mosaicId = '@test'
         const profileOptions = {mosaicId} as any
-        expect(new MosaicIdAliasResolver().resolve(profileOptions))
+        expect(await new MosaicIdAliasResolver().resolve(profileOptions))
             .to.be.instanceOf(NamespaceId)
-    })
-
-    it('should throw error if invalid alias', () => {
-        const mosaicId = 'test'
-        const profileOptions = {mosaicId} as any
-        expect(() => new MosaicIdAliasResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })
@@ -73,13 +59,6 @@ describe('Mosaics resolver', () => {
         expect(resolution[0].amount.compact()).to.be.equal(1)
         expect(resolution[1].id).to.be.instanceOf(NamespaceId)
         expect(resolution[1].amount.compact()).to.be.equal(2)
-    })
-
-    it('should throw error if invalid mosaic', () => {
-        const mosaics = '0DC67FBE1CAD29E3::1,test::2'
-        const profileOptions = {mosaics} as any
-        expect(() => new MosaicsResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 })
 
@@ -100,32 +79,26 @@ describe('MosaicFlag resolver', () => {
 })
 
 describe('MosaicIdAliasResolver optional resolver', () => {
-    it('should return mosaicId', () => {
+    it('should return mosaicId', async () => {
         const referenceMosaicId = '0DC67FBE1CAD29E3'
         const profileOptions = {referenceMosaicId} as any
-        expect(new MosaicIdAliasResolver().optionalResolve(profileOptions).toHex())
+        expect(await new MosaicIdAliasResolver().optionalResolve(profileOptions).toHex())
             .to.be.equal(referenceMosaicId)
     })
 
-    it('should return alias', () => {
+    it('should return alias', async () => {
         const referenceMosaicId = '@test'
         const profileOptions = {referenceMosaicId} as any
-        expect(new MosaicIdAliasResolver().optionalResolve(profileOptions))
+        expect(await new MosaicIdAliasResolver().optionalResolve(profileOptions))
             .to.be.instanceOf(NamespaceId)
     })
 
-    it('should return default mosaicId', () => {
+    it('should return default mosaicId', async() => {
         const defaultMosaicId = '0DC67FBE1CAD29E3'
         const referenceMosaicId = undefined
         const profileOptions = {referenceMosaicId} as any
-        expect(new MosaicIdAliasResolver().optionalResolve(profileOptions, 'referenceMosaicId', '0DC67FBE1CAD29E3').toHex())
+        expect(await new MosaicIdAliasResolver().optionalResolve(profileOptions, 'referenceMosaicId', '0DC67FBE1CAD29E3').toHex())
             .to.be.equal(defaultMosaicId)
     })
 
-    it('should return default mosaicId', () => {
-        const referenceMosaicId = undefined
-        const profileOptions = {referenceMosaicId} as any
-        expect(() => new MosaicIdAliasResolver().optionalResolve(profileOptions).toHex())
-            .to.throws(Error)
-    })
 })

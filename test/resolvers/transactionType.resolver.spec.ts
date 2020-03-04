@@ -21,18 +21,11 @@ import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resol
 
 describe('Transaction type resolver', () => {
 
-    it('should return Transfer Transaction', () => {
+    it('should return Transfer Transaction', async() => {
         const transactionType = '4154'
         const profileOptions = {transactionType} as any
-        expect(new TransactionTypeResolver().resolve(profileOptions))
+        expect(await new TransactionTypeResolver().resolve(profileOptions))
             .to.be.equal(TransactionType.TRANSFER)
-    })
-
-    it('should throw error if transaction type does not exist', () => {
-        const transactionType = '2121'
-        const profileOptions = {transactionType} as any
-        expect(() => new TransactionTypeResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })

@@ -16,54 +16,35 @@
  *
  */
 import {expect} from 'chai'
-import {ActionResolver, LinkActionResolver, SupplyActionResolver} from '../../src/resolvers/action.resolver'
-import {ActionType} from '../../src/interfaces/action.resolver'
 import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
+import {ActionType} from "../../src/models/action.enum";
+import {ActionResolver, LinkActionResolver, SupplyActionResolver} from "../../src/resolvers/action.resolver";
 
 describe('Action resolver', () => {
 
-    it('should return action', () => {
-        const profileOptions = {action: ActionType.Remove} as any
-        expect(new ActionResolver().resolve(profileOptions))
+    it('should return action', async() => {
+        const profileOptions = {action: 'Remove'} as any
+        expect(await new ActionResolver().resolve(profileOptions))
             .to.be.equal(ActionType.Remove)
-    })
-
-    it('should throw error if not 0 or 1', () => {
-        const profileOptions = {action: 2} as any
-        expect(() => new ActionResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })
 
 describe('Link action resolver', () => {
 
-    it('default case', () => {
-        const profileOptions = {action: LinkAction.Unlink} as any
-        expect(new LinkActionResolver().resolve(profileOptions))
+    it('default case', async() => {
+        const profileOptions = {action: 'Unlink'} as any
+        expect(await new LinkActionResolver().resolve(profileOptions))
             .to.be.equal(LinkAction.Unlink)
-    })
-
-    it('should throw error if not 0 or 1', () => {
-        const profileOptions = {action: 2} as any
-        expect(() => new LinkActionResolver().resolve(profileOptions))
-            .to.throws(Error)
     })
 
 })
 
 describe('Supply action resolver', () => {
 
-    it('default case', () => {
-        const profileOptions = {action: MosaicSupplyChangeAction.Decrease} as any
-        expect(new SupplyActionResolver().resolve(profileOptions))
+    it('default case', async() => {
+        const profileOptions = {action: 'Decrease'} as any
+        expect(await new SupplyActionResolver().resolve(profileOptions))
             .to.be.equal(MosaicSupplyChangeAction.Decrease)
     })
-
-    it('should throw error if not 0 or 1', () => {
-        const profileOptions = {action: 2} as any
-        expect(() => new SupplyActionResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
-
 })

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {Address} from 'symbol-sdk'
 
 /**
@@ -26,14 +26,14 @@ export class HexAddressValidator implements Validator<string> {
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
             Address.createFromEncoded(value)
         } catch (err) {
-            throw new ExpectedError('Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF')
+            return 'Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF'
         }
+        return true
     }
 }

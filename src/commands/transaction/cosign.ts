@@ -31,12 +31,13 @@ import {
 import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
 import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ProfileCommand} from '../../interfaces/profile.command'
-import {Profile} from '../../models/profile'
+import {ProfileModel} from '../../models/profile.model'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -50,7 +51,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Cosign an aggregate bonded transaction',
 })
 export default class extends ProfileCommand {
-    private profile: Profile
+    private profile: ProfileModel
     private options: CommandOptions
 
     constructor() {
@@ -119,7 +120,8 @@ export default class extends ProfileCommand {
     ): Promise<CosignatureSignedTransaction | null> {
         try {
             const cosignatureTransaction = CosignatureTransaction.create(transaction)
-            const account = await this.profile.decrypt(this.options)
+            const password = await new PasswordResolver().resolve(this.options)
+            const account = this.profile.decrypt(password)
             return account.signCosignatureTransaction(cosignatureTransaction)
         } catch (err) {
             this.spinner.stop(true)

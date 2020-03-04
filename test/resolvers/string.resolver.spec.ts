@@ -20,10 +20,10 @@ import {StringResolver} from '../../src/resolvers/string.resolver'
 
 describe('Value resolver', () => {
 
-    it('should return string', () => {
+    it('should return string', async () => {
         const value = 'test'
         const profileOptions = {value} as any
-        expect(new StringResolver().resolve(profileOptions))
+        expect(await new StringResolver().resolve(profileOptions))
             .to.be.equal(value)
     })
 })

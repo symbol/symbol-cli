@@ -27,10 +27,4 @@ describe('Duration resolver', () => {
             .to.be.equal(10)
     })
 
-    it('should throw error if height invalid', () => {
-        const duration = '-1'
-        const profileOptions = {duration} as any
-        expect(async () => await new DurationResolver().resolve(profileOptions))
-            .to.throws(Error)
-    })
 })

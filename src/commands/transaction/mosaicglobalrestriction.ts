@@ -25,6 +25,7 @@ import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver'
 import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -55,13 +56,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'T',
         description: 'New restriction type. (' +
-            MosaicRestrictionType.NONE + ': NONE, ' +
-            MosaicRestrictionType.EQ + ': EQ-equal,' +
-            MosaicRestrictionType.GE + ': GE-greater than or equal,' +
-            MosaicRestrictionType.GT + ': GT-greater than,' +
-            MosaicRestrictionType.LE + ': LE-less than or equal,' +
-            MosaicRestrictionType.LT + ': LT-less than,' +
-            MosaicRestrictionType.NE + ': NE-not equal )',
+            'NONE, ' +
+            'EQ, ' +
+            'GE, ' +
+            'GT, ' +
+            'LE, ' +
+            'LT, ' +
+            'NE)'
     })
     newRestrictionType: string
 }
@@ -76,7 +77,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const mosaicId = await new MosaicIdAliasResolver().resolve(options)
         const newRestrictionType = await new RestrictionTypeResolver().resolve(options)
         const restrictionKey = await new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey')

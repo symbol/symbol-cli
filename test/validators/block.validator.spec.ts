@@ -23,27 +23,27 @@ describe('block height validator', () => {
     it('default case', () => {
         const height = '1'
         expect(new HeightValidator().validate(height))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if height is 0', () => {
         const height = '0'
-        expect(() => {
+        expect(
             new HeightValidator().validate(height)
-        }).to.throws('The block height must be a positive integer')
+        ).to.be.equal('The block height must be a positive integer')
     })
 
     it('should throw error if height is negative', () => {
         const height = '-1'
-        expect(() => {
+        expect(
             new HeightValidator().validate(height)
-        }).to.throws('The block height must be a positive integer')
+        ).to.be.equal('The block height must be a positive integer')
     })
 
     it('should throw error if height is decimal', () => {
         const height = '1.3'
-        expect(() => {
+        expect(
             new HeightValidator().validate(height)
-        }).to.throws('The block height must be a positive integer')
+        ).to.be.equal('The block height must be a positive integer')
     })
 })

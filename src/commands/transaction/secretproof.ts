@@ -24,6 +24,7 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {ProofResolver} from '../../resolvers/proof.resolver'
 import {SecretResolver} from '../../resolvers/secret.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 
@@ -63,7 +64,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const recipientAddress = await new AddressAliasResolver()
             .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress')
         const secret = await new SecretResolver().resolve(options)

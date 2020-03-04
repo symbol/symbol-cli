@@ -1,7 +1,5 @@
-import chalk from 'chalk'
-import {Password} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
+import {ProfileModel} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {PrivateKeyValidator} from '../validators/privateKey.validator'
 import {Resolver} from './resolver'
@@ -14,23 +12,18 @@ export class PrivateKeyResolver implements Resolver {
     /**
      * Resolves a private key provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {ProfileModel} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<string>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'privateKey',
             () => undefined,
             altText ? altText : 'Enter your account private key: ',
-            'password')
-        try {
-            new PrivateKeyValidator().validate(resolution)
-        } catch (err) {
-            console.log(chalk.red('ERR'), err)
-            return process.exit()
-        }
+            'password',
+            new PrivateKeyValidator())
         return resolution
     }
 }

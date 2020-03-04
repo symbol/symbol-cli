@@ -23,11 +23,12 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from "../../resolvers/password.resolver";
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Alias action (1: Link, 0: Unlink).',
+        description: 'Alias action (Link, Unlink).',
     })
     action: number
 
@@ -57,7 +58,8 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = await profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
         const namespaceId = await new NamespaceNameResolver().resolve(options)
         const address = await new AddressResolver().resolve(options)
         const action = await new LinkActionResolver().resolve(options)

@@ -17,66 +17,88 @@
  */
 import chalk from 'chalk'
 import * as prompts from 'prompts'
-import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.resolver'
-
-export const EXIT_FLAG = '@EXIT'
+import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
+import {Validator} from "./validators/validator";
 
 export const OptionsChoiceResolver = async (options: any,
                                             key: string,
                                             promptText: string,
                                             choices: Choices[],
-                                            type: SelectOptionType = 'select') => {
+                                            type: SelectOptionType = 'select',
+                                            validation: Validator<any> | undefined) => {
     if (!['select', 'multiselect'].includes(type)) {
         console.log(chalk.red('ERR'), 'Invalid options choice resolver type')
         return process.exit()
     }
+    let title: string;
     if (options[key] !== undefined) {
-        return options[key]
+        title = options[key].trim()
+        if (validation !== undefined ) {
+            const test = validation.validate(title)
+            if (typeof test === 'string') {
+                console.log(chalk.red('ERR'), test)
+                return process.exit()
+            }
+        }
+    } else {
+        title = (await prompts({
+            type,
+            name: key,
+            message: promptText,
+            choices,
+            validate: validation !== undefined ?
+                result => validation.validate(result) : () => true
+        }))[key]
     }
-    const response = await prompts({
-        type,
-        name: key,
-        message: promptText,
-        choices,
-    })
-    if (response[key] === undefined) {
-        return process.exit()
-    }
-
-    if (('select' === type && EXIT_FLAG === response[key]) || ('multiselect' === type && response[key].includes(EXIT_FLAG))) {
-        return process.exit()
-    }
-    return response[key]
+    return choices.find((item) => item.title === title)?.value
 }
 
 export const OptionsResolver = async (options: any,
                                       key: string,
                                       secondSource: () => string | undefined,
                                       promptText: string,
-                                      type: InputOptionType = 'text') => {
+                                      type: InputOptionType = 'text',
+                                      validation: Validator<any> | undefined) => {
 
     if (!['text', 'password', 'number'].includes(type)) {
         console.log(chalk.red('ERR'), 'Invalid options resolver type')
         return process.exit()
     }
-    return options[key] !== undefined ?
-        options[key].trim() :
-        (secondSource() || await prompts({
+    let value: string;
+    if (options[key] !== undefined) {
+        value = options[key].trim()
+        if (validation !== undefined) {
+            const test = validation.validate(value)
+            if (typeof test === 'string') {
+                console.log(chalk.red('ERR'), test)
+                return process.exit()
+            }
+        }
+    } else if (secondSource() !== undefined) {
+        value = secondSource()!
+    } else {
+        value = (await prompts({
             type,
             name: key,
             message: promptText,
-        }))
+            validate: validation !== undefined ?
+                result => validation.validate(result) : () => true
+        }))[key]
+    }
+    return value
 }
 
-export const OptionsConfirmResolver = async (promptText: string,
+export const OptionsConfirmResolver = async (
+                                             promptText: string,
                                              type: ConfirmOptionType = 'confirm',
                                              initial = true,
-                                             name = 'value') => {
+                                             name = 'value') : Promise<boolean> => {
     const response = await prompts({
         type,
         name,
         message: promptText,
         initial,
       })
-    return response[name]
+    return response.value
 }
+

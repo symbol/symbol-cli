@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime'
-import { MosaicRestrictionType, AccountRestrictionFlags } from 'symbol-sdk'
+import {Validator} from 'clime'
+import {AccountRestrictionFlags, MosaicRestrictionType} from 'symbol-sdk'
 
 /**
  * Validator of mosaic restriction type
@@ -25,13 +25,10 @@ export class MosaicRestrictionTypeValidator implements Validator<number> {
     /**
      * Validates if a mosaic restriction type is valid.
      * @param {number} value - Mosaic restriction type.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: number, context?: ValidationContext): void {
-        if (!(value in MosaicRestrictionType)) {
-            throw new ExpectedError('Wrong mosaic restriction type')
-        }
+    validate(value: number): boolean | string {
+        return value in MosaicRestrictionType ? true : 'Invalid mosaic restriction type'
     }
 }
 
@@ -42,12 +39,9 @@ export class AccountRestrictionFlagsValidator implements Validator<number> {
     /**
      * Validates if an account restriction flag is valid.
      * @param {number} value - account restriction flag.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: number, context?: ValidationContext): void {
-        if (!(value in AccountRestrictionFlags)) {
-            throw new ExpectedError('Wrong restriction account address flag')
-        }
+    validate(value: number): boolean | string {
+        return value in AccountRestrictionFlags ? true : 'Invalid restriction account address flag'
     }
 }
