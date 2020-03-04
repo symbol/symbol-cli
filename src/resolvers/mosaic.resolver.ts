@@ -1,11 +1,9 @@
 import chalk from 'chalk'
 import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'symbol-sdk'
-import * as readlineSync from 'readline-sync'
 import {CommandOptions} from '../commands/transaction/mosaic'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {CommandOptions} from '../commands/transaction/mosaic'
 import {Profile} from '../models/profile'
-import {OptionsResolver, OptionsConfirmResolver} from '../options-resolver'
+import {OptionsConfirmResolver, OptionsResolver} from '../options-resolver'
 import {MosaicService} from '../services/mosaic.service'
 import {MosaicsValidator} from '../validators/mosaic.validator'
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../validators/mosaicId.validator'
@@ -100,7 +98,7 @@ export class MosaicsResolver implements Resolver {
             altKey ? altKey : 'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics with commas: ').trim()
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics with commas: ')
         try {
             new MosaicsValidator().validate(resolution)
         } catch (err) {

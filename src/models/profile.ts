@@ -123,7 +123,7 @@ export class Profile {
      * Opens a wallet.
      * @param {ProfileOptions} options - The  attribute "password" should contain the profile's password.
      * @throws {ExpectedError}
-     * @returns {Account}
+     * @returns {Promise<Account>}
      */
     async decrypt(options: ProfileOptions): Promise<Account> {
         const password = await new PasswordResolver().resolve(options)

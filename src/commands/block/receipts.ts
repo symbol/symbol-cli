@@ -46,6 +46,7 @@ export default class extends ProfileCommand {
         this.spinner.start()
         const profile = this.getProfile(options)
         const height =  await new HeightResolver().resolve(options)
+
         const receiptHttp = new ReceiptHttp(profile.url)
         receiptHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {

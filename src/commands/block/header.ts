@@ -86,8 +86,8 @@ export default class extends ProfileCommand {
         this.spinner.start()
         const profile = this.getProfile(options)
         const height = await new HeightResolver().resolve(options)
-        const blockHttp = new BlockHttp(profile.url)
 
+        const blockHttp = new BlockHttp(profile.url)
         blockHttp.getBlockByHeight(height)
             .subscribe((blockInfo) => {
                 this.spinner.stop(true)

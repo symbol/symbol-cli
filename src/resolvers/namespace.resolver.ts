@@ -1,13 +1,12 @@
 import chalk from 'chalk'
 import {NamespaceId, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
-import * as readlineSync from 'readline-sync'
 import {CommandOptions} from '../commands/transaction/namespace'
 import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile'
-import {OptionsResolver, OptionsConfirmResolver} from '../options-resolver'
+import {OptionsConfirmResolver, OptionsResolver} from '../options-resolver'
 import {NamespaceIdValidator} from '../validators/namespaceId.validator'
 import {Resolver} from './resolver'
-import {CommandOptions} from '../commands/transaction/namespace'
+
 /**
  * Namespace name resolver
  */

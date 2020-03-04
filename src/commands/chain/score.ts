@@ -57,8 +57,8 @@ export default class extends ProfileCommand {
     execute(options: ProfileOptions) {
         this.spinner.start()
         const profile = this.getProfile(options)
-        const chainHttp = new ChainHttp(profile.url)
 
+        const chainHttp = new ChainHttp(profile.url)
         chainHttp.getChainScore().subscribe((score) => {
             this.spinner.stop(true)
             console.log(new ChainScoreTable(score).toString())
