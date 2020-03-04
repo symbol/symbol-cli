@@ -27,4 +27,12 @@ describe('Duration resolver', () => {
             .to.be.equal(10)
     })
 
+    it('should change key', async () => {
+        const key = '10'
+        const profileOptions = {key} as any
+        expect((await new DurationResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).compact())
+            .to.be.equal(10)
+    })
+
 })

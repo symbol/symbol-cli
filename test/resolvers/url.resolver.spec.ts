@@ -34,4 +34,13 @@ describe('Url resolver', () => {
             .to.be.equal('https://localhost:3000')
     })
 
+    it('should change key', async () => {
+        const key = 'https://localhost:3000/'
+        const profileOptions = {key} as any
+        expect(await new URLResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal('https://localhost:3000')
+    })
+
+
 })

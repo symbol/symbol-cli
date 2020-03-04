@@ -18,6 +18,9 @@
 
 import {expect} from 'chai'
 import {OptionsChoiceResolver, OptionsResolver} from '../src/options-resolver'
+import {ActionValidator} from '../src/validators/action.validator'
+import {ActionType} from '../src/models/action.enum'
+import {NumericStringValidator} from '../src/validators/numericString.validator'
 
 describe('OptionsResolver', () => {
     it('should return the value if contains the commands option is passed', async () => {
@@ -37,6 +40,13 @@ describe('OptionsResolver', () => {
             () => 'nem', 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
     })
+
+    it('should pass validation', async () => {
+        const value = await OptionsResolver({name: '1'}, 'name',
+            () => undefined, 'Insert your name', 'text', new NumericStringValidator())
+        expect(value).to.be.equal('1')
+    })
+
 })
 
 describe('OptionsChoicesResolver', () => {
@@ -49,4 +59,14 @@ describe('OptionsChoicesResolver', () => {
             'name', 'Select name: ', choices, 'select', undefined)
         expect(value).to.be.equal(0)
     })
+
+    it('should pass validation', async () => {
+        const choices = [
+            {title: 'Remove', value: ActionType.Remove},
+        ]
+        const value = await OptionsChoiceResolver({name: 'Remove'},
+            'name', 'Select name: ', choices, 'select', new ActionValidator())
+        expect(value).to.be.equal(ActionType.Remove)
+    })
+
 })

@@ -28,4 +28,13 @@ describe('Private key resolver', () => {
             .to.be.equal(privateKey)
     })
 
+    it('should change key', async () => {
+        const key = '0000000000000000000000000000000000000000000000000000000000000000'
+        const profileOptions = {key} as any
+        expect(await new PrivateKeyResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(key)
+    })
+
+
 })

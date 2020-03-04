@@ -54,4 +54,17 @@ describe('Cosignatory public key resolver', () => {
             .to.be.equal('0000000000000000000000000000000000000000000000000000000000000001')
     })
 
+    it('should change key', async () => {
+        const key = '0000000000000000000000000000000000000000000000000000000000000000,' +
+            '0000000000000000000000000000000000000000000000000000000000000001'
+        const profileOptions = {key} as any
+        const resolution = await new CosignatoryPublicKeyResolver()
+            .resolve(profileOptions,undefined, 'altText', 'key')
+        expect(resolution[0].publicKey)
+            .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000')
+        expect(resolution[1].publicKey)
+            .to.be.equal('0000000000000000000000000000000000000000000000000000000000000001')
+    })
+
+
 })

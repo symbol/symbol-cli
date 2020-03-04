@@ -11,6 +11,15 @@ describe('Restriction value resolver', () => {
             expect(await new RestrictionValueResolver().resolve(profileOptions))
                 .to.be.equal('123')
         })
+
+        it('should change key', async () => {
+            const key = '123'
+            const profileOptions = { key } as any
+            expect(await new RestrictionValueResolver()
+                .resolve(profileOptions, undefined, 'altText', 'key'))
+                .to.be.equal('123')
+        })
+
     })
 
 })

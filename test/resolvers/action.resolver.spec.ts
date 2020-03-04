@@ -28,6 +28,13 @@ describe('Action resolver', () => {
             .to.be.equal(ActionType.Remove)
     })
 
+    it('should change key', async () => {
+        const profileOptions = {key: 'Remove'} as any
+        expect(await new ActionResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(ActionType.Remove)
+    })
+
 })
 
 describe('Link action resolver', () => {
@@ -35,6 +42,13 @@ describe('Link action resolver', () => {
     it('default case', async () => {
         const profileOptions = {action: 'Unlink'} as any
         expect(await new LinkActionResolver().resolve(profileOptions))
+            .to.be.equal(LinkAction.Unlink)
+    })
+
+    it('should change key', async () => {
+        const profileOptions = {key: 'Unlink'} as any
+        expect(await new LinkActionResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
             .to.be.equal(LinkAction.Unlink)
     })
 
@@ -47,4 +61,12 @@ describe('Supply action resolver', () => {
         expect(await new SupplyActionResolver().resolve(profileOptions))
             .to.be.equal(MosaicSupplyChangeAction.Decrease)
     })
+
+    it('should change key', async () => {
+        const profileOptions = {key: 'Decrease'} as any
+        expect(await new SupplyActionResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(MosaicSupplyChangeAction.Decrease)
+    })
+
 })

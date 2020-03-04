@@ -27,4 +27,13 @@ describe('Password resolver', () => {
             .to.be.equal(password)
     })
 
+    it('should change key', async () => {
+        const key = '12345678'
+        const profileOptions = {key} as any
+        expect((await new PasswordResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).value)
+            .to.be.equal(key)
+    })
+
+
 })

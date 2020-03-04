@@ -49,4 +49,13 @@ describe('Network type resolver', () => {
             .to.be.equal(NetworkType.MIJIN_TEST)
     })
 
+    it('should change key', async () => {
+        const key = 'MIJIN_TEST'
+        const profileOptions = {key} as any
+        expect(await new NetworkResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(NetworkType.MIJIN_TEST)
+    })
+
+
 })

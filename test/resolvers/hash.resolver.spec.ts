@@ -26,4 +26,13 @@ describe('Hash resolver', () => {
         expect(await new HashResolver().resolve(profileOptions))
             .to.be.equal(hash)
     })
+
+    it('should return hash', async () => {
+        const key = '0000000000000000000000000000000000000000000000000000000000000000'
+        const profileOptions = {key} as any
+        expect(await new HashResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(key)
+    })
+
 })

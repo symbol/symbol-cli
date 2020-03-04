@@ -27,4 +27,13 @@ describe('Key resolver', () => {
         expect((await new KeyResolver().resolve(profileOptions)).toHex())
             .to.be.equal(key)
     })
+
+    it('should change key', async () => {
+        const k1 = KeyGenerator.generateUInt64Key('test').toHex()
+        const profileOptions = {k1} as any
+        expect((await new KeyResolver()
+            .resolve(profileOptions, undefined, 'altText', 'k1')).toHex())
+            .to.be.equal(k1)
+    })
+
 })

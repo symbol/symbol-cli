@@ -29,4 +29,13 @@ describe('Secret resolver', () => {
             .to.be.equal(secret)
     })
 
+    it('should change key', async () => {
+        const key = 'secret'
+        const profileOptions = {key} as any
+        expect(await new SecretResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(key)
+    })
+
+
 })

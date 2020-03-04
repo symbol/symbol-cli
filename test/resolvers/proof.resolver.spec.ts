@@ -28,4 +28,12 @@ describe('Proof resolver', () => {
             .to.be.equal(proof)
     })
 
+    it('should change key', async () => {
+        const key = 'proof'
+        const profileOptions = {key} as any
+        expect(await new ProofResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(key)
+    })
+
 })

@@ -26,4 +26,13 @@ describe('Message resolver', () => {
         expect(await new MessageResolver().resolve(profileOptions))
             .to.be.equal('10')
     })
+
+    it('should change key', async () => {
+        const key = '10'
+        const profileOptions = {key} as any
+        expect(await new MessageResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal('10')
+    })
+
 })

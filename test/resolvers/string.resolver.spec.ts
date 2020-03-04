@@ -26,4 +26,13 @@ describe('Value resolver', () => {
         expect(await new StringResolver().resolve(profileOptions))
             .to.be.equal(value)
     })
+
+    it('should change key', async () => {
+        const key = 'test'
+        const profileOptions = {key} as any
+        expect(await new StringResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(key)
+    })
+
 })

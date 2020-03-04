@@ -43,6 +43,15 @@ describe('Namespace name resolver', () => {
             .to.be.equal('test')
     })
 
+    it('should change key', async () => {
+        const key = 'test'
+        const profileOptions = {key} as any
+        expect((await new NamespaceNameResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).fullName)
+            .to.be.equal('test')
+    })
+
+
 })
 
 describe('Namespace id resolver', () => {
@@ -54,6 +63,13 @@ describe('Namespace id resolver', () => {
             .to.be.equal(namespaceId)
     })
 
+    it('should return namespaceId', async () => {
+        const key = '85BBEA6CC462B244'
+        const profileOptions = {key} as any
+        expect((await new NamespaceIdResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).toHex())
+            .to.be.equal(key)
+    })
 })
 
 describe('Root namespace resolver', () => {
@@ -87,7 +103,8 @@ describe('Root namespace resolver', () => {
             sync: false,
             announce: false}
         expect(await new NamespaceTypeResolver()
-            .resolve(profileOptions)).to.be.equal(NamespaceRegistrationType.SubNamespace)
+            .resolve(profileOptions, undefined, 'altText'))
+            .to.be.equal(NamespaceRegistrationType.SubNamespace)
     })
 
 })

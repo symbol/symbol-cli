@@ -16,7 +16,6 @@
  *
  */
 import {expect} from 'chai'
-import {DurationResolver} from '../../src/resolvers/duration.resolver'
 import {HeightResolver} from '../../src/resolvers/height.resolver'
 
 describe('Height resolver', () => {
@@ -27,4 +26,13 @@ describe('Height resolver', () => {
         expect((await new HeightResolver().resolve(profileOptions)).compact())
             .to.be.equal(10)
     })
+
+    it('should change key', async () => {
+        const key = '10'
+        const profileOptions = {key} as any
+        expect((await new HeightResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).compact())
+            .to.be.equal(10)
+    })
+
 })

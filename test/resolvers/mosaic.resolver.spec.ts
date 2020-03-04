@@ -69,7 +69,8 @@ describe('MosaicFlag resolver', () => {
         const supplyMutable = true
         const restrictable = true
         const profileOptions = {transferable, supplyMutable, restrictable} as any
-        const resolution = await new MosaicFlagsResolver().resolve(profileOptions)
+        const resolution = await new MosaicFlagsResolver()
+            .resolve(profileOptions, undefined, 'altText')
 
         expect(resolution.transferable).to.be.equal(transferable)
         expect(resolution.supplyMutable).to.be.equal(supplyMutable)

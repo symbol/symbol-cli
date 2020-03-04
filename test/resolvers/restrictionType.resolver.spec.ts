@@ -10,8 +10,17 @@ describe('Restriction type resolver', () => {
             const newRestrictionType = 'EQ'
             const profileOptions = { newRestrictionType } as any
             expect(await new RestrictionTypeResolver().resolve(profileOptions))
-                .to.be.equal(MosaicRestrictionType['EQ'])
+                .to.be.equal(MosaicRestrictionType.EQ)
         })
+
+        it('should change key', async () => {
+            const key = 'EQ'
+            const profileOptions = { key } as any
+            expect(await new RestrictionTypeResolver()
+                .resolve(profileOptions, undefined, 'altText', 'key'))
+                .to.be.equal(MosaicRestrictionType.EQ)
+        })
+
     })
 
 })

@@ -33,6 +33,15 @@ describe('Max fee resolver', () => {
         expect((await new MaxFeeResolver().resolve(profileOptions)).compact())
             .to.be.equal(0)
     })
+
+    it('should change key', async () => {
+        const key = 'test'
+        const profileOptions = {key} as any
+        expect((await new MaxFeeResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).compact())
+            .to.be.equal(0)
+    })
+
 })
 
 describe('Max fee hash lock resolver', () => {

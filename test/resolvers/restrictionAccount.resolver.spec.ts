@@ -53,6 +53,15 @@ describe('Restriction account address flags resolver', () => {
             .to.be.equal(AccountRestrictionFlags.BlockIncomingAddress)
     })
 
+    it('should change key', async () => {
+        const key = 'BlockIncomingAddress'
+        const profileOptions = {key} as any
+        expect(await new RestrictionAccountAddressFlagsResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(AccountRestrictionFlags.BlockIncomingAddress)
+    })
+
+
 })
 
 describe('Restriction account mosaic flags resolver', () => {
@@ -71,6 +80,14 @@ describe('Restriction account mosaic flags resolver', () => {
             .to.be.equal(AccountRestrictionFlags.BlockMosaic)
     })
 
+    it('should change key', async () => {
+        const key = 'BlockMosaic'
+        const profileOptions = {key} as any
+        expect(await new RestrictionAccountMosaicFlagsResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(AccountRestrictionFlags.BlockMosaic)
+    })
+
 })
 
 describe('Restriction account operation flags resolver', () => {
@@ -86,6 +103,14 @@ describe('Restriction account operation flags resolver', () => {
         const flags = 'BlockOutgoingTransactionType'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
+            .to.be.equal(AccountRestrictionFlags.BlockOutgoingTransactionType)
+    })
+
+    it('should change key', async () => {
+        const key = 'BlockOutgoingTransactionType'
+        const profileOptions = {key} as any
+        expect(await new RestrictionAccountOperationFlagsResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
             .to.be.equal(AccountRestrictionFlags.BlockOutgoingTransactionType)
     })
 

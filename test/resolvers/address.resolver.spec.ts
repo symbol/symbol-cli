@@ -28,24 +28,42 @@ describe('Address resolver', () => {
             .to.be.equal(address)
     })
 
+    it('should change key', async () => {
+        const key = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const profileOptions = {key} as any
+        expect((await new AddressResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key')).plain())
+            .to.be.equal(key)
+    })
+
+
 })
 
 describe('Recipient address alias resolver', () => {
 
     it('should return alias', async () => {
-        const recipientAddress = '@alias'
-        const profileOptions = {recipientAddress} as any
-        expect(await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
+        const address = '@alias'
+        const profileOptions = {address} as any
+        expect(await new AddressAliasResolver().resolve(profileOptions))
             .to.be.instanceOf(NamespaceId)
     })
 
     it('should return address', async () => {
-        const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
-        const profileOptions = {recipientAddress} as any
-        const address = await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress')
-        expect(address).instanceof(Address)
-        expect((address as Address).plain())
-            .to.be.equal(recipientAddress)
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const profileOptions = {address} as any
+        const resolvedAddress = await new AddressAliasResolver().resolve(profileOptions)
+        expect(resolvedAddress).instanceof(Address)
+        expect((resolvedAddress as Address).plain())
+            .to.be.equal(address)
     })
+
+    it('should change key', async () => {
+        const key = '@alias'
+        const profileOptions = {key} as any
+        expect(await new AddressAliasResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.instanceOf(NamespaceId)
+    })
+
 
 })

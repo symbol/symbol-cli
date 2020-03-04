@@ -28,4 +28,12 @@ describe('Transaction type resolver', () => {
             .to.be.equal(TransactionType.TRANSFER)
     })
 
+    it('should change key', async () => {
+        const key = '4154'
+        const profileOptions = {key} as any
+        expect(await new TransactionTypeResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(TransactionType.TRANSFER)
+    })
+
 })

@@ -27,4 +27,13 @@ describe('Divisibility resolver', () => {
             .to.be.equal(6)
     })
 
+    it('should change key', async () => {
+        const key = '6'
+        const profileOptions = {key} as any
+        expect(await new DivisibilityResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(6)
+    })
+
+
 })

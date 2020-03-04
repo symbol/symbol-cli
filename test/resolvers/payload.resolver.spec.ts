@@ -34,4 +34,20 @@ describe('Payload resolver', () => {
         expect(await new PayloadResolver().resolve(profileOptions))
             .to.be.deep.equal(transaction)
     })
+
+    it('should change key', async () => {
+        let transaction: TransferTransaction
+        transaction = TransferTransaction.create(
+            Deadline.create(),
+            Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
+            [],
+            EmptyMessage,
+            NetworkType.MIJIN_TEST)
+        const key = transaction.serialize()
+        const profileOptions = {key} as any
+        expect(await new PayloadResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.deep.equal(transaction)
+    })
+
 })

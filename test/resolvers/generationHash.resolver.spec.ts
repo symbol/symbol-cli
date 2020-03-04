@@ -25,4 +25,5 @@ describe('Generation hash resolver', () => {
         expect(await new GenerationHashResolver().resolve(profileOptions))
             .to.be.equal('1')
     })
+
 })

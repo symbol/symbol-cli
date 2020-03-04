@@ -26,4 +26,11 @@ describe('Hash algorithm resolver', () => {
         expect(await new HashAlgorithmResolver().resolve(profileOptions))
             .to.be.equal(HashType.Op_Sha3_256)
     })
+
+    it('should change key', async () => {
+        const profileOptions = {key: 'Op_Sha3_256'} as any
+        expect(await new HashAlgorithmResolver()
+            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .to.be.equal(HashType.Op_Sha3_256)
+    })
 })
