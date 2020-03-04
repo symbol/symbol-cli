@@ -36,7 +36,7 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import { OptionsConfirmResolver } from '../../options-resolver'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

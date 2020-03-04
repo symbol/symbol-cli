@@ -58,7 +58,7 @@ describe('Namespace id resolver', () => {
 
 describe('Root namespace resolver', () => {
 
-    it('should return RootNamespace', async() => {
+    it('should return RootNamespace', async () => {
         const profileOptions = {
             name: 'bar',
             parentName: 'foo',
@@ -74,7 +74,7 @@ describe('Root namespace resolver', () => {
             .resolve(profileOptions)).to.be.equal(NamespaceRegistrationType.RootNamespace)
     })
 
-    it('should return SubNamespace', async() => {
+    it('should return SubNamespace', async () => {
         const profileOptions = {
             name: 'bar',
             parentName: 'foo',

@@ -21,7 +21,7 @@ import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 
 describe('Payload resolver', () => {
 
-    it('should return transaction from payload', async() => {
+    it('should return transaction from payload', async () => {
         let transaction: TransferTransaction
         transaction = TransferTransaction.create(
             Deadline.create(),

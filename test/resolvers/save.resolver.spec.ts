@@ -20,7 +20,7 @@ import {SaveResolver} from '../../src/resolvers/save.resolver'
 
 describe('Save resolver', () => {
 
-    it('should return boolean', async() => {
+    it('should return boolean', async () => {
         const profileOptions = {save: true, url: '', network: '', profile: '', password: '', default: false, generationHash: '1'}
         expect(await new SaveResolver().resolve(profileOptions)).to.be.equal(true)
     })

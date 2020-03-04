@@ -37,7 +37,7 @@ import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

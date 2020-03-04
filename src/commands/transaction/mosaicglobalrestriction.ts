@@ -25,7 +25,7 @@ import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver'
 import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -62,7 +62,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
             'GT, ' +
             'LE, ' +
             'LT, ' +
-            'NE)'
+            'NE)',
     })
     newRestrictionType: string
 }

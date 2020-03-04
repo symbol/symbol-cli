@@ -25,7 +25,7 @@ import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrict
 import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {ActionType} from '../../models/action.enum'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

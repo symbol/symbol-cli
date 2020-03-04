@@ -23,7 +23,7 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

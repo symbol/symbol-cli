@@ -23,7 +23,7 @@ import {DurationResolver} from '../../resolvers/duration.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

@@ -20,7 +20,7 @@ import {AnnounceResolver} from '../../src/resolvers/announce.resolver'
 
 describe('Announce resolver', () => {
 
-    it('should return boolean', async() => {
+    it('should return boolean', async () => {
         const profileOptions = {
             announce: true,
             url: '',

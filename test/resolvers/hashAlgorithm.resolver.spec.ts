@@ -21,7 +21,7 @@ import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 
 describe('Hash algorithm resolver', () => {
 
-    it('should return hash algorithm', async() => {
+    it('should return hash algorithm', async () => {
         const profileOptions = {hashAlgorithm: 'Op_Sha3_256'} as any
         expect(await new HashAlgorithmResolver().resolve(profileOptions))
             .to.be.equal(HashType.Op_Sha3_256)

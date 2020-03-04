@@ -20,7 +20,7 @@ import {DefaultResolver} from '../../src/resolvers/default.resolver'
 
 describe('Default resolver', () => {
 
-    it('should return boolean', async() => {
+    it('should return boolean', async () => {
         const profileOptions = {save: false, url: '', network: '', profile: '', password: '', default: true, generationHash: '1'}
         expect(await new DefaultResolver().resolve(profileOptions)).to.be.equal(true)
     })

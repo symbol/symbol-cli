@@ -6,7 +6,7 @@ describe('Restriction type resolver', () => {
 
     describe('resolve', () => {
 
-        it('should return one of MosaicRestrictionType', async() => {
+        it('should return one of MosaicRestrictionType', async () => {
             const newRestrictionType = 'EQ'
             const profileOptions = { newRestrictionType } as any
             expect(await new RestrictionTypeResolver().resolve(profileOptions))

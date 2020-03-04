@@ -21,7 +21,7 @@ import {PrivateKeyResolver} from '../../src/resolvers/privateKey.resolver'
 
 describe('Private key resolver', () => {
 
-    it('should return private key', async() => {
+    it('should return private key', async () => {
         const privateKey = '0000000000000000000000000000000000000000000000000000000000000000'
         const profileOptions = {privateKey} as any
         expect(await new PrivateKeyResolver().resolve(profileOptions))

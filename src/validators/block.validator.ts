@@ -41,6 +41,6 @@ export class HeightValidator implements Validator<string> {
         if (!valid) {
             return 'The block height must be a positive integer'
         }
-        return valid;
+        return valid
     }
 }

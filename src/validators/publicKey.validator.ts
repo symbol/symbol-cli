@@ -16,7 +16,7 @@
  *
  */
 import {Validator} from './validator'
-import {NetworkType, PublicAccount} from "symbol-sdk";
+import {NetworkType, PublicAccount} from 'symbol-sdk'
 
 /**
  * Public key validator
@@ -50,12 +50,12 @@ export class PublicKeysValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         const publicKeys = value.split(',')
-        let error = '';
+        let error = ''
         publicKeys.forEach((publicKey: string) => {
             const validation = new PublicKeyValidator().validate(publicKey)
-            if (typeof validation === 'string') error = validation
+            if (typeof validation === 'string') {error = validation}
         })
-        if (!error) return true
+        if (!error) {return true}
         return error
     }
 }

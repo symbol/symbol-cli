@@ -17,12 +17,12 @@
  */
 import {expect} from 'chai'
 import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
-import {ActionType} from "../../src/models/action.enum";
-import {ActionResolver, LinkActionResolver, SupplyActionResolver} from "../../src/resolvers/action.resolver";
+import {ActionType} from '../../src/models/action.enum'
+import {ActionResolver, LinkActionResolver, SupplyActionResolver} from '../../src/resolvers/action.resolver'
 
 describe('Action resolver', () => {
 
-    it('should return action', async() => {
+    it('should return action', async () => {
         const profileOptions = {action: 'Remove'} as any
         expect(await new ActionResolver().resolve(profileOptions))
             .to.be.equal(ActionType.Remove)
@@ -32,7 +32,7 @@ describe('Action resolver', () => {
 
 describe('Link action resolver', () => {
 
-    it('default case', async() => {
+    it('default case', async () => {
         const profileOptions = {action: 'Unlink'} as any
         expect(await new LinkActionResolver().resolve(profileOptions))
             .to.be.equal(LinkAction.Unlink)
@@ -42,7 +42,7 @@ describe('Link action resolver', () => {
 
 describe('Supply action resolver', () => {
 
-    it('default case', async() => {
+    it('default case', async () => {
         const profileOptions = {action: 'Decrease'} as any
         expect(await new SupplyActionResolver().resolve(profileOptions))
             .to.be.equal(MosaicSupplyChangeAction.Decrease)

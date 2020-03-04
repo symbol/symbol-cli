@@ -2,7 +2,7 @@ import {ProfileOptions} from '../interfaces/profile.command'
 import {ProfileModel} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
-import {NumericStringValidator} from "../validators/numericString.validator";
+import {NumericStringValidator} from '../validators/numericString.validator'
 
 /**
  * Divisibility resolver

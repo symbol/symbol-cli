@@ -18,7 +18,7 @@
 import chalk from 'chalk'
 import * as prompts from 'prompts'
 import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
-import {Validator} from "./validators/validator";
+import {Validator} from './validators/validator'
 
 export const OptionsChoiceResolver = async (options: any,
                                             key: string,
@@ -30,7 +30,7 @@ export const OptionsChoiceResolver = async (options: any,
         console.log(chalk.red('ERR'), 'Invalid options choice resolver type')
         return process.exit()
     }
-    let title: string;
+    let title: string
     if (options[key] !== undefined) {
         title = options[key].trim()
         if (validation !== undefined ) {
@@ -47,7 +47,7 @@ export const OptionsChoiceResolver = async (options: any,
             message: promptText,
             choices,
             validate: validation !== undefined ?
-                result => validation.validate(result) : () => true
+                (result) => validation.validate(result) : () => true,
         }))[key]
     }
     return choices.find((item) => item.title === title)?.value
@@ -64,7 +64,7 @@ export const OptionsResolver = async (options: any,
         console.log(chalk.red('ERR'), 'Invalid options resolver type')
         return process.exit()
     }
-    let value: string;
+    let value: string
     if (options[key] !== undefined) {
         value = options[key].trim()
         if (validation !== undefined) {
@@ -74,15 +74,16 @@ export const OptionsResolver = async (options: any,
                 return process.exit()
             }
         }
-    } else if (secondSource() !== undefined) {
-        value = secondSource()!
+    } else if (secondSource()) {
+        let resolvedSecondSource = secondSource()
+        value = resolvedSecondSource ? resolvedSecondSource  : ''
     } else {
         value = (await prompts({
             type,
             name: key,
             message: promptText,
             validate: validation !== undefined ?
-                result => validation.validate(result) : () => true
+                (result) => validation.validate(result) : () => true,
         }))[key]
     }
     return value
@@ -92,7 +93,7 @@ export const OptionsConfirmResolver = async (
                                              promptText: string,
                                              type: ConfirmOptionType = 'confirm',
                                              initial = true,
-                                             name = 'value') : Promise<boolean> => {
+                                             name = 'value'): Promise<boolean> => {
     const response = await prompts({
         type,
         name,

@@ -20,7 +20,7 @@ import {HashResolver} from '../../src/resolvers/hash.resolver'
 
 describe('Hash resolver', () => {
 
-    it('should return hash', async() => {
+    it('should return hash', async () => {
         const hash = '0000000000000000000000000000000000000000000000000000000000000000'
         const profileOptions = {hash} as any
         expect(await new HashResolver().resolve(profileOptions))

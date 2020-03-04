@@ -25,7 +25,7 @@ import {MessageResolver} from '../../resolvers/message.resolver'
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

@@ -18,7 +18,7 @@
 import {command, metadata} from 'clime'
 import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 @command({
     description: 'View profile credentials',

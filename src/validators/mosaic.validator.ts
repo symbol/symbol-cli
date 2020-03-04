@@ -48,9 +48,9 @@ export class MosaicsValidator implements Validator<string> {
         let error = ''
         mosaics.forEach((mosaic) => {
             const validation = MosaicService.validate(mosaic)
-            if (typeof validation === 'string') error = validation
+            if (typeof validation === 'string') {error = validation}
         })
-        if (!error) return true
+        if (!error) {return true}
         return error
     }
 }

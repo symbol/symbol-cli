@@ -43,6 +43,6 @@ export class TransactionTypeValidator implements Validator<string> {
         if (!valid) {
             return 'Enter a transaction type in hexadecimal. Example: 4154'
         }
-        return valid;
+        return valid
     }
 }

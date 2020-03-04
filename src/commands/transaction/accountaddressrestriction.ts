@@ -24,8 +24,8 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from "../../models/action.enum";
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {ActionType} from '../../models/action.enum'
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

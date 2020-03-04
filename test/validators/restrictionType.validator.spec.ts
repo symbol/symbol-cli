@@ -16,7 +16,7 @@
  *
  */
 import {expect} from 'chai'
-import {MosaicRestrictionTypeValidator,} from '../../src/validators/restrictionType.validator'
+import {MosaicRestrictionTypeValidator} from '../../src/validators/restrictionType.validator'
 import {MosaicRestrictionType} from 'nem2-sdk'
 
 describe('mosaic restriction type validator', () => {

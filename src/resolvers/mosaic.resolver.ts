@@ -21,7 +21,8 @@ export class MosaicIdResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Promise<MosaicId>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<MosaicId> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string):
+        Promise<MosaicId> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaicId',
             () =>  undefined,
@@ -45,7 +46,8 @@ export class MosaicIdAliasResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Promise<MosaicId | NamespaceId>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<MosaicId | NamespaceId> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string):
+        Promise<MosaicId | NamespaceId> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaicId',
             () =>  undefined,
@@ -84,7 +86,8 @@ export class MosaicsResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Promise<Mosaic[]>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<Mosaic[]> {
+    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string):
+        Promise<Mosaic[]> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaics',
             () =>  undefined,

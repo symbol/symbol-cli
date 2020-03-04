@@ -16,7 +16,7 @@
  *
  */
 
-import {Validator} from "./validator";
+import {Validator} from './validator'
 
 /**
  * Binary validator

@@ -16,7 +16,9 @@ export class DefaultResolver implements Resolver {
      * @returns {Promise<boolean>}
      */
     async resolve(options: CreateProfileOptions, secondSource?: ProfileModel, altText?: string): Promise<boolean> {
-        if (!options.default && await OptionsConfirmResolver(altText ? altText : 'Do you want to set the account as the default profile?')) {
+        if (!options.default &&
+            await OptionsConfirmResolver(altText ?
+                altText : 'Do you want to set the account as the default profile?')) {
             options.default = true
         }
         return options.default

@@ -25,28 +25,28 @@ import {
 
 describe('Restriction account address flags resolver', () => {
 
-    it('should return AllowOutgoingAddress', async() => {
+    it('should return AllowOutgoingAddress', async () => {
         const flags = 'AllowOutgoingAddress'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowOutgoingAddress)
     })
 
-    it('should return BlockOutgoingAddress', async() => {
+    it('should return BlockOutgoingAddress', async () => {
         const flags = 'BlockOutgoingAddress'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.BlockOutgoingAddress)
     })
 
-    it('should return AllowIncomingAddress', async() => {
+    it('should return AllowIncomingAddress', async () => {
         const flags = 'AllowIncomingAddress'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowIncomingAddress)
     })
 
-    it('should return BlockIncomingAddress', async() => {
+    it('should return BlockIncomingAddress', async () => {
         const flags = 'BlockIncomingAddress'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountAddressFlagsResolver().resolve(profileOptions))
@@ -75,14 +75,14 @@ describe('Restriction account mosaic flags resolver', () => {
 
 describe('Restriction account operation flags resolver', () => {
 
-    it('should return AllowOutgoingTransactionType', async() => {
+    it('should return AllowOutgoingTransactionType', async () => {
         const flags = 'AllowOutgoingTransactionType'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))
             .to.be.equal(AccountRestrictionFlags.AllowOutgoingTransactionType)
     })
 
-    it('should return BlockOutgoingTransactionType', async() => {
+    it('should return BlockOutgoingTransactionType', async () => {
         const flags = 'BlockOutgoingTransactionType'
         const profileOptions = {flags} as any
         expect(await new RestrictionAccountOperationFlagsResolver().resolve(profileOptions))

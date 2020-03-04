@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {Validator} from "./validator";
+import {Validator} from './validator'
 import {Address} from 'symbol-sdk'
 import {AccountService} from '../services/account.service'
 

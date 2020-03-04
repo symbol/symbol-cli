@@ -24,8 +24,8 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from "../../models/action.enum";
-import {PasswordResolver} from "../../resolvers/password.resolver";
+import {ActionType} from '../../models/action.enum'
+import {PasswordResolver} from '../../resolvers/password.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

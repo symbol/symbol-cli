@@ -32,7 +32,7 @@ describe('Address resolver', () => {
 
 describe('Recipient address alias resolver', () => {
 
-    it('should return alias', async() => {
+    it('should return alias', async () => {
         const recipientAddress = '@alias'
         const profileOptions = {recipientAddress} as any
         expect(await new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
@@ -47,5 +47,5 @@ describe('Recipient address alias resolver', () => {
         expect((address as Address).plain())
             .to.be.equal(recipientAddress)
     })
-    
+
 })

@@ -4,7 +4,7 @@ import {OptionsChoiceResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 import {LinkAction, MosaicSupplyChangeAction} from 'nem2-sdk'
 import {ActionValidator, LinkActionValidator, MosaicSupplyChangeActionValidator} from '../validators/action.validator'
-import {ActionType} from "../models/action.enum";
+import {ActionType} from '../models/action.enum'
 
 /**
  * Link action resolver

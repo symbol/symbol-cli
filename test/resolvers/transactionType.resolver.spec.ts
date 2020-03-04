@@ -21,7 +21,7 @@ import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resol
 
 describe('Transaction type resolver', () => {
 
-    it('should return Transfer Transaction', async() => {
+    it('should return Transfer Transaction', async () => {
         const transactionType = '4154'
         const profileOptions = {transactionType} as any
         expect(await new TransactionTypeResolver().resolve(profileOptions))

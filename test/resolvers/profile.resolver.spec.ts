@@ -20,7 +20,7 @@ import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
 
 describe('Profile name resolver', () => {
 
-    it('should return profile name', async() => {
+    it('should return profile name', async () => {
         const profile = 'test'
         const profileOptions = {profile} as any
         expect(await new ProfileNameResolver().resolve(profileOptions))

@@ -21,7 +21,7 @@ import {ProofResolver} from '../../src/resolvers/proof.resolver'
 
 describe('Proof resolver', () => {
 
-    it('should return proof', async() => {
+    it('should return proof', async () => {
         const proof = 'proof'
         const profileOptions = {proof} as any
         expect(await new ProofResolver().resolve(profileOptions))
