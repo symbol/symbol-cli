@@ -30,9 +30,8 @@ export const OptionsChoiceResolver = async (options: any,
         console.log(chalk.red('ERR'), 'Invalid options choice resolver type')
         return process.exit()
     }
-    let title: string
     if (options[key] !== undefined) {
-        title = options[key].trim()
+        const title = options[key].trim()
         if (validation !== undefined ) {
             const test = validation.validate(title)
             if (typeof test === 'string') {
@@ -40,8 +39,9 @@ export const OptionsChoiceResolver = async (options: any,
                 return process.exit()
             }
         }
+        return choices.find((item) => item.title === title)?.value
     } else {
-        title = (await prompts({
+        return (await prompts({
             type,
             name: key,
             message: promptText,
@@ -50,7 +50,6 @@ export const OptionsChoiceResolver = async (options: any,
                 (result) => validation.validate(result) : () => true,
         }))[key]
     }
-    return choices.find((item) => item.title === title)?.value
 }
 
 export const OptionsResolver = async (options: any,
@@ -90,19 +89,18 @@ export const OptionsResolver = async (options: any,
 }
 
 export const OptionsConfirmResolver = async (
-                                             options: any,
-                                             key: string,
-                                             promptText: string,
-                                             type: ConfirmOptionType = 'confirm',
-                                             initial = true,
-                                             name = 'value'): Promise<boolean> => {
+    options: any,
+    key: string,
+    promptText: string,
+    type: ConfirmOptionType = 'confirm',
+    initial = true,
+    name = 'value'): Promise<boolean> => {
 
-   const response = options[key] ? options[key] : (await prompts({
+    return options[key] ? options[key] : (await prompts({
         type,
         name,
         message: promptText,
         initial,
-      }))[name]
-    return response
+    }))[name]
 }
 
