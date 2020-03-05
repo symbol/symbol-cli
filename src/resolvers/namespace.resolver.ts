@@ -91,8 +91,9 @@ export class NamespaceTypeResolver  implements Resolver {
      * @returns {Promise<NamespaceRegistrationType>}
      */
     async resolve(options: CommandOptions, secondSource?: ProfileModel, altText?: string): Promise<NamespaceRegistrationType> {
-        if (!options.subnamespace && !options.rootnamespace) {
-            const resolution = await OptionsConfirmResolver(altText ? altText : 'Do you want to create a root namespace?')
+        if (!options.subnamespace) {
+            const resolution = await OptionsConfirmResolver(options, 'rootnamespace',
+                altText ? altText : 'Do you want to create a root namespace?')
             if (resolution) {
                 options.rootnamespace = true
             }

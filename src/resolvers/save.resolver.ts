@@ -16,7 +16,7 @@ export class SaveResolver implements Resolver {
      * @returns {Promise<boolean>}
      */
     async resolve(options: CommandOptions, secondSource?: ProfileModel, altText?: string): Promise <boolean> {
-        if (!options.save && await OptionsConfirmResolver(altText ? altText : 'Do you want to save the account?')) {
+        if (await OptionsConfirmResolver(options, 'save',altText ? altText : 'Do you want to save the account?')) {
             options.save = true
         }
         return options.save

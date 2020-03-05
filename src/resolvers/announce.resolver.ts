@@ -16,7 +16,7 @@ export class AnnounceResolver implements Resolver {
      * @returns {Promise<boolean>}
      */
     async resolve(options: AnnounceTransactionsOptions, secondSource?: ProfileModel, altText?: string): Promise<boolean> {
-        if (!options.announce && await OptionsConfirmResolver(altText ? altText : 'Do you want to announce this transaction?')) {
+        if (await OptionsConfirmResolver(options, 'announce', altText ? altText : 'Do you want to announce this transaction?')) {
             options.announce = true
         }
         return options.announce

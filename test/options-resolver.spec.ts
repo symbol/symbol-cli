@@ -17,7 +17,7 @@
  */
 
 import {expect} from 'chai'
-import {OptionsChoiceResolver, OptionsResolver} from '../src/options-resolver'
+import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '../src/options-resolver'
 import {ActionValidator} from '../src/validators/action.validator'
 import {ActionType} from '../src/models/action.enum'
 import {NumericStringValidator} from '../src/validators/numericString.validator'
@@ -70,3 +70,12 @@ describe('OptionsChoicesResolver', () => {
     })
 
 })
+
+describe('OptionsConfirmationResolver', () => {
+    it('should return the value if contains the commands option is passed', async () => {
+        const value = await OptionsConfirmResolver({name: true}, 'name',
+             'test', 'confirm',true, 'value')
+        expect(value).to.be.equal(true)
+    })
+})
+

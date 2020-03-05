@@ -90,16 +90,19 @@ export const OptionsResolver = async (options: any,
 }
 
 export const OptionsConfirmResolver = async (
+                                             options: any,
+                                             key: string,
                                              promptText: string,
                                              type: ConfirmOptionType = 'confirm',
                                              initial = true,
                                              name = 'value'): Promise<boolean> => {
-    const response = await prompts({
+
+   const response = options[key] ? options[key] : (await prompts({
         type,
         name,
         message: promptText,
         initial,
-      })
-    return response.value
+      }))[name]
+    return response
 }
 

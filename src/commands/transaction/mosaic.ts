@@ -104,10 +104,8 @@ export default class extends AnnounceTransactionsCommand {
 
         const nonce = MosaicNonce.createRandom()
         let blocksDuration
-        if (!options.nonExpiring) {
-            if (!(await OptionsConfirmResolver('Do you want a non-expiring mosaic?'))) {
-                blocksDuration = await new DurationResolver().resolve(options)
-            }
+        if (!(await OptionsConfirmResolver(options, 'nonExpiring', 'Do you want a non-expiring mosaic?'))) {
+            blocksDuration = await new DurationResolver().resolve(options)
         }
         const divisibility = await new DivisibilityResolver().resolve(options)
         const mosaicFlags = await new MosaicFlagsResolver().resolve(options)
