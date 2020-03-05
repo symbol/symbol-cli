@@ -48,7 +48,8 @@
         "path": "^0.12.7",
         "prompts": "^2.1.0",
         "readline-sync": "^1.4.9",
-        "rxjs": "^6.5.3"
+        "rxjs": "^6.5.3",
+        "symbol-sdk": "^0.17.3"
     },
     "devDependencies": {
         "@types/chai": "^4.0.4",

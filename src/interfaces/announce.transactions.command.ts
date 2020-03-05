@@ -75,7 +75,6 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                     .pipe(
                         filter((error) => error.hash === signedTransaction.hash),
                         tap((error) => {
-                            console.log(error)
                             throw new Error(error.code)
                         })))
                 .subscribe((response) => {
