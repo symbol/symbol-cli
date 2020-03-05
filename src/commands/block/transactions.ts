@@ -42,11 +42,11 @@ export default class extends AccountTransactionsCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start()
 
         const profile = this.getProfile(options)
         const height = await new HeightResolver().resolve(options)
 
+        this.spinner.start()
         const blockHttp = new BlockHttp(profile.url)
         blockHttp.getBlockTransactions(height, options.getQueryParams())
             .subscribe((transactions) => {

@@ -79,11 +79,11 @@ export default class extends ProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start()
         const profile = this.getProfile(options)
         const hash = await new HashResolver()
             .resolve(options)
 
+        this.spinner.start()
         const transactionHttp = new TransactionHttp(profile.url)
         transactionHttp.getTransactionStatus(hash)
             .subscribe((status) => {

@@ -60,13 +60,13 @@ export default class extends ProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start()
         this.options = options
         this.profile = this.getProfile(this.options)
 
         const hash = await new HashResolver()
         .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ')
 
+        this.spinner.start()
         const sequentialFetcher = this.getSequentialFetcher()
 
         new MultisigService(this.profile).getSelfAndChildrenAddresses()

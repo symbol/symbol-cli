@@ -61,10 +61,9 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: ProfileOptions) {
-        this.spinner.start()
-
         const profile = this.getProfile(options)
 
+        this.spinner.start()
         const nodeHttp = new NodeHttp(profile.url)
         nodeHttp.getNodeInfo()
             .subscribe((nodeInfo) => {

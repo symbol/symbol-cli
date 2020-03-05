@@ -69,11 +69,10 @@ export default class extends ProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start()
-
         const profile = this.getProfile(options)
         const address = await new AddressResolver().resolve(options, profile)
 
+        this.spinner.start()
         const restrictionHttp = new RestrictionAccountHttp(profile.url)
         restrictionHttp.getAccountRestrictions(address)
             .subscribe((accountRestrictions: any) => {

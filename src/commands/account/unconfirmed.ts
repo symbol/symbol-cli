@@ -33,10 +33,10 @@ export default class extends AccountTransactionsCommand {
 
     @metadata
     async execute(options: AccountTransactionsOptions) {
-        this.spinner.start()
         const profile = this.getProfile(options)
         const address = await new AddressResolver().resolve(options, profile)
 
+        this.spinner.start()
         const accountHttp = new AccountHttp(profile.url)
         accountHttp.getAccountUnconfirmedTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {

@@ -43,10 +43,10 @@ export default class extends ProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        this.spinner.start()
         const profile = this.getProfile(options)
         const address = await new AddressResolver().resolve(options, profile)
 
+        this.spinner.start()
         const namespaceHttp = new NamespaceHttp(profile.url)
         namespaceHttp.getNamespacesFromAccount(address)
             .subscribe((namespaces) => {
