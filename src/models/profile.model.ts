@@ -33,7 +33,7 @@ interface ProfileDTO {
 /**
  * Profile model.
  */
-export class ProfileModel {
+export class Profile {
     private readonly table: HorizontalTable
 
     /**
@@ -86,10 +86,10 @@ export class ProfileModel {
     /**
      * Creates a profile object.
      * @param {ProfileDTO} profileDTO
-     * @returns {ProfileModel}
+     * @returns {Profile}
      */
-    public static createFromDTO(profileDTO: ProfileDTO): ProfileModel {
-        return new ProfileModel(
+    public static createFromDTO(profileDTO: ProfileDTO): Profile {
+        return new Profile(
             SimpleWallet.createFromDTO(profileDTO.simpleWallet),
             profileDTO.url,
             profileDTO.networkGenerationHash,

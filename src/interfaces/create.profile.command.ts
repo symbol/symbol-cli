@@ -78,7 +78,7 @@ export abstract class CreateProfileCommand extends Command {
      * @param {string} url - The node URL.
      * @param {boolean} isDefault - If the profile has to be saved as default.
      * @param {string} generationHash - If the network generation hash.
-     * @return {ProfileModel}.
+     * @return {Profile}.
      */
     protected createProfile(simpleWallet: SimpleWallet,
                             networkType: NetworkType,

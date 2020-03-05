@@ -17,7 +17,7 @@
  */
 import {MosaicRestrictionType} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 
@@ -28,12 +28,12 @@ export class RestrictionTypeResolver implements Resolver {
     /**
      * Resolve a restriction type provided by a user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @return {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'NONE', value: MosaicRestrictionType.NONE},
             {title: 'EQ', value: MosaicRestrictionType.EQ},

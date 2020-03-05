@@ -31,7 +31,7 @@ import {
 import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
 import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileModel} from '../../models/profile.model'
+import {Profile} from '../../models/profile.model'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {MultisigService} from '../../services/multisig.service'
 import {SequentialFetcher} from '../../services/sequentialFetcher.service'
@@ -51,7 +51,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Cosign an aggregate bonded transaction',
 })
 export default class extends ProfileCommand {
-    private profile: ProfileModel
+    private profile: Profile
     private options: CommandOptions
 
     constructor() {

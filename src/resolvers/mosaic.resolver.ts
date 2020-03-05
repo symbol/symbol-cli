@@ -1,7 +1,7 @@
 import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'symbol-sdk'
 import {CommandOptions} from '../commands/transaction/mosaic'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {OptionsConfirmResolver, OptionsResolver} from '../options-resolver'
 import {MosaicService} from '../services/mosaic.service'
 import {MosaicsValidator} from '../validators/mosaic.validator'
@@ -16,12 +16,12 @@ export class MosaicIdResolver implements Resolver {
     /**
      * Resolves a mosaic id provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<MosaicId>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string):
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string):
         Promise<MosaicId> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaicId',
@@ -41,12 +41,12 @@ export class MosaicIdAliasResolver implements Resolver {
     /**
      * Resolves a mosaic id alias provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<MosaicId | NamespaceId>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string):
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string):
         Promise<MosaicId | NamespaceId> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaicId',
@@ -81,12 +81,12 @@ export class MosaicsResolver implements Resolver {
     /**
      * Resolves a set of mosaics provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<Mosaic[]>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string):
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string):
         Promise<Mosaic[]> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaics',
@@ -107,11 +107,11 @@ export class MosaicFlagsResolver implements Resolver {
     /**
      * Resolves mosaic flags by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {Promise<MosaicFlags>}
      */
-    async resolve(options: CommandOptions, secondSource?: ProfileModel, altText?: string): Promise<MosaicFlags> {
+    async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise<MosaicFlags> {
 
         return MosaicFlags.create(
                 await OptionsConfirmResolver(options, 'supplyMutable', 'Do you want mosaic to have supply mutable?'),

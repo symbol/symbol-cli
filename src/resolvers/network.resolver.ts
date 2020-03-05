@@ -1,7 +1,7 @@
 import chalk from 'chalk'
 import {NetworkType} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {NetworkValidator} from '../validators/network.validator'
 import {Resolver} from './resolver'
@@ -14,12 +14,12 @@ export class NetworkResolver implements Resolver {
     /**
      * Resolves a network type provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<any>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<any> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<any> {
         const choices = [
             {title: 'MAIN_NET', value: NetworkType.MAIN_NET},
             {title: 'TEST_NET', value: NetworkType.TEST_NET},

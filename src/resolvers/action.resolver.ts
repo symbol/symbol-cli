@@ -1,5 +1,5 @@
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
@@ -14,12 +14,12 @@ export class ActionResolver implements Resolver {
     /**
      * Resolves an action provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Remove', value: ActionType.Remove},
             {title: 'Add', value: ActionType.Add},
@@ -43,12 +43,12 @@ export class LinkActionResolver implements Resolver {
     /**
      * Resolves an action provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Unlink', value: LinkAction.Unlink},
             {title: 'Link', value: LinkAction.Link},
@@ -69,12 +69,12 @@ export class SupplyActionResolver implements Resolver {
     /**
      * Resolves an action provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'Decrease', value: MosaicSupplyChangeAction.Decrease},
             {title: 'Increase', value: MosaicSupplyChangeAction.Increase},

@@ -18,11 +18,11 @@
 
 import {expect} from 'chai'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {ProfileModel} from '../../src/models/profile.model'
+import {Profile} from '../../src/models/profile.model'
 
 describe('Profile', () => {
     it('should contain the fields', () => {
-        const profile = new ProfileModel(
+        const profile = new Profile(
             SimpleWallet.create('default', new Password('password'), NetworkType.MIJIN_TEST),
             'url',
             'generationHash',
@@ -34,7 +34,7 @@ describe('Profile', () => {
     })
 
     it('should be created from DTO', () => {
-        const profile = ProfileModel.createFromDTO(
+        const profile = Profile.createFromDTO(
             {
                 simpleWallet: {
                     name: 'default',
@@ -67,7 +67,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new ProfileModel(
+        const profile = new Profile(
             simpleWallet,
             'url',
             'generationHash',
@@ -84,7 +84,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new ProfileModel(
+        const profile = new Profile(
             simpleWallet,
             'url',
             'generationHash',
@@ -101,7 +101,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new ProfileModel(
+        const profile = new Profile(
             simpleWallet,
             'url',
             'generationHash',

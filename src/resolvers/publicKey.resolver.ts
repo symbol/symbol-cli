@@ -1,6 +1,6 @@
 import {NetworkType, PublicAccount} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator'
 import {Resolver} from './resolver'
@@ -37,12 +37,12 @@ export class CosignatoryPublicKeyResolver implements Resolver {
     /**
      * Resolves a set of cosignatory public keys provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<PublicAccount[]>}
      */
-    async resolve(options: ProfileOptions, secondSource?: ProfileModel, altText?: string, altKey?: string): Promise<PublicAccount[]> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<PublicAccount[]> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'cosignatoryPublicKey',
             () => undefined,

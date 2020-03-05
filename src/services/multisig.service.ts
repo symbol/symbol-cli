@@ -1,7 +1,7 @@
 import {Address, MultisigAccountGraphInfo, MultisigHttp} from 'symbol-sdk'
 import {from, Observable, of} from 'rxjs'
 import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 
 /*
  *
@@ -24,9 +24,9 @@ import {ProfileModel} from '../models/profile.model'
 export class MultisigService {
  /**
   * Creates an instance of MultisigService.
-  * @param {ProfileModel} profile
+  * @param {Profile} profile
   */
- constructor(private readonly profile: ProfileModel) {}
+ constructor(private readonly profile: Profile) {}
 
  /**
   * Gets self and children multisig accounts addresses from the network

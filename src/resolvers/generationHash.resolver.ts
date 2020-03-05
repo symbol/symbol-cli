@@ -2,7 +2,7 @@ import {ExpectedError} from 'clime'
 import {BlockHttp, UInt64} from 'symbol-sdk'
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {Resolver} from './resolver'
 
 /**
@@ -13,11 +13,11 @@ export class GenerationHashResolver implements Resolver {
     /**
      * Resolves generationHash. If not provided by the user, this is asked to the node.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {Promise<string>}
      */
-    async resolve(options: CreateProfileOptions, secondSource?: ProfileModel, altText?: string): Promise<string> {
+    async resolve(options: CreateProfileOptions, secondSource?: Profile, altText?: string): Promise<string> {
         let generationHash = ''
         const blockHttp = new BlockHttp(options.url)
         try {

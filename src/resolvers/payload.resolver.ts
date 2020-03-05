@@ -1,6 +1,6 @@
 import {InnerTransaction, Transaction, TransactionMapping} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 
@@ -12,13 +12,13 @@ export class PayloadResolver implements Resolver {
     /**
      * Resolves an transaction payload provided by the user.
      * @param {ProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<Transaction | InnerTransaction>}
      */
     async resolve(options: ProfileOptions,
-                secondSource?: ProfileModel,
+                secondSource?: Profile,
                 altText?: string,
                 altKey?: string): Promise<Transaction | InnerTransaction> {
         const resolution = await OptionsResolver(options,

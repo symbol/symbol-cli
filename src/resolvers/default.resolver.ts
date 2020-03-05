@@ -1,5 +1,5 @@
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {Resolver} from './resolver'
 import {OptionsConfirmResolver} from '../options-resolver'
 
@@ -11,11 +11,11 @@ export class DefaultResolver implements Resolver {
     /**
      * Resolves if an account has to be set as default.
      * @param {CreateProfileOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {Promise<boolean>}
      */
-    async resolve(options: CreateProfileOptions, secondSource?: ProfileModel, altText?: string): Promise<boolean> {
+    async resolve(options: CreateProfileOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
         if (await OptionsConfirmResolver(options, 'default', altText ?
                 altText : 'Do you want to set the account as the default profile?')) {
             options.default = true

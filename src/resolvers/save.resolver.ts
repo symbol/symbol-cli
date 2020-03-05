@@ -1,5 +1,5 @@
 import {CommandOptions} from '../commands/account/generate'
-import {ProfileModel} from '../models/profile.model'
+import {Profile} from '../models/profile.model'
 import {Resolver} from './resolver'
 import {OptionsConfirmResolver} from '../options-resolver'
 
@@ -11,11 +11,11 @@ export class SaveResolver implements Resolver {
     /**
      * Resolves if the account has to be saved.
      * @param {CommandOptions} options - Command options.
-     * @param {ProfileModel} secondSource - Secondary data source.
+     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {Promise<boolean>}
      */
-    async resolve(options: CommandOptions, secondSource?: ProfileModel, altText?: string): Promise <boolean> {
+    async resolve(options: CommandOptions, secondSource?: Profile, altText?: string): Promise <boolean> {
         if (await OptionsConfirmResolver(options, 'save',altText ? altText : 'Do you want to save the account?')) {
             options.save = true
         }
