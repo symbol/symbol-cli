@@ -30,7 +30,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'a',
         description: 'Mosaic supply change action (Increase, Decrease).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'm',

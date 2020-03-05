@@ -55,7 +55,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
         flag: 'a',
         description: 'Modification Action (Add, Remove).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'p',

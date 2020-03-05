@@ -36,7 +36,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
             'AllowIncomingAddress, ' +
             'BlockIncomingAddress)',
     })
-    flags: number
+    flags: string
 
     @option({
         flag: 'a',
@@ -44,7 +44,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
             'Add, ' +
             'Remove).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'v',

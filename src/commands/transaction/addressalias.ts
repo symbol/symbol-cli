@@ -30,7 +30,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'a',
         description: 'Alias action (Link, Unlink).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'a',

@@ -34,13 +34,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
             'AllowOutgoingTransactionType,' +
             'BlockOutgoingTransactionType)',
     })
-    flags: number
+    flags: string
 
     @option({
         flag: 'a',
         description: 'Modification action. (Add, Remove).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'v',

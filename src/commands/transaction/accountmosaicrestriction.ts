@@ -30,17 +30,16 @@ import {PasswordResolver} from '../../resolvers/password.resolver'
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-    description: 'Restriction flags.(' +
-    AccountRestrictionFlags.AllowMosaic + ': AllowMosaic, ' +
-    AccountRestrictionFlags.BlockMosaic + ': BlockMosaic)',
+    description: 'Restriction flags.(AllowMosaic,' +
+        'BlockMosaic)',
 })
-    flags: number
+    flags: string
 
     @option({
         flag: 'a',
         description: 'Modification action. (Add, Remove).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'v',
