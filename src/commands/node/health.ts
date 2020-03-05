@@ -45,7 +45,7 @@ export class NodeHealthTable {
 }
 
 @command({
-    description: 'Supplies information regarding the connection and services status',
+    description: 'Get information about the connection and services status',
 })
 export default class extends ProfileCommand {
 

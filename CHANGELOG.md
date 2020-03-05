@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.2] - 06-Mar-2020
+
+**Milestone**: Fushicho.5(RC4 0.9.3.1)
+
+Versions |   |
+---|---|---
+SDK | v0.17.3 | https://www.npmjs.com/package/symbol-sdk
+
+### Changed
+
+- ``readline-sync`` in favor of ``prompts.js`` library.
+- ``symbol-sdk`` dependency to 0.17.3.
+
+### Fixed
+
+- Multisig transaction announcement.
+
 ## [0.18.1] - 24-Feb-2020
 
 :warning: 0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
