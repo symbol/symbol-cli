@@ -37,7 +37,7 @@ export default class extends AccountTransactionsCommand {
         const profile = this.getProfile(options)
         const address = await new AddressResolver().resolve(options, profile)
 
-        const accountHttp =  new AccountHttp(profile.url)
+        const accountHttp = new AccountHttp(profile.url)
         accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {
                 this.spinner.stop(true)
