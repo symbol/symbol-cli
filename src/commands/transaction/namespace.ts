@@ -85,7 +85,7 @@ export default class extends AnnounceTransactionsCommand {
                 Deadline.create(), name, duration, profile.networkType, maxFee)
         } else {
             const parentName = await new NamespaceNameStringResolver()
-                .resolve(options, undefined, 'Enter the parent namespace name: ', 'parentName')
+                .resolve(options, undefined, 'Enter the parent namespace name:', 'parentName')
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), name, parentName, profile.networkType, maxFee)
         }

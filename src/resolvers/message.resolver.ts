@@ -20,7 +20,7 @@ export class MessageResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'message',
             () =>  undefined,
-            altText ? altText : 'Enter a message: ',
+            altText ? altText : 'Enter a message:',
             'text',
             undefined)
         return resolution

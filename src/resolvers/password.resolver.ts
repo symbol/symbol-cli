@@ -22,7 +22,7 @@ export class PasswordResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'password',
             () => undefined,
-            altText ? altText : 'Enter your wallet password: ',
+            altText ? altText : 'Enter your wallet password:',
             'password',
             new PasswordValidator())
         return new Password(resolution)

@@ -22,7 +22,7 @@ export class HeightResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'height',
             () =>  undefined,
-            altText ? altText : 'Enter the block height: ',
+            altText ? altText : 'Enter the block height:',
             'text',
             new HeightValidator())
         return  UInt64.fromNumericString(resolution)

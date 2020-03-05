@@ -29,7 +29,7 @@ export class NetworkResolver implements Resolver {
         const value = +(await OptionsChoiceResolver(
             options,
             altKey ? altKey : 'network',
-            altText ? altText : 'Select the network type: ',
+            altText ? altText : 'Select the network type:',
             choices,
             'select',
             new NetworkValidator()

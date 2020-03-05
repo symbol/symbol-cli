@@ -21,7 +21,7 @@ export class TransactionTypeResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'transactionType',
             () => undefined,
-            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ',
+            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer):',
             'text',
             new TransactionTypeValidator())
         return parseInt(resolution, 16)

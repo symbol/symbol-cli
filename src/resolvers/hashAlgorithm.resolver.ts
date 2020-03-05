@@ -28,7 +28,7 @@ export class HashAlgorithmResolver implements Resolver {
 
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'hashAlgorithm',
-            altText ? altText : 'Select the algorithm used to hash the proof: ',
+            altText ? altText : 'Select the algorithm used to hash the proof:',
             choices,
             'select',
             new HashAlgorithmValidator()))

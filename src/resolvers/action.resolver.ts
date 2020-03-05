@@ -26,7 +26,7 @@ export class ActionResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
-            altText ? altText : 'Select an action: ',
+            altText ? altText : 'Select an action:',
             choices,
             'select',
             new ActionValidator()
@@ -55,7 +55,7 @@ export class LinkActionResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
-            altText ? altText : 'Select an action: ',
+            altText ? altText : 'Select an action:',
             choices,
             'select',
             new LinkActionValidator()
@@ -81,7 +81,7 @@ export class SupplyActionResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
-            altText ? altText : 'Select an action: ',
+            altText ? altText : 'Select an action:',
             choices,
             'select',
             new MosaicSupplyChangeActionValidator()

@@ -20,7 +20,7 @@ export class ProfileNameResolver implements Resolver {
         return await OptionsResolver(options,
             altKey ? altKey : 'profile',
             () => undefined,
-            altText ? altText : 'Enter a profile name: ',
+            altText ? altText : 'Enter a profile name:',
             'text',
             undefined)
     }

@@ -67,7 +67,7 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(password)
         const mosaicId = await new MosaicIdAliasResolver().resolve(options)
         const targetAddress = await new AddressAliasResolver()
-            .resolve(options, undefined, 'Enter the restricted target address or alias: ', 'targetAddress')
+            .resolve(options, undefined, 'Enter the restricted target address or alias:', 'targetAddress')
         const restrictionKey = await new KeyResolver()
             .resolve(options, undefined, undefined, 'restrictionKey')
         const restrictionValue = await new RestrictionValueResolver().resolve(options)

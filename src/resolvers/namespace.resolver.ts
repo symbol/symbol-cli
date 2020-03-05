@@ -23,7 +23,7 @@ export class NamespaceNameResolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'namespaceName',
             () =>  undefined,
-            altText ? altText : 'Enter the namespace name: ',
+            altText ? altText : 'Enter the namespace name:',
             'text',
             undefined)
         return new NamespaceId(resolution)
@@ -46,7 +46,7 @@ export class NamespaceNameStringResolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'namespaceName',
             () =>  undefined,
-            altText ? altText : 'Enter the namespace name: ',
+            altText ? altText : 'Enter the namespace name:',
             'text',
             undefined)
         return resolution
@@ -70,7 +70,7 @@ export class NamespaceIdResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'namespaceId',
             () =>  undefined,
-            altText ? altText : 'Enter the namespace id in hexadecimal: ',
+            altText ? altText : 'Enter the namespace id in hexadecimal:',
             'text',
             new NamespaceIdValidator())
         const namespaceIdUInt64 = UInt64.fromHex(resolution)

@@ -82,7 +82,7 @@ export default class extends AnnounceTransactionsCommand {
         if (options.encrypted) {
             const recipientPublicAccount = await new PublicKeyResolver()
                 .resolve(options, profile.networkType,
-                    'Enter the recipient public key: ', 'recipientPublicKey')
+                    'Enter the recipient public key:', 'recipientPublicKey')
             recipientAddress = recipientPublicAccount.address
             const rawMessage = await new MessageResolver().resolve(options)
             message = account.encryptMessage(
@@ -91,7 +91,7 @@ export default class extends AnnounceTransactionsCommand {
                 profile.networkType)
         } else {
             recipientAddress =  await new AddressAliasResolver()
-                .resolve(options, undefined, 'Enter the recipient address or @alias: ', 'recipientAddress')
+                .resolve(options, undefined, 'Enter the recipient address or @alias:', 'recipientAddress')
             const rawMessage = await new MessageResolver().resolve(options)
             if (rawMessage) {
                 message = PlainMessage.create(rawMessage)

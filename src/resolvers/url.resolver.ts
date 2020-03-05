@@ -20,7 +20,7 @@ export class URLResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'url',
             () => secondSource ? secondSource.url : undefined,
-            altText ? altText : 'Enter the Symbol node URL. (Example: http://localhost:3000): ',
+            altText ? altText : 'Enter the Symbol node URL. (Example: http://localhost:3000):',
             'text',
             undefined)
         return resolution.endsWith('/') ? resolution.slice(0, -1) : resolution

@@ -20,7 +20,7 @@ export class SecretResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'secret',
             () => undefined,
-            altText ? altText : 'Enter proof hashed in hexadecimal format: ',
+            altText ? altText : 'Enter proof hashed in hexadecimal format:',
             'text',
             undefined)
         return resolution

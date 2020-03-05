@@ -21,7 +21,7 @@ export class DivisibilityResolver implements Resolver {
         const resolution = +(await OptionsResolver(options,
             altKey ? altKey : 'divisibility',
             () =>  undefined,
-            altText ? altText : 'Enter the mosaic divisibility: ',
+            altText ? altText : 'Enter the mosaic divisibility:',
             'text',
             new NumericStringValidator()))
         return resolution

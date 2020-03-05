@@ -27,7 +27,7 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'flags',
-            altText ? altText : 'Select the restriction flags: ',
+            altText ? altText : 'Select the restriction flags:',
             choices,
             'select',
             new AccountRestrictionFlagsValidator()
@@ -56,7 +56,7 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'flags',
-            altText ? altText : 'Select the restriction flags: ',
+            altText ? altText : 'Select the restriction flags:',
             choices,
             'select',
             new AccountRestrictionFlagsValidator()
@@ -85,7 +85,7 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'flags',
-            altText ? altText : 'Select the restriction flags: ',
+            altText ? altText : 'Select the restriction flags:',
             choices,
             'select',
             new AccountRestrictionFlagsValidator()

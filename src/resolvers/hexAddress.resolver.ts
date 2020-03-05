@@ -21,7 +21,7 @@ export class HexAddressResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an hex address: ',
+            altText ? altText : 'Enter an hex address:',
             'text',
             new HexAddressValidator())
         return resolution

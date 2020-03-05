@@ -61,7 +61,7 @@ export default class extends AnnounceTransactionsCommand {
         const mosaic = await new MosaicIdResolver().resolve(options)
         const targetAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
-                'Enter the mosaic owner account public key: ', 'targetPublicKey')
+                'Enter the mosaic owner account public key:', 'targetPublicKey')
         const key = await new KeyResolver().resolve(options)
         const value = await new StringResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
@@ -115,7 +115,7 @@ export default class extends AnnounceTransactionsCommand {
             const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash)
 
             const maxFeeHashLock = await new MaxFeeResolver().resolve(options, undefined,
-                'Enter the maximum fee to announce the hashlock transaction (absolute amount): ', 'maxFeeHashLock')
+                'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyPublic.createRelative(UInt64.fromNumericString(options.amount)),

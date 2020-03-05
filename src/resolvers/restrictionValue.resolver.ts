@@ -38,7 +38,7 @@ export class RestrictionValueResolver implements Resolver {
         const value = await OptionsResolver(options,
             altKey ? altKey : 'newRestrictionValue',
             () => undefined,
-            altText ? altText : 'Enter new restriction value: ',
+            altText ? altText : 'Enter new restriction value:',
             'text',
             new NumericStringValidator()
         )

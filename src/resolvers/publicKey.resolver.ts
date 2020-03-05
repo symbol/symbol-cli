@@ -22,7 +22,7 @@ export class PublicKeyResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ',
+            altText ? altText : 'Enter the account public key:',
             'text',
             new PublicKeyValidator())
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST)
@@ -46,7 +46,7 @@ export class CosignatoryPublicKeyResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma): ',
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):',
             'text',
             new PublicKeysValidator())
         const cosignatoryPublicKeys = resolution.split(',')

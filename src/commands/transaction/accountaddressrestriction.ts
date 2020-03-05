@@ -69,7 +69,7 @@ export default class extends AnnounceTransactionsCommand {
         const action = await new ActionResolver().resolve(options)
         const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options)
         const address = await new AddressAliasResolver()
-        .resolve(options, undefined, 'Enter the recipient address (or @alias): ', 'recipientAddress')
+        .resolve(options, undefined, 'Enter the recipient address (or @alias):', 'recipientAddress')
         const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(

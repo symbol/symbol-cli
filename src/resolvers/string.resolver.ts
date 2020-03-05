@@ -20,7 +20,7 @@ export class StringResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'value',
             () => undefined,
-            altText ? altText : 'Enter a string value: ',
+            altText ? altText : 'Enter a string value:',
             'text',
             undefined)
         return resolution

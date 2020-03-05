@@ -87,11 +87,11 @@ export default class extends AnnounceTransactionsCommand {
         const action = await new ActionResolver().resolve(options)
         const multisigAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
-                'Enter the multisig account public key: ', 'multisigAccountPublicKey')
+                'Enter the multisig account public key:', 'multisigAccountPublicKey')
         const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile)
         const maxFee = await new MaxFeeResolver().resolve(options)
         const maxFeeHashLock = await new MaxFeeResolver().resolve(options, undefined,
-            'Enter the maximum fee to announce the hashlock transaction (absolute amount): ', 'maxFeeHashLock')
+            'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),

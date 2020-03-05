@@ -20,7 +20,7 @@ export default class extends CreateProfileCommand {
         const profileName = await new ProfileNameResolver().resolve(
             options,
             undefined,
-            'New default profile: ')
+            'New default profile:')
         if (profileName) {
             this.setDefaultProfile(profileName)
             console.log(chalk.green('\nDefault profile changed to [' + profileName + ']'))

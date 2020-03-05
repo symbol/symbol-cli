@@ -24,7 +24,7 @@ export class PayloadResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'payload',
             () => undefined,
-            altText ? altText : 'Enter a transaction payload: ',
+            altText ? altText : 'Enter a transaction payload:',
             'text',
             undefined)
         const transaction = TransactionMapping.createFromPayload(resolution)

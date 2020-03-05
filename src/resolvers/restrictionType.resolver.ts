@@ -46,7 +46,7 @@ export class RestrictionTypeResolver implements Resolver {
         ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'newRestrictionType',
-            altText ? altText : 'Select the new restriction type: ',
+            altText ? altText : 'Select the new restriction type:',
             choices,
             'select',
             undefined

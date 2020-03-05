@@ -21,7 +21,7 @@ export class MaxFeeResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'maxFee',
             () => undefined,
-            altText ? altText : 'Enter the maximum fee (absolute amount): ',
+            altText ? altText : 'Enter the maximum fee (absolute amount):',
             'text',
             undefined)
         try {

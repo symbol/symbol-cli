@@ -22,7 +22,7 @@ export class DurationResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'duration',
             () =>  undefined,
-            altText ? altText : 'Enter the duration in number of blocks: ',
+            altText ? altText : 'Enter the duration in number of blocks:',
             'text',
             new NumericStringValidator())
         return UInt64.fromNumericString(resolution)

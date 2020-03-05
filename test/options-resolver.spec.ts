@@ -56,7 +56,7 @@ describe('OptionsChoicesResolver', () => {
             {title: 'mijin', value: 1},
         ]
         const value = await OptionsChoiceResolver({name: 'nem'},
-            'name', 'Select name: ', choices, 'select', undefined)
+            'name', 'Select name:', choices, 'select', undefined)
         expect(value).to.be.equal(0)
     })
 
@@ -65,7 +65,7 @@ describe('OptionsChoicesResolver', () => {
             {title: 'Remove', value: ActionType.Remove},
         ]
         const value = await OptionsChoiceResolver({name: 'Remove'},
-            'name', 'Select name: ', choices, 'select', new ActionValidator())
+            'name', 'Select name:', choices, 'select', new ActionValidator())
         expect(value).to.be.equal(ActionType.Remove)
     })
 

@@ -22,7 +22,7 @@ export class HashResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'hash',
             () => undefined,
-            altText ? altText : 'Enter a transaction hash: ',
+            altText ? altText : 'Enter a transaction hash:',
             'text',
             new HashValidator())
         return resolution

@@ -67,7 +67,7 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
         const recipientAddress = await new AddressAliasResolver()
-            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked: ', 'recipientAddress')
+            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked:', 'recipientAddress')
         const secret = await new SecretResolver().resolve(options)
         const proof = await new ProofResolver().resolve(options)
         const hashAlgorithm = await new HashAlgorithmResolver().resolve(options)

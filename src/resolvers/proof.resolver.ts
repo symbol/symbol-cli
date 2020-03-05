@@ -20,7 +20,7 @@ export class ProofResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'proof',
             () => undefined,
-            altText ? altText : 'Enter the original random set of bytes in hexadecimal: ',
+            altText ? altText : 'Enter the original random set of bytes in hexadecimal:',
             'text',
             undefined)
         return resolution

@@ -21,7 +21,7 @@ export class KeyResolver implements Resolver {
             altText ?
             altText : 'Enter a UInt64 key in hexadecimal format.' +
                 ' You can use the command \'symbol-cli converter stringtokey\' ' +
-                'to turn an string into a valid key: ',
+                'to turn an string into a valid key:',
             'text',
             new KeyValidator())
         return UInt64.fromHex(resolution)

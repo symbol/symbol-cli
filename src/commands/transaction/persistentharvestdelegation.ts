@@ -55,10 +55,10 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
         const remotePrivateKey = await new PrivateKeyResolver()
-            .resolve(options, undefined, 'Enter the remote account private key: ', 'remotePrivateKey')
+            .resolve(options, undefined, 'Enter the remote account private key:', 'remotePrivateKey')
         const recipientPublicAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
-                'Enter the public key of the node: ', 'recipientPublicKey')
+                'Enter the public key of the node:', 'recipientPublicKey')
        const message = PersistentHarvestingDelegationMessage.create(
             remotePrivateKey,
             recipientPublicAccount.publicKey,

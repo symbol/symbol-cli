@@ -22,7 +22,7 @@ export class AmountResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'amount',
             () =>  undefined,
-            altText ? altText : 'Enter an absolute amount: ',
+            altText ? altText : 'Enter an absolute amount:',
             'text',
             new NumericStringValidator())
         return UInt64.fromNumericString(resolution)

@@ -23,7 +23,7 @@ export class AddressResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an address: ',
+            altText ? altText : 'Enter an address:',
             'text',
             new AddressValidator())
         return Address.createFromRawAddress(resolution)
@@ -43,7 +43,7 @@ export class AddressAliasResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an address (or @alias): ',
+            altText ? altText : 'Enter an address (or @alias):',
             'text',
             new AddressAliasValidator())
         return AccountService.getRecipient(resolution)

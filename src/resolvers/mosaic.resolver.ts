@@ -26,7 +26,7 @@ export class MosaicIdResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaicId',
             () =>  undefined,
-            altText ? altText : 'Enter the mosaic id in hexadecimal format: ',
+            altText ? altText : 'Enter the mosaic id in hexadecimal format:',
             'text',
             new MosaicIdValidator())
         return new MosaicId(resolution)
@@ -51,7 +51,7 @@ export class MosaicIdAliasResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'mosaicId',
             () =>  undefined,
-            altText ? altText : 'Enter the mosaic id or alias: ',
+            altText ? altText : 'Enter the mosaic id or alias:',
             'text',
             new MosaicIdAliasValidator())
         return MosaicService.getMosaicId(resolution)
@@ -92,7 +92,7 @@ export class MosaicsResolver implements Resolver {
             altKey ? altKey : 'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics with commas: ',
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics separated by commas:',
             'text',
             new MosaicsValidator())
         return resolution ? MosaicService.getMosaics(resolution) : []

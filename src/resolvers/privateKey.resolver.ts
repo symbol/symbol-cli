@@ -21,7 +21,7 @@ export class PrivateKeyResolver implements Resolver {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'privateKey',
             () => undefined,
-            altText ? altText : 'Enter your account private key: ',
+            altText ? altText : 'Enter your account private key:',
             'password',
             new PrivateKeyValidator())
         return resolution
