@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata} from 'clime'
-import {AccountHttp} from 'symbol-sdk'
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {AccountHttp} from 'symbol-sdk'
+import {command, metadata} from 'clime'
 
 @command({
     description: 'Fetch aggregate bonded transactions from account',
@@ -32,11 +32,11 @@ export default class extends AccountTransactionsCommand {
     }
 
     @metadata
-    execute(options: AccountTransactionsOptions) {
-        this.spinner.start()
+    async execute(options: AccountTransactionsOptions) {
         const profile = this.getProfile(options)
-        const address = new AddressResolver().resolve(options, profile)
+        const address = await new AddressResolver().resolve(options, profile)
 
+        this.spinner.start()
         const accountHttp = new AccountHttp(profile.url)
         accountHttp.getAccountPartialTransactions(address, options.getQueryParams())
             .subscribe((transactions) => {

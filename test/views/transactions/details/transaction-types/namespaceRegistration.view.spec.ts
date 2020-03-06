@@ -1,7 +1,7 @@
-import {expect} from 'chai'
 import {NamespaceRegistrationView} from '../../../../../src/views/transactions/details/transaction-types'
 import {namespaceId1} from '../../../../mocks/namespaces.mock'
 import {unsignedNamespaceRegistration1, unsignedSubNamespaceRegistration1} from '../../../../mocks/transactions/namespaceRegistration.mock'
+import {expect} from 'chai'
 
 describe('NamespaceRegistrationView', () => {
  it('should return a view of a root namespace registration', () => {

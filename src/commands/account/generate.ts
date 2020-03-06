@@ -15,9 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
-import {Account, SimpleWallet} from 'symbol-sdk'
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
 import {DefaultResolver} from '../../resolvers/default.resolver'
 import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
@@ -26,6 +23,9 @@ import {PasswordResolver} from '../../resolvers/password.resolver'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
 import {SaveResolver} from '../../resolvers/save.resolver'
 import {URLResolver} from '../../resolvers/url.resolver'
+import {Account, SimpleWallet} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -47,16 +47,15 @@ export default class extends CreateProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = new NetworkResolver().resolve(options)
-        const save = new SaveResolver().resolve(options)
-
+        const networkType = await new NetworkResolver().resolve(options)
+        const save = await new SaveResolver().resolve(options)
         const account = Account.generateNewAccount(networkType)
         console.log(new AccountCredentialsTable(account).toString())
         if (save) {
-            options.url = new URLResolver().resolve(options)
-            const profileName = new ProfileNameResolver().resolve(options)
-            const password = new PasswordResolver().resolve(options)
-            const isDefault = new DefaultResolver().resolve(options)
+            options.url = await new URLResolver().resolve(options)
+            const profileName = await new ProfileNameResolver().resolve(options)
+            const password = await new PasswordResolver().resolve(options)
+            const isDefault = await new DefaultResolver().resolve(options)
             const generationHash = await new GenerationHashResolver().resolve(options)
 
             const simpleWallet = SimpleWallet.createFromPrivateKey(

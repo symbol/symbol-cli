@@ -15,16 +15,25 @@
  * limitations under the License.
  *
  */
+import {KeyResolver} from '../../src/resolvers/key.resolver'
 import {expect} from 'chai'
 import {KeyGenerator} from 'symbol-sdk'
-import {KeyResolver} from '../../src/resolvers/key.resolver'
 
 describe('Key resolver', () => {
 
-    it('should return key', () => {
+    it('should return key', async () => {
         const key = KeyGenerator.generateUInt64Key('test').toHex()
-        const profileOptions = {key} as any
-        expect(new KeyResolver().resolve(profileOptions).toHex())
+        const options = {key} as any
+        expect((await new KeyResolver().resolve(options)).toHex())
             .to.be.equal(key)
     })
+
+    it('should change key', async () => {
+        const k1 = KeyGenerator.generateUInt64Key('test').toHex()
+        const options = {k1} as any
+        expect((await new KeyResolver()
+            .resolve(options, 'altText', 'k1')).toHex())
+            .to.be.equal(k1)
+    })
+
 })

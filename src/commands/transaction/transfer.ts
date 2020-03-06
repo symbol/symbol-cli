@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -25,6 +23,9 @@ import {MessageResolver} from '../../resolvers/message.resolver'
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -71,31 +72,32 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const mosaics = new MosaicsResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const mosaics = await new MosaicsResolver().resolve(options)
         let recipientAddress: Address | NamespaceId
         let message = EmptyMessage
         if (options.encrypted) {
-            const recipientPublicAccount = new PublicKeyResolver()
+            const recipientPublicAccount = await new PublicKeyResolver()
                 .resolve(options, profile.networkType,
-                    'Enter the recipient public key: ', 'recipientPublicKey')
+                    'Enter the recipient public key:', 'recipientPublicKey')
             recipientAddress = recipientPublicAccount.address
-            const rawMessage = new MessageResolver().resolve(options)
+            const rawMessage = await new MessageResolver().resolve(options)
             message = account.encryptMessage(
                 rawMessage,
                 recipientPublicAccount,
                 profile.networkType)
         } else {
-            recipientAddress =  new AddressAliasResolver()
-                .resolve(options, undefined, 'Enter the recipient address or @alias: ', 'recipientAddress')
-            const rawMessage = new MessageResolver().resolve(options)
+            recipientAddress =  await new AddressAliasResolver()
+                .resolve(options, undefined, 'Enter the recipient address or @alias:', 'recipientAddress')
+            const rawMessage = await new MessageResolver().resolve(options)
             if (rawMessage) {
                 message = PlainMessage.create(rawMessage)
             }
         }
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = TransferTransaction.create(
             Deadline.create(),
@@ -108,7 +110,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {UInt64} from 'symbol-sdk'
 
 /**
@@ -26,14 +26,14 @@ export class NumericStringValidator implements Validator<string> {
     /**
      * Validates if a string is composed by numbers.
      * @param {string} value - Numeric string.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
             UInt64.fromNumericString(value)
         } catch (err) {
-            throw new ExpectedError('Enter a number')
+            return 'Enter an integer number'
         }
+        return true
     }
 }

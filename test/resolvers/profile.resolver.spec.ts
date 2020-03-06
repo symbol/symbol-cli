@@ -15,16 +15,24 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
+import {expect} from 'chai'
 
 describe('Profile name resolver', () => {
 
-    it('should return profile name', () => {
+    it('should return profile name', async () => {
         const profile = 'test'
-        const profileOptions = {profile} as any
-        expect(new ProfileNameResolver().resolve(profileOptions))
+        const options = {profile} as any
+        expect(await new ProfileNameResolver().resolve(options))
             .to.be.equal(profile)
+    })
+
+    it('should change key', async () => {
+        const key = 'test'
+        const options = {key} as any
+        expect(await new ProfileNameResolver()
+            .resolve(options, 'altText', 'key'))
+            .to.be.equal(key)
     })
 
 })

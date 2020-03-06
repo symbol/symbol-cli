@@ -15,27 +15,24 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {HashResolver} from '../../src/resolvers/hash.resolver'
+import {expect} from 'chai'
 
 describe('Hash resolver', () => {
 
-    it('should return hash', () => {
+    it('should return hash', async () => {
         const hash = '0000000000000000000000000000000000000000000000000000000000000000'
-        const profileOptions = {hash} as any
-        expect(new HashResolver().resolve(profileOptions))
+        const options = {hash} as any
+        expect(await new HashResolver().resolve(options))
             .to.be.equal(hash)
     })
 
-    it('should throw when hash is invalid', () => {
-        const hash = 'notAHash'
-        const profileOptions = {hash} as any
-        expect(() => new HashResolver().resolve(profileOptions)).to.throw()
+    it('should return hash', async () => {
+        const key = '0000000000000000000000000000000000000000000000000000000000000000'
+        const options = {key} as any
+        expect(await new HashResolver()
+            .resolve(options, 'altText', 'key'))
+            .to.be.equal(key)
     })
 
-    it('should throw when hash is empty', () => {
-        const hash = 'notAHash'
-        const profileOptions = {hash} as any
-        expect(() => new HashResolver().resolve(profileOptions)).to.throw()
-    })
 })

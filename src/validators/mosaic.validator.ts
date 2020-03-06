@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {ValidationContext, Validator} from 'clime'
 import {MosaicService} from '../services/mosaic.service'
+import {Validator} from 'clime'
 
 /**
  * Mosaic validator
@@ -26,11 +26,10 @@ export class MosaicValidator implements Validator<string> {
     /**
      * Validates if a mosaic object can be created from a string.
      * @param {string} value - Mosaic in the form mosaicId::amount.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        MosaicService.validate(value)
+    validate(value: string): boolean | string {
+        return MosaicService.validate(value)
     }
 }
 
@@ -42,13 +41,16 @@ export class MosaicsValidator implements Validator<string> {
     /**
      * Validates if an array of mosaic objects can be created from a string.
      * @param {string} value - Mosaics in the form mosaicId::amount, separated by commas.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         const mosaics = value.split(',')
+        let error = ''
         mosaics.forEach((mosaic) => {
-            MosaicService.validate(mosaic)
+            const validation = MosaicService.validate(mosaic)
+            if (typeof validation === 'string') {error = validation}
         })
+        if (!error) {return true}
+        return error
     }
 }

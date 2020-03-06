@@ -1,11 +1,9 @@
-import {NamespaceId, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
-import * as readlineSync from 'readline-sync'
 import {CommandOptions} from '../commands/transaction/namespace'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
-import {OptionsResolver} from '../options-resolver'
+import {OptionsConfirmResolver, OptionsResolver} from '../options-resolver'
 import {NamespaceIdValidator} from '../validators/namespaceId.validator'
 import {Resolver} from './resolver'
+import {NamespaceId, NamespaceRegistrationType, UInt64} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Namespace name resolver
@@ -14,18 +12,41 @@ export class NamespaceNameResolver {
 
     /**
      * Resolves a namespace name provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {NamespaceId}
+     * @returns {Promise<NamespaceId>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): NamespaceId {
-        const resolution = OptionsResolver(options,
-        altKey ? altKey : 'namespaceName',
-        () =>  undefined,
-        altText ? altText : 'Enter the namespace name: ').trim()
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<NamespaceId> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'namespaceName',
+            () =>  undefined,
+            altText ? altText : 'Enter the namespace name:',
+            'text',
+            undefined)
         return new NamespaceId(resolution)
+    }
+}
+
+/**
+ * Namespace name string resolver
+ */
+export class NamespaceNameStringResolver {
+    /**
+     * Resolves a namespace name provided by the user.
+     * @param {Options} options - Command options.
+     * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<string>}
+     */
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'namespaceName',
+            () =>  undefined,
+            altText ? altText : 'Enter the namespace name:',
+            'text',
+            undefined)
+        return resolution
     }
 }
 
@@ -36,17 +57,18 @@ export class NamespaceIdResolver implements Resolver {
 
     /**
      * Resolves a namespace id provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {NamespaceId}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<NamespaceId>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): NamespaceId {
-        const resolution = OptionsResolver(options,
-            'namespaceId',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<NamespaceId> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'namespaceId',
             () =>  undefined,
-            altText ? altText : 'Enter the namespace id in hexadecimal: ').trim()
-        new NamespaceIdValidator().validate(resolution)
+            altText ? altText : 'Enter the namespace id in hexadecimal:',
+            'text',
+            new NamespaceIdValidator())
         const namespaceIdUInt64 = UInt64.fromHex(resolution)
         return new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher])
     }
@@ -59,14 +81,17 @@ export class NamespaceTypeResolver  implements Resolver {
 
     /**
      * Resolves the namespace type.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {NamespaceRegistrationType}
+     * @returns {Promise<NamespaceRegistrationType>}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): NamespaceRegistrationType {
-        if (!options.subnamespace && !options.rootnamespace && readlineSync.keyInYN('Do you want to create a root namespace?')) {
-            options.rootnamespace = true
+    async resolve(options: CommandOptions, altText?: string): Promise<NamespaceRegistrationType> {
+        if (!options.subnamespace) {
+            const resolution = await OptionsConfirmResolver(options, 'rootnamespace',
+                altText ? altText : 'Do you want to create a root namespace?')
+            if (resolution) {
+                options.rootnamespace = true
+            }
         }
         let namespaceType = NamespaceRegistrationType.SubNamespace
         if (options.rootnamespace) {

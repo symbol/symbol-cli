@@ -1,7 +1,6 @@
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
+import {Options} from 'clime'
 
 /**
  * String resolver
@@ -9,17 +8,19 @@ import {Resolver} from './resolver'
 export class StringResolver implements Resolver {
 
     /**
-     * Resolves an string value provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * Resolves a string value provided by the user.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {string}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<string>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
-        const resolution = OptionsResolver(options,
-            'value',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'value',
             () => undefined,
-            altText ? altText : 'Enter a string value: ').trim()
+            altText ? altText : 'Enter a string value:',
+            'text',
+            undefined)
         return resolution
     }
 }

@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {SupplyActionResolver} from '../../resolvers/action.resolver'
 import {AmountResolver} from '../../resolvers/amount.resolver'
@@ -23,13 +21,16 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Mosaic supply change action (1: Increase, 0: Decrease).',
+        description: 'Mosaic supply change action (Increase, Decrease).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'm',
@@ -55,14 +56,15 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const mosaicId = new MosaicIdResolver().resolve(options)
-        const action = new SupplyActionResolver().resolve(options)
-        const amount = new AmountResolver()
-            .resolve(options, undefined, 'Enter absolute amount of supply change: ')
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const mosaicId = await new MosaicIdResolver().resolve(options)
+        const action = await new SupplyActionResolver().resolve(options)
+        const amount = await new AmountResolver()
+            .resolve(options, 'Enter absolute amount of supply change: ')
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
@@ -75,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

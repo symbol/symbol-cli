@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-import {MosaicRestrictionType} from 'symbol-sdk'
-import {isNumeric} from 'rxjs/internal-compatibility'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator'
 import {Resolver} from './resolver'
+import {MosaicRestrictionType} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Restriction type resolver
@@ -29,25 +27,29 @@ import {Resolver} from './resolver'
 export class RestrictionTypeResolver implements Resolver {
     /**
      * Resolve a restriction type provided by a user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @return {number}
+     * @param {string} altKey - Alternative key.
+     * @return {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['NONE', 'EQ', 'NE', 'LT', 'LE', 'GT', 'GE']
-        const index = OptionsChoiceResolver(options,
-            'newRestrictionType',
-            altText ? altText : 'Select the new restriction type: ',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const choices = [
+            {title: 'NONE', value: MosaicRestrictionType.NONE},
+            {title: 'EQ', value: MosaicRestrictionType.EQ},
+            {title: 'NE', value: MosaicRestrictionType.NE},
+            {title: 'LT', value: MosaicRestrictionType.LT},
+            {title: 'LE', value: MosaicRestrictionType.LE},
+            {title: 'GT', value: MosaicRestrictionType.GT},
+            {title: 'GE', value: MosaicRestrictionType.GE},
+
+        ]
+        const value = +(await OptionsChoiceResolver(options,
+            altKey ? altKey : 'newRestrictionType',
+            altText ? altText : 'Select the new restriction type:',
             choices,
-        )
-        let restrictionName
-        if (isNumeric(index)) {
-            restrictionName = choices[+index] as any
-        } else {
-            restrictionName = index
-        }
-        new MosaicRestrictionTypeValidator().validate(restrictionName)
-        return parseInt(MosaicRestrictionType[restrictionName], 10)
+            'select',
+            new MosaicRestrictionTypeValidator()
+        ))
+        return value
     }
 }

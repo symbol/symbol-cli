@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import {command, metadata, option} from 'clime'
 import {NamespaceHttp} from 'symbol-sdk'
 import {forkJoin, of} from 'rxjs'
 import {catchError} from 'rxjs/operators'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -41,11 +41,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const namespaceId = new NamespaceNameResolver().resolve(options)
+        const namespaceId = await new NamespaceNameResolver().resolve(options)
 
+        this.spinner.start()
         const namespaceHttp = new NamespaceHttp(profile.url)
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),

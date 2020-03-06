@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  */
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {NumericStringValidator} from '../validators/numericString.validator'
 import {Resolver} from './resolver'
+import {Options} from 'clime'
 
 /**
  * Restriction value resolver
@@ -28,19 +27,19 @@ export class RestrictionValueResolver implements Resolver {
 
     /**
      * Resolve a restriction value provided by a user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @return {string}
+     * @return {Promise<string>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): string {
-        const value = OptionsResolver(options,
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
+        const value = await OptionsResolver(options,
             altKey ? altKey : 'newRestrictionValue',
             () => undefined,
-            altText ? altText : 'Enter new restriction value: ',
+            altText ? altText : 'Enter new restriction value:',
+            'text',
+            new NumericStringValidator()
         )
-        new NumericStringValidator().validate(value)
         return value
     }
 }

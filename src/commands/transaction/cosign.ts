@@ -17,8 +17,16 @@
  *
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
+import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {ProfileCommand} from '../../interfaces/profile.command'
+import {Profile} from '../../models/profile.model'
+import {HashResolver} from '../../resolvers/hash.resolver'
+import {MultisigService} from '../../services/multisig.service'
+import {SequentialFetcher} from '../../services/sequentialFetcher.service'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
 import {
     AccountHttp,
     Address,
@@ -28,15 +36,8 @@ import {
     QueryParams,
     TransactionHttp,
 } from 'symbol-sdk'
-import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
-import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {Profile} from '../../models/profile'
-import {HashResolver} from '../../resolvers/hash.resolver'
-import {MultisigService} from '../../services/multisig.service'
-import {SequentialFetcher} from '../../services/sequentialFetcher.service'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -58,14 +59,14 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         this.options = options
         this.profile = this.getProfile(this.options)
 
-        const hash = new HashResolver()
-            .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ')
+        const hash = await new HashResolver()
+        .resolve(options, '\'Enter the aggregate bonded transaction hash to cosign: ')
 
+        this.spinner.start()
         const sequentialFetcher = this.getSequentialFetcher()
 
         new MultisigService(this.profile).getSelfAndChildrenAddresses()
@@ -80,9 +81,9 @@ export default class extends ProfileCommand {
                     new TransactionView(transaction).print()
                 }),
             )
-            .subscribe((transaction: AggregateTransaction) => {
+            .subscribe(async (transaction: AggregateTransaction) => {
                 sequentialFetcher.kill()
-                const signedCosignature = this.getSignedAggregateBondedCosignature(transaction, hash)
+                const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction, hash)
                 if (signedCosignature) {
                     this.announceAggregateBondedCosignature(signedCosignature)
                 }
@@ -113,13 +114,14 @@ export default class extends ProfileCommand {
      * @param {string} hash of the transaction to be cosigned
      * @returns {(CosignatureSignedTransaction | null)}
      */
-    private getSignedAggregateBondedCosignature(
+    private async getSignedAggregateBondedCosignature(
         transaction: AggregateTransaction,
         hash: string,
-    ): CosignatureSignedTransaction | null {
+    ): Promise<CosignatureSignedTransaction | null> {
         try {
             const cosignatureTransaction = CosignatureTransaction.create(transaction)
-            const account = this.profile.decrypt(this.options)
+            const password = await new PasswordResolver().resolve(this.options)
+            const account = this.profile.decrypt(password)
             return account.signCosignatureTransaction(cosignatureTransaction)
         } catch (err) {
             this.spinner.stop(true)

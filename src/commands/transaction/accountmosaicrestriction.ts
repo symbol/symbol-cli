@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -24,20 +22,24 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {ActionType} from '../../models/action.enum'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flags.' +
-            '(0: AllowMosaic, 1: BlockMosaic)',
-    })
-    flags: number
+    description: 'Restriction flags.(AllowMosaic,' +
+        'BlockMosaic)',
+})
+    flags: string
 
     @option({
         flag: 'a',
-        description: 'Modification action. (1: Add, 0: Remove).',
+        description: 'Modification action. (Add, Remove).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'v',
@@ -55,19 +57,20 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const action = new ActionResolver().resolve(options)
-        const flags = new RestrictionAccountMosaicFlagsResolver().resolve(options)
-        const mosaic = new MosaicIdAliasResolver().resolve(options)
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const action = await new ActionResolver().resolve(options)
+        const flags = await new RestrictionAccountMosaicFlagsResolver().resolve(options)
+        const mosaic = await new MosaicIdAliasResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === 1) ? [mosaic] : [],
-            (action === 0) ? [mosaic] : [],
+            (action === ActionType.Add) ? [mosaic] : [],
+            (action === ActionType.Remove) ? [mosaic] : [],
             profile.networkType,
             maxFee)
 
@@ -75,7 +78,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

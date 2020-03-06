@@ -16,11 +16,11 @@
  *
  */
 // eslint-disable-next-line @typescript-eslint/no-var-requires
+import {SequentialFetcher} from '../../src/services/sequentialFetcher.service'
 import {expect} from 'chai'
 import {Address} from 'symbol-sdk'
 import {toArray} from 'rxjs/operators'
 import {capture, mock, spy, verify} from 'ts-mockito'
-import {SequentialFetcher} from '../../src/services/sequentialFetcher.service'
 
 const addresses = [
     Address.createFromRawAddress('SAY7N2GP6JJBFIRBTUEXY2JJVOLGIZ46KWIMYB5T'),

@@ -16,7 +16,6 @@
  *
  */
 
-import {ExpectedError} from 'clime'
 import {Mosaic, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
 
 /**
@@ -34,7 +33,7 @@ export class MosaicService {
     /**
      * Validates a mosaic object from a string.
      * @param {string} value - Mosaic in the form mosaicId::amount.
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
     static validate(value: string) {
         const mosaicParts = value.split('::')
@@ -49,9 +48,10 @@ export class MosaicService {
             valid = false
         }
         if (!valid) {
-            throw new ExpectedError('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
+            return 'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)'
         }
+        return valid
     }
 
     /**

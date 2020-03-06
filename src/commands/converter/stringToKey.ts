@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
-import {KeyGenerator} from 'symbol-sdk'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {StringResolver} from '../../resolvers/string.resolver'
+import {Command, command, metadata, option} from 'clime'
+import {KeyGenerator} from 'symbol-sdk'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -38,8 +38,8 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const value = new StringResolver().resolve(options)
+    async execute(options: CommandOptions) {
+        const value = await new StringResolver().resolve(options)
         console.log(KeyGenerator.generateUInt64Key(value).toHex())
     }
 }

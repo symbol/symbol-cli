@@ -1,5 +1,5 @@
-import {expect} from 'chai'
 import {AccountTransactionsOptions} from '../../src/interfaces/account.transactions.command'
+import {expect} from 'chai'
 import {Order} from 'symbol-sdk'
 
 describe('Announce Transactions Command', () => {

@@ -16,8 +16,8 @@
  *
  */
 
+import {Profile} from '../../src/models/profile.model'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../../src/models/profile'
 
 const simpleWallet1 = SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST)
 const url1 = 'http://localhost:1234'

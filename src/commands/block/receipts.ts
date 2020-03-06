@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {ReceiptHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {ReceiptService} from '../../services/receipt.service'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {ReceiptHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -42,11 +42,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const height = new HeightResolver().resolve(options)
+        const height =  await new HeightResolver().resolve(options)
 
+        this.spinner.start()
         const receiptHttp = new ReceiptHttp(profile.url)
         receiptHttp.getBlockReceipts(height)
             .subscribe((statement: any) => {

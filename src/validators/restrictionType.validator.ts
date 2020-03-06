@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime'
-import { MosaicRestrictionType } from 'symbol-sdk'
+import {Validator} from 'clime'
+import {AccountRestrictionFlags, MosaicRestrictionType} from 'symbol-sdk'
 
 /**
  * Validator of mosaic restriction type
@@ -24,13 +24,28 @@ import { MosaicRestrictionType } from 'symbol-sdk'
 export class MosaicRestrictionTypeValidator implements Validator<string> {
     /**
      * Validates if a mosaic restriction type is valid.
-     * @param {string} value - Mosaic restriction type.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @param {number} value - Mosaic restriction type.
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        if (!(value in MosaicRestrictionType)) {
-            throw new ExpectedError('Wrong mosaic restriction type')
-        }
+    validate(value: string): boolean | string {
+        const keys = Object.keys(MosaicRestrictionType)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+        return keys.includes(value) ? true : 'MosaicRestrictionType must be one of (' + keys + ').'
+    }
+}
+
+/**
+ * Validator of account restriction flag
+ */
+export class AccountRestrictionFlagsValidator implements Validator<string> {
+    /**
+     * Validates if an account restriction flag is valid.
+     * @param {number} value - account restriction flag.
+     * @returns {true | string}
+     */
+    validate(value: string): boolean | string {
+        const keys = Object.keys(AccountRestrictionFlags)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+        return keys.includes(value) ? true : 'AccountRestrictionFlags must be one of (' + keys + ').'
     }
 }

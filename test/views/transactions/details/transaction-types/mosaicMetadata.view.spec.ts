@@ -1,9 +1,9 @@
-import {expect} from 'chai'
-import {Convert} from 'symbol-sdk'
 import {MosaicMetadataView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {mosaicId1} from '../../../../mocks/mosaics.mock'
 import {unsignedMosaicMetadata1} from '../../../../mocks/transactions/mosaicMetadata.mock'
+import {Convert} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('MosaicMetadataView', () => {
  it('should return a view', () => {

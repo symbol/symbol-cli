@@ -1,13 +1,10 @@
-import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'symbol-sdk'
-import * as readlineSync from 'readline-sync'
-import {CommandOptions} from '../commands/transaction/mosaic'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
-import {OptionsResolver} from '../options-resolver'
+import {OptionsConfirmResolver, OptionsResolver} from '../options-resolver'
 import {MosaicService} from '../services/mosaic.service'
 import {MosaicsValidator} from '../validators/mosaic.validator'
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../validators/mosaicId.validator'
 import {Resolver} from './resolver'
+import {Mosaic, MosaicFlags, MosaicId, NamespaceId} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * MosaicId resolver
@@ -16,17 +13,19 @@ export class MosaicIdResolver implements Resolver {
 
     /**
      * Resolves a mosaic id provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {MosaicId}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<MosaicId>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): MosaicId {
-        const resolution = OptionsResolver(options,
-        'mosaicId',
-        () =>  undefined,
-        altText ? altText : 'Enter the mosaic id in hexadecimal format: ').trim()
-        new MosaicIdValidator().validate(resolution)
+    async resolve(options: Options, altText?: string, altKey?: string):
+        Promise<MosaicId> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'mosaicId',
+            () =>  undefined,
+            altText ? altText : 'Enter the mosaic id in hexadecimal format:',
+            'text',
+            new MosaicIdValidator())
         return new MosaicId(resolution)
     }
 }
@@ -38,17 +37,19 @@ export class MosaicIdAliasResolver implements Resolver {
 
     /**
      * Resolves a mosaic id alias provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {MosaicId | NamespaceId}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<MosaicId | NamespaceId>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): MosaicId | NamespaceId {
-        const resolution = OptionsResolver(options,
-            'mosaicId',
+    async resolve(options: Options, altText?: string, altKey?: string):
+        Promise<MosaicId | NamespaceId> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'mosaicId',
             () =>  undefined,
-            altText ? altText : 'Enter the mosaic id or alias: ').trim()
-        new MosaicIdAliasValidator().validate(resolution)
+            altText ? altText : 'Enter the mosaic id or alias:',
+            'text',
+            new MosaicIdAliasValidator())
         return MosaicService.getMosaicId(resolution)
     }
 
@@ -56,7 +57,7 @@ export class MosaicIdAliasResolver implements Resolver {
      * Resolves an optional mosaic id or alias provided by the user.
      * @param {any} options - Command options.
      * @param {string} altKey - Alternative key.
-     * @param {string} defaultValue - Default value.
+     * @param {MosaicId | NamespaceId} defaultValue - Default value.
      */
     optionalResolve(options: any, altKey?: string, defaultValue?: string): MosaicId | NamespaceId {
         const key = altKey ? altKey : 'referenceMosaicId'
@@ -75,18 +76,20 @@ export class MosaicsResolver implements Resolver {
 
     /**
      * Resolves a set of mosaics provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {Mosaic[]}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<Mosaic[]>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Mosaic[] {
-        const resolution = OptionsResolver(options,
-            'mosaics',
+    async resolve(options: Options, altText?: string, altKey?: string):
+        Promise<Mosaic[]> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'mosaics',
             () =>  undefined,
             altText ? altText : 'Mosaics to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics with commas: ').trim()
-        new MosaicsValidator().validate(resolution)
+                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000). Add multiple mosaics separated by commas:',
+            'text',
+            new MosaicsValidator())
         return resolution ? MosaicService.getMosaics(resolution) : []
     }
 }
@@ -98,18 +101,14 @@ export class MosaicFlagsResolver implements Resolver {
 
     /**
      * Resolves mosaic flags by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @returns {MosaicFlags}
+     * @param {Options} options - Command options.
+     * @returns {Promise<MosaicFlags>}
      */
-    resolve(options: CommandOptions, secondSource?: Profile, altText?: string): MosaicFlags {
+    async resolve(options: Options): Promise<MosaicFlags> {
+
         return MosaicFlags.create(
-            options.supplyMutable ? options.supplyMutable : readlineSync.keyInYN(
-                'Do you want mosaic to have supply mutable?'),
-            options.transferable ? options.transferable : readlineSync.keyInYN(
-                'Do you want mosaic to be transferable?'),
-            options.restrictable ? options.restrictable : readlineSync.keyInYN(
-                'Do you want mosaic to be restrictable?'))
+                await OptionsConfirmResolver(options, 'supplyMutable', 'Do you want this mosaic to have supply mutable?'),
+                await OptionsConfirmResolver(options, 'transferable','Do you want this mosaic to be transferable?'),
+                await OptionsConfirmResolver(options, 'restrictable','Do you want this mosaic to be restrictable?'))
     }
 }

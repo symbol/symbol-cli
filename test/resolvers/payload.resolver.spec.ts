@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
+import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 import {expect} from 'chai'
 import {Account, Deadline, EmptyMessage, NetworkType, TransferTransaction} from 'symbol-sdk'
-import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 
 describe('Payload resolver', () => {
 
-    it('should return transaction from payload', () => {
+    it('should return transaction from payload', async () => {
         let transaction: TransferTransaction
         transaction = TransferTransaction.create(
             Deadline.create(),
@@ -30,8 +30,24 @@ describe('Payload resolver', () => {
             EmptyMessage,
             NetworkType.MIJIN_TEST)
         const payload = transaction.serialize()
-        const profileOptions = {payload} as any
-        expect(new PayloadResolver().resolve(profileOptions))
+        const options = {payload} as any
+        expect(await new PayloadResolver().resolve(options))
             .to.be.deep.equal(transaction)
     })
+
+    it('should change key', async () => {
+        let transaction: TransferTransaction
+        transaction = TransferTransaction.create(
+            Deadline.create(),
+            Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
+            [],
+            EmptyMessage,
+            NetworkType.MIJIN_TEST)
+        const key = transaction.serialize()
+        const options = {key} as any
+        expect(await new PayloadResolver()
+            .resolve(options, 'altText', 'key'))
+            .to.be.deep.equal(transaction)
+    })
+
 })

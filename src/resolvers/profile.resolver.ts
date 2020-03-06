@@ -1,5 +1,4 @@
 import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 
@@ -10,15 +9,17 @@ export class ProfileNameResolver implements Resolver {
 
     /**
      * Resolves a profile name provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {string}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<string>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
-        return OptionsResolver(options,
-            'profile',
+    async resolve(options: ProfileOptions, altText?: string, altKey?: string): Promise<string> {
+        return await OptionsResolver(options,
+            altKey ? altKey : 'profile',
             () => undefined,
-            'Enter a profile name: ').trim()
+            altText ? altText : 'Enter a profile name:',
+            'text',
+            undefined)
     }
 }

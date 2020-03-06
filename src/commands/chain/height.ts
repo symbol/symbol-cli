@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import {command, metadata} from 'clime'
-import {ChainHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {command, metadata} from 'clime'
+import {ChainHttp} from 'symbol-sdk'
 
 @command({
     description: 'Get the current height of the chain',
@@ -31,9 +31,9 @@ export default class extends ProfileCommand {
 
     @metadata
     execute(options: ProfileOptions) {
-        this.spinner.start()
         const profile = this.getProfile(options)
 
+        this.spinner.start()
         const chainHttp = new ChainHttp(profile.url)
         chainHttp.getBlockchainHeight().subscribe((height) => {
             this.spinner.stop(true)

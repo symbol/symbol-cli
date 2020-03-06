@@ -16,9 +16,9 @@
  *
  */
 
-import {AddressAliasTransaction, AliasAction, Deadline, NetworkType, UInt64} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 import {namespaceId1} from '../namespaces.mock'
+import {AddressAliasTransaction, AliasAction, Deadline, NetworkType, UInt64} from 'symbol-sdk'
 
 export const unsignedAddressAlias1 = AddressAliasTransaction.create(
  Deadline.create(),

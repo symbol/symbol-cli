@@ -16,10 +16,10 @@
  *
  */
 
-import {Cell} from 'cli-table3'
-import {AggregateTransactionInfo, NetworkType, Transaction} from 'symbol-sdk'
 import {CellRecord} from './transaction.view'
 import {transactionNameFromType} from './transactionNameFromType'
+import {Cell} from 'cli-table3'
+import {AggregateTransactionInfo, NetworkType, Transaction} from 'symbol-sdk'
 
 export interface ITransactionHeaderView extends CellRecord {
   'Title': Cell;

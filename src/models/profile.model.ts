@@ -19,8 +19,6 @@ import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {ExpectedError} from 'clime'
 import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {PasswordResolver} from '../resolvers/password.resolver'
 
 /**
  * Profile data transfer object.
@@ -121,12 +119,11 @@ export class Profile {
 
     /**
      * Opens a wallet.
-     * @param {ProfileOptions} options - The  attribute "password" should contain the profile's password.
+     * @param {Password} options - The  attribute "password" should contain the profile's password.
      * @throws {ExpectedError}
      * @returns {Account}
      */
-    decrypt(options: ProfileOptions): Account {
-        const password = new PasswordResolver().resolve(options)
+    decrypt(password: Password): Account {
         if (!this.isPasswordValid(password)) {
             throw new ExpectedError('The password provided does not match your account password')
         }

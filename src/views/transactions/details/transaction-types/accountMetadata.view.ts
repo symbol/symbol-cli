@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountMetadataTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {AccountMetadataTransaction} from 'symbol-sdk'
 
 export class AccountMetadataView {
   /**

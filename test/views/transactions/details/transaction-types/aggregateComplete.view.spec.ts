@@ -1,6 +1,6 @@
-import {expect} from 'chai'
 import {AggregateCompleteView} from '../../../../../src/views/transactions/details/transaction-types'
 import {unsignedAggregateComplete1} from '../../../../mocks/transactions/aggregateComplete.mock'
+import {expect} from 'chai'
 
 describe('AggregateCompleteView', () => {
  it('should return a view', () => {

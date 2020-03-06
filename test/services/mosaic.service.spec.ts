@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {MosaicService} from '../../src/services/mosaic.service'
 import {expect} from 'chai'
 import {MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
-import {MosaicService} from '../../src/services/mosaic.service'
 
 describe('Mosaic service', () => {
 
@@ -47,24 +47,24 @@ describe('Mosaic service', () => {
 
     it('validate should not throw exception (alias)', () => {
         const string = '@foo::1'
-        expect(MosaicService.validate(string)).to.be.equal(undefined)
+        expect(MosaicService.validate(string)).to.be.equal(true)
     })
 
     it('validate should not throw exception (hex)', () => {
         const string = '175785202c44e5db::1'
-        expect(MosaicService.validate(string)).to.be.equal(undefined)
+        expect(MosaicService.validate(string)).to.be.equal(true)
     })
 
     it('validate should throw exception', () => {
         const string = 'a::1'
-        expect(() => { MosaicService.validate(string) } ).to.throws(
+        expect(MosaicService.validate(string)).to.equal(
             'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
             ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
     })
 
     it('validate should throw exception (format)', () => {
         const string = 'a::1'
-        expect(() => { MosaicService.validate(string) } ).to.throws(
+        expect(MosaicService.validate(string)).to.equal(
             'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
             ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
     })

@@ -16,9 +16,9 @@
  *
  */
 
-import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'symbol-sdk'
 import {MosaicsView} from '../../../mosaics.view'
 import {CellRecord} from '../transaction.view'
+import {AccountMosaicRestrictionTransaction, AccountRestrictionFlags, MosaicId, NamespaceId} from 'symbol-sdk'
 
 export class AccountMosaicRestrictionView {
   /**

@@ -1,8 +1,8 @@
 
-import {expect} from 'chai'
 import {MosaicsView} from '../../src/views/mosaics.view'
 import {mosaic1, mosaic2, mosaicId1, mosaicId2} from '../mocks/mosaics.mock'
 import {namespaceId1, namespaceId2, namespaceId3} from '../mocks/namespaces.mock'
+import {expect} from 'chai'
 
 describe('Mosaics view', () => {
  it('get should return formatted mosaics', () => {

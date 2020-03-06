@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {DurationResolver} from '../../resolvers/duration.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {NamespaceNameResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
+import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -69,24 +70,22 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-
-        const namespaceId = new NamespaceNameResolver()
-            .resolve(options, undefined, 'Enter the namespace name: ', 'name')
-        const name = namespaceId.fullName ? namespaceId.fullName : ''
-        const namespaceType = new NamespaceTypeResolver().resolve(options)
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name')
+        const namespaceType = await new NamespaceTypeResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         let transaction: NamespaceRegistrationTransaction
         if (namespaceType === NamespaceRegistrationType.RootNamespace) {
-            const duration = new DurationResolver().resolve(options)
+            const duration = await new DurationResolver().resolve(options)
             transaction = NamespaceRegistrationTransaction.createRootNamespace(
                 Deadline.create(), name, duration, profile.networkType, maxFee)
         } else {
-            const parentName = new NamespaceNameResolver()
-                .resolve(options, undefined, 'Enter the parent namespace name: ', 'parentName')
+            const parentName = await new NamespaceNameStringResolver()
+                .resolve(options, 'Enter the parent namespace name:', 'parentName')
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), name, parentName, profile.networkType, maxFee)
         }
@@ -94,7 +93,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

@@ -16,9 +16,9 @@
  *
  */
 
+import {Profile} from '../../src/models/profile.model'
 import {expect} from 'chai'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../../src/models/profile'
 
 describe('Profile', () => {
     it('should contain the fields', () => {
@@ -76,7 +76,7 @@ describe('Profile', () => {
         expect(profile.isPasswordValid(password)).to.be.equal(true)
     })
 
-    it('should decrypt profile', () => {
+    it('should decrypt profile', async () => {
         const privateKey =  '0'.repeat(64)
         const password = new Password('password')
         const simpleWallet = SimpleWallet.createFromPrivateKey(
@@ -89,8 +89,7 @@ describe('Profile', () => {
             'url',
             'generationHash',
         )
-        const profileOptions = {password: 'password'} as any
-        expect(profile.decrypt(profileOptions).privateKey).to.be.equal(privateKey)
+        expect(profile.decrypt(password).privateKey).to.be.equal(privateKey)
         expect(profile.address).to.be.equal(simpleWallet.address)
     })
 
@@ -107,8 +106,8 @@ describe('Profile', () => {
             'url',
             'generationHash',
         )
-        const profileOptions = {password: 'test12345678'} as any
-        expect(() => profile.decrypt(profileOptions))
+        const password2 = new Password('test12345678')
+        expect(() => profile.decrypt(password2))
             .to.throws('The password provided does not match your account password')
     })
 })

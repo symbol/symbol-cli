@@ -16,47 +16,66 @@
  *
  */
 
+import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '../src/options-resolver'
+import {ActionValidator} from '../src/validators/action.validator'
+import {ActionType} from '../src/models/action.enum'
+import {NumericStringValidator} from '../src/validators/numericString.validator'
 import {expect} from 'chai'
-import {OptionsChoiceResolver, OptionsResolver} from '../src/options-resolver'
 
 describe('OptionsResolver', () => {
-    it('should return the value if contains the commands option is passed', () => {
-        const value = OptionsResolver({name: 'nem'}, 'name', () => undefined, 'Insert your name')
+    it('should return the value if contains the commands option is passed', async () => {
+        const value = await OptionsResolver({name: 'nem'}, 'name',
+            () => undefined, 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
     })
 
-    it('should return the value 0 if contains the commands option is passed', () => {
-        const value = OptionsResolver({name: 0}, 'name', () => undefined, 'Insert your name')
-        expect(value).to.be.equal(0)
+    it('should return the value 0 if contains the commands option is passed', async () => {
+        const value = await OptionsResolver({name: '0'}, 'name',
+            () => undefined, 'Insert your name', 'text', undefined)
+        expect(value).to.be.equal('0')
     })
 
-    it('should return the value inserted via console if it is not in the command options object', () => {
-        const promptText = 'Insert your name'
-        const readlineSyncMock = {
-            question : (text: string): 'nem' | undefined => text === promptText ? 'nem' : undefined,
-        }
-        const value = OptionsResolver({}, 'name', () => undefined, promptText, readlineSyncMock)
+    it('should return the secondSource value if command options object have not it and secondValue is not undefined', async () => {
+        const value = await OptionsResolver({}, 'name',
+            () => 'nem', 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
     })
 
-    it('should return the secondSource value if command options object have not it and secondValue is not undefined', () => {
-        const value = OptionsResolver({}, 'name', () => 'nem', 'Insert your name')
-        expect(value).to.be.equal('nem')
+    it('should pass validation', async () => {
+        const value = await OptionsResolver({name: '1'}, 'name',
+            () => undefined, 'Insert your name', 'text', new NumericStringValidator())
+        expect(value).to.be.equal('1')
     })
+
 })
 
 describe('OptionsChoicesResolver', () => {
-    it('should return the value if contains the commands option is passed', () => {
-        const value = OptionsChoiceResolver({name: 'nem'}, 'name', 'Select name: ', ['nem', 'mijin'])
-        expect(value).to.be.equal('nem')
+    it('should return the value if contains the commands option is passed', async () => {
+        const choices = [
+            {title: 'nem', value: 0},
+            {title: 'mijin', value: 1},
+        ]
+        const value = await OptionsChoiceResolver({name: 'nem'},
+            'name', 'Select name:', choices, 'select', undefined)
+        expect(value).to.be.equal(0)
     })
 
-    it('should return the value inserted via console if it is not in the command options object', () => {
-        const choices = ['nem', 'mijin']
-        const readlineSyncMock = {
-            keyInSelect : (): number => 0,
-        }
-        const index = OptionsChoiceResolver({}, 'name', 'Select name: ', choices, readlineSyncMock)
-        expect(choices[index]).to.be.equal('nem')
+    it('should pass validation', async () => {
+        const choices = [
+            {title: 'Remove', value: ActionType.Remove},
+        ]
+        const value = await OptionsChoiceResolver({name: 'Remove'},
+            'name', 'Select name:', choices, 'select', new ActionValidator())
+        expect(value).to.be.equal(ActionType.Remove)
+    })
+
+})
+
+describe('OptionsConfirmationResolver', () => {
+    it('should return the value if contains the commands option is passed', async () => {
+        const value = await OptionsConfirmResolver({name: true}, 'name',
+             'test', 'confirm',true, 'value')
+        expect(value).to.be.equal(true)
     })
 })
+

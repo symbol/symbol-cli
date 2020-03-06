@@ -1,7 +1,6 @@
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
+import {Options} from 'clime'
 
 /**
  * Secret resolver
@@ -10,16 +9,18 @@ export class SecretResolver implements Resolver {
 
     /**
      * Resolves an secret provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {string}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<string>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): string {
-        const resolution = OptionsResolver(options,
-        'secret',
-        () => undefined,
-        altText ? altText : 'Enter proof hashed in hexadecimal format: ').trim()
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'secret',
+            () => undefined,
+            altText ? altText : 'Enter proof hashed in hexadecimal format:',
+            'text',
+            undefined)
         return resolution
     }
 }

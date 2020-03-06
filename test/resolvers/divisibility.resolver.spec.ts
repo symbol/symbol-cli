@@ -15,16 +15,25 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {DivisibilityResolver} from '../../src/resolvers/divisibility.resolver'
+import {expect} from 'chai'
 
 describe('Divisibility resolver', () => {
 
-    it('should return divisibility', () => {
+    it('should return divisibility', async () => {
         const divisibility = '6'
-        const profileOptions = {divisibility} as any
-        expect(new DivisibilityResolver().resolve(profileOptions))
+        const options = {divisibility} as any
+        expect(await new DivisibilityResolver().resolve(options))
             .to.be.equal(6)
     })
+
+    it('should change key', async () => {
+        const key = '6'
+        const options = {key} as any
+        expect(await new DivisibilityResolver()
+            .resolve(options, 'altText', 'key'))
+            .to.be.equal(6)
+    })
+
 
 })

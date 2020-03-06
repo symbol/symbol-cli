@@ -16,9 +16,9 @@
  *
  */
 
-import {Address, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64} from 'symbol-sdk'
 import {mosaic1, mosaic2} from '../mosaics.mock'
 import {namespaceId2} from '../namespaces.mock'
+import {Address, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64} from 'symbol-sdk'
 
 export const unsignedTransfer1 = new TransferTransaction(
  NetworkType.MAIN_NET,

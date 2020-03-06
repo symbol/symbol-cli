@@ -1,8 +1,7 @@
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {TransactionTypeValidator} from '../validators/transactionType.validator'
 import {Resolver} from './resolver'
+import {Options} from 'clime'
 
 /**
  * Transaction type resolver
@@ -11,17 +10,18 @@ export class TransactionTypeResolver implements Resolver {
 
     /**
      * Resolves a transaction type provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const resolution = OptionsResolver(options,
-            'transactionType',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'transactionType',
             () => undefined,
-            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer): ').trim()
-        new TransactionTypeValidator().validate(resolution)
+            altText ? altText : 'Enter the transaction type. Example: 4154 (Transfer):',
+            'text',
+            new TransactionTypeValidator())
         return parseInt(resolution, 16)
     }
 }

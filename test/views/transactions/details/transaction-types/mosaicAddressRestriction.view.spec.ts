@@ -1,8 +1,8 @@
-import {expect} from 'chai'
 import {MosaicAddressRestrictionView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {namespaceId1} from '../../../../mocks/namespaces.mock'
 import {unsignedMosaicAddressRestriction1} from '../../../../mocks/transactions/mosaicAddressRestriction.mock'
+import {expect} from 'chai'
 
 describe('MosaicAddressRestrictionView', () => {
  it('should return a view', () => {

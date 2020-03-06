@@ -15,24 +15,25 @@
  * limitations under the License.
  *
  */
+import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver'
 import {expect} from 'chai'
 import {TransactionType} from 'symbol-sdk'
-import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver'
 
 describe('Transaction type resolver', () => {
 
-    it('should return Transfer Transaction', () => {
+    it('should return Transfer Transaction', async () => {
         const transactionType = '4154'
-        const profileOptions = {transactionType} as any
-        expect(new TransactionTypeResolver().resolve(profileOptions))
+        const options = {transactionType} as any
+        expect(await new TransactionTypeResolver().resolve(options))
             .to.be.equal(TransactionType.TRANSFER)
     })
 
-    it('should throw error if transaction type does not exist', () => {
-        const transactionType = '2121'
-        const profileOptions = {transactionType} as any
-        expect(() => new TransactionTypeResolver().resolve(profileOptions))
-            .to.throws(Error)
+    it('should change key', async () => {
+        const key = '4154'
+        const options = {key} as any
+        expect(await new TransactionTypeResolver()
+            .resolve(options, 'altText', 'key'))
+            .to.be.equal(TransactionType.TRANSFER)
     })
 
 })

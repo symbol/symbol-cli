@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
-import {Listener} from 'symbol-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {Listener} from 'symbol-sdk'
+import {command, metadata} from 'clime'
+import chalk from 'chalk'
 
 @command({
     description: 'Monitor unconfirmed transactions added',
@@ -33,9 +33,9 @@ export default class extends MonitorAddressCommand {
     }
 
     @metadata
-    execute(options: MonitorAddressOptions) {
+    async execute(options: MonitorAddressOptions) {
         const profile = this.getProfile(options)
-        const address = new AddressResolver().resolve(options, profile)
+        const address = await new AddressResolver().resolve(options, profile)
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
         const listener = new Listener(profile.url)

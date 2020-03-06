@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
 import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'symbol-sdk'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -66,11 +66,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const mosaicId = new MosaicIdResolver().resolve(options)
+        const mosaicId = await new MosaicIdResolver().resolve(options)
 
+        this.spinner.start()
         const restrictionHttp = new RestrictionMosaicHttp(profile.url)
         restrictionHttp.getMosaicGlobalRestriction(mosaicId)
             .subscribe((mosaicRestrictions) => {

@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'symbol-sdk'
 
 export class AccountAddressRestrictionView {
   /**

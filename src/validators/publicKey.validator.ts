@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
+import {NetworkType, PublicAccount} from 'symbol-sdk'
 
 /**
  * Public key validator
@@ -25,13 +26,15 @@ export class PublicKeyValidator implements Validator<string> {
     /**
      * Validates a public key format.
      * @param {string} value - Public key.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        if (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) {
-            throw new ExpectedError('Public key should be a 64 characters hexadecimal string')
+    validate(value: string): boolean | string {
+        try {
+            PublicAccount.createFromPublicKey(value, NetworkType.MIJIN_TEST)
+        } catch {
+            return 'Public key should be a 64 characters hexadecimal string'
         }
+        return true
     }
 }
 
@@ -43,13 +46,16 @@ export class PublicKeysValidator implements Validator<string> {
     /**
      * Validates multiple public key format.
      * @param {string} value - Public keys, separated by a comma.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         const publicKeys = value.split(',')
-        publicKeys.map((publicKey: string) => {
-            new PublicKeyValidator().validate(publicKey)
+        let error = ''
+        publicKeys.forEach((publicKey: string) => {
+            const validation = new PublicKeyValidator().validate(publicKey)
+            if (typeof validation === 'string') {error = validation}
         })
+        if (!error) {return true}
+        return error
     }
 }

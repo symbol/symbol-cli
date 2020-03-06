@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {BlockHttp} from 'symbol-sdk'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
+import {BlockHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AccountTransactionsOptions {
     @option({
@@ -41,13 +41,12 @@ export default class extends AccountTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-
-        this.spinner.start()
+    async execute(options: CommandOptions) {
 
         const profile = this.getProfile(options)
-        const height = new HeightResolver().resolve(options)
+        const height = await new HeightResolver().resolve(options)
 
+        this.spinner.start()
         const blockHttp = new BlockHttp(profile.url)
         blockHttp.getBlockTransactions(height, options.getQueryParams())
             .subscribe((transactions) => {

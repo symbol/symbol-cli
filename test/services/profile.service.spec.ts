@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
+import {Profile} from '../../src/models/profile.model'
+import {ProfileRepository} from '../../src/respositories/profile.repository'
+import {ProfileService} from '../../src/services/profile.service'
 import {expect} from 'chai'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {instance, mock, when} from 'ts-mockito'
-import {Profile} from '../../src/models/profile'
-import {ProfileRepository} from '../../src/respositories/profile.repository'
-import {ProfileService} from '../../src/services/profile.service'
 
 describe('Configure service', () => {
 

@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
+import {AccountLinkTransaction, Deadline, LinkAction, NetworkType} from 'symbol-sdk'
 
 export const unsignedAccountLink1 = AccountLinkTransaction.create(
  Deadline.create(),

@@ -1,9 +1,8 @@
-import {Password} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {PasswordValidator} from '../validators/password.validator'
 import {Resolver} from './resolver'
+import {Password} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Password resolver
@@ -12,19 +11,18 @@ export class PasswordResolver implements Resolver {
 
     /**
      * Resolves a password provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {Password}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<Password>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): Password {
-        const resolution = OptionsResolver(options,
-            'password',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<Password> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'password',
             () => undefined,
-            'Enter your wallet password: ',
-            undefined,
-            true)
-        new PasswordValidator().validate(resolution)
+            altText ? altText : 'Enter your wallet password:',
+            'password',
+            new PasswordValidator())
         return new Password(resolution)
     }
 }

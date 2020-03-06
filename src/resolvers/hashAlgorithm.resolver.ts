@@ -1,10 +1,8 @@
-import {HashType} from 'symbol-sdk'
-import {isNumeric} from 'rxjs/internal-compatibility'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator'
 import {Resolver} from './resolver'
+import {HashType} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Link hashAlgorithm resolver
@@ -13,25 +11,25 @@ export class HashAlgorithmResolver implements Resolver {
 
     /**
      * Resolves an hashAlgorithm provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['Op_Sha3_256', 'Op_Keccak_256', 'Op_Hash_160', 'Op_Hash_256']
-        const resolution = OptionsChoiceResolver(options,
-        'hashAlgorithm',
-            altText ? altText : 'Select the algorithm used to hash the proof: ',
-        choices,
-        )
-        let hashAlgorithmName
-        if (isNumeric(resolution)) {
-            hashAlgorithmName = choices[+resolution] as any
-        } else {
-            hashAlgorithmName = resolution
-        }
-        new HashAlgorithmValidator().validate(hashAlgorithmName)
-        return parseInt(HashType[hashAlgorithmName], 10)
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const choices = [
+            {title: 'Op_Sha3_256', value: HashType.Op_Sha3_256},
+            {title: 'Op_Keccak_256', value: HashType.Op_Keccak_256},
+            {title: 'Op_Hash_160', value: HashType.Op_Hash_160},
+            {title: 'Op_Hash_256', value: HashType.Op_Hash_256},
+        ]
+
+        const value = +(await OptionsChoiceResolver(options,
+            altKey ? altKey : 'hashAlgorithm',
+            altText ? altText : 'Select the algorithm used to hash the proof:',
+            choices,
+            'select',
+            new HashAlgorithmValidator()))
+        return value
     }
 }

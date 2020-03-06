@@ -15,33 +15,81 @@
  * limitations under the License.
  *
  */
+import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
+import {Validator} from './validators/validator'
+import chalk from 'chalk'
+import * as prompts from 'prompts'
 
-import * as readlineSync from 'readline-sync'
-
-export const OptionsResolver = (options: any,
-                                key: string,
-                                secondSource: () => string | undefined,
-                                promptText: string,
-                                readlineDependency?: any,
-                                hide?: boolean): any => {
-    const readline = readlineDependency || readlineSync
-    const hideEchoBack = hide ? true : false
-    return options[key] !== undefined ? options[key] : (secondSource() ||
-        readline.question(promptText, {hideEchoBack}))
-}
-
-export const OptionsChoiceResolver = (options: any,
-                                      key: string,
-                                      promptText: string,
-                                      choices: string[],
-                                      readlineDependency?: any): any => {
-    const readline = readlineDependency || readlineSync
+export const OptionsChoiceResolver = async (options: any,
+                                            key: string,
+                                            promptText: string,
+                                            choices: Choices[],
+                                            type: SelectOptionType = 'select',
+                                            validation: Validator<any> | undefined) => {
     if (options[key] !== undefined) {
-        return options[key]
+        const title = options[key].trim()
+        if (validation !== undefined ) {
+            const test = validation.validate(title)
+            if (typeof test === 'string') {
+                console.log(chalk.red('ERR'), test)
+                return process.exit()
+            }
+        }
+        return choices.find((item) => item.title === title)?.value
+    } else {
+        return (await prompts({
+            type,
+            name: key,
+            message: promptText,
+            choices,
+            validate: validation !== undefined ?
+                (result) => validation.validate(result) : () => true,
+        }))[key]
     }
-    const choiceIndex = readline.keyInSelect(choices, promptText)
-    if (-1 === choiceIndex) {
-        return process.exit()
-    }
-    return choiceIndex
 }
+
+export const OptionsResolver = async (options: any,
+                                      key: string,
+                                      secondSource: () => string | undefined,
+                                      promptText: string,
+                                      type: InputOptionType = 'text',
+                                      validation: Validator<any> | undefined) => {
+
+    let value: string
+    if (options[key] !== undefined) {
+        value = options[key].trim()
+        if (validation !== undefined) {
+            const test = validation.validate(value)
+            if (typeof test === 'string') {
+                console.log(chalk.red('ERR'), test)
+                return process.exit()
+            }
+        }
+    } else if (secondSource()) {
+        let resolvedSecondSource = secondSource()
+        value = resolvedSecondSource ? resolvedSecondSource  : ''
+    } else {
+        value = (await prompts({
+            type,
+            name: key,
+            message: promptText,
+            validate: validation !== undefined ?
+                (result) => validation.validate(result) : () => true,
+        }))[key]
+    }
+    return value
+}
+
+export const OptionsConfirmResolver = async (
+    options: any,
+    key: string,
+    promptText: string,
+    type: ConfirmOptionType = 'confirm',
+    initial = true,
+    name = 'value'): Promise<boolean> => options[key] ? options[key] : (await prompts({
+        type,
+        name,
+        message: promptText,
+        initial,
+    }))[name]
+

@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {NamespaceIdValidator} from '../../src/validators/namespaceId.validator'
+import {expect} from 'chai'
 
 describe('Mosaic id validator', () => {
 
     it('default case ', () => {
         const value = '85BBEA6CC462B244'
         expect(new NamespaceIdValidator().validate(value))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if namespaceId is not a valid UInt64 value', () => {
         const value = 'test'
-        expect(() => {
+        expect(
             new NamespaceIdValidator().validate(value)
-        }).to.throws('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244')
+        ).to.be.equal('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244')
     })
 
 })

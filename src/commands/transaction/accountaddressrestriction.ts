@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
@@ -24,20 +22,29 @@ import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {ActionType} from '../../models/action.enum'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flags.' +
-            '(0: AllowOutgoingAddress, 1: BlockOutgoingAddress, 2: AllowIncomingAddress, 3: BlockIncomingAddress)',
+        description: 'Restriction flags.(' +
+            'AllowOutgoingAddress, ' +
+            'BlockOutgoingAddress, ' +
+            'AllowIncomingAddress, ' +
+            'BlockIncomingAddress)',
     })
-    flags: number
+    flags: string
 
     @option({
         flag: 'a',
-        description: 'Modification action. (1: Add, 0: Remove).',
+        description: 'Modification action. (' +
+            'Add, ' +
+            'Remove).',
     })
-    action: number
+    action: string
 
     @option({
         flag: 'v',
@@ -55,27 +62,28 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const action = new ActionResolver().resolve(options)
-        const flags = new RestrictionAccountAddressFlagsResolver().resolve(options)
-        const address = new AddressAliasResolver()
-        .resolve(options, undefined, 'Enter the recipient address (or @alias): ', 'recipientAddress')
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const action = await new ActionResolver().resolve(options)
+        const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options)
+        const address = await new AddressAliasResolver()
+        .resolve(options, undefined, 'Enter the recipient address (or @alias):', 'recipientAddress')
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === 1) ? [address] : [],
-            (action === 0) ? [address] : [],
+            (action === ActionType.Add) ? [address] : [],
+            (action === ActionType.Remove) ? [address] : [],
             profile.networkType,
             maxFee)
         const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

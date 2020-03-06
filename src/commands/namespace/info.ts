@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
 import {NamespaceHttp, NamespaceInfo} from 'symbol-sdk'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -90,13 +90,13 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
         const namespaceId = options.namespaceName ?
-            new NamespaceNameResolver().resolve(options) :
-            new NamespaceIdResolver().resolve(options)
+        await new NamespaceNameResolver().resolve(options) :
+        await new NamespaceIdResolver().resolve(options)
 
+        this.spinner.start()
         const namespaceHttp = new NamespaceHttp(profile.url)
         namespaceHttp.getNamespace(namespaceId)
             .subscribe((namespaceInfo) => {

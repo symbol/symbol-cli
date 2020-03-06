@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../../src/validators/mosaicId.validator'
+import {expect} from 'chai'
 
 describe('Mosaic id validator', () => {
 
     it('default case', () => {
         const value = '941299B2B7E1291C'
         expect(new MosaicIdValidator().validate(value))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if mosaicId is not valid', () => {
         const value = 'test'
-        expect(() => {
+        expect(
             new MosaicIdValidator().validate(value)
-        }).to.throws('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C')
+        ).to.be.equal('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C')
     })
 
 })
@@ -39,26 +39,26 @@ describe('mosaic alias validator', () => {
     it('default case', () => {
         const mosaicId = '941299B2B7E1291C'
         expect(new MosaicIdAliasValidator().validate(mosaicId))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if mosaicId is not valid', () => {
         const value = 'test'
-        expect(() => {
+        expect(
             new MosaicIdAliasValidator().validate(value)
-        }).to.throws('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C')
+        ).to.be.equal('Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C')
     })
 
     it('should throw error if alias is not valid (special char)', () => {
         const alias = '@nem.xem'
         expect(new MosaicIdAliasValidator().validate(alias))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if mosaicId is not valid (uppercase)', () => {
         const value = '@myOwnAlias.name'
-        expect(() => {
+        expect(
             new MosaicIdAliasValidator().validate(value)
-        }).to.throws('Enter valid mosaic alias. Example: @nem.xem')
+        ).to.be.equal('Enter valid mosaic alias. Example: @nem.xem')
     })
 })

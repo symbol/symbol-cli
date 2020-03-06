@@ -1,10 +1,8 @@
-import {NetworkType} from 'symbol-sdk'
-import {isNumeric} from 'rxjs/internal-compatibility'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {NetworkValidator} from '../validators/network.validator'
 import {Resolver} from './resolver'
+import {NetworkType} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Restriction account address flags resolver
@@ -13,25 +11,26 @@ export class NetworkResolver implements Resolver {
 
     /**
      * Resolves a network type provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<any>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['MAIN_NET', 'TEST_NET', 'MIJIN', 'MIJIN_TEST']
-        const resolution = OptionsChoiceResolver(options,
-            'network',
-            altText ? altText : 'Select the network type: ',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<any> {
+        const choices = [
+            {title: 'MAIN_NET', value: NetworkType.MAIN_NET},
+            {title: 'TEST_NET', value: NetworkType.TEST_NET},
+            {title: 'MIJIN', value: NetworkType.MIJIN},
+            {title: 'MIJIN_TEST', value: NetworkType.MIJIN_TEST},
+        ]
+        const value = +(await OptionsChoiceResolver(
+            options,
+            altKey ? altKey : 'network',
+            altText ? altText : 'Select the network type:',
             choices,
-        )
-        let networkFriendlyName
-        if (isNumeric(resolution)) {
-            networkFriendlyName = choices[+resolution] as any
-        } else {
-            networkFriendlyName = resolution
-        }
-        new NetworkValidator().validate(networkFriendlyName)
-        return parseInt(NetworkType[networkFriendlyName], 10)
+            'select',
+            new NetworkValidator()
+        ))
+        return value
     }
 }

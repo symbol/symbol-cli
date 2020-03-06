@@ -1,9 +1,9 @@
-import {NetworkType, PublicAccount} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
+import {Profile} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {PublicKeysValidator, PublicKeyValidator} from '../validators/publicKey.validator'
 import {Resolver} from './resolver'
+import {NetworkType, PublicAccount} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Public key resolver
@@ -12,18 +12,19 @@ export class PublicKeyResolver implements Resolver {
 
     /**
      * Resolves a public key provided by the user.
-     * @param {ProfileOptions} options - Command options.
+     * @param {Options} options - Command options.
      * @param {NetworkType} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @param {string} altKey - Alternative text.
-     * @returns {PublicAccount}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<PublicAccount>}
      */
-    resolve(options: ProfileOptions, secondSource?: NetworkType, altText?: string, altKey?: string): PublicAccount {
-        const resolution = OptionsResolver(options,
+    async resolve(options: Options, secondSource?: NetworkType, altText?: string, altKey?: string): Promise<PublicAccount> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'publicKey',
             () => undefined,
-            altText ? altText : 'Enter the account public key: ').trim()
-        new PublicKeyValidator().validate(resolution)
+            altText ? altText : 'Enter the account public key:',
+            'text',
+            new PublicKeyValidator())
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST)
     }
 }
@@ -35,17 +36,19 @@ export class PublicKeyResolver implements Resolver {
 export class CosignatoryPublicKeyResolver implements Resolver {
     /**
      * Resolves a set of cosignatory public keys provided by the user.
-     * @param {ProfileOptions} options - Command options.
+     * @param {Options} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {PublicAccount[]}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<PublicAccount[]>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): PublicAccount [] {
-        const resolution = OptionsResolver(options,
-            'cosignatoryPublicKey',
+    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<PublicAccount[]> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'cosignatoryPublicKey',
             () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma): ').trim()
-        new PublicKeysValidator().validate(resolution)
+            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):',
+            'text',
+            new PublicKeysValidator())
         const cosignatoryPublicKeys = resolution.split(',')
         const cosignatories: PublicAccount[] = []
         cosignatoryPublicKeys.map((cosignatory: string) => {

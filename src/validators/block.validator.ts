@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {UInt64} from 'symbol-sdk'
 
 /**
@@ -26,10 +26,9 @@ export class HeightValidator implements Validator<string> {
     /**
      * Validates if height value is bigger than 0.
      * @param {string} value - Height.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         let valid = true
         if (value === '0') {
             valid = false
@@ -40,7 +39,8 @@ export class HeightValidator implements Validator<string> {
             valid = false
         }
         if (!valid) {
-            throw new ExpectedError('The block height must be a positive integer')
+            return 'The block height must be a positive integer'
         }
+        return valid
     }
 }
