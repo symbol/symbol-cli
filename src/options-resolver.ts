@@ -26,10 +26,6 @@ export const OptionsChoiceResolver = async (options: any,
                                             choices: Choices[],
                                             type: SelectOptionType = 'select',
                                             validation: Validator<any> | undefined) => {
-    if (!['select', 'multiselect'].includes(type)) {
-        console.log(chalk.red('ERR'), 'Invalid options choice resolver type')
-        return process.exit()
-    }
     if (options[key] !== undefined) {
         const title = options[key].trim()
         if (validation !== undefined ) {
@@ -59,10 +55,6 @@ export const OptionsResolver = async (options: any,
                                       type: InputOptionType = 'text',
                                       validation: Validator<any> | undefined) => {
 
-    if (!['text', 'password', 'number'].includes(type)) {
-        console.log(chalk.red('ERR'), 'Invalid options resolver type')
-        return process.exit()
-    }
     let value: string
     if (options[key] !== undefined) {
         value = options[key].trim()
