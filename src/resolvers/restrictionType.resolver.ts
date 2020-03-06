@@ -20,6 +20,7 @@ import {ProfileOptions} from '../interfaces/profile.command'
 import {Profile} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
 import {Resolver} from './resolver'
+import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator'
 
 /**
  * Restriction type resolver
@@ -49,7 +50,7 @@ export class RestrictionTypeResolver implements Resolver {
             altText ? altText : 'Select the new restriction type:',
             choices,
             'select',
-            undefined
+            new MosaicRestrictionTypeValidator()
         ))
         return value
     }

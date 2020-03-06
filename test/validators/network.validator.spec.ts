@@ -30,7 +30,7 @@ describe('Network type validator', () => {
         const networkType = 'TEST'
         expect(
             new NetworkValidator().validate(networkType)
-        ).to.be.equal('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
+        ).to.include('Network must be one of')
     })
 
 })

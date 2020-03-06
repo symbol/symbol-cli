@@ -25,10 +25,12 @@ export class NetworkValidator implements Validator<string> {
 
     /**
      * Validates if a network is supported.
-     * @param {string} value - Network type friendly name.     * @returns {true | string}
+     * @param {string} value - Network type friendly name.
+     * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return value in NetworkType ? true : 'Enter a valid network type. ' +
-                'Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)'
+        const keys = Object.keys(NetworkType)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+        return keys.includes(value) ? true : 'Network must be one of (' + keys + ').'
     }
 }

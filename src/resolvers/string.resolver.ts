@@ -9,7 +9,7 @@ import {Resolver} from './resolver'
 export class StringResolver implements Resolver {
 
     /**
-     * Resolves an string value provided by the user.
+     * Resolves a string value provided by the user.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.

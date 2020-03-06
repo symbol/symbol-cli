@@ -12,7 +12,8 @@ export class HashAlgorithmValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return value in HashType ? true : 'Hash algorithm must be one of ' +
-            '(Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256)'
+        return value in HashType ? true : 'Hash algorithm must be one of (' +
+            Object.keys(HashType)
+                .filter((key) => Number.isNaN(parseFloat(key))) + ').'
     }
 }

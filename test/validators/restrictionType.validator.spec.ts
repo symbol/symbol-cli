@@ -16,20 +16,39 @@
  *
  */
 import {expect} from 'chai'
-import {MosaicRestrictionTypeValidator} from '../../src/validators/restrictionType.validator'
-import {MosaicRestrictionType} from 'symbol-sdk'
+import {
+    AccountRestrictionFlagsValidator,
+    MosaicRestrictionTypeValidator
+} from '../../src/validators/restrictionType.validator'
+import {AccountRestrictionFlags, MosaicRestrictionType} from 'symbol-sdk'
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {
-        const mosaic = MosaicRestrictionType.EQ
-        expect(new MosaicRestrictionTypeValidator().validate(mosaic))
+        const restriction = 'EQ'
+        expect(new MosaicRestrictionTypeValidator().validate(restriction))
             .to.be.equal(true)
     })
 
     it('invalid mosaic restriction type', () => {
-        const mosaic = 9999999999999
+        const restriction = '99'
         expect(
-            new MosaicRestrictionTypeValidator().validate(mosaic)
-        ).to.be.equal('Invalid mosaic restriction type')
+            new MosaicRestrictionTypeValidator().validate(restriction)
+        ).to.include('MosaicRestrictionType must be one of')
     })
 })
+
+describe('account restriction flags validator', () => {
+    it('valid account restriction flag', () => {
+        const restriction = 'AllowIncomingAddress'
+        expect(new AccountRestrictionFlagsValidator().validate(restriction))
+            .to.be.equal(true)
+    })
+
+    it('invalid account restriction flag', () => {
+        const restriction = '99'
+        expect(
+            new AccountRestrictionFlagsValidator().validate(restriction)
+        ).to.include('AccountRestrictionFlags must be one of')
+    })
+})
+

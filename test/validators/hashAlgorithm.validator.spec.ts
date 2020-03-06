@@ -14,7 +14,6 @@ describe('hashAlgorithm validator', () => {
         const value = 'Op_Unknown'
         expect(
             new HashAlgorithmValidator().validate(value)
-        ).to.be.equal('Hash algorithm must be one of ' +
-            '(Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256)')
+        ).to.include('Hash algorithm must be one of')
     })
 })
