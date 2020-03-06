@@ -1,7 +1,6 @@
 import {AnnounceTransactionsOptions} from '../interfaces/announce.transactions.command'
-import {Profile} from '../models/profile.model'
-import {Resolver} from './resolver'
 import {OptionsConfirmResolver} from '../options-resolver'
+import {Resolver} from './resolver'
 
 /**
  * Announce resolver
@@ -11,11 +10,10 @@ export class AnnounceResolver implements Resolver {
     /**
      * Resolves if the user wants to announce the transaction.
      * @param {CreateProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @returns {Promise<boolean>}
      */
-    async resolve(options: AnnounceTransactionsOptions, secondSource?: Profile, altText?: string): Promise<boolean> {
+    async resolve(options: AnnounceTransactionsOptions, altText?: string): Promise<boolean> {
         if (await OptionsConfirmResolver(options, 'announce', altText ? altText : 'Do you want to announce this transaction?')) {
             options.announce = true
         }

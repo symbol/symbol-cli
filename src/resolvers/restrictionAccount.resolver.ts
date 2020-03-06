@@ -1,9 +1,8 @@
-import {AccountRestrictionFlags} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
-import {Resolver} from './resolver'
 import {AccountRestrictionFlagsValidator} from '../validators/restrictionType.validator'
+import {Resolver} from './resolver'
+import {AccountRestrictionFlags} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Restriction account address flags resolver
@@ -12,13 +11,12 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
 
     /**
      * Resolves a restriction account address flag provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'AllowOutgoingAddress', value: AccountRestrictionFlags.AllowOutgoingAddress},
             {title: 'BlockOutgoingAddress', value: AccountRestrictionFlags.BlockOutgoingAddress},
@@ -43,13 +41,12 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
 
     /**
      * Resolves a restriction account mosaic flag provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'AllowMosaic', value: AccountRestrictionFlags.AllowMosaic},
             {title: 'BlockMosaic', value: AccountRestrictionFlags.BlockMosaic},
@@ -72,13 +69,12 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
 
     /**
      * Resolves a restriction account operation flag provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'AllowOutgoingTransactionType', value: AccountRestrictionFlags.AllowOutgoingTransactionType},
             {title: 'BlockOutgoingTransactionType', value: AccountRestrictionFlags.BlockOutgoingTransactionType},

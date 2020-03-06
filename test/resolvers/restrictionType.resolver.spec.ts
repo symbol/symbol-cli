@@ -8,16 +8,16 @@ describe('Restriction type resolver', () => {
 
         it('should return one of MosaicRestrictionType', async () => {
             const newRestrictionType = 'EQ'
-            const profileOptions = { newRestrictionType } as any
-            expect(await new RestrictionTypeResolver().resolve(profileOptions))
+            const options = { newRestrictionType } as any
+            expect(await new RestrictionTypeResolver().resolve(options))
                 .to.be.equal(MosaicRestrictionType.EQ)
         })
 
         it('should change key', async () => {
             const key = 'EQ'
-            const profileOptions = { key } as any
+            const options = { key } as any
             expect(await new RestrictionTypeResolver()
-                .resolve(profileOptions, undefined, 'altText', 'key'))
+                .resolve(options, 'altText', 'key'))
                 .to.be.equal(MosaicRestrictionType.EQ)
         })
 

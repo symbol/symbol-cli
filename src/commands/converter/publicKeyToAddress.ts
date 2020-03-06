@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
+import {Command, command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({

@@ -1,8 +1,8 @@
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
 import {CreateProfileCommand} from '../../interfaces/create.profile.command'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
+import {command, metadata} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends ProfileOptions {
 }

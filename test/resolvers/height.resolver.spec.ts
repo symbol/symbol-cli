@@ -22,16 +22,16 @@ describe('Height resolver', () => {
 
     it('should return height', async () => {
         const height = '10'
-        const profileOptions = {height} as any
-        expect((await new HeightResolver().resolve(profileOptions)).compact())
+        const options = {height} as any
+        expect((await new HeightResolver().resolve(options)).compact())
             .to.be.equal(10)
     })
 
     it('should change key', async () => {
         const key = '10'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new HeightResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).compact())
+            .resolve(options, 'altText', 'key')).compact())
             .to.be.equal(10)
     })
 

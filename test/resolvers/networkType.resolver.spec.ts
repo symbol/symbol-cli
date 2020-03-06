@@ -23,37 +23,37 @@ describe('Network type resolver', () => {
 
     it('should return MAIN_NET', async () => {
         const network = 'MAIN_NET'
-        const profileOptions = {network} as any
-        expect(await new NetworkResolver().resolve(profileOptions))
+        const options = {network} as any
+        expect(await new NetworkResolver().resolve(options))
             .to.be.equal(NetworkType.MAIN_NET)
     })
 
     it('should return TEST_NET', async () => {
         const network = 'TEST_NET'
-        const profileOptions = {network} as any
-        expect(await new NetworkResolver().resolve(profileOptions))
+        const options = {network} as any
+        expect(await new NetworkResolver().resolve(options))
             .to.be.equal(NetworkType.TEST_NET)
     })
 
     it('should return MIJIN', async () => {
         const network = 'MIJIN'
-        const profileOptions = {network} as any
-        expect(await new NetworkResolver().resolve(profileOptions))
+        const options = {network} as any
+        expect(await new NetworkResolver().resolve(options))
             .to.be.equal(NetworkType.MIJIN)
     })
 
     it('should return MIJIN_TEST', async () => {
         const network = 'MIJIN_TEST'
-        const profileOptions = {network} as any
-        expect(await new NetworkResolver().resolve(profileOptions))
+        const options = {network} as any
+        expect(await new NetworkResolver().resolve(options))
             .to.be.equal(NetworkType.MIJIN_TEST)
     })
 
     it('should change key', async () => {
         const key = 'MIJIN_TEST'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new NetworkResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.equal(NetworkType.MIJIN_TEST)
     })
 

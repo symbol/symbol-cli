@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
+import {HttpErrorHandler} from '../services/httpErrorHandler.service'
+import {ProfileCommand, ProfileOptions} from './profile.command'
 import chalk from 'chalk'
 import {option} from 'clime'
 import {Address, Listener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionHttp } from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
-import {ProfileCommand, ProfileOptions} from './profile.command'
-import {HttpErrorHandler} from '../services/httpErrorHandler.service'
 
 /**
  * Base command class to announce transactions.

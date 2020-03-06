@@ -23,16 +23,16 @@ describe('Private key resolver', () => {
 
     it('should return private key', async () => {
         const privateKey = '0000000000000000000000000000000000000000000000000000000000000000'
-        const profileOptions = {privateKey} as any
-        expect(await new PrivateKeyResolver().resolve(profileOptions))
+        const options = {privateKey} as any
+        expect(await new PrivateKeyResolver().resolve(options))
             .to.be.equal(privateKey)
     })
 
     it('should change key', async () => {
         const key = '0000000000000000000000000000000000000000000000000000000000000000'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new PrivateKeyResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.equal(key)
     })
 

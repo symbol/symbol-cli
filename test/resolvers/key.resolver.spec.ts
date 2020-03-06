@@ -23,16 +23,16 @@ describe('Key resolver', () => {
 
     it('should return key', async () => {
         const key = KeyGenerator.generateUInt64Key('test').toHex()
-        const profileOptions = {key} as any
-        expect((await new KeyResolver().resolve(profileOptions)).toHex())
+        const options = {key} as any
+        expect((await new KeyResolver().resolve(options)).toHex())
             .to.be.equal(key)
     })
 
     it('should change key', async () => {
         const k1 = KeyGenerator.generateUInt64Key('test').toHex()
-        const profileOptions = {k1} as any
+        const options = {k1} as any
         expect((await new KeyResolver()
-            .resolve(profileOptions, undefined, 'altText', 'k1')).toHex())
+            .resolve(options, 'altText', 'k1')).toHex())
             .to.be.equal(k1)
     })
 

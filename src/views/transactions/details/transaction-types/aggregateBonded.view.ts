@@ -16,9 +16,9 @@
  *
  */
 
-import {AggregateTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 import {AggregateView} from './aggregate.view'
+import {AggregateTransaction} from 'symbol-sdk'
 
 export class AggregateBondedView extends AggregateView {
   /**

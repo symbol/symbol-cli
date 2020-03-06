@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Metadata, MetadataHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {MetadataEntryTable} from './account'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {MetadataEntryTable} from './account'
+import {Metadata, MetadataHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({

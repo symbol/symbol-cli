@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {BlockHttp} from 'symbol-sdk'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
+import {BlockHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AccountTransactionsOptions {
     @option({

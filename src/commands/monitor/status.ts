@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
-import {Listener} from 'symbol-sdk'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {Listener} from 'symbol-sdk'
 
 @command({
     description: 'Monitor transaction status error',

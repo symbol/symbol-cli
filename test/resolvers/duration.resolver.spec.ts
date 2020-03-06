@@ -22,16 +22,16 @@ describe('Duration resolver', () => {
 
     it('should return duration', async () => {
         const duration = '10'
-        const profileOptions = {duration} as any
-        expect((await new DurationResolver().resolve(profileOptions)).compact())
+        const options = {duration} as any
+        expect((await new DurationResolver().resolve(options)).compact())
             .to.be.equal(10)
     })
 
     it('should change key', async () => {
         const key = '10'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new DurationResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).compact())
+            .resolve(options, 'altText', 'key')).compact())
             .to.be.equal(10)
     })
 

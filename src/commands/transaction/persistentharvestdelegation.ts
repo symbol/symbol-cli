@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
@@ -24,6 +22,8 @@ import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -55,7 +55,7 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
         const remotePrivateKey = await new PrivateKeyResolver()
-            .resolve(options, undefined, 'Enter the remote account private key:', 'remotePrivateKey')
+            .resolve(options, 'Enter the remote account private key:', 'remotePrivateKey')
         const recipientPublicAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
                 'Enter the public key of the node:', 'recipientPublicKey')

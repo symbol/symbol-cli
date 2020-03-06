@@ -1,20 +1,18 @@
-import {UInt64} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {KeyValidator} from '../validators/key.validator'
 import {Resolver} from './resolver'
+import {UInt64} from 'symbol-sdk'
+import {Options} from 'clime'
 
 export class KeyResolver implements Resolver {
     /**
      * Resolves a string key provided by user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<UInt64>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UInt64> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<UInt64> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'key',
             () => undefined,

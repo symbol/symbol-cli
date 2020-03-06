@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {HeightResolver} from '../../resolvers/height.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
 import {BlockHttp, BlockInfo, NetworkType} from 'symbol-sdk'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {HeightResolver} from '../../resolvers/height.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({

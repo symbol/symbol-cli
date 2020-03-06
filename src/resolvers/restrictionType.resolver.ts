@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-import {MosaicRestrictionType} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile.model'
 import {OptionsChoiceResolver} from '../options-resolver'
-import {Resolver} from './resolver'
 import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator'
+import {Resolver} from './resolver'
+import {MosaicRestrictionType} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Restriction type resolver
@@ -28,13 +27,12 @@ import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.vali
 export class RestrictionTypeResolver implements Resolver {
     /**
      * Resolve a restriction type provided by a user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @return {Promise<number>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<number> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
         const choices = [
             {title: 'NONE', value: MosaicRestrictionType.NONE},
             {title: 'EQ', value: MosaicRestrictionType.EQ},

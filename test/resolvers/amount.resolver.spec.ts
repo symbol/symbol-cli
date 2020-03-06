@@ -22,16 +22,16 @@ describe('Amount resolver', () => {
 
     it('should return amount', async () => {
         const amount = '10'
-        const profileOptions = {amount} as any
-        expect((await new AmountResolver().resolve(profileOptions)).compact())
+        const options = {amount} as any
+        expect((await new AmountResolver().resolve(options)).compact())
             .to.be.equal(10)
     })
 
     it('should change key', async () => {
         const key = '10'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new AmountResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).compact())
+            .resolve(options, 'altText', 'key')).compact())
             .to.be.equal(10)
     })
 

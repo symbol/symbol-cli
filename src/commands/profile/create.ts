@@ -15,9 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
-import {SimpleWallet} from 'symbol-sdk'
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
 import {DefaultResolver} from '../../resolvers/default.resolver'
 import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
@@ -25,6 +22,9 @@ import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PasswordResolver} from '../../resolvers/password.resolver'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
 import {URLResolver} from '../../resolvers/url.resolver'
+import {SimpleWallet} from 'symbol-sdk'
+import {command, metadata} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends CreateProfileOptions {}
 

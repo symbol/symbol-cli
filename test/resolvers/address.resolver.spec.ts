@@ -23,16 +23,16 @@ describe('Address resolver', () => {
 
     it('should return address', async () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
-        const profileOptions = {address} as any
-        expect((await new AddressResolver().resolve(profileOptions)).plain())
+        const options = {address} as any
+        expect((await new AddressResolver().resolve(options)).plain())
             .to.be.equal(address)
     })
 
     it('should change key', async () => {
         const key = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new AddressResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).plain())
+            .resolve(options, undefined, 'altText', 'key')).plain())
             .to.be.equal(key)
     })
 
@@ -43,15 +43,15 @@ describe('Recipient address alias resolver', () => {
 
     it('should return alias', async () => {
         const address = '@alias'
-        const profileOptions = {address} as any
-        expect(await new AddressAliasResolver().resolve(profileOptions))
+        const options = {address} as any
+        expect(await new AddressAliasResolver().resolve(options))
             .to.be.instanceOf(NamespaceId)
     })
 
     it('should return address', async () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
-        const profileOptions = {address} as any
-        const resolvedAddress = await new AddressAliasResolver().resolve(profileOptions)
+        const options = {address} as any
+        const resolvedAddress = await new AddressAliasResolver().resolve(options)
         expect(resolvedAddress).instanceof(Address)
         expect((resolvedAddress as Address).plain())
             .to.be.equal(address)
@@ -59,9 +59,9 @@ describe('Recipient address alias resolver', () => {
 
     it('should change key', async () => {
         const key = '@alias'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new AddressAliasResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, undefined, 'altText', 'key'))
             .to.be.instanceOf(NamespaceId)
     })
 

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {AccountLinkTransaction, Deadline} from 'symbol-sdk'
 import {
     AnnounceTransactionsCommand,
     AnnounceTransactionsOptions,
@@ -27,6 +25,8 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {AccountLinkTransaction, Deadline} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

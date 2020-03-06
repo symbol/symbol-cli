@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../models/profile.model'
 import {ProfileRepository} from '../respositories/profile.repository'
+import {SimpleWallet} from 'symbol-sdk'
 
 /**
  * Profile service

@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {PayloadResolver} from '../../resolvers/payload.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {Command, command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({

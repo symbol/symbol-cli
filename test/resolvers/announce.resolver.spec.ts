@@ -21,7 +21,7 @@ import {AnnounceResolver} from '../../src/resolvers/announce.resolver'
 describe('Announce resolver', () => {
 
     it('should return boolean', async () => {
-        const profileOptions = {
+        const options = {
             announce: true,
             url: '',
             network: '',
@@ -30,7 +30,7 @@ describe('Announce resolver', () => {
             generationHash: '1',
             maxFee: '1',
             sync: false}
-        expect(await new AnnounceResolver().resolve(profileOptions)).to.be.equal(true)
+        expect(await new AnnounceResolver().resolve(options)).to.be.equal(true)
     })
 
 })

@@ -24,16 +24,16 @@ describe('Secret resolver', () => {
 
     it('should return public key', async () => {
         const secret = 'secret'
-        const profileOptions = {secret} as any
-        expect(await new SecretResolver().resolve(profileOptions))
+        const options = {secret} as any
+        expect(await new SecretResolver().resolve(options))
             .to.be.equal(secret)
     })
 
     it('should change key', async () => {
         const key = 'secret'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new SecretResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.equal(key)
     })
 

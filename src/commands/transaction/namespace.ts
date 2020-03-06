@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {DurationResolver} from '../../resolvers/duration.resolver'
@@ -24,6 +22,8 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -74,7 +74,7 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options)
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
-        const name = await new NamespaceNameStringResolver().resolve(options, undefined, undefined, 'name')
+        const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name')
         const namespaceType = await new NamespaceTypeResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
 
@@ -85,7 +85,7 @@ export default class extends AnnounceTransactionsCommand {
                 Deadline.create(), name, duration, profile.networkType, maxFee)
         } else {
             const parentName = await new NamespaceNameStringResolver()
-                .resolve(options, undefined, 'Enter the parent namespace name:', 'parentName')
+                .resolve(options, 'Enter the parent namespace name:', 'parentName')
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), name, parentName, profile.networkType, maxFee)
         }

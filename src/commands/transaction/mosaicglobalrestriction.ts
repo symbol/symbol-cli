@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {KeyResolver} from '../../resolvers/key.resolver'
@@ -26,6 +24,8 @@ import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver'
 import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -81,7 +81,7 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(password)
         const mosaicId = await new MosaicIdAliasResolver().resolve(options)
         const newRestrictionType = await new RestrictionTypeResolver().resolve(options)
-        const restrictionKey = await new KeyResolver().resolve(options, undefined, undefined, 'restrictionKey')
+        const restrictionKey = await new KeyResolver().resolve(options, undefined, 'restrictionKey')
         const newRestrictionValue = await new RestrictionValueResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
         const referenceMosaicId = new MosaicIdAliasResolver().optionalResolve(options)

@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -26,6 +24,8 @@ import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -69,7 +69,7 @@ export default class extends AnnounceTransactionsCommand {
         const targetAddress = await new AddressAliasResolver()
             .resolve(options, undefined, 'Enter the restricted target address or alias:', 'targetAddress')
         const restrictionKey = await new KeyResolver()
-            .resolve(options, undefined, undefined, 'restrictionKey')
+            .resolve(options, undefined, 'restrictionKey')
         const restrictionValue = await new RestrictionValueResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
 

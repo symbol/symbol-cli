@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
-import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'symbol-sdk'
-import {merge} from 'rxjs'
 import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import chalk from 'chalk'
+import {command, metadata} from 'clime'
+import {AggregateTransaction, BlockInfo, Listener, Transaction, TransactionStatusError} from 'symbol-sdk'
+import {merge} from 'rxjs'
 
 @command({
     description: 'Monitors new blocks, confirmed, aggregate bonded added, and status errors related to an account.',

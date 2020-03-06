@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, Mosaic, SecretLockTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AmountResolver} from '../../resolvers/amount.resolver'
@@ -27,6 +25,8 @@ import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
 import {SecretResolver} from '../../resolvers/secret.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, Mosaic, SecretLockTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -81,13 +81,13 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
         const mosaicId = await new MosaicIdAliasResolver()
-            .resolve(options, undefined, 'Enter the locked mosaic identifier or alias:')
+            .resolve(options, 'Enter the locked mosaic identifier or alias:')
         const amount = await new AmountResolver()
-            .resolve(options, undefined, 'Enter the absolute amount of mosaic units to lock:')
+            .resolve(options, 'Enter the absolute amount of mosaic units to lock:')
         const recipientAddress = await new AddressAliasResolver()
             .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked:', 'recipientAddress')
         const duration = await new DurationResolver()
-            .resolve(options, undefined, 'Enter the number of blocks for which a lock should be valid:')
+            .resolve(options, 'Enter the number of blocks for which a lock should be valid:')
         const secret = await new SecretResolver().resolve(options)
         const hashAlgorithm = await new HashAlgorithmResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)

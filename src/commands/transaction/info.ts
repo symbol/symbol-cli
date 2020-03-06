@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {TransactionHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HashResolver} from '../../resolvers/hash.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {TransactionHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({

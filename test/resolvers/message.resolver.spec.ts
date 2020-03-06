@@ -22,16 +22,16 @@ describe('Message resolver', () => {
 
     it('should return message', async () => {
         const message = '10'
-        const profileOptions = {message} as any
-        expect(await new MessageResolver().resolve(profileOptions))
+        const options = {message} as any
+        expect(await new MessageResolver().resolve(options))
             .to.be.equal('10')
     })
 
     it('should change key', async () => {
         const key = '10'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new MessageResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, undefined, 'altText', 'key'))
             .to.be.equal('10')
     })
 

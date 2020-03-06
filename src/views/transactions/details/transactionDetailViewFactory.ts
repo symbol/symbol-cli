@@ -16,7 +16,6 @@
  *
  */
 
-import {Transaction, TransactionType} from 'symbol-sdk'
 
 import {
  AccountAddressRestrictionView,
@@ -42,6 +41,7 @@ import {
  TransferView,
 } from './transaction-types'
 import {CellRecord} from './transaction.view'
+import {Transaction, TransactionType} from 'symbol-sdk'
 
 /**
  * @param  {Transaction} transaction

@@ -22,25 +22,24 @@ describe('Url resolver', () => {
 
     it('should return url', async () => {
         const url = 'https://localhost:3000'
-        const profileOptions = {url} as any
-        expect(await new URLResolver().resolve(profileOptions))
+        const options = {url} as any
+        expect(await new URLResolver().resolve(options))
             .to.be.equal(url)
     })
 
     it('should return url without trailing backslash', async () => {
         const url = 'https://localhost:3000/'
-        const profileOptions = {url} as any
-        expect(await new URLResolver().resolve(profileOptions))
+        const options = {url} as any
+        expect(await new URLResolver().resolve(options))
             .to.be.equal('https://localhost:3000')
     })
 
     it('should change key', async () => {
         const key = 'https://localhost:3000/'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new URLResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, undefined, 'altText', 'key'))
             .to.be.equal('https://localhost:3000')
     })
-
 
 })

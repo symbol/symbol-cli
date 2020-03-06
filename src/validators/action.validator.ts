@@ -16,8 +16,8 @@
  *
  */
 import {ActionType} from '../models/action.enum'
-import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
 import {Validator} from './validator'
+import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
 
 /**
  * Action validator

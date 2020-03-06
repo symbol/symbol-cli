@@ -18,9 +18,8 @@
 import {expect} from 'chai'
 import {
     AccountRestrictionFlagsValidator,
-    MosaicRestrictionTypeValidator
+    MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator'
-import {AccountRestrictionFlags, MosaicRestrictionType} from 'symbol-sdk'
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {

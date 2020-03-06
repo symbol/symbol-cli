@@ -1,4 +1,12 @@
-import {command, metadata, option} from 'clime'
+import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {KeyResolver} from '../../resolvers/key.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {NamespaceIdResolver} from '../../resolvers/namespace.resolver'
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
+import {StringResolver} from '../../resolvers/string.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from '../../resolvers/password.resolver'
 import {
     AggregateTransaction,
     Deadline,
@@ -9,15 +17,7 @@ import {
     NetworkCurrencyPublic,
     UInt64,
 } from 'symbol-sdk'
-import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {KeyResolver} from '../../resolvers/key.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {NamespaceIdResolver} from '../../resolvers/namespace.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {StringResolver} from '../../resolvers/string.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -113,7 +113,7 @@ export default class extends AnnounceTransactionsCommand {
             )
             const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash)
 
-            const maxFeeHashLock = await new MaxFeeResolver().resolve(options, undefined,
+            const maxFeeHashLock = await new MaxFeeResolver().resolve(options,
                 'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(),

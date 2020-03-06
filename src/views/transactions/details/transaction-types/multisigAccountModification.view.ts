@@ -16,8 +16,8 @@
  *
  */
 
-import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'symbol-sdk'
 
 export class MultisigAccountModificationView {
   /**

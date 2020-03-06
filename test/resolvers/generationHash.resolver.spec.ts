@@ -21,8 +21,8 @@ import {GenerationHashResolver} from '../../src/resolvers/generationHash.resolve
 describe('Generation hash resolver', () => {
 
     it('should return generation hash', async () => {
-        const profileOptions = {generationHash: '1'} as any
-        expect(await new GenerationHashResolver().resolve(profileOptions))
+        const options = {generationHash: '1'} as any
+        expect(await new GenerationHashResolver().resolve(options))
             .to.be.equal('1')
     })
 

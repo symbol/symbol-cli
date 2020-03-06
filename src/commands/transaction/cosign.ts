@@ -17,18 +17,6 @@
  *
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
-import {
-    AccountHttp,
-    Address,
-    AggregateTransaction,
-    CosignatureSignedTransaction,
-    CosignatureTransaction,
-    QueryParams,
-    TransactionHttp,
-} from 'symbol-sdk'
-import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
 import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ProfileCommand} from '../../interfaces/profile.command'
 import {Profile} from '../../models/profile.model'
@@ -38,6 +26,18 @@ import {SequentialFetcher} from '../../services/sequentialFetcher.service'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {filter, flatMap, switchMap, tap} from 'rxjs/operators'
+import {
+    AccountHttp,
+    Address,
+    AggregateTransaction,
+    CosignatureSignedTransaction,
+    CosignatureTransaction,
+    QueryParams,
+    TransactionHttp,
+} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -64,7 +64,7 @@ export default class extends ProfileCommand {
         this.profile = this.getProfile(this.options)
 
         const hash = await new HashResolver()
-        .resolve(options, undefined, '\'Enter the aggregate bonded transaction hash to cosign: ')
+        .resolve(options, '\'Enter the aggregate bonded transaction hash to cosign: ')
 
         this.spinner.start()
         const sequentialFetcher = this.getSequentialFetcher()

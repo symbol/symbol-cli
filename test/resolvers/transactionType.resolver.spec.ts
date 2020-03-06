@@ -23,16 +23,16 @@ describe('Transaction type resolver', () => {
 
     it('should return Transfer Transaction', async () => {
         const transactionType = '4154'
-        const profileOptions = {transactionType} as any
-        expect(await new TransactionTypeResolver().resolve(profileOptions))
+        const options = {transactionType} as any
+        expect(await new TransactionTypeResolver().resolve(options))
             .to.be.equal(TransactionType.TRANSFER)
     })
 
     it('should change key', async () => {
         const key = '4154'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new TransactionTypeResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.equal(TransactionType.TRANSFER)
     })
 

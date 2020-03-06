@@ -22,8 +22,8 @@ describe('Public key resolver', () => {
 
     it('should return public key', async () => {
         const publicKey = '0000000000000000000000000000000000000000000000000000000000000000'
-        const profileOptions = {publicKey} as any
-        expect((await new PublicKeyResolver().resolve(profileOptions)).publicKey)
+        const options = {publicKey} as any
+        expect((await new PublicKeyResolver().resolve(options)).publicKey)
             .to.be.equal(publicKey)
     })
 
@@ -33,8 +33,8 @@ describe('Multisig account public key resolver', () => {
 
     it('should return public key', async () => {
         const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000'
-        const profileOptions = {multisigAccountPublicKey} as any
-        expect((await new PublicKeyResolver().resolve(profileOptions, undefined,
+        const options = {multisigAccountPublicKey} as any
+        expect((await new PublicKeyResolver().resolve(options, undefined,
             'test', 'multisigAccountPublicKey')).publicKey)
             .to.be.equal(multisigAccountPublicKey)
     })
@@ -46,8 +46,8 @@ describe('Cosignatory public key resolver', () => {
     it('should return public key', async () => {
         const cosignatoryPublicKey = '0000000000000000000000000000000000000000000000000000000000000000,' +
             '0000000000000000000000000000000000000000000000000000000000000001'
-        const profileOptions = {cosignatoryPublicKey} as any
-        const resolution = await new CosignatoryPublicKeyResolver().resolve(profileOptions)
+        const options = {cosignatoryPublicKey} as any
+        const resolution = await new CosignatoryPublicKeyResolver().resolve(options)
         expect(resolution[0].publicKey)
             .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000')
         expect(resolution[1].publicKey)
@@ -57,9 +57,9 @@ describe('Cosignatory public key resolver', () => {
     it('should change key', async () => {
         const key = '0000000000000000000000000000000000000000000000000000000000000000,' +
             '0000000000000000000000000000000000000000000000000000000000000001'
-        const profileOptions = {key} as any
+        const options = {key} as any
         const resolution = await new CosignatoryPublicKeyResolver()
-            .resolve(profileOptions,undefined, 'altText', 'key')
+            .resolve(options,undefined, 'altText', 'key')
         expect(resolution[0].publicKey)
             .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000')
         expect(resolution[1].publicKey)

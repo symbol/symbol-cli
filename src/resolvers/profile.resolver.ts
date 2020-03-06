@@ -1,5 +1,4 @@
 import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 
@@ -10,13 +9,12 @@ export class ProfileNameResolver implements Resolver {
 
     /**
      * Resolves a profile name provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<string>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+    async resolve(options: ProfileOptions, altText?: string, altKey?: string): Promise<string> {
         return await OptionsResolver(options,
             altKey ? altKey : 'profile',
             () => undefined,

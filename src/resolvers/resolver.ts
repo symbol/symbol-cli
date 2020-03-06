@@ -1,6 +1,4 @@
 import {Options} from 'clime'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile.model'
 
 /**
  * URL resolver
@@ -9,8 +7,8 @@ export interface Resolver {
 
     /**
      * Resolves an url provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
+     * @param {any} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {any}

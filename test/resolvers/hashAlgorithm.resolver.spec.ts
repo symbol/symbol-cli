@@ -22,15 +22,15 @@ import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 describe('Hash algorithm resolver', () => {
 
     it('should return hash algorithm', async () => {
-        const profileOptions = {hashAlgorithm: 'Op_Sha3_256'} as any
-        expect(await new HashAlgorithmResolver().resolve(profileOptions))
+        const options = {hashAlgorithm: 'Op_Sha3_256'} as any
+        expect(await new HashAlgorithmResolver().resolve(options))
             .to.be.equal(HashType.Op_Sha3_256)
     })
 
     it('should change key', async () => {
-        const profileOptions = {key: 'Op_Sha3_256'} as any
+        const options = {key: 'Op_Sha3_256'} as any
         expect(await new HashAlgorithmResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.equal(HashType.Op_Sha3_256)
     })
 })

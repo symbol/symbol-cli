@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, SecretProofTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -25,6 +23,8 @@ import {ProofResolver} from '../../resolvers/proof.resolver'
 import {SecretResolver} from '../../resolvers/secret.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, SecretProofTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
 

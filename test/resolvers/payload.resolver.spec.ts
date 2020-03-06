@@ -30,8 +30,8 @@ describe('Payload resolver', () => {
             EmptyMessage,
             NetworkType.MIJIN_TEST)
         const payload = transaction.serialize()
-        const profileOptions = {payload} as any
-        expect(await new PayloadResolver().resolve(profileOptions))
+        const options = {payload} as any
+        expect(await new PayloadResolver().resolve(options))
             .to.be.deep.equal(transaction)
     })
 
@@ -44,9 +44,9 @@ describe('Payload resolver', () => {
             EmptyMessage,
             NetworkType.MIJIN_TEST)
         const key = transaction.serialize()
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new PayloadResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.deep.equal(transaction)
     })
 

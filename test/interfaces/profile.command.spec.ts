@@ -46,14 +46,14 @@ describe('Profile Command', () => {
 
     it('should get a new profile', () => {
         new ProfileRepository(repositoryFileUrl).save(wallet, 'http://localhost:3000', '1')
-        const profileOptions = {profile: wallet.name}
-        const profile = command['getProfile'](profileOptions)
+        const options = {profile: wallet.name}
+        const profile = command['getProfile'](options)
         expect(profile.name).to.equal(wallet.name)
     })
 
     it('should not get a profile that does not exist', () => {
-        const profileOptions = {profile: 'random'}
-        expect(() => command['getProfile'](profileOptions))
+        const options = {profile: 'random'}
+        expect(() => command['getProfile'](options))
             .to.throws(Error)
     })
 

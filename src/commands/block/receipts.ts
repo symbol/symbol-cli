@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {ReceiptHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {ReceiptService} from '../../services/receipt.service'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {ReceiptHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({

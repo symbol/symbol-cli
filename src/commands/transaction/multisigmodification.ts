@@ -14,16 +14,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
-import {
-    AggregateTransaction,
-    Deadline,
-    HashLockTransaction,
-    MultisigAccountModificationTransaction,
-    NetworkCurrencyPublic,
-    UInt64,
-} from 'symbol-sdk'
 import {
     AnnounceAggregateTransactionsOptions,
     AnnounceTransactionsCommand,
@@ -35,6 +25,16 @@ import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/p
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {ActionType} from '../../models/action.enum'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {
+    AggregateTransaction,
+    Deadline,
+    HashLockTransaction,
+    MultisigAccountModificationTransaction,
+    NetworkCurrencyPublic,
+    UInt64,
+} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -90,7 +90,7 @@ export default class extends AnnounceTransactionsCommand {
                 'Enter the multisig account public key:', 'multisigAccountPublicKey')
         const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile)
         const maxFee = await new MaxFeeResolver().resolve(options)
-        const maxFeeHashLock = await new MaxFeeResolver().resolve(options, undefined,
+        const maxFeeHashLock = await new MaxFeeResolver().resolve(options,
             'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(

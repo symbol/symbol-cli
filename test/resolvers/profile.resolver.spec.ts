@@ -22,16 +22,16 @@ describe('Profile name resolver', () => {
 
     it('should return profile name', async () => {
         const profile = 'test'
-        const profileOptions = {profile} as any
-        expect(await new ProfileNameResolver().resolve(profileOptions))
+        const options = {profile} as any
+        expect(await new ProfileNameResolver().resolve(options))
             .to.be.equal(profile)
     })
 
     it('should change key', async () => {
         const key = 'test'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect(await new ProfileNameResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key'))
+            .resolve(options, 'altText', 'key'))
             .to.be.equal(key)
     })
 

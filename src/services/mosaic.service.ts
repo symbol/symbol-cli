@@ -16,7 +16,6 @@
  *
  */
 
-import {ExpectedError} from 'clime'
 import {Mosaic, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
 
 /**

@@ -16,9 +16,9 @@
  *
  */
 
-import {LockFundsTransaction} from 'symbol-sdk'
 import {MosaicsView} from '../../../mosaics.view'
 import {CellRecord} from '../transaction.view'
+import {LockFundsTransaction} from 'symbol-sdk'
 
 export class LockFundsView {
   /**

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {Validator} from 'clime'
 import {MosaicService} from '../services/mosaic.service'
+import {Validator} from 'clime'
 
 /**
  * Mosaic validator

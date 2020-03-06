@@ -15,8 +15,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
@@ -26,6 +24,8 @@ import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictio
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {ActionType} from '../../models/action.enum'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({

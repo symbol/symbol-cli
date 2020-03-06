@@ -16,9 +16,9 @@
  *
  */
 
-import {HashType, SecretProofTransaction} from 'symbol-sdk'
 import {RecipientsView} from '../../../recipients.view'
 import {CellRecord} from '../transaction.view'
+import {HashType, SecretProofTransaction} from 'symbol-sdk'
 
 export class SecretProofView {
   /**

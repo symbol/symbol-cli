@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {AccountOperationRestrictionTransaction, AccountRestrictionFlags, TransactionType} from 'symbol-sdk'
 
 export class AccountOperationRestrictionView {
   /**

@@ -22,16 +22,16 @@ describe('Password resolver', () => {
 
     it('should return password', async () => {
         const password = '12345678'
-        const profileOptions = {password} as any
-        expect((await new PasswordResolver().resolve(profileOptions)).value)
+        const options = {password} as any
+        expect((await new PasswordResolver().resolve(options)).value)
             .to.be.equal(password)
     })
 
     it('should change key', async () => {
         const key = '12345678'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new PasswordResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).value)
+            .resolve(options, 'altText', 'key')).value)
             .to.be.equal(key)
     })
 

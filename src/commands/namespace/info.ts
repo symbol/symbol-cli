@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
 import {NamespaceHttp, NamespaceInfo} from 'symbol-sdk'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({

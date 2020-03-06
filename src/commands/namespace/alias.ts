@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import {command, metadata, option} from 'clime'
 import {NamespaceHttp} from 'symbol-sdk'
 import {forkJoin, of} from 'rxjs'
 import {catchError} from 'rxjs/operators'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({

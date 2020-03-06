@@ -15,18 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
-import {
-    AggregateTransaction,
-    Deadline,
-    MosaicDefinitionTransaction,
-    MosaicId,
-    MosaicNonce,
-    MosaicSupplyChangeAction,
-    MosaicSupplyChangeTransaction,
-    UInt64,
-} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AmountResolver} from '../../resolvers/amount.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -37,6 +25,18 @@ import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import { OptionsConfirmResolver } from '../../options-resolver'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {
+    AggregateTransaction,
+    Deadline,
+    MosaicDefinitionTransaction,
+    MosaicId,
+    MosaicNonce,
+    MosaicSupplyChangeAction,
+    MosaicSupplyChangeTransaction,
+    UInt64,
+} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -109,7 +109,7 @@ export default class extends AnnounceTransactionsCommand {
         }
         const divisibility = await new DivisibilityResolver().resolve(options)
         const mosaicFlags = await new MosaicFlagsResolver().resolve(options)
-        const amount = await new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ')
+        const amount = await new AmountResolver().resolve(options, 'Amount of mosaics units to create: ')
         const maxFee = await new MaxFeeResolver().resolve(options)
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(

@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import {Spinner} from 'cli-spinner'
-import {Command, ExpectedError, option, Options} from 'clime'
 import {Profile} from '../models/profile.model'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
+import {Command, ExpectedError, option, Options} from 'clime'
+import {Spinner} from 'cli-spinner'
 
 /**
  * Base command class to use the stored profile.

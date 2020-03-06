@@ -23,31 +23,31 @@ describe('Namespace name resolver', () => {
 
     it('should return namespace id', async () => {
         const namespaceName = 'test'
-        const profileOptions = {namespaceName} as any
-        expect((await new NamespaceNameResolver().resolve(profileOptions)).toHex())
+        const options = {namespaceName} as any
+        expect((await new NamespaceNameResolver().resolve(options)).toHex())
             .to.be.equal(new NamespaceId(namespaceName).toHex())
     })
 
     it('should return namespaceId with alt key', async () => {
         const name = 'test'
-        const profileOptions = {name} as any
+        const options = {name} as any
         expect((await new NamespaceNameResolver()
-            .resolve(profileOptions, undefined, '', 'name')).toHex())
+            .resolve(options, '', 'name')).toHex())
             .to.be.equal(new NamespaceId(name).toHex())
     })
 
     it('should return namespace full name', async () => {
         const namespaceName = 'test'
-        const profileOptions = {namespaceName} as any
-        expect((await new NamespaceNameResolver().resolve(profileOptions)).fullName)
+        const options = {namespaceName} as any
+        expect((await new NamespaceNameResolver().resolve(options)).fullName)
             .to.be.equal('test')
     })
 
     it('should change key', async () => {
         const key = 'test'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new NamespaceNameResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).fullName)
+            .resolve(options, 'altText', 'key')).fullName)
             .to.be.equal('test')
     })
 
@@ -58,16 +58,16 @@ describe('Namespace id resolver', () => {
 
     it('should return namespaceId', async () => {
         const namespaceId = '85BBEA6CC462B244'
-        const profileOptions = {namespaceId} as any
-        expect((await new NamespaceIdResolver().resolve(profileOptions)).toHex())
+        const options = {namespaceId} as any
+        expect((await new NamespaceIdResolver().resolve(options)).toHex())
             .to.be.equal(namespaceId)
     })
 
     it('should return namespaceId', async () => {
         const key = '85BBEA6CC462B244'
-        const profileOptions = {key} as any
+        const options = {key} as any
         expect((await new NamespaceIdResolver()
-            .resolve(profileOptions, undefined, 'altText', 'key')).toHex())
+            .resolve(options, 'altText', 'key')).toHex())
             .to.be.equal(key)
     })
 })
@@ -75,7 +75,7 @@ describe('Namespace id resolver', () => {
 describe('Root namespace resolver', () => {
 
     it('should return RootNamespace', async () => {
-        const profileOptions = {
+        const options = {
             name: 'bar',
             parentName: 'foo',
             rootnamespace: true,
@@ -87,11 +87,11 @@ describe('Root namespace resolver', () => {
             sync: false,
             announce: false}
         expect(await new NamespaceTypeResolver()
-            .resolve(profileOptions)).to.be.equal(NamespaceRegistrationType.RootNamespace)
+            .resolve(options)).to.be.equal(NamespaceRegistrationType.RootNamespace)
     })
 
     it('should return SubNamespace', async () => {
-        const profileOptions = {
+        const options = {
             name: 'bar',
             parentName: 'foo',
             rootnamespace: false,
@@ -103,7 +103,7 @@ describe('Root namespace resolver', () => {
             sync: false,
             announce: false}
         expect(await new NamespaceTypeResolver()
-            .resolve(profileOptions, undefined, 'altText'))
+            .resolve(options, 'altText'))
             .to.be.equal(NamespaceRegistrationType.SubNamespace)
     })
 

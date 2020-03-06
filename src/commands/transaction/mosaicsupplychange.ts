@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {SupplyActionResolver} from '../../resolvers/action.resolver'
 import {AmountResolver} from '../../resolvers/amount.resolver'
@@ -24,6 +22,8 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -63,7 +63,7 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options)
         const action = await new SupplyActionResolver().resolve(options)
         const amount = await new AmountResolver()
-            .resolve(options, undefined, 'Enter absolute amount of supply change: ')
+            .resolve(options, 'Enter absolute amount of supply change: ')
         const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = MosaicSupplyChangeTransaction.create(
