@@ -104,7 +104,7 @@ module.exports = {
         "guard-for-in": "error",
         "id-blacklist": "off",
         "id-match": "off",
-        "import/order": "error",
+        "import/order": "off",
         "max-classes-per-file": "off",
         "max-len": [
             "error",
