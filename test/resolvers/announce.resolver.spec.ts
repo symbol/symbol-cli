@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {AnnounceResolver} from '../../src/resolvers/announce.resolver'
+import {expect} from 'chai'
 
 describe('Announce resolver', () => {
 

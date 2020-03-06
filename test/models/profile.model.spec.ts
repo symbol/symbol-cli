@@ -16,9 +16,9 @@
  *
  */
 
+import {Profile} from '../../src/models/profile.model'
 import {expect} from 'chai'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../../src/models/profile.model'
 
 describe('Profile', () => {
     it('should contain the fields', () => {

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {HeightValidator} from '../../src/validators/block.validator'
+import {expect} from 'chai'
 
 describe('block height validator', () => {
 

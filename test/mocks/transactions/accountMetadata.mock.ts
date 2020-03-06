@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountMetadataTransaction, Convert, Deadline, NetworkType, UInt64} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
+import {AccountMetadataTransaction, Convert, Deadline, NetworkType, UInt64} from 'symbol-sdk'
 
 export const unsignedAccountMetadata1 = AccountMetadataTransaction.create(
  Deadline.create(),

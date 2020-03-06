@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {TransactionTypeValidator} from '../../src/validators/transactionType.validator'
+import {expect} from 'chai'
 
 describe('Transaction type validator', () => {
 

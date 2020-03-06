@@ -1,5 +1,5 @@
-import {expect} from 'chai'
 import {RestrictionValueResolver} from '../../src/resolvers/restrictionValue.resolver'
+import {expect} from 'chai'
 
 describe('Restriction value resolver', () => {
 

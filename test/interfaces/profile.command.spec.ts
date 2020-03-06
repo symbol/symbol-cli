@@ -1,8 +1,8 @@
-import {expect} from 'chai'
 import * as fs from 'fs'
-import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ProfileCommand} from '../../src/interfaces/profile.command'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
+import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('Profile Command', () => {
     let repositoryFileUrl: string

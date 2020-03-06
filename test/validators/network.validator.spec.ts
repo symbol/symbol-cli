@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {NetworkValidator} from '../../src/validators/network.validator'
+import {expect} from 'chai'
 
 describe('Network type validator', () => {
 

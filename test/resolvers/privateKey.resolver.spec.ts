@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {PasswordResolver} from '../../src/resolvers/password.resolver'
 import {PrivateKeyResolver} from '../../src/resolvers/privateKey.resolver'
+import {expect} from 'chai'
 
 describe('Private key resolver', () => {
 

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../src/resolvers/publicKey.resolver'
+import {expect} from 'chai'
 
 describe('Public key resolver', () => {
 

@@ -1,5 +1,5 @@
-import {expect} from 'chai'
 import {HashAlgorithmValidator} from '../../src/validators/hashAlgorithm.validator'
+import {expect} from 'chai'
 
 describe('hashAlgorithm validator', () => {
 

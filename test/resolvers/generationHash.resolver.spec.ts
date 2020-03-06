@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {GenerationHashResolver} from '../../src/resolvers/generationHash.resolver'
+import {expect} from 'chai'
 
 describe('Generation hash resolver', () => {
 

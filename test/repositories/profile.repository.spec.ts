@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import * as fs from 'fs'
-import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
+import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('ProfileRepository', () => {
 

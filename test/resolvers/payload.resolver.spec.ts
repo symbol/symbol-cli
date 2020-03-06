@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 import {expect} from 'chai'
 import {Account, Deadline, EmptyMessage, NetworkType, TransferTransaction} from 'symbol-sdk'
-import {PayloadResolver} from '../../src/resolvers/payload.resolver'
 
 describe('Payload resolver', () => {
 

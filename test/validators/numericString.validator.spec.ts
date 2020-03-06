@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {NumericStringValidator} from '../../src/validators/numericString.validator'
+import {expect} from 'chai'
 
 describe('Numeric string validator', () => {
 

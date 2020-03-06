@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {MessageResolver} from '../../src/resolvers/message.resolver'
+import {expect} from 'chai'
 
 describe('Message resolver', () => {
 

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {AmountResolver} from '../../src/resolvers/amount.resolver'
+import {expect} from 'chai'
 
 describe('Amount resolver', () => {
 

@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {KeyResolver} from '../../src/resolvers/key.resolver'
 import {expect} from 'chai'
 import {KeyGenerator} from 'symbol-sdk'
-import {KeyResolver} from '../../src/resolvers/key.resolver'
 
 describe('Key resolver', () => {
 

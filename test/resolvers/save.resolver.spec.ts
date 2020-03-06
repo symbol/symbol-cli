@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {SaveResolver} from '../../src/resolvers/save.resolver'
+import {expect} from 'chai'
 
 describe('Save resolver', () => {
 

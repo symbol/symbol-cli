@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {MosaicIdAliasValidator, MosaicIdValidator} from '../../src/validators/mosaicId.validator'
+import {expect} from 'chai'
 
 describe('Mosaic id validator', () => {
 

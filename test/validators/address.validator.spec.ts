@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {AddressAliasValidator, AddressValidator} from '../../src/validators/address.validator'
+import {expect} from 'chai'
 
 describe('Address validator', () => {
 

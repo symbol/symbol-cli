@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {MaxFeeResolver} from '../../src/resolvers/maxFee.resolver'
+import {expect} from 'chai'
 
 describe('Max fee resolver', () => {
 

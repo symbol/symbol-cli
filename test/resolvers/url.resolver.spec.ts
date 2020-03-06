@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {URLResolver} from '../../src/resolvers/url.resolver'
+import {expect} from 'chai'
 
 describe('Url resolver', () => {
 

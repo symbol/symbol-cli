@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {HashResolver} from '../../src/resolvers/hash.resolver'
+import {expect} from 'chai'
 
 describe('Hash resolver', () => {
 

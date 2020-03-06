@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver'
 import {expect} from 'chai'
 import {Address, NamespaceId} from 'symbol-sdk'
-import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver'
 
 describe('Address resolver', () => {
 

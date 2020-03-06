@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {ReceiptService} from '../../src/services/receipt.service'
+import {expect} from 'chai'
 
 describe('Receipt service', () => {
 

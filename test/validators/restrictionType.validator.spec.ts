@@ -15,11 +15,11 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {
     AccountRestrictionFlagsValidator,
     MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator'
+import {expect} from 'chai'
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {

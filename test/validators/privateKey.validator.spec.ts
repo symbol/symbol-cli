@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {PrivateKeyValidator} from '../../src/validators/privateKey.validator'
+import {expect} from 'chai'
 
 describe('Private key validator', () => {
 

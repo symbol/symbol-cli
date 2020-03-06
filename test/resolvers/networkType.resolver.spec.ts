@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {NetworkResolver} from '../../src/resolvers/network.resolver'
 import {expect} from 'chai'
 import {NetworkType} from 'symbol-sdk'
-import {NetworkResolver} from '../../src/resolvers/network.resolver'
 
 describe('Network type resolver', () => {
 

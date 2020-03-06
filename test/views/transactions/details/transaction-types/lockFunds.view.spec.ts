@@ -1,6 +1,6 @@
-import {expect} from 'chai'
 import {LockFundsView} from '../../../../../src/views/transactions/details/transaction-types'
 import {unsignedLockFunds1} from '../../../../mocks/transactions/lockFunds.mock'
+import {expect} from 'chai'
 
 describe('LockFundsView', () => {
  it('should return a view', () => {

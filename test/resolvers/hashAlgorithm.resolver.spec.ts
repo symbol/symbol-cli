@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 import {expect} from 'chai'
 import {HashType} from 'symbol-sdk'
-import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 
 describe('Hash algorithm resolver', () => {
 

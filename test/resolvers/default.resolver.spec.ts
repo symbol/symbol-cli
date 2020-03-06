@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {DefaultResolver} from '../../src/resolvers/default.resolver'
+import {expect} from 'chai'
 
 describe('Default resolver', () => {
 

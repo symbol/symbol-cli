@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {HeightResolver} from '../../src/resolvers/height.resolver'
+import {expect} from 'chai'
 
 describe('Height resolver', () => {
 

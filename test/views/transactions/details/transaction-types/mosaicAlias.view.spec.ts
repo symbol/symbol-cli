@@ -1,8 +1,8 @@
-import {expect} from 'chai'
-import {AliasAction} from 'symbol-sdk'
 import {MosaicAliasView} from '../../../../../src/views/transactions/details/transaction-types'
 import {mosaicId1} from '../../../../mocks/mosaics.mock'
 import {unsignedMosaicAlias1} from '../../../../mocks/transactions/mosaicAlias.mock'
+import {AliasAction} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('MosaicAliasView', () => {
  it('should return a view', () => {

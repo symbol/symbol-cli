@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {DivisibilityResolver} from '../../src/resolvers/divisibility.resolver'
+import {expect} from 'chai'
 
 describe('Divisibility resolver', () => {
 

@@ -16,9 +16,9 @@
  *
  */
 
-import {AliasAction, Deadline, MosaicAliasTransaction, NetworkType} from 'symbol-sdk'
 import {mosaicId1} from '../mosaics.mock'
 import {namespaceId1} from '../namespaces.mock'
+import {AliasAction, Deadline, MosaicAliasTransaction, NetworkType} from 'symbol-sdk'
 
 export const unsignedMosaicAlias1 = MosaicAliasTransaction.create(
     Deadline.create(),

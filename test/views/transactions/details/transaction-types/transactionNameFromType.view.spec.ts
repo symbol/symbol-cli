@@ -1,6 +1,6 @@
+import {transactionNameFromType} from '../../../../../src/views/transactions/details/transactionNameFromType'
 import {expect} from 'chai'
 import {TransactionType} from 'symbol-sdk'
-import {transactionNameFromType} from '../../../../../src/views/transactions/details/transactionNameFromType'
 
 describe('Transaction name from type', () => {
  it('should return a string for each transaction type', () => {

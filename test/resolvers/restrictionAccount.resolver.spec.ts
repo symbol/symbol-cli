@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {AccountRestrictionFlags} from 'symbol-sdk'
 import {
     RestrictionAccountAddressFlagsResolver,
     RestrictionAccountMosaicFlagsResolver,
     RestrictionAccountOperationFlagsResolver,
 } from '../../src/resolvers/restrictionAccount.resolver'
+import {expect} from 'chai'
+import {AccountRestrictionFlags} from 'symbol-sdk'
 
 describe('Restriction account address flags resolver', () => {
 

@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {MosaicService} from '../../src/services/mosaic.service'
 import {expect} from 'chai'
 import {MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
-import {MosaicService} from '../../src/services/mosaic.service'
 
 describe('Mosaic service', () => {
 

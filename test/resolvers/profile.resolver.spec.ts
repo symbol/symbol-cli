@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
+import {expect} from 'chai'
 
 describe('Profile name resolver', () => {
 

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {BinaryValidator} from '../../src/validators/binary.validator'
+import {expect} from 'chai'
 
 describe('binary validator', () => {
 

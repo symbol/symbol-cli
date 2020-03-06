@@ -16,9 +16,9 @@
  *
  */
 
-import {AggregateTransaction, Deadline, NetworkType} from 'symbol-sdk'
 import {account1} from '../accounts.mock'
 import {unsignedTransfer1, unsignedTransfer2} from '../transactions/transfer.mock'
+import {AggregateTransaction, Deadline, NetworkType} from 'symbol-sdk'
 
 export const unsignedAggregateComplete1 = AggregateTransaction.createComplete(
  Deadline.create(),

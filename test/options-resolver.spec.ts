@@ -16,11 +16,11 @@
  *
  */
 
-import {expect} from 'chai'
 import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '../src/options-resolver'
 import {ActionValidator} from '../src/validators/action.validator'
 import {ActionType} from '../src/models/action.enum'
 import {NumericStringValidator} from '../src/validators/numericString.validator'
+import {expect} from 'chai'
 
 describe('OptionsResolver', () => {
     it('should return the value if contains the commands option is passed', async () => {

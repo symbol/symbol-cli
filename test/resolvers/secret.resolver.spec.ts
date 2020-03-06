@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
 import {ProofResolver} from '../../src/resolvers/proof.resolver'
 import {SecretResolver} from '../../src/resolvers/secret.resolver'
+import {expect} from 'chai'
 
 describe('Secret resolver', () => {
 

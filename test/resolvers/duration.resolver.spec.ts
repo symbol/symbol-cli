@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {DurationResolver} from '../../src/resolvers/duration.resolver'
+import {expect} from 'chai'
 
 describe('Duration resolver', () => {
 

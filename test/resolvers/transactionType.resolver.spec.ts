@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
+import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver'
 import {expect} from 'chai'
 import {TransactionType} from 'symbol-sdk'
-import {TransactionTypeResolver} from '../../src/resolvers/transactionType.resolver'
 
 describe('Transaction type resolver', () => {
 

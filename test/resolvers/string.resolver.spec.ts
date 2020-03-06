@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {StringResolver} from '../../src/resolvers/string.resolver'
+import {expect} from 'chai'
 
 describe('Value resolver', () => {
 

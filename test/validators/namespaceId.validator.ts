@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {NamespaceIdValidator} from '../../src/validators/namespaceId.validator'
+import {expect} from 'chai'
 
 describe('Mosaic id validator', () => {
 

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {ProofResolver} from '../../src/resolvers/proof.resolver'
+import {expect} from 'chai'
 
 describe('Proof resolver', () => {
 
