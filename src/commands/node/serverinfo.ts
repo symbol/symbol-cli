@@ -45,7 +45,7 @@ export class ServerInfoTable {
 }
 
 @command({
-    description: 'Get the REST server components versions',
+    description: 'Get information about the REST instance',
 })
 export default class extends ProfileCommand {
 
