@@ -16,11 +16,11 @@
  *
  */
 
-import {Cell} from 'cli-table3'
-import {AggregateTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
 import {transactionDetailViewFactory} from '../transactionDetailViewFactory'
 import {transactionNameFromType} from '../transactionNameFromType'
+import {AggregateTransaction} from 'symbol-sdk'
+import {Cell} from 'cli-table3'
 
 export abstract class AggregateView {
   /**

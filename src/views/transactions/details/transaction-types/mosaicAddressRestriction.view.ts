@@ -16,9 +16,9 @@
  *
  */
 
-import {MosaicAddressRestrictionTransaction} from 'symbol-sdk'
 import {RecipientsView} from '../../../recipients.view'
 import {CellRecord} from '../transaction.view'
+import {MosaicAddressRestrictionTransaction} from 'symbol-sdk'
 
 export class MosaicAddressRestrictionView {
   /**

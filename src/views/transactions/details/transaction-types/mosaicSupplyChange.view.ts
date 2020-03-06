@@ -16,8 +16,8 @@
  *
  */
 
-import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 
 export class MosaicSupplyChangeView {
   /**

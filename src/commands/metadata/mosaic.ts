@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Metadata, MetadataHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {MetadataEntryTable} from './account'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {MetadataEntryTable} from './account'
+import {Metadata, MetadataHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -40,11 +40,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const mosaicId = new MosaicIdResolver().resolve(options)
+        const mosaicId = await new MosaicIdResolver().resolve(options)
 
+        this.spinner.start()
         const metadataHttp = new MetadataHttp(profile.url)
         metadataHttp.getMosaicMetadata(mosaicId)
             .subscribe((metadataEntries) => {

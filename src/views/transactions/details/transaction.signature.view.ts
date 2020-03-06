@@ -16,9 +16,9 @@
  *
  */
 
+import {CellRecord} from './transaction.view'
 import {Cell} from 'cli-table3'
 import {SignedTransaction} from 'symbol-sdk'
-import {CellRecord} from './transaction.view'
 
 export interface ITransactionViewSignature extends CellRecord {
  SignatureDetailsTitle: Cell;

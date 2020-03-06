@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime'
-import { KeyGenerator, UInt64 } from 'symbol-sdk'
+import {Validator} from 'clime'
+import {UInt64} from 'symbol-sdk'
 
 /**
  * Validator of mosaic restriction key
@@ -25,14 +25,14 @@ export class MosaicRestrictionKeyValidator implements Validator<string> {
     /**
      * Validates if a mosaic restriction key is valid.
      * @param {string} value - Mosaic restriction key.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
             UInt64.fromNumericString(value)
         } catch (err) {
-            throw new ExpectedError('Restriction key is an invalid UInt64 string')
+            return 'Restriction key is an invalid UInt64 string'
         }
+        return true
     }
 }

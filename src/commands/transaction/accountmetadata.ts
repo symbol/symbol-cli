@@ -1,4 +1,11 @@
-import {command, metadata, option} from 'clime'
+import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {KeyResolver} from '../../resolvers/key.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
+import {StringResolver} from '../../resolvers/string.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from '../../resolvers/password.resolver'
 import {
     AggregateTransaction,
     Deadline,
@@ -9,13 +16,7 @@ import {
     NetworkCurrencyPublic,
     UInt64,
 } from 'symbol-sdk'
-import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {KeyResolver} from '../../resolvers/key.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {StringResolver} from '../../resolvers/string.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
@@ -48,17 +49,19 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const targetAccount = new PublicKeyResolver()
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const targetAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
-                'Enter the target account public key: ', 'targetPublicKey')
-        const key = new KeyResolver().resolve(options)
-        const value = new StringResolver().resolve(options)
-        const maxFee = new MaxFeeResolver().resolve(options)
+                'Enter the target account public key:', 'targetPublicKey')
+        const key = await new KeyResolver().resolve(options)
+        const value = await new StringResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const metadataHttp = new MetadataHttp(profile.url)
         const metadataTransactionService = new MetadataTransactionService(metadataHttp)
-        const metadataTransaction = await metadataTransactionService.createMetadataTransaction(
+        const metadataTransaction = await metadataTransactionService
+            .createMetadataTransaction(
             Deadline.create(),
             account.networkType,
             MetadataType.Account,
@@ -83,7 +86,7 @@ export default class extends AnnounceTransactionsCommand {
 
             new TransactionView(aggregateTransaction, signedTransaction).print()
 
-            const shouldAnnounce = new AnnounceResolver().resolve(options)
+            const shouldAnnounce = await new AnnounceResolver().resolve(options)
             if (shouldAnnounce && options.sync) {
                 this.announceTransactionSync(
                     signedTransaction,
@@ -104,8 +107,8 @@ export default class extends AnnounceTransactionsCommand {
             )
             const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash)
 
-            const maxFeeHashLock = new MaxFeeResolver().resolve(options, undefined,
-                'Enter the maximum fee to announce the hashlock transaction (absolute amount): ', 'maxFeeHashLock')
+            const maxFeeHashLock = await new MaxFeeResolver().resolve(options,
+                'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(),
                 NetworkCurrencyPublic.createRelative(UInt64.fromNumericString(options.amount)),
@@ -118,7 +121,7 @@ export default class extends AnnounceTransactionsCommand {
             new TransactionView(aggregateTransaction, signedTransaction).print()
             new TransactionView(hashLockTransaction, signedHashLockTransaction).print()
 
-            const shouldAnnounce = new AnnounceResolver().resolve(options)
+            const shouldAnnounce = await new AnnounceResolver().resolve(options)
             if (shouldAnnounce) {
                 this.announceAggregateTransaction(
                     signedHashLockTransaction,

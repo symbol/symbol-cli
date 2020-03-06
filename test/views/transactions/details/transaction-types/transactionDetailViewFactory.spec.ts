@@ -1,4 +1,3 @@
-import {assert} from 'chai'
 import {transactionDetailViewFactory} from '../../../../../src/views/transactions/details/transactionDetailViewFactory'
 import {
  unsignedAccountAddressRestriction1,
@@ -23,6 +22,7 @@ import {
  unsignedSecretProof1,
  unsignedTransfer1,
 } from '../../../../mocks/transactions/index'
+import {assert} from 'chai'
 
 describe('Transaction detail view factory', () => {
  it('should return an object for each transaction type', () => {

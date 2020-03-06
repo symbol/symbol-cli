@@ -15,22 +15,39 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {
+    AccountRestrictionFlagsValidator,
     MosaicRestrictionTypeValidator,
 } from '../../src/validators/restrictionType.validator'
+import {expect} from 'chai'
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {
-        const mosaic = 'EQ'
-        expect(new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic }))
-            .to.be.equal(undefined)
+        const restriction = 'EQ'
+        expect(new MosaicRestrictionTypeValidator().validate(restriction))
+            .to.be.equal(true)
     })
 
     it('invalid mosaic restriction type', () => {
-        const mosaic = 'error'
-        expect(() => {
-            new MosaicRestrictionTypeValidator().validate(mosaic, { name: 'mosaic', source: mosaic })
-        }).to.throws('Wrong mosaic restriction type')
+        const restriction = '99'
+        expect(
+            new MosaicRestrictionTypeValidator().validate(restriction)
+        ).to.include('MosaicRestrictionType must be one of')
     })
 })
+
+describe('account restriction flags validator', () => {
+    it('valid account restriction flag', () => {
+        const restriction = 'AllowIncomingAddress'
+        expect(new AccountRestrictionFlagsValidator().validate(restriction))
+            .to.be.equal(true)
+    })
+
+    it('invalid account restriction flag', () => {
+        const restriction = '99'
+        expect(
+            new AccountRestrictionFlagsValidator().validate(restriction)
+        ).to.include('AccountRestrictionFlags must be one of')
+    })
+})
+

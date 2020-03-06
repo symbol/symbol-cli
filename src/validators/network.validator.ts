@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {NetworkType} from 'symbol-sdk'
 
 /**
@@ -26,13 +26,11 @@ export class NetworkValidator implements Validator<string> {
     /**
      * Validates if a network is supported.
      * @param {string} value - Network type friendly name.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        if (!(value in NetworkType)) {
-            throw new ExpectedError('Enter a valid network type. ' +
-                'Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
-        }
+    validate(value: string): boolean | string {
+        const keys = Object.keys(NetworkType)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+        return keys.includes(value) ? true : 'Network must be one of (' + keys + ').'
     }
 }

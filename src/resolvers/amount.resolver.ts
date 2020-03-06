@@ -1,9 +1,8 @@
-import {UInt64} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {NumericStringValidator} from '../validators/numericString.validator'
 import {Resolver} from './resolver'
+import {UInt64} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Amount resolver
@@ -12,17 +11,18 @@ export class AmountResolver implements Resolver {
 
     /**
      * Resolves an absolute amount by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {UInt64}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<UInt64>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): UInt64 {
-        const resolution = OptionsResolver(options,
-        'amount',
-        () =>  undefined,
-        altText ? altText : 'Enter an absolute amount: ').trim()
-        new NumericStringValidator().validate(resolution)
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<UInt64> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'amount',
+            () =>  undefined,
+            altText ? altText : 'Enter an absolute amount:',
+            'text',
+            new NumericStringValidator())
         return UInt64.fromNumericString(resolution)
     }
 }

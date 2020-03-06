@@ -1,8 +1,8 @@
-import {expect} from 'chai'
-import {LinkAction} from 'symbol-sdk'
 import {AccountLinkView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {unsignedAccountLink1} from '../../../../mocks/transactions/accountLink.mock'
+import {LinkAction} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('AccountLinkView', () => {
  it('should return a view', () => {

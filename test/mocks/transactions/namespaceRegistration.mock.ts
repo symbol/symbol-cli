@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'symbol-sdk'
 import {namespaceId1} from '../namespaces.mock'
+import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'symbol-sdk'
 
 export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction
  .createRootNamespace(

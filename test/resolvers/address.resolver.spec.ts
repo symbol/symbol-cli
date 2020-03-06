@@ -15,51 +15,55 @@
  * limitations under the License.
  *
  */
+import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver'
 import {expect} from 'chai'
 import {Address, NamespaceId} from 'symbol-sdk'
-import {AddressAliasResolver, AddressResolver} from '../../src/resolvers/address.resolver'
 
 describe('Address resolver', () => {
 
-    it('should return address', () => {
+    it('should return address', async () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
-        const profileOptions = {address} as any
-        expect(new AddressResolver().resolve(profileOptions).plain())
+        const options = {address} as any
+        expect((await new AddressResolver().resolve(options)).plain())
             .to.be.equal(address)
     })
 
-    it('should throw error if cannot create address', () => {
-        const address = 'S'
-        const profileOptions = {address} as any
-        expect(() => new AddressResolver().resolve(profileOptions))
-            .to.throws(Error)
+    it('should change key', async () => {
+        const key = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const options = {key} as any
+        expect((await new AddressResolver()
+            .resolve(options, undefined, 'altText', 'key')).plain())
+            .to.be.equal(key)
     })
+
 
 })
 
 describe('Recipient address alias resolver', () => {
 
-    it('should return alias', () => {
-        const recipientAddress = '@alias'
-        const profileOptions = {recipientAddress} as any
-        expect(new AddressAliasResolver().resolve(profileOptions, undefined, undefined, 'recipientAddress'))
+    it('should return alias', async () => {
+        const address = '@alias'
+        const options = {address} as any
+        expect(await new AddressAliasResolver().resolve(options))
             .to.be.instanceOf(NamespaceId)
     })
 
-    it('should return address', () => {
-        const recipientAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
-        const profileOptions = {recipientAddress} as any
-        expect((new AddressAliasResolver()
-            .resolve(profileOptions, undefined, undefined, 'recipientAddress') as Address).plain())
-            .to.be.equal(recipientAddress)
+    it('should return address', async () => {
+        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3'
+        const options = {address} as any
+        const resolvedAddress = await new AddressAliasResolver().resolve(options)
+        expect(resolvedAddress).instanceof(Address)
+        expect((resolvedAddress as Address).plain())
+            .to.be.equal(address)
     })
 
-    it('should throw error if cannot create address', () => {
-        const recipientAddress = 'test'
-        const profileOptions = {recipientAddress} as any
-        expect(() => new AddressAliasResolver()
-            .resolve(profileOptions, undefined, undefined, 'recipientAddress'))
-            .to.throws(Error)
+    it('should change key', async () => {
+        const key = '@alias'
+        const options = {key} as any
+        expect(await new AddressAliasResolver()
+            .resolve(options, undefined, 'altText', 'key'))
+            .to.be.instanceOf(NamespaceId)
     })
+
 
 })

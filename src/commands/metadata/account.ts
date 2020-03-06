@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
+import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {AddressResolver} from '../../resolvers/address.resolver'
+import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import chalk from 'chalk'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {command, metadata, option} from 'clime'
 import {Metadata, MetadataEntry, MetadataHttp} from 'symbol-sdk'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -69,11 +69,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const address = new AddressResolver().resolve(options, profile)
+        const address = await new AddressResolver().resolve(options, profile)
 
+        this.spinner.start()
         const metadataHttp = new MetadataHttp(profile.url)
         metadataHttp.getAccountMetadata(address)
             .subscribe((metadataEntries) => {

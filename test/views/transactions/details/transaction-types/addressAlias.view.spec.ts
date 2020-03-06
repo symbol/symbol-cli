@@ -1,8 +1,8 @@
-import {expect} from 'chai'
-import {AliasAction} from 'symbol-sdk'
 import {AddressAliasView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {unsignedAddressAlias1} from '../../../../mocks/transactions/addressAlias.mock'
+import {AliasAction} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('AddressAliasView', () => {
  it('should return a view', () => {

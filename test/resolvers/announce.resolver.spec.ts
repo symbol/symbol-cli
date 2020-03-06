@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {AnnounceResolver} from '../../src/resolvers/announce.resolver'
+import {expect} from 'chai'
 
 describe('Announce resolver', () => {
 
-    it('should return boolean', () => {
-        const profileOptions = {
+    it('should return boolean', async () => {
+        const options = {
             announce: true,
             url: '',
             network: '',
@@ -30,7 +30,7 @@ describe('Announce resolver', () => {
             generationHash: '1',
             maxFee: '1',
             sync: false}
-        expect(new AnnounceResolver().resolve(profileOptions)).to.be.equal(true)
+        expect(await new AnnounceResolver().resolve(options)).to.be.equal(true)
     })
 
 })

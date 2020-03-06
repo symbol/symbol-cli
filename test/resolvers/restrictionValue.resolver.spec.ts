@@ -1,23 +1,25 @@
-import {expect} from 'chai'
 import {RestrictionValueResolver} from '../../src/resolvers/restrictionValue.resolver'
+import {expect} from 'chai'
 
 describe('Restriction value resolver', () => {
 
     describe('resolve', () => {
 
-        it('should return UInt64 value', () => {
+        it('should return UInt64 value', async () => {
             const newRestrictionValue = '123'
-            const profileOptions = { newRestrictionValue } as any
-            expect(new RestrictionValueResolver().resolve(profileOptions))
+            const options = { newRestrictionValue } as any
+            expect(await new RestrictionValueResolver().resolve(options))
                 .to.be.equal('123')
         })
 
-        it('should throw err, when input letters', () => {
-            const newRestrictionValue = '123as'
-            const profileOptions = { newRestrictionValue } as any
-            expect(() => new RestrictionValueResolver().resolve(profileOptions))
-                .to.throws(Error)
+        it('should change key', async () => {
+            const key = '123'
+            const options = { key } as any
+            expect(await new RestrictionValueResolver()
+                .resolve(options, 'altText', 'key'))
+                .to.be.equal('123')
         })
+
     })
 
 })

@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {PasswordValidator} from '../../src/validators/password.validator'
+import {expect} from 'chai'
 
 describe('Public key validator', () => {
 
     it('default case', () => {
         const password = '12345678'
         expect(new PasswordValidator().validate(password))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if password has less than 8 chars', () => {
         const password = '123'
-        expect(() => {
+        expect(
             new PasswordValidator().validate(password)
-        }).to.throws('Password should have a minimum of 8 characters')
+        ).to.be.equal('Password should have a minimum of 8 characters')
     })
 
 })

@@ -1,4 +1,4 @@
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {HashType} from 'symbol-sdk'
 
 /**
@@ -9,13 +9,11 @@ export class HashAlgorithmValidator implements Validator<string> {
     /**
      * Validates if the hash algorithm is available.
      * @param {string} value - Hash algorithm code.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
-        if (!(value in HashType)) {
-            throw new ExpectedError('Hash algorithm must be one of ' +
-                '(Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256)')
-        }
+    validate(value: string): boolean | string {
+        return value in HashType ? true : 'Hash algorithm must be one of (' +
+            Object.keys(HashType)
+                .filter((key) => Number.isNaN(parseFloat(key))) + ').'
     }
 }

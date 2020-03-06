@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {NamespaceHttp} from 'symbol-sdk'
 import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
-import {NamespaceInfoTable} from './info'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
+import {NamespaceInfoTable} from './info'
+import {NamespaceHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
 
@@ -42,11 +42,11 @@ export default class extends ProfileCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        this.spinner.start()
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const address = new AddressResolver().resolve(options, profile)
+        const address = await new AddressResolver().resolve(options, profile)
 
+        this.spinner.start()
         const namespaceHttp = new NamespaceHttp(profile.url)
         namespaceHttp.getNamespacesFromAccount(address)
             .subscribe((namespaces) => {

@@ -1,9 +1,9 @@
-import {expect} from 'chai'
-import {TransactionType} from 'symbol-sdk'
 import {AccountOperationRestrictionView} from '../../../../../src/views/transactions/details/transaction-types'
 import {
  operation1, operation2, operation3, unsignedAccountOperationRestriction1,
 } from '../../../../mocks/transactions/accountOperationRestriction.mock'
+import {expect} from 'chai'
+import {TransactionType} from 'symbol-sdk'
 
 describe('AccountOperationRestrictionView', () => {
  it('should return a view', () => {

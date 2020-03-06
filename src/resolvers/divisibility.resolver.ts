@@ -1,7 +1,7 @@
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
+import {NumericStringValidator} from '../validators/numericString.validator'
 import {Resolver} from './resolver'
+import {Options} from 'clime'
 
 /**
  * Divisibility resolver
@@ -10,16 +10,18 @@ export class DivisibilityResolver implements Resolver {
 
     /**
      * Resolves a divisibility provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const resolution = +OptionsResolver(options,
-        'divisibility',
-        () =>  undefined,
-        altText ? altText : 'Enter the mosaic divisibility: ')
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const resolution = +(await OptionsResolver(options,
+            altKey ? altKey : 'divisibility',
+            () =>  undefined,
+            altText ? altText : 'Enter the mosaic divisibility:',
+            'text',
+            new NumericStringValidator()))
         return resolution
     }
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import { ExpectedError, ValidationContext, Validator } from 'clime'
-import { UInt64 } from 'symbol-sdk'
+import {Validator} from 'clime'
+import {UInt64} from 'symbol-sdk'
 
 /**
  * Key validator
@@ -25,14 +25,14 @@ export class KeyValidator implements Validator<string> {
     /**
      * validates if the key is valid.
      * @param {string} value - the key.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
             UInt64.fromHex(value)
         } catch (err) {
-            throw new ExpectedError('Invalid key')
+            return 'Invalid key'
         }
+        return true
     }
 }

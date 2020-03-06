@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, NetworkType, UInt64} from 'symbol-sdk'
 import {mosaicId1} from '../mosaics.mock'
+import {Deadline, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, NetworkType, UInt64} from 'symbol-sdk'
 
 export const unsignedMosaicSupplyChange1 = MosaicSupplyChangeTransaction.create(
  Deadline.create(),

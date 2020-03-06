@@ -1,8 +1,7 @@
-import {UInt64} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
+import {UInt64} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Max fee resolver
@@ -11,20 +10,21 @@ export class MaxFeeResolver implements Resolver {
 
     /**
      * Resolves a max fee provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {UInt64}
+     * @returns {Promise<UInt64>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): UInt64 {
-        const resolution = OptionsResolver(options,
-        altKey ? altKey : 'maxFee',
-        () => undefined,
-        altText ? altText : 'Enter the maximum fee (absolute amount): ').trim()
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<UInt64> {
+        const resolution = await OptionsResolver(options,
+            altKey ? altKey : 'maxFee',
+            () => undefined,
+            altText ? altText : 'Enter the maximum fee (absolute amount):',
+            'text',
+            undefined)
         try {
            return UInt64.fromNumericString(resolution)
-        }  catch {
+        } catch {
            return UInt64.fromUint(0)
         }
     }

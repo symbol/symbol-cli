@@ -15,9 +15,9 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
+import {Command, command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -37,8 +37,8 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const namespace = new NamespaceNameResolver().resolve(options)
+    async execute(options: CommandOptions) {
+        const namespace = await new NamespaceNameResolver().resolve(options)
         console.log(namespace.toHex())
     }
 }

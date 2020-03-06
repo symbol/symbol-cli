@@ -1,9 +1,7 @@
-import {Password} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsResolver} from '../options-resolver'
 import {PrivateKeyValidator} from '../validators/privateKey.validator'
 import {Resolver} from './resolver'
+import {Options} from 'clime'
 
 /**
  * Private key resolver
@@ -12,20 +10,18 @@ export class PrivateKeyResolver implements Resolver {
 
     /**
      * Resolves a private key provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {string}
+     * @returns {Promise<string>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): string {
-        const resolution = OptionsResolver(options,
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'privateKey',
             () => undefined,
-            'Enter your account private key: ',
-            undefined,
-            true).trim()
-        new PrivateKeyValidator().validate(resolution)
+            altText ? altText : 'Enter your account private key:',
+            'password',
+            new PrivateKeyValidator())
         return resolution
     }
 }

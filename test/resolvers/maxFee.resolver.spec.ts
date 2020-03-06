@@ -15,33 +15,42 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {MaxFeeResolver} from '../../src/resolvers/maxFee.resolver'
+import {expect} from 'chai'
 
 describe('Max fee resolver', () => {
 
-    it('default case', () => {
+    it('default case', async () => {
         const maxFee = '10'
-        const profileOptions = {maxFee} as any
-        expect(new MaxFeeResolver().resolve(profileOptions).compact())
+        const options = {maxFee} as any
+        expect((await new MaxFeeResolver().resolve(options)).compact())
             .to.be.equal(10)
     })
 
-    it('should return 0 if invalid', () => {
+    it('should return 0 if invalid', async () => {
         const maxFee = 'test'
-        const profileOptions = {maxFee} as any
-        expect(new MaxFeeResolver().resolve(profileOptions).compact())
+        const options = {maxFee} as any
+        expect((await new MaxFeeResolver().resolve(options)).compact())
             .to.be.equal(0)
     })
+
+    it('should change key', async () => {
+        const key = 'test'
+        const options = {key} as any
+        expect((await new MaxFeeResolver()
+            .resolve(options, 'altText', 'key')).compact())
+            .to.be.equal(0)
+    })
+
 })
 
 describe('Max fee hash lock resolver', () => {
 
-    it('should return maxFee', () => {
+    it('should return maxFee', async () => {
         const maxFeeHashLock = '10'
-        const profileOptions = {maxFeeHashLock} as any
-        expect(new MaxFeeResolver().resolve(profileOptions, undefined,
-            'test', 'maxFeeHashLock').compact())
+        const options = {maxFeeHashLock} as any
+        expect((await new MaxFeeResolver().resolve(options,
+            'test', 'maxFeeHashLock')).compact())
             .to.be.equal(10)
     })
 

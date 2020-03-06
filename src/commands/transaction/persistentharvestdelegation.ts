@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -49,19 +50,20 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const remotePrivateKey = new PrivateKeyResolver()
-            .resolve(options, undefined, 'Enter the remote account private key: ', 'remotePrivateKey')
-        const recipientPublicAccount = new PublicKeyResolver()
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const remotePrivateKey = await new PrivateKeyResolver()
+            .resolve(options, 'Enter the remote account private key:', 'remotePrivateKey')
+        const recipientPublicAccount = await new PublicKeyResolver()
             .resolve(options, profile.networkType,
-                'Enter the public key of the node: ', 'recipientPublicKey')
+                'Enter the public key of the node:', 'recipientPublicKey')
        const message = PersistentHarvestingDelegationMessage.create(
             remotePrivateKey,
             recipientPublicAccount.publicKey,
             profile.networkType)
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = TransferTransaction.create(
             Deadline.create(),
@@ -74,7 +76,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

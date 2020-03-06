@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
+import {ProfileRepository} from '../respositories/profile.repository'
+import {ProfileService} from '../services/profile.service'
+import {ProfileOptions} from './profile.command'
 import chalk from 'chalk'
 import {Spinner} from 'cli-spinner'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {Command, ExpectedError, option} from 'clime'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {ProfileRepository} from '../respositories/profile.repository'
-import {ProfileService} from '../services/profile.service'
-import {ProfileOptions} from './profile.command'
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable

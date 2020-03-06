@@ -15,13 +15,13 @@
  * limitations under the License.
  *
  */
+import {HttpErrorHandler} from '../services/httpErrorHandler.service'
+import {ProfileCommand, ProfileOptions} from './profile.command'
 import chalk from 'chalk'
 import {option} from 'clime'
-import {Address, Listener, ReceiptHttp, SignedTransaction, TransactionHttp, TransactionService} from 'symbol-sdk'
+import {Address, Listener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionHttp } from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
-import {ProfileCommand, ProfileOptions} from './profile.command'
-import {HttpErrorHandler} from '../services/httpErrorHandler.service'
 
 /**
  * Base command class to announce transactions.
@@ -60,11 +60,16 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
     protected announceTransactionSync(signedTransaction: SignedTransaction, senderAddress: Address, url: string) {
         this.spinner.start()
         const transactionHttp = new TransactionHttp(url)
-        const receiptHttp = new ReceiptHttp(url)
         const listener = new Listener(url)
-        const transactionService = new TransactionService(transactionHttp, receiptHttp)
         listener.open().then(() => {
-            merge(transactionService.announce(signedTransaction, listener),
+            merge(
+                transactionHttp.announce(signedTransaction),
+                listener
+                    .confirmed(senderAddress)
+                    .pipe(
+                        filter((transaction) => transaction.transactionInfo !== undefined
+                            && transaction.transactionInfo.hash === signedTransaction.hash),
+                    ),
                 listener
                     .status(senderAddress)
                     .pipe(
@@ -72,10 +77,17 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
                         tap((error) => {
                             throw new Error(error.code)
                         })))
-                .subscribe((ignored) => {
-                    listener.close()
-                    this.spinner.stop(true)
-                    console.log(chalk.green('\nTransaction confirmed.'))
+                .subscribe((response) => {
+                    if (response instanceof TransactionAnnounceResponse) {
+                        this.spinner.stop(true)
+                        console.log(chalk.green('\nTransaction announced.'))
+                        this.spinner.start()
+                    }
+                    else if (response instanceof Transaction){
+                        listener.close()
+                        this.spinner.stop(true)
+                        console.log(chalk.green('\nTransaction confirmed.'))
+                    }
                 }, (err) => {
                     listener.close()
                     this.spinner.stop(true)

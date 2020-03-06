@@ -16,9 +16,9 @@
  *
  */
 
-import {AliasAction, MosaicAliasTransaction} from 'symbol-sdk'
 import {NamespacesView} from '../../../namespaces.view'
 import {CellRecord} from '../transaction.view'
+import {AliasAction, MosaicAliasTransaction} from 'symbol-sdk'
 
 export class MosaicAliasView {
   /**

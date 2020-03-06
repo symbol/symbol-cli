@@ -15,8 +15,16 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
+import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AmountResolver} from '../../resolvers/amount.resolver'
+import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {DivisibilityResolver} from '../../resolvers/divisibility.resolver'
+import {DurationResolver} from '../../resolvers/duration.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
+import {TransactionView} from '../../views/transactions/details/transaction.view'
+import { OptionsConfirmResolver } from '../../options-resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
 import {
     AggregateTransaction,
     Deadline,
@@ -27,15 +35,8 @@ import {
     MosaicSupplyChangeTransaction,
     UInt64,
 } from 'symbol-sdk'
-import * as readlineSync from 'readline-sync'
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
-import {AmountResolver} from '../../resolvers/amount.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {DivisibilityResolver} from '../../resolvers/divisibility.resolver'
-import {DurationResolver} from '../../resolvers/duration.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -96,21 +97,20 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
 
         const nonce = MosaicNonce.createRandom()
         let blocksDuration
-        if (!options.nonExpiring) {
-            if (!readlineSync.keyInYN('Do you want a non-expiring mosaic?')) {
-                blocksDuration = new DurationResolver().resolve(options)
-            }
+        if (!(await OptionsConfirmResolver(options, 'nonExpiring', 'Do you want a non-expiring mosaic?'))) {
+            blocksDuration = await new DurationResolver().resolve(options)
         }
-        const divisibility = new DivisibilityResolver().resolve(options)
-        const mosaicFlags = new MosaicFlagsResolver().resolve(options)
-        const amount = new AmountResolver().resolve(options, undefined, 'Amount of mosaics units to create: ')
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const divisibility = await new DivisibilityResolver().resolve(options)
+        const mosaicFlags = await new MosaicFlagsResolver().resolve(options)
+        const amount = await new AmountResolver().resolve(options, 'Amount of mosaics units to create: ')
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
             Deadline.create(),
@@ -143,7 +143,7 @@ export default class extends AnnounceTransactionsCommand {
         new TransactionView(aggregateTransaction, signedTransaction).print()
 
         console.log(chalk.green('The new mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex())
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {

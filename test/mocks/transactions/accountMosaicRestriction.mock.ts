@@ -16,9 +16,9 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'symbol-sdk'
 import {mosaicId1, mosaicId2} from '../mosaics.mock'
 import {namespaceId1} from '../namespaces.mock'
+import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'symbol-sdk'
 
 export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction
     .createMosaicRestrictionModificationTransaction(

@@ -15,9 +15,9 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
-import {Address} from 'symbol-sdk'
 import {AccountService} from '../services/account.service'
+import {Validator} from './validator'
+import {Address} from 'symbol-sdk'
 
 /**
  * Address validator
@@ -27,15 +27,15 @@ export class AddressValidator implements Validator<string> {
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
             Address.createFromRawAddress(value)
         } catch (err) {
-            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
+            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP'
         }
+        return true
     }
 }
 
@@ -47,14 +47,14 @@ export class AddressAliasValidator implements Validator<string> {
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address. If starts with '@', then it is an alias.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
-            const ignored = AccountService.getRecipient(value)
+            AccountService.getRecipient(value)
         } catch {
-            throw new ExpectedError('Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP')
+            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP'
         }
+        return true
     }
 }

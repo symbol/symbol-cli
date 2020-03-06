@@ -37,7 +37,8 @@ export class ReceiptService {
     /**
      * Constructor
      */
-    constructor() {}
+    constructor() {
+    }
 
     /**
      * Formats transaction statements as a string.
@@ -56,7 +57,7 @@ export class ReceiptService {
                 txt += '<index: ' + transactionIndex + '-' + receiptIndex + '>\t'
                 if (receipt instanceof BalanceTransferReceipt) {
                     txt += 'version:\t' + receipt.version + '\n'
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n'
                     txt += '\t\trecipientAddress:\t' +
                         (receipt.recipientAddress instanceof Address ?
                             receipt.recipientAddress.pretty() : receipt.recipientAddress.toHex()) + '\n'
@@ -69,13 +70,13 @@ export class ReceiptService {
                     txt += '\t\ttargetPublicKey:\t' + receipt.targetPublicAccount.publicKey + '\n'
                     txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n'
                     txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n'
-                }  else if (receipt instanceof ArtifactExpiryReceipt) {
+                } else if (receipt instanceof ArtifactExpiryReceipt) {
                     txt += 'version:\t' + receipt.version + '\n'
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n'
                     txt += '\t\tartifactId:\t' + receipt.artifactId.toHex() + '\n'
-                }  else if (receipt instanceof InflationReceipt) {
+                } else if (receipt instanceof InflationReceipt) {
                     txt += 'version:\t' + receipt.version + '\n'
-                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type]  + '\n'
+                    txt += '\t\ttype:\t\t' + ReceiptType[receipt.type] + '\n'
                     txt += '\t\tamount:\t\t' + receipt.amount.toString() + '\n'
                     txt += '\t\tmosaicId:\t' + receipt.mosaicId.toHex() + '\n'
                 }
@@ -97,10 +98,12 @@ export class ReceiptService {
         }
         statement.addressResolutionStatements.map((addressResolution: ResolutionStatement, addressResolutionIndex: number) => {
             txt += 'height:\t\t' + addressResolution.height + '\n'
-            txt += 'unresolved:\t' + addressResolution.unresolved + '\n\n'
+            txt += 'unresolved:\t' + (addressResolution.unresolved instanceof Address ?
+                addressResolution.unresolved.pretty() : addressResolution.unresolved.toHex()) + '\n\n'
             addressResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
                 txt += '<index:' + addressResolutionIndex + '-' + resolutionEntryIndex + '>\t'
-                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n'
+                txt += 'resolved:\t\t' + (resolutionEntry.resolved instanceof Address ?
+                    resolutionEntry.resolved.pretty() : resolutionEntry.resolved.toHex()) + '\n'
                 txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n'
                 txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n'
             })
@@ -121,10 +124,12 @@ export class ReceiptService {
         }
         statement.mosaicResolutionStatements.map((mosaicResolution: ResolutionStatement, mosaicResolutionIndex: number) => {
             txt += 'height:\t\t' + mosaicResolution.height + '\n'
-            txt += 'unresolved:\t' + mosaicResolution.unresolved + '\n\n'
+            txt += 'unresolved:\t' + (mosaicResolution.unresolved instanceof Address ?
+                mosaicResolution.unresolved.pretty() : mosaicResolution.unresolved.toHex()) + '\n\n'
             mosaicResolution.resolutionEntries.map((resolutionEntry: ResolutionEntry, resolutionEntryIndex: number) => {
                 txt += '<index:' + mosaicResolutionIndex + '-' + resolutionEntryIndex + '>\t'
-                txt += 'resolved:\t\t' + resolutionEntry.resolved + '\n'
+                txt += 'resolved:\t\t' + (resolutionEntry.resolved instanceof Address ?
+                    resolutionEntry.resolved.pretty() : resolutionEntry.resolved.toHex()) + '\n'
                 txt += '\t\tprimaryId:\t\t' + resolutionEntry.source.primaryId + '\n'
                 txt += '\t\tsecondaryId:\t\t' + resolutionEntry.source.secondaryId + '\n\n'
             })

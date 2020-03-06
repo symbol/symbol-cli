@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+
+import {Validator} from './validator'
 
 /**
  * Binary validator
@@ -25,12 +26,9 @@ export class BinaryValidator implements Validator<number> {
     /**
      * Validates if value is 0 or 1.
      * @param {number} value
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: number, context?: ValidationContext): void {
-        if (value !== 0 && value !== 1) {
-            throw new ExpectedError('The value must be 0 or 1')
-        }
+    validate(value: number): boolean | string {
+        return (value !== 0 && value !== 1) ? 'The value must be 0 or 1' : true
     }
 }

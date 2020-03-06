@@ -1,10 +1,8 @@
-import {ExpectedError} from 'clime'
-import {AccountRestrictionFlags} from 'symbol-sdk'
-import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
 import {OptionsChoiceResolver} from '../options-resolver'
-import {BinaryValidator} from '../validators/binary.validator'
+import {AccountRestrictionFlagsValidator} from '../validators/restrictionType.validator'
 import {Resolver} from './resolver'
+import {AccountRestrictionFlags} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Restriction account address flags resolver
@@ -13,22 +11,26 @@ export class RestrictionAccountAddressFlagsResolver implements Resolver {
 
     /**
      * Resolves a restriction account address flag provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['AllowOutgoingAddress', 'BlockOutgoingAddress', 'AllowIncomingAddress', 'BlockIncomingAddress']
-        const index = +OptionsChoiceResolver(options,
-            'flags',
-            altText ? altText : 'Select the restriction flags: ',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const choices = [
+            {title: 'AllowOutgoingAddress', value: AccountRestrictionFlags.AllowOutgoingAddress},
+            {title: 'BlockOutgoingAddress', value: AccountRestrictionFlags.BlockOutgoingAddress},
+            {title: 'AllowIncomingAddress', value: AccountRestrictionFlags.AllowIncomingAddress},
+            {title: 'BlockIncomingAddress', value: AccountRestrictionFlags.BlockIncomingAddress},
+        ]
+        const value = +(await OptionsChoiceResolver(options,
+            altKey ? altKey : 'flags',
+            altText ? altText : 'Select the restriction flags:',
             choices,
-        )
-        if (index < 0 || index > 3) {
-            throw new ExpectedError('Unknown restriction flag.')
-        }
-        return parseInt(AccountRestrictionFlags[choices[index] as any], 10)
+            'select',
+            new AccountRestrictionFlagsValidator()
+        ))
+        return value
     }
 }
 
@@ -39,20 +41,24 @@ export class RestrictionAccountMosaicFlagsResolver implements Resolver {
 
     /**
      * Resolves a restriction account mosaic flag provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['AllowMosaic', 'BlockMosaic']
-        const index = +OptionsChoiceResolver(options,
-            'flags',
-            altText ? altText : 'Select the restriction flags: ',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const choices = [
+            {title: 'AllowMosaic', value: AccountRestrictionFlags.AllowMosaic},
+            {title: 'BlockMosaic', value: AccountRestrictionFlags.BlockMosaic},
+        ]
+        const value = +(await OptionsChoiceResolver(options,
+            altKey ? altKey : 'flags',
+            altText ? altText : 'Select the restriction flags:',
             choices,
-        )
-        new BinaryValidator().validate(index)
-        return parseInt(AccountRestrictionFlags[choices[index] as any], 10)
+            'select',
+            new AccountRestrictionFlagsValidator()
+        ))
+        return value
     }
 }
 
@@ -63,19 +69,23 @@ export class RestrictionAccountOperationFlagsResolver implements Resolver {
 
     /**
      * Resolves a restriction account operation flag provided by the user.
-     * @param {ProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
+     * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
-     * @returns {number}
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<number>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string): number {
-        const choices = ['AllowOutgoingTransactionType', 'BlockOutgoingTransactionType']
-        const index = +OptionsChoiceResolver(options,
-            'flags',
-            altText ? altText : 'Select the restriction flags: ',
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
+        const choices = [
+            {title: 'AllowOutgoingTransactionType', value: AccountRestrictionFlags.AllowOutgoingTransactionType},
+            {title: 'BlockOutgoingTransactionType', value: AccountRestrictionFlags.BlockOutgoingTransactionType},
+        ]
+        const value = +(await OptionsChoiceResolver(options,
+            altKey ? altKey : 'flags',
+            altText ? altText : 'Select the restriction flags:',
             choices,
-        )
-        new BinaryValidator().validate(index)
-        return parseInt(AccountRestrictionFlags[choices[index] as any], 10)
+            'select',
+            new AccountRestrictionFlagsValidator()
+        ))
+        return value
     }
 }

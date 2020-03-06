@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
-import {Convert, RawAddress} from 'symbol-sdk'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {AddressResolver} from '../../resolvers/address.resolver'
+import {Command, command, metadata, option} from 'clime'
+import {Convert, RawAddress} from 'symbol-sdk'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -37,8 +37,8 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const address = new AddressResolver().resolve(options)
+    async execute(options: CommandOptions) {
+        const address = await new AddressResolver().resolve(options)
         console.log(Convert.uint8ToHex(RawAddress.stringToAddress(address.plain())))
     }
 }

@@ -15,9 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
-import {SimpleWallet} from 'symbol-sdk'
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
 import {DefaultResolver} from '../../resolvers/default.resolver'
 import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
@@ -26,6 +23,9 @@ import {PasswordResolver} from '../../resolvers/password.resolver'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
 import {URLResolver} from '../../resolvers/url.resolver'
+import {SimpleWallet} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+import chalk from 'chalk'
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -46,12 +46,12 @@ export default class extends CreateProfileCommand {
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = new NetworkResolver().resolve(options)
-        const privateKey = new PrivateKeyResolver().resolve(options)
-        options.url = new URLResolver().resolve(options)
-        const profileName = new ProfileNameResolver().resolve(options)
-        const password = new PasswordResolver().resolve(options)
-        const isDefault = new DefaultResolver().resolve(options)
+        const networkType = await new NetworkResolver().resolve(options)
+        const privateKey = await new PrivateKeyResolver().resolve(options)
+        options.url = await new URLResolver().resolve(options)
+        const profileName = await new ProfileNameResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const isDefault = await new DefaultResolver().resolve(options)
         const generationHash = await new GenerationHashResolver().resolve(options)
 
         const simpleWallet = SimpleWallet.createFromPrivateKey(

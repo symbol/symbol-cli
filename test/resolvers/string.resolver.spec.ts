@@ -15,15 +15,24 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {StringResolver} from '../../src/resolvers/string.resolver'
+import {expect} from 'chai'
 
 describe('Value resolver', () => {
 
-    it('should return string', () => {
+    it('should return string', async () => {
         const value = 'test'
-        const profileOptions = {value} as any
-        expect(new StringResolver().resolve(profileOptions))
+        const options = {value} as any
+        expect(await new StringResolver().resolve(options))
             .to.be.equal(value)
     })
+
+    it('should change key', async () => {
+        const key = 'test'
+        const options = {key} as any
+        expect(await new StringResolver()
+            .resolve(options, 'altText', 'key'))
+            .to.be.equal(key)
+    })
+
 })

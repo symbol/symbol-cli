@@ -1,6 +1,5 @@
-import * as readlineSync from 'readline-sync'
 import {CreateProfileOptions} from '../interfaces/create.profile.command'
-import {Profile} from '../models/profile'
+import {OptionsConfirmResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 
 /**
@@ -11,14 +10,15 @@ export class DefaultResolver implements Resolver {
     /**
      * Resolves if an account has to be set as default.
      * @param {CreateProfileOptions} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
-     * @returns {boolean}
+     * @returns {Promise<boolean>}
      */
-    resolve(options: CreateProfileOptions, secondSource?: Profile, altText?: string): boolean {
-        if (!options.default && readlineSync.keyInYN('Do you want to set the account as the default profile?')) {
+    async resolve(options: CreateProfileOptions, altText?: string): Promise<boolean> {
+        if (await OptionsConfirmResolver(options, 'default', altText ?
+                altText : 'Do you want to set the account as the default profile?')) {
             options.default = true
         }
         return options.default
     }
+
 }

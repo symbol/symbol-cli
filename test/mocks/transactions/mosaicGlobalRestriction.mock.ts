@@ -16,8 +16,8 @@
  *
  */
 
-import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'symbol-sdk'
 import {mosaicId1, mosaicId2} from '../mosaics.mock'
+import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'symbol-sdk'
 
 export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransaction
     .create(

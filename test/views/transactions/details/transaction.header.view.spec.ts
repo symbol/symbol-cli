@@ -1,6 +1,6 @@
-import {expect} from 'chai'
 import {TransactionHeaderView} from '../../../../src/views/transactions/details/transaction.header.view'
 import {unsignedTransfer1} from '../../../mocks/transactions/transfer.mock'
+import {expect} from 'chai'
 
 describe('Transaction header view', () => {
     it('should return a view of an unsigned transaction', () => {

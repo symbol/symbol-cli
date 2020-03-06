@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {NetworkValidator} from '../../src/validators/network.validator'
+import {expect} from 'chai'
 
 describe('Network type validator', () => {
 
     it('default case', () => {
         const networkType = 'MIJIN_TEST'
         expect(new NetworkValidator().validate(networkType))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if network type is unknown', () => {
         const networkType = 'TEST'
-        expect(() => {
+        expect(
             new NetworkValidator().validate(networkType)
-        }).to.throws('Enter a valid network type. Example: (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)')
+        ).to.include('Network must be one of')
     })
 
 })

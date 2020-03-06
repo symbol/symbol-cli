@@ -1,8 +1,8 @@
 
-import {expect} from 'chai'
 import {RecipientsView} from '../../src/views/recipients.view'
 import {account1} from '../mocks/accounts.mock'
 import {namespaceId1, namespaceId2} from '../mocks/namespaces.mock'
+import {expect} from 'chai'
 
 describe('Mosaics view', () => {
  it('getMosaicLabel should return labels for mosaic Id and namespaceId', () => {

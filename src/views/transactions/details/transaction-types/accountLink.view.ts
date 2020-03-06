@@ -16,8 +16,8 @@
  *
  */
 
-import {AccountLinkTransaction, LinkAction} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {AccountLinkTransaction, LinkAction} from 'symbol-sdk'
 
 export class AccountLinkView {
   /**

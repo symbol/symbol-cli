@@ -16,8 +16,8 @@
  *
  */
 
-import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'symbol-sdk'
 import {CellRecord} from '../transaction.view'
+import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'symbol-sdk'
 
 export class MosaicGlobalRestrictionView {
   /**

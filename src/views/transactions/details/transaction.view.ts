@@ -16,12 +16,12 @@
  *
  */
 
-import {Cell, HorizontalTable} from 'cli-table3'
-import {SignedTransaction, Transaction} from 'symbol-sdk'
-import {TableBuilder} from '../../../models/tableBuilder'
+import {TableBuilder} from '../../../models/tableBuilder.model'
 import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view'
 import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view'
 import {transactionDetailViewFactory} from './transactionDetailViewFactory'
+import {SignedTransaction, Transaction} from 'symbol-sdk'
+import {Cell, HorizontalTable} from 'cli-table3'
 
 export type CellRecord = Record<string, string | Cell>
 

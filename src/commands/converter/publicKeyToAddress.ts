@@ -15,10 +15,10 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
+import {Command, command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -45,9 +45,9 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const networkType = new NetworkResolver().resolve(options)
-        const publicAccount = new PublicKeyResolver().resolve(options, networkType)
+    async execute(options: CommandOptions) {
+        const networkType = await new NetworkResolver().resolve(options)
+        const publicAccount = await new PublicKeyResolver().resolve(options, networkType)
         console.log(publicAccount.address.pretty())
     }
 }

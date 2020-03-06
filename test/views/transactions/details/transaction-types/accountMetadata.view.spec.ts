@@ -1,8 +1,8 @@
-import {expect} from 'chai'
-import {Convert} from 'symbol-sdk'
 import {AccountMetadataView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {unsignedAccountMetadata1} from '../../../../mocks/transactions/accountMetadata.mock'
+import {Convert} from 'symbol-sdk'
+import {expect} from 'chai'
 
 describe('AccountMetadataView', () => {
  it('should return a view', () => {

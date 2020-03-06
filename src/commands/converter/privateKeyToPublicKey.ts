@@ -15,11 +15,11 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
-import {Account} from 'symbol-sdk'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
+import {Account} from 'symbol-sdk'
+import {Command, command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -46,9 +46,9 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const privateKey = new PrivateKeyResolver().resolve(options)
-        const network = new NetworkResolver().resolve(options)
+    async execute(options: CommandOptions) {
+        const privateKey = await new PrivateKeyResolver().resolve(options)
+        const network = await new NetworkResolver().resolve(options)
         console.log(Account.createFromPrivateKey(privateKey, network).publicKey)
     }
 }

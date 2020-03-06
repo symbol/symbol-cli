@@ -15,9 +15,9 @@
 * limitations under the License.
 *
 */
-import {Command, command, metadata, option} from 'clime'
 import {ProfileOptions} from '../../interfaces/profile.command'
 import {AmountResolver} from '../../resolvers/amount.resolver'
+import {Command, command, metadata, option} from 'clime'
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -37,8 +37,8 @@ export default class extends Command {
     }
 
     @metadata
-    execute(options: CommandOptions) {
-        const value = new AmountResolver().resolve(options)
+    async execute(options: CommandOptions) {
+        const value = await new AmountResolver().resolve(options)
         console.log(value.toHex())
     }
 }

@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
 import {NumericStringValidator} from '../../src/validators/numericString.validator'
+import {expect} from 'chai'
 
 describe('Numeric string validator', () => {
 
@@ -24,23 +24,23 @@ describe('Numeric string validator', () => {
         const zeroValue = '0'
         const largePositiveValue = '10000000000000000000000000'
         expect(new NumericStringValidator().validate(zeroValue))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
         expect(new NumericStringValidator().validate(largePositiveValue))
-            .to.be.equal(undefined)
+            .to.be.equal(true)
     })
 
     it('should throw error if not a numeric string', () => {
         const value = 'test'
-        expect(() => {
+        expect(
             new NumericStringValidator().validate(value)
-        }).to.throws('Enter a number')
+        ).to.be.equal('Enter an integer number')
     })
 
     it('should throw error if numeric string is negative', () => {
         const value = '-1'
-        expect(() => {
+        expect(
             new NumericStringValidator().validate(value)
-        }).to.throws('Enter a number')
+        ).to.be.equal('Enter an integer number')
     })
 
 })

@@ -1,7 +1,7 @@
-import {expect} from 'chai'
 import {SecretProofView} from '../../../../../src/views/transactions/details/transaction-types'
 import {account1} from '../../../../mocks/accounts.mock'
 import {unsignedSecretProof1} from '../../../../mocks/transactions/secretProof.mock'
+import {expect} from 'chai'
 
 describe('SecretProofView', () => {
  it('should return a view', () => {

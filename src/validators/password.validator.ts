@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {Password} from 'symbol-sdk'
 
 /**
@@ -26,14 +26,14 @@ export class PasswordValidator implements Validator<string> {
      /**
       * Validates if a password has at least 8 chars.
       * @param {string} value - Password.
-      * @param {ValidationContext} context
-      * @throws {ExpectedError}
+      * @returns {true | string}
       */
-     validate(value: string, context?: ValidationContext): void {
+     validate(value: string): boolean | string {
         try {
              const ignored = new Password(value)
          } catch (error) {
-              throw new ExpectedError('Password should have a minimum of 8 characters')
+              return 'Password should have a minimum of 8 characters'
          }
+         return true
      }
 }

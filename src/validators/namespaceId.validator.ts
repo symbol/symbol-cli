@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {ExpectedError, ValidationContext, Validator} from 'clime'
+import {Validator} from './validator'
 import {NamespaceId, UInt64} from 'symbol-sdk'
 
 /**
@@ -26,15 +26,15 @@ export class NamespaceIdValidator implements Validator<string> {
     /**
      * Validates a namespace id.
      * @param {string} value - NamespaceId in hexadecimal.
-     * @param {ValidationContext} context
-     * @throws {ExpectedError}
+     * @returns {true | string}
      */
-    validate(value: string, context?: ValidationContext): void {
+    validate(value: string): boolean | string {
         try {
             const namespaceIdUInt64 = UInt64.fromHex(value)
             const ignored = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher])
         } catch (err) {
-            throw new ExpectedError('Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244')
+            return 'Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244'
         }
+        return true
     }
 }

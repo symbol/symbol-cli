@@ -16,8 +16,8 @@
  *
  */
 import * as fs from 'fs'
+import {Profile} from '../models/profile.model'
 import {SimpleWallet} from 'symbol-sdk'
-import {Profile} from '../models/profile'
 
 /**
  * Profile repository

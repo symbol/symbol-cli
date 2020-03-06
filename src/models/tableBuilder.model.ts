@@ -16,9 +16,9 @@
  *
  */
 
+import {CellRecord} from '../views/transactions/details/transaction.view'
 import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
-import {CellRecord} from '../views/transactions/details/transaction.view'
 
 export class TableBuilder {
   /**

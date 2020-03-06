@@ -1,7 +1,7 @@
+import {Profile} from '../models/profile.model'
 import {Address, MultisigAccountGraphInfo, MultisigHttp} from 'symbol-sdk'
 import {from, Observable, of} from 'rxjs'
 import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators'
-import {Profile} from '../models/profile'
 
 /*
  *

@@ -1,6 +1,6 @@
-import {expect} from 'chai'
 import {AggregateBondedView} from '../../../../../src/views/transactions/details/transaction-types'
 import {unsignedAggregateBonded1} from '../../../../mocks/transactions/aggregateBonded.mock'
+import {expect} from 'chai'
 
 describe('AggregateBondedView', () => {
  it('should return a view', () => {

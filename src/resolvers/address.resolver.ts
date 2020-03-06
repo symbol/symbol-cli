@@ -1,10 +1,11 @@
-import {Address, NamespaceId} from 'symbol-sdk'
 import {ProfileOptions} from '../interfaces/profile.command'
-import {Profile} from '../models/profile'
+import {Profile} from '../models/profile.model'
 import {OptionsResolver} from '../options-resolver'
 import {AccountService} from '../services/account.service'
 import {AddressAliasValidator, AddressValidator} from '../validators/address.validator'
 import {Resolver} from './resolver'
+import {Address, NamespaceId} from 'symbol-sdk'
+import {Options} from 'clime'
 
 /**
  * Address resolver
@@ -13,18 +14,19 @@ export class AddressResolver implements Resolver {
 
     /**
      * Resolves an address provided by the user.
-     * @param {ProfileOptions} options - Command options.
+     * @param {Options} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Address}
+     * @returns {Promise<Address>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Address {
-        const resolution = OptionsResolver(options,
+    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an address: ').trim()
-        new AddressValidator().validate(resolution)
+            altText ? altText : 'Enter an address:',
+            'text',
+            new AddressValidator())
         return Address.createFromRawAddress(resolution)
     }
 }
@@ -36,14 +38,15 @@ export class AddressAliasResolver implements Resolver {
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Address | NamespaceId}
+     * @returns {Promise<Address | NamespaceId>}
      */
-    resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Address | NamespaceId {
-        const resolution = OptionsResolver(options,
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address | NamespaceId> {
+        const resolution = await OptionsResolver(options,
             altKey ? altKey : 'address',
             () => secondSource ? secondSource.address.pretty() : undefined,
-            altText ? altText : 'Enter an address (or @alias): ').trim()
-        new AddressAliasValidator().validate(resolution)
+            altText ? altText : 'Enter an address (or @alias):',
+            'text',
+            new AddressAliasValidator())
         return AccountService.getRecipient(resolution)
     }
 }

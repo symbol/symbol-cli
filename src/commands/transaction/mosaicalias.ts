@@ -14,8 +14,6 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {Deadline, MosaicAliasTransaction} from 'symbol-sdk'
 import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
 import {LinkActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -23,11 +21,14 @@ import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {Deadline, MosaicAliasTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
-        description: 'Alias action (1: Link, 0: Unlink).',
+        description: 'Alias action (Link, Unlink).',
     })
     action: string
 
@@ -55,13 +56,14 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    execute(options: CommandOptions) {
+    async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
-        const account = profile.decrypt(options)
-        const namespaceId = new NamespaceNameResolver().resolve(options)
-        const mosaicId = new MosaicIdResolver().resolve(options)
-        const action = new LinkActionResolver().resolve(options)
-        const maxFee = new MaxFeeResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const account = profile.decrypt(password)
+        const namespaceId = await new NamespaceNameResolver().resolve(options)
+        const mosaicId = await new MosaicIdResolver().resolve(options)
+        const action = await new LinkActionResolver().resolve(options)
+        const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = MosaicAliasTransaction.create(
             Deadline.create(),
@@ -74,7 +76,7 @@ export default class extends AnnounceTransactionsCommand {
 
         new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = new AnnounceResolver().resolve(options)
+        const shouldAnnounce = await new AnnounceResolver().resolve(options)
         if (shouldAnnounce && options.sync) {
             this.announceTransactionSync(signedTransaction, profile.address, profile.url)
         } else if (shouldAnnounce) {
