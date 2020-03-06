@@ -120,7 +120,9 @@ export default class extends ProfileCommand {
     ): Promise<CosignatureSignedTransaction | null> {
         try {
             const cosignatureTransaction = CosignatureTransaction.create(transaction)
+            this.spinner.stop(true)
             const password = await new PasswordResolver().resolve(this.options)
+            this.spinner.start()
             const account = this.profile.decrypt(password)
             return account.signCosignatureTransaction(cosignatureTransaction)
         } catch (err) {
