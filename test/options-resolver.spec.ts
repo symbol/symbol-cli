@@ -23,19 +23,25 @@ import {NumericStringValidator} from '../src/validators/numericString.validator'
 import {expect} from 'chai'
 
 describe('OptionsResolver', () => {
-    it('should return the value if contains the commands option is passed', async () => {
+    it('should return the value', async () => {
         const value = await OptionsResolver({name: 'nem'}, 'name',
             () => undefined, 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
     })
 
-    it('should return the value 0 if contains the commands option is passed', async () => {
-        const value = await OptionsResolver({name: '0'}, 'name',
+    it('should return the value trimmed', async () => {
+        const value = await OptionsResolver({name: 'nem '}, 'name',
             () => undefined, 'Insert your name', 'text', undefined)
-        expect(value).to.be.equal('0')
+        expect(value).to.be.equal('nem')
     })
 
-    it('should return the secondSource value if command options object have not it and secondValue is not undefined', async () => {
+    it('should return the value (int)', async () => {
+        const value = await OptionsResolver({name: 0}, 'name',
+            () => undefined, 'Insert your name', 'text', undefined)
+        expect(value).to.be.equal(0)
+    })
+
+    it('should return the secondSource value', async () => {
         const value = await OptionsResolver({}, 'name',
             () => 'nem', 'Insert your name', 'text', undefined)
         expect(value).to.be.equal('nem')
@@ -50,7 +56,7 @@ describe('OptionsResolver', () => {
 })
 
 describe('OptionsChoicesResolver', () => {
-    it('should return the value if contains the commands option is passed', async () => {
+    it('should return the value', async () => {
         const choices = [
             {title: 'nem', value: 0},
             {title: 'mijin', value: 1},
@@ -72,7 +78,7 @@ describe('OptionsChoicesResolver', () => {
 })
 
 describe('OptionsConfirmationResolver', () => {
-    it('should return the value if contains the commands option is passed', async () => {
+    it('should return the value', async () => {
         const value = await OptionsConfirmResolver({name: true}, 'name',
              'test', 'confirm',true, 'value')
         expect(value).to.be.equal(true)
