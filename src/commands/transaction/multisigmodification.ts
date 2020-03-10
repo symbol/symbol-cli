@@ -14,10 +14,7 @@
  * limitations under the License.
  *
  */
-import {
-    AnnounceAggregateTransactionsOptions,
-    AnnounceTransactionsCommand,
-} from '../../interfaces/announce.transactions.command'
+import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
@@ -35,19 +32,20 @@ import {
 } from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
 import chalk from 'chalk'
+import {DeltaResolver} from '../../resolvers/delta.resolver'
 
 export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
         flag: 'R',
-        description: '(Optional) Number of signatures needed to remove a cosignatory. ',
-        default: 0,
+        description: 'Number of signatures needed to remove a cosignatory. ' +
+            'If the account already exists, enter the relative amount of change.',
     })
     minRemovalDelta: number
 
     @option({
         flag: 'A',
-        description: '(Optional) Number of signatures needed to approve a transaction.',
-        default: 0,
+        description: 'Number of signatures needed to approve a transaction. ' +
+            'If the account already exists, enter the relative amount of change.',
     })
     minApprovalDelta: number
 
@@ -89,14 +87,20 @@ export default class extends AnnounceTransactionsCommand {
             .resolve(options, profile.networkType,
                 'Enter the multisig account public key:', 'multisigAccountPublicKey')
         const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile)
+        const minApprovalDelta = await new DeltaResolver().resolve(options,
+            'Enter the number of signatures needed to approve a transaction. ' +
+            'If the account already exists, enter the relative amount of change:', 'minApprovalDelta' )
+        const minRemovalDelta = await new DeltaResolver().resolve(options,
+            'Enter the number of signatures needed to remove a cosignatory. ' +
+            'If the account already exists, enter the relative amount of change:', 'minRemovalDelta' )
         const maxFee = await new MaxFeeResolver().resolve(options)
         const maxFeeHashLock = await new MaxFeeResolver().resolve(options,
             'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
-            options.minApprovalDelta,
-            options.minRemovalDelta,
+            minApprovalDelta,
+            minRemovalDelta,
             (action === ActionType.Add) ? cosignatories : [],
             (action === ActionType.Remove) ? cosignatories : [],
             profile.networkType)
