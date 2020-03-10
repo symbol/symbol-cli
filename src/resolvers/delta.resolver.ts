@@ -5,7 +5,7 @@ import {Options} from 'clime'
 import {DeltaValidator} from '../validators/delta.validator'
 
 /**
- * Password resolver
+ * Delta resolver
  */
 export class DeltaResolver implements Resolver {
 
@@ -14,7 +14,7 @@ export class DeltaResolver implements Resolver {
      * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Promise<Password>}
+     * @returns {Promise<number>}
      */
     async resolve(options: Options, altText: string, altKey?: string): Promise<number> {
         const resolution = await OptionsResolver(options,

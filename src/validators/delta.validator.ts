@@ -18,7 +18,7 @@
 import {Validator} from './validator'
 
 /**
- * Action validator
+ * Delta validator
  */
 export class DeltaValidator implements Validator<number> {
 
