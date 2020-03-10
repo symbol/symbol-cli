@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface';
+import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
 import {Validator} from './validators/validator'
 import chalk from 'chalk'
 import * as prompts from 'prompts'

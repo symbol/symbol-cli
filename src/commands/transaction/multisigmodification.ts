@@ -38,14 +38,14 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     @option({
         flag: 'R',
         description: 'Number of signatures needed to remove a cosignatory. ' +
-            'If the account already exists, enter the relative amount of change.',
+            'If the account already exists, enter the number of cosignatories to add or remove.',
     })
     minRemovalDelta: number
 
     @option({
         flag: 'A',
         description: 'Number of signatures needed to approve a transaction. ' +
-            'If the account already exists, enter the relative amount of change.',
+            'If the account already exists, enter the number of cosignatories to add or remove.',
     })
     minApprovalDelta: number
 
@@ -89,10 +89,10 @@ export default class extends AnnounceTransactionsCommand {
         const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile)
         const minApprovalDelta = await new DeltaResolver().resolve(options,
             'Enter the number of signatures needed to approve a transaction. ' +
-            'If the account already exists, enter the relative amount of change:', 'minApprovalDelta' )
+            'If the account already exists, enter the number of cosignatories to add or remove:', 'minApprovalDelta' )
         const minRemovalDelta = await new DeltaResolver().resolve(options,
             'Enter the number of signatures needed to remove a cosignatory. ' +
-            'If the account already exists, enter the relative amount of change:', 'minRemovalDelta' )
+            'If the account already exists, enter the number of cosignatories to add or remove:', 'minRemovalDelta' )
         const maxFee = await new MaxFeeResolver().resolve(options)
         const maxFeeHashLock = await new MaxFeeResolver().resolve(options,
             'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
