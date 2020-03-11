@@ -15,32 +15,24 @@
  * limitations under the License.
  *
  */
-import {MaxFeeResolver} from '../../src/resolvers/maxFee.resolver'
 import {expect} from 'chai'
+import {DeltaResolver} from '../../src/resolvers/delta.resolver'
 
-describe('Max fee resolver', () => {
+describe('Delta resolver', () => {
 
-    it('default case', async () => {
-        const maxFee = '10'
-        const options = {maxFee} as any
-        expect((await new MaxFeeResolver().resolve(options)).compact())
+    it('should return delta', async () => {
+        const delta = '10'
+        const options = {delta} as any
+        expect(await new DeltaResolver().resolve(options, 'altText'))
             .to.be.equal(10)
     })
 
-    it('should return 0', async () => {
-        const maxFee = '0'
-        const options = {maxFee} as any
-        expect((await new MaxFeeResolver().resolve(options)).compact())
-            .to.be.equal(0)
-    })
-
     it('should change key', async () => {
-        const maxFeeHashLock = '10'
-        const options = {maxFeeHashLock} as any
-        expect((await new MaxFeeResolver().resolve(options,
-            'test', 'maxFeeHashLock')).compact())
+        const key = '10'
+        const options = {key} as any
+        expect((await new DeltaResolver()
+            .resolve(options, 'altText', 'key')))
             .to.be.equal(10)
     })
 
 })
-
