@@ -27,26 +27,14 @@ describe('Max fee resolver', () => {
             .to.be.equal(10)
     })
 
-    it('should return 0 if invalid', async () => {
-        const maxFee = 'test'
+    it('should return 0', async () => {
+        const maxFee = '0'
         const options = {maxFee} as any
         expect((await new MaxFeeResolver().resolve(options)).compact())
             .to.be.equal(0)
     })
 
     it('should change key', async () => {
-        const key = 'test'
-        const options = {key} as any
-        expect((await new MaxFeeResolver()
-            .resolve(options, 'altText', 'key')).compact())
-            .to.be.equal(0)
-    })
-
-})
-
-describe('Max fee hash lock resolver', () => {
-
-    it('should return maxFee', async () => {
         const maxFeeHashLock = '10'
         const options = {maxFeeHashLock} as any
         expect((await new MaxFeeResolver().resolve(options,
@@ -55,3 +43,4 @@ describe('Max fee hash lock resolver', () => {
     })
 
 })
+

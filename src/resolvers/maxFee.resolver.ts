@@ -2,6 +2,7 @@ import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 import {UInt64} from 'symbol-sdk'
 import {Options} from 'clime'
+import {NumericStringValidator} from '../validators/numericString.validator'
 
 /**
  * Max fee resolver
@@ -21,11 +22,7 @@ export class MaxFeeResolver implements Resolver {
             () => undefined,
             altText ? altText : 'Enter the maximum fee (absolute amount):',
             'text',
-            undefined)
-        try {
-           return UInt64.fromNumericString(resolution)
-        } catch {
-           return UInt64.fromUint(0)
-        }
+            new NumericStringValidator())
+        return UInt64.fromNumericString(resolution)
     }
 }
