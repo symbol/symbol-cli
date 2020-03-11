@@ -57,7 +57,7 @@ export const OptionsResolver = async (options: any,
 
     let value: string
     if (options[key] !== undefined) {
-        value = options[key].trim()
+        value = typeof options[key] === 'string' ? options[key].trim() : options[key]
         if (validation !== undefined) {
             const test = validation.validate(value)
             if (typeof test === 'string') {

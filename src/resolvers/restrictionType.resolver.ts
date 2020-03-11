@@ -33,16 +33,14 @@ export class RestrictionTypeResolver implements Resolver {
      * @return {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = [
-            {title: 'NONE', value: MosaicRestrictionType.NONE},
-            {title: 'EQ', value: MosaicRestrictionType.EQ},
-            {title: 'NE', value: MosaicRestrictionType.NE},
-            {title: 'LT', value: MosaicRestrictionType.LT},
-            {title: 'LE', value: MosaicRestrictionType.LE},
-            {title: 'GT', value: MosaicRestrictionType.GT},
-            {title: 'GE', value: MosaicRestrictionType.GE},
+        const choices = Object
+            .keys(MosaicRestrictionType)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+            .map((string) => ({
+                title: string,
+                value: MosaicRestrictionType[string as any],
+            }))
 
-        ]
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'newRestrictionType',
             altText ? altText : 'Select the new restriction type:',
