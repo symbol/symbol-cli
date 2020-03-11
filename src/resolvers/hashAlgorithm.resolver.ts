@@ -17,12 +17,13 @@ export class HashAlgorithmResolver implements Resolver {
      * @returns {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = [
-            {title: 'Op_Sha3_256', value: HashType.Op_Sha3_256},
-            {title: 'Op_Keccak_256', value: HashType.Op_Keccak_256},
-            {title: 'Op_Hash_160', value: HashType.Op_Hash_160},
-            {title: 'Op_Hash_256', value: HashType.Op_Hash_256},
-        ]
+        const choices = Object
+            .keys(HashType)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+            .map((string) => ({
+                title: string,
+                value: HashType[string as any],
+            }))
 
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'hashAlgorithm',

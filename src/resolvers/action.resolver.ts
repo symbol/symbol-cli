@@ -18,10 +18,14 @@ export class ActionResolver implements Resolver {
      * @returns {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = [
-            {title: 'Remove', value: ActionType.Remove},
-            {title: 'Add', value: ActionType.Add},
-        ]
+        const choices = Object
+            .keys(ActionType)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+            .map((string) => ({
+                title: string,
+                value: ActionType[string as any],
+            }))
+
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
             altText ? altText : 'Select an action:',
@@ -46,10 +50,14 @@ export class LinkActionResolver implements Resolver {
      * @returns {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = [
-            {title: 'Unlink', value: LinkAction.Unlink},
-            {title: 'Link', value: LinkAction.Link},
-        ]
+        const choices = Object
+            .keys(LinkAction)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+            .map((string) => ({
+                title: string,
+                value: LinkAction[string as any],
+            }))
+
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
             altText ? altText : 'Select an action:',
@@ -71,10 +79,14 @@ export class SupplyActionResolver implements Resolver {
      * @returns {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = [
-            {title: 'Decrease', value: MosaicSupplyChangeAction.Decrease},
-            {title: 'Increase', value: MosaicSupplyChangeAction.Increase},
-        ]
+        const choices = Object
+            .keys(MosaicSupplyChangeAction)
+            .filter((key) => Number.isNaN(parseFloat(key)))
+            .map((string) => ({
+                title: string,
+                value: MosaicSupplyChangeAction[string as any],
+            }))
+
         const value = +(await OptionsChoiceResolver(options,
             altKey ? altKey : 'action',
             altText ? altText : 'Select an action:',
