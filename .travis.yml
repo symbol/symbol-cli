@@ -10,3 +10,16 @@ before_script:
 script:
   - npm run test:coveralls
   - npm run lint:all
+deploy:
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/uploadArchives.sh
+    on:
+      branch: master
+      node_js: "10"
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/release.sh
+    on:
+      branch: $RELEASE_BRANCH
+      node_js: "10"
