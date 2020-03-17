@@ -12,7 +12,8 @@
         "test:cov": "nyc --reporter=lcov --reporter=text-lcov npm t && nyc report --reporter=text-lcov",
         "test:coveralls": "npm run test:cov | coveralls",
         "lint:all": "eslint src/ --ext .ts && eslint test/ --ext .ts",
-        "lint:all:fix": "eslint src/ --ext .ts --fix && eslint test/ --ext .ts --fix"
+        "lint:all:fix": "eslint src/ --ext .ts --fix && eslint test/ --ext .ts --fix",
+        "version": "echo $npm_package_version"
     },
     "bin": {
         "symbol-cli": "./bin/symbol-cli"
