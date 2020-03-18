@@ -31,7 +31,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   cp travis/.npmrc $HOME/.npmrc
 
  #  The $SKIP_RELEASE_PUBLISH env variable can avoid republishing the same version to npm if something in the release process fails.
-  if [ "$SKIP_RELEASE_PUBLISH" == "true" ]; then
+  if [ "$SKIP_RELEASE_PUBLISH" = "true" ]; then
     echo "Skipping publishing of sdk artifacts"
     echo ""
   else
