@@ -9,12 +9,13 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 **Milestone**: Fushicho.5(RC4 0.9.3.1)
 
 ### Added
+
 - Guide the user when the account is not created #237
 - Travis npm releases automated #235
 
 ### Changed
 
-- ``transaction `multisigmodication`` asks for minApprovalDelta/minRemovalDelta #230
+- ``transaction multisigmodication`` asks for minApprovalDelta/minRemovalDelta #230
 - Enums from SDK are not hardcoded #229
 
 ### Fixed

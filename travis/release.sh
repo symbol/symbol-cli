@@ -25,7 +25,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo ""
 
   echo "Creating tag v$CURRENT_VERSION"
-  git tag "v$CURRENT_VERSION"
+  git tag -fa "v$CURRENT_VERSION" -m "Releasing version $CURRENT_VERSION"
   echo ""
 
   cp travis/.npmrc $HOME/.npmrc
@@ -41,7 +41,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   fi
 
   echo "Increasing sdk version"
-  npm version patch  -m "Increasing version to %s"  --git-tag-version false
+  npm version patch -m "Increasing version to %s" --git-tag-version false
 
   CURRENT_VERSION=$(npm run version --silent)
 
@@ -49,6 +49,8 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo "$CURRENT_VERSION"
   echo ""
 
+  git add .
+  git commit -m "Creating new version $CURRENT_VERSION"
   echo "Pushing code to $REMOTE_NAME $POST_RELEASE_BRANCH"
   git push --set-upstream $REMOTE_NAME $RELEASE_BRANCH:$POST_RELEASE_BRANCH
   echo "Pushing tags to $REMOTE_NAME"
