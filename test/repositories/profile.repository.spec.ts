@@ -26,8 +26,9 @@ describe('ProfileRepository', () => {
     let repositoryFileUrl: string
 
     const removeAccountsFile = () => {
-        if (fs.existsSync(process.env.HOME || process.env.USERPROFILE + '/' + repositoryFileUrl)) {
-            fs.unlinkSync(process.env.HOME || process.env.USERPROFILE + '/' + repositoryFileUrl)
+        const file = (process.env.HOME  || process.env.USERPROFILE) + '/' + repositoryFileUrl
+        if (fs.existsSync(file)) {
+            fs.unlinkSync(file)
         }
     }
 

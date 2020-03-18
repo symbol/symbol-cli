@@ -20,8 +20,8 @@ describe('Create Profile Command', () => {
     }
 
     const removeAccountsFile = () => {
-        if (fs.existsSync(process.env.HOME || process.env.USERPROFILE + '/' + repositoryFileUrl)) {
-            fs.unlinkSync(process.env.HOME || process.env.USERPROFILE + '/' + repositoryFileUrl)
+        if (fs.existsSync(process.env.HOME + '/' + repositoryFileUrl || process.env.USERPROFILE + '/' + repositoryFileUrl)) {
+            fs.unlinkSync(process.env.HOME + '/' + repositoryFileUrl || process.env.USERPROFILE + '/' + repositoryFileUrl)
         }
     }
 
