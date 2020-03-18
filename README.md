@@ -35,7 +35,8 @@ npm install -g symbol-cli
 
 ## Usage
 
-Surf the [NEM Developer Center][docs] to get started into NEM development. You will find self-paced guides and useful code snippets using the Symbol CLI.
+Surf the [Symbol Developer documentation][docs] to get started. 
+You will find self-paced guides and useful code snippets using the Symbol CLI.
 
 To get the full list of available commands, check the [CLI reference][docs].
 
