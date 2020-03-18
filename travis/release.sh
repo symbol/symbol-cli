@@ -17,7 +17,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   CURRENT_VERSION=$(npm run version --silent)
 
   echo "Current Version"
-  cat "$CURRENT_VERSION"
+  echo "$CURRENT_VERSION"
   echo ""
 
   echo "Testing git remote"
@@ -40,7 +40,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   CURRENT_VERSION=$(npm run version --silent)
 
   echo "New Version"
-  cat "$CURRENT_VERSION"
+  echo "$CURRENT_VERSION"
   echo ""
 
   echo "Pushing code to $REMOTE_NAME $POST_RELEASE_BRANCH"
