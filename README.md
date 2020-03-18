@@ -19,7 +19,7 @@ Before installing ``symbol-cli@0.18.1``, backup and delete the file ``~ \.nem2rc
 
 - [0.17.1](CHANGELOG.md#0171-31-Jan-2020) - **Fushicho4 Network Compatibility (catapult-server@0.9.2.1)**
 
-The release notes for the symbol-cli can be found [here](CHANGELOG.md).
+Find the complete release notes [here](CHANGELOG.md).
 
 ## Requirements
 
@@ -35,21 +35,24 @@ npm install -g symbol-cli
 
 ## Usage
 
-Surf the [Symbol Developer documentation][docs] to get started. 
+Surf the [documentation][docs] to get started into Symbol development.
 You will find self-paced guides and useful code snippets using the Symbol CLI.
 
-To get the full list of available commands, check the [CLI reference][docs].
-
-## Contributing
-
-This project is developed and maintained by NEM Foundation. Contributions are welcome and appreciated. You can find [Symbol CLI on GitHub][self];
-Feel free to start an issue or create a pull request. Check [CONTRIBUTING](CONTRIBUTING.md) before start.
+To get the full list of available commands, check the [CLI reference][ref].
 
 ## Getting help
 
-- [Symbol CLI documentation][docs]
+- [Symbol Documentation][docs]
+- [Symbol CLI Reference][ref]
 - Join the community [slack group (#sig-client)][slack] 
 - If you found a bug, [open a new issue][issues]
+
+## Contributing
+
+This project is developed and maintained by NEM Foundation.
+
+Contributions are welcome and appreciated. 
+Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
 ## License
 
@@ -58,6 +61,7 @@ Copyright 2018-present NEM
 Licensed under the [Apache License 2.0](LICENSE)
 
 [self]: https://github.com/nemtech/symbol-cli
-[docs]: https://nemtech.github.io/cli.html
+[docs]: http://nemtech.github.io/getting-started/setup-workstation.html
+[ref]: https://nemtech.github.io/cli.html
 [issues]: https://github.com/nemtech/symbol-cli/issues
 [slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
