@@ -45,6 +45,9 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
             .subscribe((ignored) => {
                 this.spinner.stop(true)
                 console.log(chalk.green('\nTransaction announced correctly.'))
+                console.log(chalk.blue('Info'), 'To check if the network confirms or rejects the transaction, ' +
+                    'run the command \'symbol-cli transaction status\'.')
+
             }, (err) => {
                 this.spinner.stop(true)
                 console.log(HttpErrorHandler.handleError(err))

@@ -191,6 +191,12 @@ export default class extends ProfileCommand {
             }, (err) => {
                 this.spinner.stop(true)
                 console.log(HttpErrorHandler.handleError(err))
+                if (err instanceof Object &&
+                    'message' in err &&
+                    JSON.parse(err.message).statusCode === 404) {
+                    console.log(chalk.blue('Info'), 'The account has to receive at least ' +
+                        'one transaction to be recorded on the network.')
+                }
             })
         }
 }
