@@ -9,7 +9,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   git remote rm $REMOTE_NAME
 
   echo "Setting remote url https://github.com/${TRAVIS_REPO_SLUG}.git"
-  git remote add $REMOTE_NAME "https://${GRGIT_USER}@github.com/${TRAVIS_REPO_SLUG}.git" > /dev/null 2>&1
+  git remote add $REMOTE_NAME "https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git" > /dev/null 2>&1
 
   echo "Checking out $RELEASE_BRANCH as travis leaves the head detached."
   git checkout $RELEASE_BRANCH
@@ -30,9 +30,15 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
 
   cp travis/.npmrc $HOME/.npmrc
 
-  echo "Releasing sdk artifacts"
-  npm publish
-  echo ""
+ #  The $SKIP_RELEASE_PUBLISH env variable can avoid republishing the same version to npm if something in the release process fails.
+  if [ "$SKIP_RELEASE_PUBLISH" == "true" ]; then
+    echo "Skipping publishing of sdk artifacts"
+    echo ""
+  else
+    echo "Publishing SDK artifacts"
+    npm publish
+    echo ""
+  fi
 
   echo "Increasing sdk version"
   npm version patch  -m "Increasing version to %s"  --git-tag-version false
