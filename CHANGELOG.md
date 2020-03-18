@@ -4,13 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.18.2] - 06-Mar-2020
+## [0.18.3] - 18-Mar-2020
 
 **Milestone**: Fushicho.5(RC4 0.9.3.1)
 
-Versions |   |
----|---|---
-SDK | v0.17.3 | https://www.npmjs.com/package/symbol-sdk
+### Added
+- Guide the user when the account is not created #237
+- Travis npm releases automated #235
+
+### Changed
+
+- ``transaction `multisigmodication`` asks for minApprovalDelta/minRemovalDelta #230
+- Enums from SDK are not hardcoded #229
+
+### Fixed
+
+- Maxfee validator does not work #241
+- Object.unlinkSync:(): tests breaking on MacOs #236
+- ``transaction cosign`` spinner
+
+## [0.18.2] - 06-Mar-2020
+
+**Milestone**: Fushicho.5(RC4 0.9.3.1)
 
 ### Changed
 
@@ -29,10 +44,6 @@ Before installing ``symbol-cli@0.18.1``, backup and delete the file  ``~ \.nem2r
 
 **Milestone**: Fushicho.5(RC4 0.9.3.1)
 
-Versions |   |
----|---|---
-SDK | v0.17.1 | https://www.npmjs.com/package/symbol-sdk
-
 ## Added
 
 - ``node info`` command.
@@ -47,10 +58,6 @@ SDK | v0.17.1 | https://www.npmjs.com/package/symbol-sdk
 ## [0.17.1] - 31-Jan-2020
 
 **Milestone**: Fushicho.4(RC3 v0.9.2.1)
-
-Versions |   |
----|---|---
-SDK | v0.16.5 | https://www.npmjs.com/package/symbol-sdk
 
 ### Changed
 
@@ -272,6 +279,9 @@ Before installing ``symbol-cli@0.16.0``, backup and delete the file  ``~ \.nem2r
 ### Added
 - Initial code release.
 
+[0.18.3]: https://github.com/nemtech/symbol-cli/compare/v0.18.2...v0.18.3
+[0.18.2]: https://github.com/nemtech/symbol-cli/compare/v0.18.1...v0.18.2
+[0.18.1]: https://github.com/nemtech/symbol-cli/compare/v0.17.1...v0.18.1
 [0.17.1]: https://github.com/nemtech/symbol-cli/compare/v0.16.3...v0.17.1
 [0.16.3]: https://github.com/nemtech/symbol-cli/compare/v0.16.2...v0.16.3
 [0.16.2]: https://github.com/nemtech/symbol-cli/compare/v0.16.1...v0.16.2
