@@ -8,7 +8,7 @@ cache:
 before_script:
   - npm run build
 script:
-  - npm run test:coveralls
+  - npm run test:cov
   - npm run lint:all
 deploy:
   - provider: script
