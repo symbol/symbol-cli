@@ -28,7 +28,7 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   git tag "v$CURRENT_VERSION"
   echo ""
 
-  npm config set '//registry.npmjs.org/:_authToken' "${NPM_TOKEN}"
+  cp travis/.npmrc $HOME/.npmrc
 
   echo "Releasing sdk artifacts"
   npm publish
