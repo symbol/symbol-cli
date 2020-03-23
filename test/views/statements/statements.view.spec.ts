@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
-import {ReceiptService} from '../../src/services/receipt.service'
-import {expect} from 'chai'
 
-describe('Receipt service', () => {
+import {statement} from '../../mocks/statements.mock'
+import {StatementsView} from '../../../src/views/statements/statements.view'
+import {assert, expect} from 'chai'
 
-    it('should create receipt service', () => {
-        expect(new ReceiptService()).to.not.be.equal(undefined)
-    })
-
+describe('Statements view', () => {
+ it('Render returns an array', () => {
+  const statementsView: any[] = new StatementsView(statement).render()
+  assert.typeOf(statementsView, 'array', 'statementsView.render is an array')
+ })
 })

@@ -16,18 +16,20 @@
  *
  */
 
-import {Address, NamespaceId} from 'symbol-sdk'
+import {CellRecord} from '../transactions/details/transaction.view'
 
-export class RecipientsView {
-  /**
-   * Renders a recipient or target address to a string to be used in views
-   * @static
-   * @param {(Address | NamespaceId)} recipient
-   * @returns {string}
-   */
-  static get(recipient: Address | NamespaceId): string {
-    if (recipient instanceof Address) {return recipient.pretty()}
-    if (recipient.fullName) {return `${recipient.fullName} (${recipient.toHex()})`}
-    return recipient.toHex()
-  }
+export abstract class AbstractStatementView {
+ /**
+ * Renders a section header
+ * @private
+ * @param {string} sectionName
+ * @returns {CellRecord}
+ */
+ protected getSectionTitle(sectionName: string): CellRecord {
+  return {title: {content: sectionName, colSpan: 2, hAlign: 'center'}}
+ }
+
+ public render() {
+  throw new Error('The render class must be overriden by implementation classes')
+ }
 }

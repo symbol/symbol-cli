@@ -46,6 +46,33 @@ export class TableBuilder {
   }
 
   /**
+    Creates an HorizontalTable from a CellRecord array
+   * @static
+   * @param {CellRecord[]} array
+   * @returns {HorizontalTable}
+   */
+  static renderTableFromArray(array: CellRecord[]): HorizontalTable {
+    const table = TableBuilder.getEmptyTable()
+    array
+      // Filters out empty items
+      .filter((x) => x && typeof x === 'object')
+      .forEach((entry) => {
+        const [entries] = Object.entries(entry)
+        const [label, value] = entries
+
+        // handles <string, Cell> items
+        if (typeof value === 'object') {
+          table.push([value])
+          return
+        }
+        // handles <string, string> items
+        table.push([`${label}:`, `${value}`])
+      })
+
+    return table
+  }
+
+  /**
    * Instantiates the Table
    * @static
    * @returns {HorizontalTable}
