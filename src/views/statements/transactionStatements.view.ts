@@ -45,8 +45,8 @@ export class TransactionStatementViews extends AbstractStatementView {
    ...this.statements
     .map(({height, source, receipts}, index, self) => ([
      this.getSectionTitle(`Transaction statement ${index + 1} of ${self.length}`),
-     {height: height.compact()},
-     {source: `Primary Id: ${source.primaryId}, Secondary Id: ${source.secondaryId}`},
+     {Height: height.compact()},
+     {Source: `Primary Id: ${source.primaryId}, Secondary Id: ${source.secondaryId}`},
      this.getSectionTitle('Transaction receipts'),
      ...this.renderReceipts(receipts),
     ]))
@@ -82,8 +82,8 @@ export class TransactionStatementViews extends AbstractStatementView {
   const {type, size} = receipt
   return [
    this.getSectionTitle(`Receipt ${index + 1} of ${numberOfReceipts}`),
-   {type: ReceiptType[type]},
-   {size: size || 'N/A'},
+   {Type: ReceiptType[type]},
+   {Size: size || 'N/A'},
    ...this.renderSpecificReceiptProperties(receipt),
   ]
  }

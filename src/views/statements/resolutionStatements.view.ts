@@ -41,8 +41,8 @@ export class ResolutionStatementViews extends AbstractStatementView {
     resolutionEntries,
    }, index, self) => ([
     this.getSectionTitle(`${statementTypeLabel} statement ${index + 1} of ${self.length}`),
-    {height: height.compact()},
-    {unresolved: this.getUnresolved(unresolved)},
+    {Height: height.compact()},
+    {Unresolved: this.getUnresolved(unresolved)},
     ...this.renderResolutionEntries(resolutionEntries),
    ]))
     .reduce((acc, entry) => ([...acc, ...entry]), []),
@@ -76,8 +76,8 @@ export class ResolutionStatementViews extends AbstractStatementView {
  ): CellRecord[] {
   return [
    this.getSectionTitle(`Resolution ${index + 1} of ${numberOfReceipts}`),
-   {resolved: this.getUnresolved(entry.resolved)},
-   {source: `Primary Id: ${entry.source.primaryId}, Secondary Id: ${entry.source.secondaryId}`},
+   {Resolved: this.getUnresolved(entry.resolved)},
+   {Source: `Primary Id: ${entry.source.primaryId}, Secondary Id: ${entry.source.secondaryId}`},
   ]
  }
 
