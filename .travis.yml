@@ -15,7 +15,6 @@ before_deploy:
   - npm link
   - CURRENT_VERSION=$(npm run version --silent)
   - catapult-docs-cli cli-usage --config .clidocs > docs/$CURRENT_VERSION.md
-  - touch ./docs/.nojekyll
 deploy:
   - provider: script
     skip_cleanup: true
