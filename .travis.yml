@@ -12,7 +12,7 @@ script:
   - npm run lint:all
 before_deploy:
   - sudo apt-get update
-  - sudo apt-get install python3 python3-pip
+  - sudo apt-get install python3 python3-pip python3-setuptools
   - pip3 install --user catapultdocscli
   - npm link
   - CURRENT_VERSION=$(npm run version --silent)
