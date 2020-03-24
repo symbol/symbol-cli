@@ -28,14 +28,12 @@ export class ResolutionStatementViews extends AbstractStatementView {
   * Renders cell records
   * @returns {CellRecord[]}
   */
- public render(): CellRecord[] {
-  if (!this.statements.length) {return []}
+ public render(): CellRecord[][] | null {
+  if (!this.statements.length) {return null}
 
   const statementTypeLabel = ResolutionType[this.statements[0].resolutionType]
 
-  return [
-   this.getSectionTitle(`${statementTypeLabel} resolution statements`),
-   ...this.statements.map(({
+  return this.statements.map(({
     height,
     unresolved,
     resolutionEntries,
@@ -45,8 +43,6 @@ export class ResolutionStatementViews extends AbstractStatementView {
     {Unresolved: this.getUnresolved(unresolved)},
     ...this.renderResolutionEntries(resolutionEntries),
    ]))
-    .reduce((acc, entry) => ([...acc, ...entry]), []),
-  ]
  }
 
  /**

@@ -16,8 +16,9 @@
  *
  */
 
+import chalk from 'chalk'
 import {Statement} from 'symbol-sdk'
-import {HorizontalTable} from 'cli-table3'
+
 import {TableBuilder} from '../../models/tableBuilder.model'
 import {CellRecord} from '../transactions/details/transaction.view'
 import {TransactionStatementViews} from './transactionStatements.view'
@@ -31,14 +32,15 @@ export class StatementsView {
    * Logs the table
    */
   public print(): void {
-    console.log(this.render().toString())
-  }
-
-  /**
-   * @returns {HorizontalTable}
-   */
-  public render(): HorizontalTable {
-    return TableBuilder.renderTableFromArray(this.tableEntries)
+    Object
+      .entries(this.tableEntries)
+      .forEach(([tableName, entries]) => {
+        if (!entries) {return}
+        console.log(chalk.bold(tableName))
+        entries.forEach(
+          (entry) => console.log(`${TableBuilder.renderTableFromArray(entry)} \n\n`),
+        )
+      })
   }
 
   /**
@@ -47,11 +49,15 @@ export class StatementsView {
    * @protected
    * @type {CellRecord}
    */
-  private get tableEntries(): CellRecord[] {
-    return [
-      ...new TransactionStatementViews(this.statement.transactionStatements).render(),
-      ...new ResolutionStatementViews(this.statement.addressResolutionStatements).render(),
-      ...new ResolutionStatementViews(this.statement.mosaicResolutionStatements).render(),
-    ]
+  public get tableEntries(): {
+    'Transaction statements': CellRecord[][] | null;
+    'Address resolution statements': CellRecord[][] | null;
+    'Mosaic resolution statements': CellRecord[][] | null;
+  }  {
+    return {
+      'Transaction statements': new TransactionStatementViews(this.statement.transactionStatements).render(),
+      'Address resolution statements': new ResolutionStatementViews(this.statement.addressResolutionStatements).render(),
+      'Mosaic resolution statements': new ResolutionStatementViews(this.statement.mosaicResolutionStatements).render(),
+    }
   }
 }

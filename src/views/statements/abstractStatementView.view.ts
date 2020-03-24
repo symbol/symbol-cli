@@ -26,7 +26,9 @@ export abstract class AbstractStatementView {
  * @returns {CellRecord}
  */
  protected getSectionTitle(sectionName: string): CellRecord {
-  return {title: {content: sectionName, colSpan: 2, hAlign: 'center'}}
+  return {
+   title: {content: sectionName, colSpan: 2, hAlign: 'left'},
+  }
  }
 
  public render() {

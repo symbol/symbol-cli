@@ -93,19 +93,20 @@ export const inflationReceipt = new InflationReceipt(
  100,
 )
 
-export const transactionStatement = new TransactionStatement(
+export const transactionStatement1 = new TransactionStatement(
  UInt64.fromNumericString('1'),
  new ReceiptSource(1, 2),
- [
-  balanceChangeReceipt,
-  balanceTransferReceipt,
-  artifactExpiryReceipt,
-  inflationReceipt,
- ]
+ [balanceChangeReceipt, balanceTransferReceipt]
+)
+
+export const transactionStatement2 = new TransactionStatement(
+ UInt64.fromNumericString('2'),
+ new ReceiptSource(3, 4),
+ [artifactExpiryReceipt, inflationReceipt]
 )
 
 export const statement = new Statement(
- [transactionStatement],
+ [transactionStatement1, transactionStatement2],
  [addressResolutionStatement],
  [mosaicResolutionStatement],
 )

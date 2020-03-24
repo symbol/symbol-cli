@@ -37,12 +37,10 @@ export class TransactionStatementViews extends AbstractStatementView {
   * Renders cell records
   * @returns {CellRecord[]}
   */
- public render(): CellRecord[] {
-  if (!this.statements.length) {return []}
+ public render(): CellRecord[][] | null{
+  if (!this.statements.length) {return null}
 
-  return [
-   this.getSectionTitle('Transaction statements'),
-   ...this.statements
+  return this.statements
     .map(({height, source, receipts}, index, self) => ([
      this.getSectionTitle(`Transaction statement ${index + 1} of ${self.length}`),
      {Height: height.compact()},
@@ -50,9 +48,7 @@ export class TransactionStatementViews extends AbstractStatementView {
      this.getSectionTitle('Transaction receipts'),
      ...this.renderReceipts(receipts),
     ]))
-    .reduce((acc, entry) => ([...acc, ...entry]), []),
-  ]
- }
+  }
 
  /**
   * Renders receipts
