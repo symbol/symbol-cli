@@ -11,11 +11,11 @@ git clone --branch=$PUBLICATION_BRANCH https://${GITHUB_TOKEN}@github.com/$TRAVI
 cd publish
 # Update pages
 
-cp -r $REPO_PATH/ts-docs/. ./
+cp -r $REPO_PATH/docs/. ./
 # Commit and push latest version
 git add .
 git config user.name  "Travis"
 git config user.email "travis@travis-ci.org"
-git commit -m "Uploading $CURRENT_VERSION docs."
+git commit -m "Uploading $CURRENT_VERSION docs." --allow-empty
 git push -fq origin $PUBLICATION_BRANCH 2>&1 > /dev/null
 cd $REPO_PATH
