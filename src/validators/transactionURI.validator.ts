@@ -33,7 +33,7 @@ export class TransactionURIValidator implements Validator<string> {
             TransactionURI.fromURI(value)
         } catch {
             return 'Transaction URI format is not valid. ' +
-                'Example: web+nem://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl'
+                'Example: web+symbol://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl'
         }
         return true
     }

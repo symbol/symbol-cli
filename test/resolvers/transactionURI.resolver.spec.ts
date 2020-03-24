@@ -21,7 +21,7 @@ import {expect} from 'chai'
 describe('TransactionURI resolver', () => {
 
     it('should return TransactionURI', async () => {
-        const uri = 'web+nem://transaction?data=data'
+        const uri = 'web+symbol://transaction?data=data'
         const options = {uri} as any
         const transactionURI = await new TransactionURIResolver().resolve(options)
         expect(transactionURI.build())

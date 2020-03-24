@@ -21,16 +21,16 @@ import {expect} from 'chai'
 describe('TransactionURI validator', () => {
 
     it('default case', () => {
-        const uri = 'web+nem://transaction?data=data&generationHash=gh'
+        const uri = 'web+symbol://transaction?data=data&generationHash=gh'
         expect(new TransactionURIValidator().validate(uri))
             .to.be.equal(true)
     })
 
     it('should throw error if invalid uri', () => {
-        const uri = 'web+nem://transaction?dat'
+        const uri = 'web+symbol://transaction?dat'
         expect(new TransactionURIValidator().validate(uri))
             .to.be.equal('Transaction URI format is not valid. ' +
-            'Example: web+nem://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl')
+            'Example: web+symbol://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl')
     })
 
 })

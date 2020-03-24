@@ -29,8 +29,8 @@
         "@types/cli-spinner": "^0.2.0",
         "@types/node": "^9.6.55",
         "@types/prompts": "^2.0.3",
-        "axios": "^0.19.2",
         "@types/update-notifier": "^4.1.0",
+        "axios": "^0.19.2",
         "chalk": "^2.3.0",
         "cli-spinner": "^0.2.7",
         "cli-table3": "^0.5.1",
@@ -39,7 +39,7 @@
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
         "symbol-sdk": "^0.17.3",
-        "symbol-uri-scheme": "^0.4.2",
+        "symbol-uri-scheme": "^0.4.3",
         "update-notifier": "^4.1.0"
     },
     "devDependencies": {
