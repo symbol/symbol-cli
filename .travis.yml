@@ -10,6 +10,7 @@ before_script:
 script:
   - npm run test:cov
   - npm run lint:all
+  - if [ "$TRAVIS_NODE_VERSION" = "10" ]; then npm run coveralls-report; fi
 deploy:
   - provider: script
     skip_cleanup: true
