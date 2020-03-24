@@ -11,6 +11,8 @@ script:
   - npm run test:cov
   - npm run lint:all
 before_deploy:
+  - sudo apt-get update
+  - sudo apt-get install python3
   - pip install --user catapultdocscli
   - npm link
   - CURRENT_VERSION=$(npm run version --silent)
