@@ -1,7 +1,0 @@
-
-{
- "watch": ["src"],
- "ext": "ts",
- "ignore": ["src/public"],
- "exec": "rm -rf build/ && tsc"
-}
