@@ -23,7 +23,7 @@ import {mockProfile1} from '../mocks/profile.mock'
 import {expect} from 'chai'
 
 describe('Multisig service', () => {
-  it('should create a multisig service service', () => {
+  it('should create a multisig service', () => {
     const multisigService = new MultisigService(mockProfile1)
     expect(multisigService).to.be.an.instanceOf(MultisigService)
   })
