@@ -15,13 +15,23 @@
  * limitations under the License.
  *
  */
-import {ReceiptService} from '../../src/services/receipt.service'
-import {expect} from 'chai'
 
-describe('Receipt service', () => {
+import {CellRecord} from '../transactions/details/transaction.view'
 
-    it('should create receipt service', () => {
-        expect(new ReceiptService()).to.not.be.equal(undefined)
-    })
+export abstract class AbstractStatementView {
+ /**
+ * Renders a section header
+ * @private
+ * @param {string} sectionName
+ * @returns {CellRecord}
+ */
+ protected getSectionTitle(sectionName: string): CellRecord {
+  return {
+   title: {content: sectionName, colSpan: 2, hAlign: 'left'},
+  }
+ }
 
-})
+ public render() {
+  throw new Error('The render class must be overriden by implementation classes')
+ }
+}
