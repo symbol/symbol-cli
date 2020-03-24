@@ -12,8 +12,8 @@ script:
   - npm run lint:all
 before_deploy:
   - sudo apt-get update
-  - sudo apt-get install python3
-  - pip install --user catapultdocscli
+  - sudo apt-get install python3 python3-pip
+  - pip3 install --user catapultdocscli
   - npm link
   - CURRENT_VERSION=$(npm run version --silent)
   - catapult-docs-cli cli-usage --config .clidocs > docs/$CURRENT_VERSION.md
