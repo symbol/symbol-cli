@@ -11,7 +11,7 @@ script:
   - npm run test:cov
   - npm run lint:all
 before_deploy:
-  - pip intall catapult-docs-cli
+  - pip install catapult-docs-cli
   - npm link
   - CURRENT_VERSION=$(npm run version --silent)
   - catapult-docs-cli cli-usage --config .clidocs > docs/$CURRENT_VERSION.md
