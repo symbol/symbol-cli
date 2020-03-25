@@ -20,6 +20,7 @@ import {Profile, ProfileRecord, CURRENT_PROFILE_VERSION} from '../models/profile
 import {SimpleWallet, ISimpleWalletDTO} from 'symbol-sdk'
 import {NetworkCurrency} from '../models/networkCurrency.model'
 import {ProfileMigrations} from '../migrations/profile.migrations'
+import {ExpectedError} from 'clime'
 
 /**
  * Profile repository
@@ -143,10 +144,18 @@ export class ProfileRepository {
      */
     private getProfiles(): ProfileRecord {
         // check if profile storage file exists, creates one if not
-        if (!fs.existsSync(this.filePath)) {
-            fs.writeFileSync(this.filePath, '{}', 'utf-8')
-            return {}
+        try {
+            if (!fs.existsSync(this.filePath)) {
+                fs.writeFileSync(this.filePath, '{}', 'utf-8')
+                return {}
+            }
+        } catch (error) {
+            throw new ExpectedError(
+                'Something went wrong when creating a file to store your profiles...',
+                + JSON.stringify(error),
+            )
         }
+
 
         try {
             // get accounts from storage
@@ -161,8 +170,11 @@ export class ProfileRepository {
             }
 
             return profiles
-        } catch (err) {
-            return {}
+        } catch (error) {
+            throw new ExpectedError(
+                'Something went wrong when retrieving your profiles from the storage...'
+                + JSON.stringify(error),
+            )
         }
     }
 
