@@ -47,19 +47,23 @@ describe('Network currency', () => {
   expect(networkCurrency.toDTO()).deep.equal(DTO)
  })
 
- it('createRelative should return a mosaic whem provided a number', () => {
+ it('createRelative should return a mosaic when provided a number', () => {
   const relativeAmount = 123456
-  const absoluteAmount = Math.pow(relativeAmount, 6)
+  const absoluteAmount = relativeAmount * Math.pow(10, 6)
   const expectedMosaic = new Mosaic(new NamespaceId('symbol.xym'), UInt64.fromUint(absoluteAmount))
-  expect(mockNetworkCurrency.createRelative(relativeAmount)).deep.equal(expectedMosaic)
+  const mosaic = mockNetworkCurrency.createRelative(relativeAmount)
+  expect(mosaic).deep.equal(expectedMosaic)
+  expect(mosaic.amount.compact()).equals(123_456_000_000)
  })
 
- it('createRelative should return a mosaic whem provided a number as a string', () => {
+ it('createRelative should return a mosaic when provided a number as a string', () => {
   const relativeAmount = 123456
   const relativeAmountAsString = '123456'
-  const absoluteAmount = Math.pow(relativeAmount, 6)
+  const absoluteAmount = relativeAmount * Math.pow(10, 6)
   const expectedMosaic = new Mosaic(new NamespaceId('symbol.xym'), UInt64.fromUint(absoluteAmount))
-  expect(mockNetworkCurrency.createRelative(relativeAmountAsString)).deep.equal(expectedMosaic)
+  const mosaic = mockNetworkCurrency.createRelative(relativeAmountAsString)
+  expect(mosaic).deep.equal(expectedMosaic)
+  expect(mosaic.amount.compact()).equals(123_456_000_000)
  })
 
  it('createRelative should throw when provided an invalid number', () => {
