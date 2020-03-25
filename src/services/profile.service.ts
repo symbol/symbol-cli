@@ -18,6 +18,7 @@
 import {Profile} from '../models/profile.model'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {SimpleWallet} from 'symbol-sdk'
+import {NetworkCurrency} from '../models/networkCurrency.model'
 
 /**
  * Profile service
@@ -38,10 +39,16 @@ export class ProfileService {
      * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
      * @param {string} url - Node URL by default.
      * @param {string} networkGenerationHash - Network's generation hash.
+     * @param {NetworkCurrency} networkCurrency - Network currency.
      * @returns {Profile}
      */
-    createNewProfile(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
-        return this.profileRepository.save(simpleWallet, url, networkGenerationHash)
+    createNewProfile(
+        simpleWallet: SimpleWallet,
+        url: string,
+        networkGenerationHash: string,
+        networkCurrency: NetworkCurrency,
+    ): Profile {
+        return this.profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
     }
 
     /**

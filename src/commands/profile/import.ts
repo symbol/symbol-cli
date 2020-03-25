@@ -26,6 +26,7 @@ import {URLResolver} from '../../resolvers/url.resolver'
 import {SimpleWallet} from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
 import chalk from 'chalk'
+import {NetworkCurrencyResolver} from '../../resolvers/networkCurrency.resolver'
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -53,6 +54,7 @@ export default class extends CreateProfileCommand {
         const password = await new PasswordResolver().resolve(options)
         const isDefault = await new DefaultResolver().resolve(options)
         const generationHash = await new GenerationHashResolver().resolve(options)
+        const networkCurrency = await new NetworkCurrencyResolver().resolve(options)
 
         const simpleWallet = SimpleWallet.createFromPrivateKey(
             profileName,
@@ -60,7 +62,7 @@ export default class extends CreateProfileCommand {
             privateKey,
             networkType)
         console.log(new AccountCredentialsTable(simpleWallet.open(password), password).toString())
-        this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash)
+        this.createProfile(simpleWallet, options.url, isDefault, generationHash, networkCurrency)
         console.log( chalk.green('\nStored ' + profileName + ' profile'))
     }
 }

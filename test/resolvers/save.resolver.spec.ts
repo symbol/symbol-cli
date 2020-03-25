@@ -21,7 +21,17 @@ import {expect} from 'chai'
 describe('Save resolver', () => {
 
     it('should return boolean', async () => {
-        const options = {save: true, url: '', network: '', profile: '', password: '', default: false, generationHash: '1'}
+        const options = {
+            save: true,
+            url: '',
+            network: '',
+            profile: '',
+            password: '',
+            default: false,
+            generationHash: '1',
+            namespaceId: '',
+            divisibility: 0,
+        }
         expect(await new SaveResolver().resolve(options)).to.be.equal(true)
     })
 

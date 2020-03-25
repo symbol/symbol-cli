@@ -18,6 +18,7 @@
 import * as fs from 'fs'
 import {Profile} from '../models/profile.model'
 import {SimpleWallet} from 'symbol-sdk'
+import {NetworkCurrency} from '../models/networkCurrency.model'
 
 /**
  * Profile repository
@@ -65,9 +66,15 @@ export class ProfileRepository {
      * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
      * @param {string} url - Node URL by default.
      * @param {string} networkGenerationHash - Network's generation hash.
+     * @param {NetworkCurrency} networkCurrency - Network's generation hash.
      * @returns {Profile}
      */
-    public save(simpleWallet: SimpleWallet, url: string, networkGenerationHash: string): Profile {
+    public save(
+        simpleWallet: SimpleWallet,
+        url: string,
+        networkGenerationHash: string,
+        networkCurrency: NetworkCurrency,
+    ): Profile {
         const profiles = this.getProfiles()
         const {name, network} = simpleWallet
         if (profiles.hasOwnProperty(name)) {
@@ -78,10 +85,11 @@ export class ProfileRepository {
             simpleWallet,
             url,
             networkGenerationHash,
+            networkCurrency: networkCurrency.toDTO(),
             default: '0',
         }
         this.saveProfiles(profiles)
-        return new Profile(simpleWallet, url, networkGenerationHash)
+        return new Profile(simpleWallet, url, networkGenerationHash, networkCurrency)
     }
 
     /**

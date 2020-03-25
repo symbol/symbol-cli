@@ -21,6 +21,7 @@ import {ProfileService} from '../../src/services/profile.service'
 import {expect} from 'chai'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {instance, mock, when} from 'ts-mockito'
+import {NetworkCurrency} from '../../src/models/networkCurrency.model'
 
 describe('Configure service', () => {
 
@@ -41,14 +42,16 @@ describe('Configure service', () => {
 
         const url = 'http://localhost:1234'
         const networkGenerationHash = 'test'
-        const profile = new Profile(simpleWallet, url, networkGenerationHash)
+        const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+
+        const profile = new Profile(simpleWallet, url, networkGenerationHash, networkCurrency)
 
         const mockProfileRepository = mock(ProfileRepository)
-        when(mockProfileRepository.save(simpleWallet, url,  networkGenerationHash))
+        when(mockProfileRepository.save(simpleWallet, url,  networkGenerationHash, networkCurrency))
             .thenReturn(profile)
 
         const profileService = new ProfileService(instance(mockProfileRepository))
-        const createdProfile = profileService.createNewProfile(simpleWallet, url, networkGenerationHash)
+        const createdProfile = profileService.createNewProfile(simpleWallet, url, networkGenerationHash, networkCurrency)
         expect(createdProfile.simpleWallet).to.be.equal(simpleWallet)
         expect(createdProfile.url).to.be.equal(url)
         expect(createdProfile.name).to.be.equal('default')
@@ -63,7 +66,10 @@ describe('Configure service', () => {
         const url = 'http://localhost:1234'
 
         const networkGenerationHash = 'test'
-        const profile = new Profile(simpleWallet, url, networkGenerationHash)
+
+        const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+
+        const profile = new Profile(simpleWallet, url, networkGenerationHash, networkCurrency)
         const mockProfileRepository = mock(ProfileRepository)
         when(mockProfileRepository.find('default'))
             .thenReturn(profile)
@@ -97,9 +103,15 @@ describe('Configure service', () => {
         const url = 'http://localhost:1234'
 
         const networkGenerationHash = 'test'
-        const profile = new Profile(simpleWallet,
+
+        const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+
+        const profile = new Profile(
+            simpleWallet,
             url,
-            networkGenerationHash)
+            networkGenerationHash,
+            networkCurrency,
+        )
         const mockProfileRepository = mock(ProfileRepository)
         when(mockProfileRepository.find('test'))
             .thenReturn(profile)

@@ -16,10 +16,14 @@
  *
  */
 import * as fs from 'fs'
+import {expect} from 'chai'
+
+import {NetworkCurrency} from '../../src/models/networkCurrency.model'
+import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
-import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {expect} from 'chai'
+
+const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
 describe('ProfileRepository', () => {
 
@@ -57,7 +61,7 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000'
         const networkGenerationHash = 'test'
         const profileRepository = new ProfileRepository(repositoryFileUrl)
-        const savedProfile = profileRepository.save(simpleWallet, url, networkGenerationHash)
+        const savedProfile = profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
         expect(savedProfile.simpleWallet).to.be.equal(simpleWallet)
     })
 
@@ -69,8 +73,8 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000'
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
-        profileRepository.save(simpleWallet, url, networkGenerationHash)
-        expect( () => profileRepository.save(simpleWallet2, url, networkGenerationHash))
+        profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
+        expect(() => profileRepository.save(simpleWallet2, url, networkGenerationHash, networkCurrency))
             .to.throws('A profile named default already exists.')
     })
 
@@ -80,7 +84,7 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000'
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
-        profileRepository.save(simpleWallet, url, networkGenerationHash)
+        profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
         const savedProfile = profileRepository.find('default')
         expect(savedProfile).to.not.be.equal(undefined)
 
@@ -111,8 +115,8 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
         const url = 'http://localhost:3000'
-        profileRepository.save(simpleWallet1, url, networkGenerationHash)
-        profileRepository.save(simpleWallet2, url, networkGenerationHash)
+        profileRepository.save(simpleWallet1, url, networkGenerationHash, networkCurrency)
+        profileRepository.save(simpleWallet2, url, networkGenerationHash, networkCurrency)
         const all = profileRepository.all()
         expect(all.length).to.be.equal(2)
     })
@@ -125,8 +129,8 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
         const url = 'http://localhost:3000'
-        profileRepository.save(simpleWallet1, url, networkGenerationHash)
-        profileRepository.save(simpleWallet2, url, networkGenerationHash)
+        profileRepository.save(simpleWallet1, url, networkGenerationHash, networkCurrency)
+        profileRepository.save(simpleWallet2, url, networkGenerationHash, networkCurrency)
         profileRepository.setDefault('default')
         const currentDefaultProfile = profileRepository.getDefaultProfile()
         expect(currentDefaultProfile).to.not.be.equal(undefined)

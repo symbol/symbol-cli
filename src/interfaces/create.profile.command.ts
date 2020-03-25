@@ -24,6 +24,7 @@ import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {Command, ExpectedError, option} from 'clime'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {NetworkCurrency} from '../models/networkCurrency.model'
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable
@@ -74,22 +75,25 @@ export abstract class CreateProfileCommand extends Command {
     /**
      * Creates a new profile.
      * @param {SimpleWallet} simpleWallet - The account credentials.
-     * @param {NetworkType} networkType - The network type.
      * @param {string} url - The node URL.
      * @param {boolean} isDefault - If the profile has to be saved as default.
-     * @param {string} generationHash - If the network generation hash.
+     * @param {string} generationHash - The network generation hash.
+     * @param {NetworkCurrency} networkCurrency - The network generation hash.
      * @return {Profile}.
      */
     protected createProfile(simpleWallet: SimpleWallet,
-                            networkType: NetworkType,
                             url: string,
                             isDefault: boolean,
-                            generationHash: string) {
+                            generationHash: string,
+                            networkCurrency: NetworkCurrency,) {
             let profile
             try {
-                 profile = this.profileService.createNewProfile(simpleWallet,
+                 profile = this.profileService.createNewProfile(
+                    simpleWallet,
                     url,
-                    generationHash)
+                    generationHash,
+                    networkCurrency,
+                )
             } catch (ignored) {
                 throw new ExpectedError('The profile [' + simpleWallet.name + '] already exists')
             }
@@ -151,4 +155,15 @@ export class CreateProfileOptions extends ProfileOptions {
     })
     generationHash: string
 
+    @option({
+        flag: 'i',
+        description: '(Optional) Namespace Name of the network mosaic. (eg.: symbol.xym) Necessary to create the profile offline.',
+    })
+    namespaceId: string
+
+    @option({
+        flag: 'v',
+        description: '(Optional) Divisiblity of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
+    })
+    divisibility: number
 }

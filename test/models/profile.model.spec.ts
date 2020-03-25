@@ -16,9 +16,14 @@
  *
  */
 
-import {Profile} from '../../src/models/profile.model'
 import {expect} from 'chai'
 import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+
+import {NetworkCurrency} from '../../src/models/networkCurrency.model'
+import {Profile} from '../../src/models/profile.model'
+
+const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+
 
 describe('Profile', () => {
     it('should contain the fields', () => {
@@ -26,6 +31,7 @@ describe('Profile', () => {
             SimpleWallet.create('default', new Password('password'), NetworkType.MIJIN_TEST),
             'url',
             'generationHash',
+            networkCurrency,
         )
         expect(profile.name).to.be.equal('default')
         expect(profile.networkGenerationHash).to.be.equal('generationHash')
@@ -52,6 +58,10 @@ describe('Profile', () => {
                 },
                 networkGenerationHash: 'generationHash',
                 url: 'url',
+                networkCurrency: {
+                    namespaceId: 'symbol.xym',
+                    divisibility: 6,
+                },
             })
         expect(profile.name).to.be.equal('default')
         expect(profile.networkGenerationHash).to.be.equal('generationHash')
@@ -71,6 +81,7 @@ describe('Profile', () => {
             simpleWallet,
             'url',
             'generationHash',
+            networkCurrency,
         )
         expect(profile.isPasswordValid(new Password('12345678'))).to.be.equal(false)
         expect(profile.isPasswordValid(password)).to.be.equal(true)
@@ -88,6 +99,7 @@ describe('Profile', () => {
             simpleWallet,
             'url',
             'generationHash',
+            networkCurrency,
         )
         expect(profile.decrypt(password).privateKey).to.be.equal(privateKey)
         expect(profile.address).to.be.equal(simpleWallet.address)
@@ -105,6 +117,7 @@ describe('Profile', () => {
             simpleWallet,
             'url',
             'generationHash',
+            networkCurrency,
         )
         const password2 = new Password('test12345678')
         expect(() => profile.decrypt(password2))
