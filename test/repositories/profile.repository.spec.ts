@@ -23,6 +23,7 @@ import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 import {profileDTOv1, profileDTO2v2} from '../mocks/profiles/profileDTO.mock'
+import {when, spy} from 'ts-mockito'
 
 const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
@@ -153,5 +154,22 @@ describe('ProfileRepository', () => {
     it('should throw error if default does not exist',  () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         expect(() => profileRepository.getDefaultProfile()).to.throws(Error)
+    })
+
+    it('should throw error if unable to create a new file',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+        const mockedFs: any = spy(fs)
+        when(mockedFs.writeFileSync(profileRepository.filePath, '{}', 'utf-8'))
+            .thenThrow(new Error())
+        expect(() => profileRepository.all()).to.throws(Error)
+    })
+
+    it('should throw error if unable to save migrated files',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+        // @ts-ignore // accessing a private property
+        profileRepository.saveProfiles({...profileDTOv1, ...profileDTO2v2})
+        const mockedFs: any = spy(fs)
+        when(mockedFs.writeFileSync).thenThrow(new Error())
+        expect(() => profileRepository.all()).to.throws(Error)
     })
 })
