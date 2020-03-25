@@ -1,8 +1,8 @@
 import * as fs from 'fs'
-import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {NetworkType, Password, SimpleWallet, Account} from 'symbol-sdk'
 import {expect} from 'chai'
 
-import {CreateProfileCommand} from '../../src/interfaces/create.profile.command'
+import {CreateProfileCommand, AccountCredentialsTable} from '../../src/interfaces/create.profile.command'
 import {NetworkCurrency} from '../../src/models/networkCurrency.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 
@@ -68,5 +68,17 @@ describe('Create Profile Command', () => {
 
     it('should not set as default if profile does not exist', () => {
         expect(() => command['setDefaultProfile']('random')).to.throws(Error)
+    })
+})
+
+describe('AccountCredentialsTable', () => {
+    it('toString() should not be undefined', () => {
+        const table = new AccountCredentialsTable(
+            Account.generateNewAccount(NetworkType.MAIN_NET),
+        )
+
+        const tableAsString = table.toString()
+        expect(tableAsString).not.to.be.undefined
+        expect(tableAsString.length).greaterThan(0)
     })
 })
