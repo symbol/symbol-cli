@@ -29,6 +29,7 @@ interface ProfileDTO {
     url: string;
     networkGenerationHash: string;
     networkCurrency: NetworkCurrencyDTO;
+    version: number;
 }
 
 /**
@@ -47,6 +48,7 @@ export class Profile {
                 public readonly url: string,
                 public readonly networkGenerationHash: string,
                 public readonly networkCurrency: NetworkCurrency,
+                public readonly version: number,
     ) {
         const {namespaceId, divisibility} = networkCurrency
 
@@ -100,6 +102,7 @@ export class Profile {
             profileDTO.url,
             profileDTO.networkGenerationHash,
             NetworkCurrency.createFromDTO(profileDTO.networkCurrency),
+            profileDTO.version,
         )
     }
 

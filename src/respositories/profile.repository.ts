@@ -89,7 +89,7 @@ export class ProfileRepository {
             default: '0',
         }
         this.saveProfiles(profiles)
-        return new Profile(simpleWallet, url, networkGenerationHash, networkCurrency)
+        return new Profile(simpleWallet, url, networkGenerationHash, networkCurrency, 2)
     }
 
     /**

@@ -32,6 +32,7 @@ describe('Profile', () => {
             'url',
             'generationHash',
             networkCurrency,
+            2,
         )
         expect(profile.name).to.be.equal('default')
         expect(profile.networkGenerationHash).to.be.equal('generationHash')
@@ -62,6 +63,7 @@ describe('Profile', () => {
                     namespaceId: 'symbol.xym',
                     divisibility: 6,
                 },
+                version: 2,
             })
         expect(profile.name).to.be.equal('default')
         expect(profile.networkGenerationHash).to.be.equal('generationHash')
@@ -77,12 +79,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new Profile(
-            simpleWallet,
-            'url',
-            'generationHash',
-            networkCurrency,
-        )
+        const profile = new Profile(simpleWallet, 'url', 'generationHash', networkCurrency, 2)
         expect(profile.isPasswordValid(new Password('12345678'))).to.be.equal(false)
         expect(profile.isPasswordValid(password)).to.be.equal(true)
     })
@@ -95,12 +92,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new Profile(
-            simpleWallet,
-            'url',
-            'generationHash',
-            networkCurrency,
-        )
+        const profile = new Profile(simpleWallet, 'url', 'generationHash', networkCurrency, 2)
         expect(profile.decrypt(password).privateKey).to.be.equal(privateKey)
         expect(profile.address).to.be.equal(simpleWallet.address)
     })
@@ -113,12 +105,7 @@ describe('Profile', () => {
             password,
             privateKey,
             NetworkType.MIJIN_TEST)
-        const profile = new Profile(
-            simpleWallet,
-            'url',
-            'generationHash',
-            networkCurrency,
-        )
+        const profile = new Profile(simpleWallet, 'url', 'generationHash', networkCurrency, 2)
         const password2 = new Password('test12345678')
         expect(() => profile.decrypt(password2))
             .to.throws('The password provided does not match your account password')
