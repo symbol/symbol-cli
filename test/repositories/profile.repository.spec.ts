@@ -22,7 +22,7 @@ import {NetworkCurrency} from '../../src/models/networkCurrency.model'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
-import {profileDTOv1} from '../mocks/profiles/profileDTO.mock'
+import {profileDTOv1, profileDTO2v2} from '../mocks/profiles/profileDTO.mock'
 
 const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
@@ -122,10 +122,10 @@ describe('ProfileRepository', () => {
         expect(all.length).to.be.equal(2)
     })
 
-    it('should get all profiles and update their schemas',  () => {
+    it('should get all profiles and update their schemas if necessary',  () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         // @ts-ignore // accessing a private property
-        profileRepository.saveProfiles(profileDTOv1)
+        profileRepository.saveProfiles({...profileDTOv1, ...profileDTO2v2})
         const all = profileRepository.all()
         expect(all[0].version).to.not.be.undefined
         expect(all[0].networkCurrency).deep.equal(networkCurrency)
