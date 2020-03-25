@@ -16,20 +16,23 @@
  *
  */
 import * as fs from 'fs'
-import {Profile} from '../models/profile.model'
-import {SimpleWallet} from 'symbol-sdk'
+import {Profile, ProfileRecord, CURRENT_PROFILE_VERSION} from '../models/profile.model'
+import {SimpleWallet, ISimpleWalletDTO} from 'symbol-sdk'
 import {NetworkCurrency} from '../models/networkCurrency.model'
+import {ProfileMigrations} from '../migrations/profile.migrations'
 
 /**
  * Profile repository
  */
 export class ProfileRepository {
+    public readonly filePath: string
 
     /**
      * Constructor
      * @param {string} fileUrl - File path where profiles are saved.
      */
     constructor(private readonly fileUrl: string) {
+        this.filePath = require('os').homedir() + '/' + fileUrl
     }
 
     /**
@@ -76,17 +79,20 @@ export class ProfileRepository {
         networkCurrency: NetworkCurrency,
     ): Profile {
         const profiles = this.getProfiles()
-        const {name, network} = simpleWallet
+        const {name} = simpleWallet
         if (profiles.hasOwnProperty(name)) {
             throw new Error(`A profile named ${name} already exists.`)
         }
+
+        // @TODO: use SimpleWallet.toDTO() once it is available in the SDK
+        const simpleWalletDTO: ISimpleWalletDTO = JSON.parse(JSON.stringify(simpleWallet))
         profiles[name] = {
-            networkType: network,
-            simpleWallet,
+            simpleWallet: simpleWalletDTO,
             url,
             networkGenerationHash,
             networkCurrency: networkCurrency.toDTO(),
             default: '0',
+            version: CURRENT_PROFILE_VERSION,
         }
         this.saveProfiles(profiles)
         return new Profile(simpleWallet, url, networkGenerationHash, networkCurrency, 2)
@@ -135,21 +141,85 @@ export class ProfileRepository {
      * Get all profiles as JSON objects.
      * @returns {object}
      */
-    private getProfiles(): any {
-        let accounts = {}
-        try {
-            accounts = JSON.parse(fs.readFileSync(require('os').homedir() + '/' + this.fileUrl, 'utf-8'))
-        } catch (err) {
-            fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, '{}', 'utf-8')
+    private getProfiles(): ProfileRecord {
+        // check if profile storage file exists, creates one if not
+        if (!fs.existsSync(this.filePath)) {
+            fs.writeFileSync(this.filePath, '{}', 'utf-8')
+            return {}
         }
-        return accounts
+
+        try {
+            // get accounts from storage
+            const profiles = JSON.parse(fs.readFileSync(this.filePath, 'utf-8'))
+
+            // migrate accounts if necessary
+            if (!this.checkSchemaVersion(profiles)) {
+                const migratedProfiles = this.migrate(profiles)
+                // persist updated profiles
+                this.saveProfiles(migratedProfiles)
+                return migratedProfiles
+            }
+
+            return profiles
+        } catch (err) {
+            return {}
+        }
+    }
+
+    /**
+     * Iterates entities to find *out-of-date* data schemas.
+     * @param {ProfileRecord} profiles
+     * @return {boolean}  True if profiles are up to date, false if any requires migration
+     */
+    private checkSchemaVersion(profiles: ProfileRecord): boolean {
+        const profileNeedingMigration = Object.values(profiles).find(
+            ({version}) => !version || version < CURRENT_PROFILE_VERSION,
+        )
+
+        return profileNeedingMigration === undefined
+    }
+
+
+    /**
+     * Return a profile record with updated profiles
+     * @private
+     * @param {ProfileRecord} profiles
+     * @returns {ProfileRecord}
+     */
+    private migrate(profiles: ProfileRecord): ProfileRecord {
+        const allMigrations = ProfileMigrations.get()
+        return Object.entries(profiles)
+            .map((entry) => {
+                const [name, profile] = entry
+                const profileVersion = Number(profile.version) || 0
+
+                // migrate outdated files
+                if (profileVersion < CURRENT_PROFILE_VERSION) {
+                    // get migrations to apply
+                    const migrations = Object.entries(allMigrations)
+                        .filter(([version]) => Number(version) > profileVersion)
+                        .map(([, migration]) => migration)
+
+                    // return migrated profiles
+                    return migrations
+                        .map((migration) => migration({[name]: profile}))
+                        .reduce((acc, migratedProfile) => ({...acc, ...migratedProfile}), {})
+                }
+
+                return {[name]: profile}
+            })
+            .reduce((acc, profile) => ({...acc, ...profile}), {})
     }
 
     /**
      * Save profiles from JSON.
      * @param {JSON} profiles
      */
-    private saveProfiles(profiles: JSON) {
-        fs.writeFileSync(require('os').homedir() + '/' + this.fileUrl, JSON.stringify(profiles), 'utf-8')
+    private saveProfiles(profiles: ProfileRecord) {
+        fs.writeFileSync(
+            this.filePath,
+            JSON.stringify(profiles),
+            'utf-8',
+        )
     }
 }

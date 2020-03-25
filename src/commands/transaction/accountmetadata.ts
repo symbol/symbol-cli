@@ -13,7 +13,6 @@ import {
     MetadataHttp,
     MetadataTransactionService,
     MetadataType,
-    NetworkCurrencyPublic,
     UInt64,
 } from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
@@ -111,7 +110,7 @@ export default class extends AnnounceTransactionsCommand {
                 'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
             const hashLockTransaction = HashLockTransaction.create(
                 Deadline.create(),
-                NetworkCurrencyPublic.createRelative(UInt64.fromNumericString(options.amount)),
+                profile.networkCurrency.createRelative(options.amount),
                 UInt64.fromNumericString(options.duration),
                 signedTransaction,
                 profile.networkType,

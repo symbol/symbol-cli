@@ -22,11 +22,11 @@ export class NetworkCurrencyResolver implements Resolver {
                 return NetworkCurrency.createFromDTO({namespaceId, divisibility})
             }
 
-            const transactions = await new BlockHttp(options.url)
+            const firstBlockTransactions = await new BlockHttp(options.url)
                 .getBlockTransactions(UInt64.fromUint(1), new QueryParams({pageSize: 100}))
                 .toPromise()
 
-            return NetworkCurrency.createFromFirstBlockTransactions(transactions)
+            return NetworkCurrency.createFromFirstBlockTransactions(firstBlockTransactions)
         } catch (ignored) {
             throw new ExpectedError('Check if you can reach the Symbol url provided: ' + options.url + '/block/1')
         }

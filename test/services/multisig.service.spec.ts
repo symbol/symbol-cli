@@ -19,7 +19,7 @@ import {MultisigService} from '../../src/services/multisig.service'
 import {
   multisigGraphInfo1, multisigGraphInfoPublicAccount1, multisigGraphInfoPublicAccount5,
 } from '../mocks/multisigGraphInfo.mock'
-import {mockProfile1} from '../mocks/profile.mock'
+import {mockProfile1} from '../mocks/profiles/profile.mock'
 import {expect} from 'chai'
 
 describe('Multisig service', () => {

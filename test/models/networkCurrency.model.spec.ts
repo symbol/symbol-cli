@@ -16,9 +16,13 @@
  *
  */
 import {expect} from 'chai'
-import {NamespaceId} from 'symbol-sdk'
+import {NamespaceId, Mosaic, UInt64} from 'symbol-sdk'
 import {NetworkCurrency} from '../../src/models/networkCurrency.model'
 import {block1Transactions} from '../mocks/transactions/block1Transactions.mock'
+
+const mockNetworkCurrency = NetworkCurrency.createFromDTO({
+ namespaceId: 'symbol.xym', divisibility: 6,
+})
 
 describe('Network currency', () => {
  it('createFromDTO instantiate the network currency', () => {
@@ -41,5 +45,30 @@ describe('Network currency', () => {
   const DTO = {namespaceId: 'symbol.xym', divisibility: 6}
   const networkCurrency = NetworkCurrency.createFromDTO(DTO)
   expect(networkCurrency.toDTO()).deep.equal(DTO)
+ })
+
+ it('createRelative should return a mosaic whem provided a number', () => {
+  const relativeAmount = 123456
+  const absoluteAmount = Math.pow(relativeAmount, 6)
+  const expectedMosaic = new Mosaic(new NamespaceId('symbol.xym'), UInt64.fromUint(absoluteAmount))
+  expect(mockNetworkCurrency.createRelative(relativeAmount)).deep.equal(expectedMosaic)
+ })
+
+ it('createRelative should return a mosaic whem provided a number as a string', () => {
+  const relativeAmount = 123456
+  const relativeAmountAsString = '123456'
+  const absoluteAmount = Math.pow(relativeAmount, 6)
+  const expectedMosaic = new Mosaic(new NamespaceId('symbol.xym'), UInt64.fromUint(absoluteAmount))
+  expect(mockNetworkCurrency.createRelative(relativeAmountAsString)).deep.equal(expectedMosaic)
+ })
+
+ it('createRelative should throw when provided an invalid number', () => {
+  // @ts-ignore
+  expect(() => {mockNetworkCurrency.createRelative('not an amount')}).to.throws
+  // @ts-ignore
+  expect(() => {mockNetworkCurrency.createRelative(undefined)}).to.throws
+  // @ts-ignore
+  expect(() => {mockNetworkCurrency.createRelative(null)}).to.throws
+  expect(() => {mockNetworkCurrency.createRelative(-1)}).to.throws
  })
 })

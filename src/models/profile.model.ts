@@ -21,6 +21,8 @@ import {ExpectedError} from 'clime'
 import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {NetworkCurrency, NetworkCurrencyDTO} from './networkCurrency.model'
 
+export const CURRENT_PROFILE_VERSION = 2
+
 /**
  * Profile data transfer object.
  */
@@ -30,7 +32,13 @@ interface ProfileDTO {
     networkGenerationHash: string;
     networkCurrency: NetworkCurrencyDTO;
     version: number;
+    default: '0' | '1';
 }
+
+/**
+ * Profile DTO mapped by profile names
+ */
+export type ProfileRecord = Record<string, ProfileDTO>
 
 /**
  * Profile model.
@@ -59,10 +67,10 @@ export class Profile {
 
         this.table.push(
             ['Name', this.simpleWallet.name],
+            ['Address', this.simpleWallet.address.pretty()],
             ['Network', NetworkType[this.simpleWallet.network]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
-            ['Address', this.simpleWallet.address.pretty()],
             ['NetworkCurrency', `name: ${namespaceId.fullName}, divisibility: ${divisibility}`],
         )
     }

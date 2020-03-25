@@ -18,8 +18,8 @@
 
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 
-import {NetworkCurrency} from '../../src/models/networkCurrency.model'
-import {Profile} from '../../src/models/profile.model'
+import {NetworkCurrency} from '../../../src/models/networkCurrency.model'
+import {Profile} from '../../../src/models/profile.model'
 
 const simpleWallet1 = SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST)
 const url1 = 'http://localhost:1234'

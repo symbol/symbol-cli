@@ -20,6 +20,8 @@ import {
   NamespaceRegistrationTransaction,
   NamespaceRegistrationType,
   Transaction,
+  Mosaic,
+  UInt64,
 } from 'symbol-sdk'
 
 export interface NetworkCurrencyDTO {
@@ -96,5 +98,17 @@ export class NetworkCurrency {
   public toDTO(): NetworkCurrencyDTO {
     const id = this.namespaceId.fullName ? this.namespaceId.fullName : this.namespaceId.toHex()
     return {namespaceId: id, divisibility: this.divisibility}
+  }
+
+  /**
+   * Creates a mosaic given a relative amount
+   * @param {(number | string)} amount
+   * @returns {Mosaic}
+   */
+  public createRelative(amount: number | string): Mosaic {
+    const theAmount = Number(amount)
+    if (theAmount < 0) { throw new Error('The provided amount should be greater than 0') }
+    const absoluteAmount = Math.pow(theAmount, this.divisibility)
+    return new Mosaic(this.namespaceId, UInt64.fromUint(absoluteAmount))
   }
 }

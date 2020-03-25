@@ -22,6 +22,7 @@ import {NetworkCurrency} from '../../src/models/networkCurrency.model'
 import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
+import {profileDTOv1} from '../mocks/profiles/profileDTO.mock'
 
 const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
@@ -121,6 +122,15 @@ describe('ProfileRepository', () => {
         expect(all.length).to.be.equal(2)
     })
 
+    it('should get all profiles and update their schemas',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+        // @ts-ignore // accessing a private property
+        profileRepository.saveProfiles(profileDTOv1)
+        const all = profileRepository.all()
+        expect(all[0].version).to.not.be.undefined
+        expect(all[0].networkCurrency).deep.equal(networkCurrency)
+    })
+
     it('should set and get default profile',  () => {
         const simpleWallet1 = SimpleWallet
             .create('simpleWallet1', new Password('password'), NetworkType.MIJIN_TEST)
@@ -144,5 +154,4 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         expect(() => profileRepository.getDefaultProfile()).to.throws(Error)
     })
-
 })

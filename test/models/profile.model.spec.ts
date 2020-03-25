@@ -64,6 +64,7 @@ describe('Profile', () => {
                     divisibility: 6,
                 },
                 version: 2,
+                default: '1',
             })
         expect(profile.name).to.be.equal('default')
         expect(profile.networkGenerationHash).to.be.equal('generationHash')
