@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.18.4] - 25-Mar-2020
+
+**Milestone**: Fushicho.5(RC4 0.9.3.1)
+
+### Added
+
+- ``transaction uri`` command supports the transaction uri scheme #210 #177
+- Alpha and full-releases from TravisCI
+- Commands documentation versioned and generated automatically
+- CLI notifies the user when there is a new update #251
+- Receipts are shown in tables #192
+
+### Fixed
+
+- Divisibility resolver validation.
+
 ## [0.18.3] - 18-Mar-2020
 
 **Milestone**: Fushicho.5(RC4 0.9.3.1)
@@ -280,6 +296,7 @@ Before installing ``symbol-cli@0.16.0``, backup and delete the file  ``~ \.nem2r
 ### Added
 - Initial code release.
 
+[0.18.4]: https://github.com/nemtech/symbol-cli/compare/v0.18.3...v0.18.4
 [0.18.3]: https://github.com/nemtech/symbol-cli/compare/v0.18.2...v0.18.3
 [0.18.2]: https://github.com/nemtech/symbol-cli/compare/v0.18.1...v0.18.2
 [0.18.1]: https://github.com/nemtech/symbol-cli/compare/v0.17.1...v0.18.1
