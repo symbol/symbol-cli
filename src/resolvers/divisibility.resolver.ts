@@ -21,7 +21,7 @@ export class DivisibilityResolver implements Resolver {
             () =>  undefined,
             altText ? altText : 'Enter the mosaic divisibility:',
             'text',
-            new NumericStringValidator()))
+            undefined))
         return resolution
     }
 }

@@ -19,6 +19,9 @@ import * as Table from 'cli-table3'
 import {HorizontalTable} from 'cli-table3'
 import {ExpectedError} from 'clime'
 import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {NetworkCurrency, NetworkCurrencyDTO} from './networkCurrency.model'
+
+export const CURRENT_PROFILE_VERSION = 2
 
 /**
  * Profile data transfer object.
@@ -27,7 +30,15 @@ interface ProfileDTO {
     simpleWallet: ISimpleWalletDTO;
     url: string;
     networkGenerationHash: string;
+    networkCurrency: NetworkCurrencyDTO;
+    version: number;
+    default: '0' | '1';
 }
+
+/**
+ * Profile DTO mapped by profile names
+ */
+export type ProfileRecord = Record<string, ProfileDTO>
 
 /**
  * Profile model.
@@ -43,18 +54,24 @@ export class Profile {
      */
     constructor(public readonly simpleWallet: SimpleWallet,
                 public readonly url: string,
-                public readonly networkGenerationHash: string) {
+                public readonly networkGenerationHash: string,
+                public readonly networkCurrency: NetworkCurrency,
+                public readonly version: number,
+    ) {
+        const {namespaceId, divisibility} = networkCurrency
 
         this.table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable
+
         this.table.push(
             ['Name', this.simpleWallet.name],
+            ['Address', this.simpleWallet.address.pretty()],
             ['Network', NetworkType[this.simpleWallet.network]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
-            ['Address', this.simpleWallet.address.pretty()],
+            ['NetworkCurrency', `name: ${namespaceId.fullName}, divisibility: ${divisibility}`],
         )
     }
 
@@ -92,6 +109,8 @@ export class Profile {
             SimpleWallet.createFromDTO(profileDTO.simpleWallet),
             profileDTO.url,
             profileDTO.networkGenerationHash,
+            NetworkCurrency.createFromDTO(profileDTO.networkCurrency),
+            profileDTO.version,
         )
     }
 

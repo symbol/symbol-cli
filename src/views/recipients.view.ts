@@ -26,8 +26,8 @@ export class RecipientsView {
    * @returns {string}
    */
   static get(recipient: Address | NamespaceId): string {
-    return recipient instanceof Address
-      ? recipient.pretty()
-      : `${recipient.fullName} (${recipient.toHex()})`
+    if (recipient instanceof Address) {return recipient.pretty()}
+    if (recipient.fullName) {return `${recipient.fullName} (${recipient.toHex()})`}
+    return recipient.toHex()
   }
 }

@@ -27,7 +27,6 @@ import {
     Deadline,
     HashLockTransaction,
     MultisigAccountModificationTransaction,
-    NetworkCurrencyPublic,
     UInt64,
 } from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
@@ -117,7 +116,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const hashLockTransaction = HashLockTransaction.create(
             Deadline.create(),
-            NetworkCurrencyPublic.createRelative(UInt64.fromNumericString(options.amount)),
+            profile.networkCurrency.createRelative(options.amount),
             UInt64.fromNumericString(options.duration),
             signedTransaction,
             profile.networkType,

@@ -18,6 +18,7 @@
 import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
 import {DefaultResolver} from '../../resolvers/default.resolver'
 import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
+import {NetworkCurrencyResolver} from '../../resolvers/networkCurrency.resolver'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PasswordResolver} from '../../resolvers/password.resolver'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
@@ -46,13 +47,22 @@ export default class extends CreateProfileCommand {
         const password = await new PasswordResolver().resolve(options)
         const isDefault = await new DefaultResolver().resolve(options)
         const generationHash = await new GenerationHashResolver().resolve(options)
+        const networkCurrency = await new NetworkCurrencyResolver().resolve(options)
 
         const simpleWallet = SimpleWallet.create(
             profileName,
             password,
             networkType)
+
         console.log(new AccountCredentialsTable(simpleWallet.open(password), password).toString())
-        this.createProfile(simpleWallet, networkType, options.url, isDefault, generationHash)
+        this.createProfile(
+            simpleWallet,
+            options.url,
+            isDefault,
+            generationHash,
+            networkCurrency,
+        )
+
         console.log( chalk.green('\nStored ' + profileName + ' profile'))
     }
 }

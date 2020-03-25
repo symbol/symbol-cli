@@ -15,24 +15,23 @@
  * limitations under the License.
  *
  */
-import {DefaultResolver} from '../../src/resolvers/default.resolver'
-import {expect} from 'chai'
 
-describe('Default resolver', () => {
+import {CellRecord} from '../transactions/details/transaction.view'
 
-    it('should return boolean', async () => {
-        const options = {
-            save: false,
-            url: '',
-            network: '',
-            profile: '',
-            password: '',
-            default: true,
-            generationHash: '1',
-            namespaceId: '',
-            divisibility: 0,
-        }
-        expect(await new DefaultResolver().resolve(options)).to.be.equal(true)
-    })
+export abstract class AbstractStatementView {
+ /**
+ * Renders a section header
+ * @private
+ * @param {string} sectionName
+ * @returns {CellRecord}
+ */
+ protected getSectionTitle(sectionName: string): CellRecord {
+  return {
+   title: {content: sectionName, colSpan: 2, hAlign: 'left'},
+  }
+ }
 
-})
+ public render() {
+  throw new Error('The render class must be overriden by implementation classes')
+ }
+}

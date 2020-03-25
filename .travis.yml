@@ -1,25 +1,35 @@
 language: node_js
 node_js:
-  - "10"
   - "12"
 cache:
   directories:
     - "node_modules"
 before_script:
+  - sudo apt-get update
+  - sudo apt-get install python3 python3-pip python3-setuptools
+  - pip3 install catapultdocscli --user
   - npm run build
+  - npm link
 script:
   - npm run test:cov
+  - npm run coveralls-report
   - npm run lint:all
+  - npm run coveralls-report
+  - CURRENT_VERSION=$(npm run version --silent)
+  - catapult-docs-cli cli-usage --config .clidocs > docs/$CURRENT_VERSION.md
 deploy:
+  - provider: script
+    skip_cleanup: true
+    script: /bin/sh travis/github-pages.sh
+    on:
+      branch: master
   - provider: script
     skip_cleanup: true
     script: /bin/sh travis/uploadArchives.sh
     on:
       branch: master
-      node_js: "10"
   - provider: script
     skip_cleanup: true
     script: /bin/sh travis/release.sh
     on:
       branch: $RELEASE_BRANCH
-      node_js: "10"

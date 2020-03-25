@@ -15,24 +15,16 @@
  * limitations under the License.
  *
  */
-import {DefaultResolver} from '../../src/resolvers/default.resolver'
+import {TransactionURIResolver} from '../../src/resolvers/transactionURI.resolver'
 import {expect} from 'chai'
 
-describe('Default resolver', () => {
+describe('TransactionURI resolver', () => {
 
-    it('should return boolean', async () => {
-        const options = {
-            save: false,
-            url: '',
-            network: '',
-            profile: '',
-            password: '',
-            default: true,
-            generationHash: '1',
-            namespaceId: '',
-            divisibility: 0,
-        }
-        expect(await new DefaultResolver().resolve(options)).to.be.equal(true)
+    it('should return TransactionURI', async () => {
+        const uri = 'web+symbol://transaction?data=data'
+        const options = {uri} as any
+        const transactionURI = await new TransactionURIResolver().resolve(options)
+        expect(transactionURI.build())
+            .to.be.equal(uri)
     })
-
 })

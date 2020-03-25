@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-import {ReceiptService} from '../../src/services/receipt.service'
 import {expect} from 'chai'
+import {WebhookService} from '../../src/services/webhook.service'
 
-describe('Receipt service', () => {
-
-    it('should create receipt service', () => {
-        expect(new ReceiptService()).to.not.be.equal(undefined)
-    })
-
+describe('Webhook service', () => {
+  it('should create a Webhook service', () => {
+    const webhookService = new WebhookService()
+    expect(webhookService).to.be.an.instanceOf(WebhookService)
+  })
 })
