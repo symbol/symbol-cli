@@ -16,10 +16,16 @@
  *
  */
 import * as fs from 'fs'
+import {expect} from 'chai'
+
+import {NetworkCurrency} from '../../src/models/networkCurrency.model'
+import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {Profile} from '../../src/models/profile.model'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
-import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {expect} from 'chai'
+import {profileDTOv1, profileDTO2v2} from '../mocks/profiles/profileDTO.mock'
+import {when, spy} from 'ts-mockito'
+
+const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
 describe('ProfileRepository', () => {
 
@@ -57,7 +63,7 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000'
         const networkGenerationHash = 'test'
         const profileRepository = new ProfileRepository(repositoryFileUrl)
-        const savedProfile = profileRepository.save(simpleWallet, url, networkGenerationHash)
+        const savedProfile = profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
         expect(savedProfile.simpleWallet).to.be.equal(simpleWallet)
     })
 
@@ -69,8 +75,8 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000'
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
-        profileRepository.save(simpleWallet, url, networkGenerationHash)
-        expect( () => profileRepository.save(simpleWallet2, url, networkGenerationHash))
+        profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
+        expect(() => profileRepository.save(simpleWallet2, url, networkGenerationHash, networkCurrency))
             .to.throws('A profile named default already exists.')
     })
 
@@ -80,7 +86,7 @@ describe('ProfileRepository', () => {
         const url = 'http://localhost:3000'
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
-        profileRepository.save(simpleWallet, url, networkGenerationHash)
+        profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
         const savedProfile = profileRepository.find('default')
         expect(savedProfile).to.not.be.equal(undefined)
 
@@ -111,10 +117,19 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
         const url = 'http://localhost:3000'
-        profileRepository.save(simpleWallet1, url, networkGenerationHash)
-        profileRepository.save(simpleWallet2, url, networkGenerationHash)
+        profileRepository.save(simpleWallet1, url, networkGenerationHash, networkCurrency)
+        profileRepository.save(simpleWallet2, url, networkGenerationHash, networkCurrency)
         const all = profileRepository.all()
         expect(all.length).to.be.equal(2)
+    })
+
+    it('should get all profiles and update their schemas if necessary',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+        // @ts-ignore // accessing a private property
+        profileRepository.saveProfiles({...profileDTOv1, ...profileDTO2v2})
+        const all = profileRepository.all()
+        expect(all[0].version).to.not.be.undefined
+        expect(all[0].networkCurrency).deep.equal(networkCurrency)
     })
 
     it('should set and get default profile',  () => {
@@ -125,8 +140,8 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl)
         const networkGenerationHash = 'test'
         const url = 'http://localhost:3000'
-        profileRepository.save(simpleWallet1, url, networkGenerationHash)
-        profileRepository.save(simpleWallet2, url, networkGenerationHash)
+        profileRepository.save(simpleWallet1, url, networkGenerationHash, networkCurrency)
+        profileRepository.save(simpleWallet2, url, networkGenerationHash, networkCurrency)
         profileRepository.setDefault('default')
         const currentDefaultProfile = profileRepository.getDefaultProfile()
         expect(currentDefaultProfile).to.not.be.equal(undefined)
@@ -141,4 +156,20 @@ describe('ProfileRepository', () => {
         expect(() => profileRepository.getDefaultProfile()).to.throws(Error)
     })
 
+    it('should throw error if unable to create a new file',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+        const mockedFs: any = spy(fs)
+        when(mockedFs.writeFileSync(profileRepository.filePath, '{}', 'utf-8'))
+            .thenThrow(new Error())
+        expect(() => profileRepository.all()).to.throws(Error)
+    })
+
+    it('should throw error if unable to save migrated files',  () => {
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+        // @ts-ignore // accessing a private property
+        profileRepository.saveProfiles({...profileDTOv1, ...profileDTO2v2})
+        const mockedFs: any = spy(fs)
+        when(mockedFs.writeFileSync).thenThrow(new Error())
+        expect(() => profileRepository.all()).to.throws(Error)
+    })
 })
