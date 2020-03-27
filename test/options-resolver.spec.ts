@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
-
-import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '../src/options-resolver'
-import {ActionValidator} from '../src/validators/action.validator'
-import {ActionType} from '../src/models/action.enum'
-import {NumericStringValidator} from '../src/validators/numericString.validator'
 import {expect} from 'chai'
+import * as proxyquire from 'proxyquire'
+import * as sinon from 'sinon'
+
+import {ActionType} from '../src/models/action.enum'
+import {ActionValidator} from '../src/validators/action.validator'
+import {NumericStringValidator} from '../src/validators/numericString.validator'
+import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '../src/options-resolver'
 
 describe('OptionsResolver', () => {
     it('should return the value', async () => {
@@ -53,6 +55,19 @@ describe('OptionsResolver', () => {
         expect(value).to.be.equal('1')
     })
 
+    it('should prompt the user when provided a wrong option key', async () => {
+        const stub = sinon.stub().returns({name: 'user was prompted'})
+        const optionsResolver = proxyquire('../src/options-resolver', {prompts: stub})
+        const value = await optionsResolver.OptionsResolver(
+            {dummy: 'dummy'},
+            'name',
+            () => undefined,
+            '',
+            'text',
+            undefined,
+        )
+        expect(value).equal('user was prompted')
+    })
 })
 
 describe('OptionsChoicesResolver', () => {
@@ -77,11 +92,40 @@ describe('OptionsChoicesResolver', () => {
 
 })
 
+describe('OptionsChoiceResolver', () => {
+    it('should prompt the user when provided a wrong option key', async () => {
+        const stub = sinon.stub().returns({name: 'user was prompted'})
+        const optionsResolver = proxyquire('../src/options-resolver', {prompts: stub})
+        const value = await optionsResolver.OptionsChoiceResolver(
+            {dummy: 'dummy'},
+            'name',
+            'test',
+            [],
+            'select',
+            undefined,
+        )
+        expect(value).equal('user was prompted')
+    })
+})
+
 describe('OptionsConfirmationResolver', () => {
     it('should return the value', async () => {
         const value = await OptionsConfirmResolver({name: true}, 'name',
              'test', 'confirm',true, 'value')
         expect(value).to.be.equal(true)
+    })
+
+    it('should prompt the user when provided a wrong option key', async () => {
+        const stub = sinon.stub().returns({value: 'user was prompted'})
+        const optionsResolver = proxyquire('../src/options-resolver', {prompts: stub})
+        const value = await optionsResolver.OptionsConfirmResolver(
+            {dummy: 'dummy'},
+            'name',
+            'test',
+            'confirm',
+            true,
+        )
+        expect(value).equal('user was prompted')
     })
 })
 
