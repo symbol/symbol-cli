@@ -15,24 +15,30 @@
  * limitations under the License.
  *
  */
-import {ProofResolver} from '../../src/resolvers/proof.resolver'
 import {expect} from 'chai'
+import {HashType} from 'symbol-sdk'
+import {ProofResolver} from '../../src/resolvers/proof.resolver'
 
 describe('Proof resolver', () => {
-
     it('should return proof', async () => {
-        const proof = 'proof'
+        const proof = '0000000000000000000000000000000000000000000000000000000000000000'
         const options = {proof} as any
+        expect(await new ProofResolver().resolve(options, HashType.Op_Hash_160))
+            .to.be.equal(proof)
+    })
+
+    it('should return proof with a length of 46 when declared as Op_Hash_160', async () => {
+        const proof = 'A000000000000000000000000000000000000000000000'
+        const options = {proof, hashAlgorithm: HashType.Op_Hash_160} as any
         expect(await new ProofResolver().resolve(options))
             .to.be.equal(proof)
     })
 
     it('should change key', async () => {
-        const key = 'proof'
+        const key = '0000000000000000000000000000000000000000000000000000000000000000'
         const options = {key} as any
         expect(await new ProofResolver()
-            .resolve(options, 'altText', 'key'))
+            .resolve(options, undefined, 'altText', 'key'))
             .to.be.equal(key)
     })
-
 })

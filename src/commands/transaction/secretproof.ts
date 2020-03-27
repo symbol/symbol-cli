@@ -26,7 +26,7 @@ import {PasswordResolver} from '../../resolvers/password.resolver'
 import {Deadline, SecretProofTransaction} from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
 
-export class CommandOptions extends AnnounceTransactionsOptions {
+export class SecretProofCommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         description: 'Proof hashed in hexadecimal. ',
@@ -62,15 +62,15 @@ export default class extends AnnounceTransactionsCommand {
     }
 
     @metadata
-    async execute(options: CommandOptions) {
+    async execute(options: SecretProofCommandOptions) {
         const profile = this.getProfile(options)
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
         const recipientAddress = await new AddressAliasResolver()
             .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked:', 'recipientAddress')
         const secret = await new SecretResolver().resolve(options)
-        const proof = await new ProofResolver().resolve(options)
         const hashAlgorithm = await new HashAlgorithmResolver().resolve(options)
+        const proof = await new ProofResolver().resolve(options, hashAlgorithm)
         const maxFee = await new MaxFeeResolver().resolve(options)
 
         const transaction = SecretProofTransaction.create(
