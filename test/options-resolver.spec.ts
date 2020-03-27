@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/unbound-method */
 /*
  *
  * Copyright 2018-present NEM
@@ -25,6 +26,10 @@ import {NumericStringValidator} from '../src/validators/numericString.validator'
 import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '../src/options-resolver'
 
 describe('OptionsResolver', () => {
+    before(() => { sinon.stub(process, 'exit') })
+    // @ts-ignore
+    after(() => { process.exit.restore() })
+
     it('should return the value', async () => {
         const value = await OptionsResolver({name: 'nem'}, 'name',
             () => undefined, 'Insert your name', 'text', undefined)
@@ -55,6 +60,14 @@ describe('OptionsResolver', () => {
         expect(value).to.be.equal('1')
     })
 
+    it('should not pass validation', async () => {
+        const value = await OptionsResolver({name: 'Not a numeric string'}, 'name',
+            () => undefined, 'Insert your name', 'text', new NumericStringValidator())
+        expect(value).to.be.undefined
+        // @ts-ignore
+        sinon.assert.called(process.exit)
+    })
+
     it('should prompt the user when provided a wrong option key', async () => {
         const stub = sinon.stub().returns({name: 'user was prompted'})
         const optionsResolver = proxyquire('../src/options-resolver', {prompts: stub})
@@ -70,7 +83,11 @@ describe('OptionsResolver', () => {
     })
 })
 
-describe('OptionsChoicesResolver', () => {
+describe('OptionsChoiceResolver', () => {
+    before(() => { sinon.stub(process, 'exit') })
+    // @ts-ignore
+    after(() => { process.exit.restore() })
+
     it('should return the value', async () => {
         const choices = [
             {title: 'nem', value: 0},
@@ -90,10 +107,32 @@ describe('OptionsChoicesResolver', () => {
         expect(value).to.be.equal(ActionType.Remove)
     })
 
-})
+    it('should not pass validation', async () => {
+        const choices = [
+            {title: 'Remove', value: ActionType.Remove},
+        ]
+        const value = await OptionsChoiceResolver({name: 'Wrong action'},
+            'name', 'Select name:', choices, 'select', new ActionValidator())
+        expect(value).to.be.undefined
+        // @ts-ignore
+        sinon.assert.called(process.exit)
+    })
 
-describe('OptionsChoiceResolver', () => {
     it('should prompt the user when provided a wrong option key', async () => {
+        const stub = sinon.stub().returns({name: 'user was prompted'})
+        const optionsResolver = proxyquire('../src/options-resolver', {prompts: stub})
+        const value = await optionsResolver.OptionsChoiceResolver(
+            {dummy: 'dummy'},
+            'name',
+            'test',
+            [],
+            'select',
+            undefined,
+        )
+        expect(value).equal('user was prompted')
+    })
+
+    it('should prompt the user when provided a wrong option key and not pass the validation', async () => {
         const stub = sinon.stub().returns({name: 'user was prompted'})
         const optionsResolver = proxyquire('../src/options-resolver', {prompts: stub})
         const value = await optionsResolver.OptionsChoiceResolver(
@@ -111,7 +150,7 @@ describe('OptionsChoiceResolver', () => {
 describe('OptionsConfirmationResolver', () => {
     it('should return the value', async () => {
         const value = await OptionsConfirmResolver({name: true}, 'name',
-             'test', 'confirm',true, 'value')
+            'test', 'confirm', true, 'value')
         expect(value).to.be.equal(true)
     })
 
