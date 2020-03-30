@@ -18,7 +18,7 @@
 import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
 import {Validator} from './validators/validator'
 import chalk from 'chalk'
-import * as prompts from 'prompts'
+import * as prompts from  'prompts'
 
 /**
  * Passed as option to Prompt,
@@ -80,7 +80,7 @@ export const OptionsResolver = async (options: any,
             name: key,
             message: promptText,
             validate: validation !== undefined ?
-                (result) => validation.validate(result) : () => true,
+                (result: any) => validation.validate(result) : () => true,
         }, {onCancel}))[key]
     }
     return value
