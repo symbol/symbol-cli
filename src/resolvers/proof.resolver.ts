@@ -1,13 +1,8 @@
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 import {ProofValidator} from '../validators/proof.validator'
-import {CommandOptions} from '../commands/account/generate'
 import {SecretProofCommandOptions} from '../commands/transaction/secretproof'
 import {HashType} from 'symbol-sdk'
-
-class CommandOptionsWithHash extends CommandOptions {
-    hashAlgorithm: string
-}
 
 /**
  * Proof resolver
