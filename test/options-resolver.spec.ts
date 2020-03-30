@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 /*
  *
  * Copyright 2018-present NEM
@@ -27,8 +26,7 @@ import {OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver} from '..
 
 describe('OptionsResolver', () => {
     before(() => { sinon.stub(process, 'exit') })
-    // @ts-ignore
-    after(() => { process.exit.restore() })
+    after(() => { (process.exit as any).restore() })
 
     it('should return the value', async () => {
         const value = await OptionsResolver({name: 'nem'}, 'name',
@@ -64,8 +62,7 @@ describe('OptionsResolver', () => {
         const value = await OptionsResolver({name: 'Not a numeric string'}, 'name',
             () => undefined, 'Insert your name', 'text', new NumericStringValidator())
         expect(value).to.be.undefined
-        // @ts-ignore
-        sinon.assert.called(process.exit)
+        sinon.assert.called(process.exit as any)
     })
 
     it('should prompt the user when provided a wrong option key', async () => {
@@ -85,8 +82,7 @@ describe('OptionsResolver', () => {
 
 describe('OptionsChoiceResolver', () => {
     before(() => { sinon.stub(process, 'exit') })
-    // @ts-ignore
-    after(() => { process.exit.restore() })
+    after(() => { (process.exit as any).restore() })
 
     it('should return the value', async () => {
         const choices = [
@@ -114,8 +110,7 @@ describe('OptionsChoiceResolver', () => {
         const value = await OptionsChoiceResolver({name: 'Wrong action'},
             'name', 'Select name:', choices, 'select', new ActionValidator())
         expect(value).to.be.undefined
-        // @ts-ignore
-        sinon.assert.called(process.exit)
+        sinon.assert.called(process.exit as any)
     })
 
     it('should prompt the user when provided a wrong option key', async () => {

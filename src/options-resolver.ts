@@ -18,7 +18,6 @@
 import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
 import {Validator} from './validators/validator'
 import chalk from 'chalk'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 import * as prompts from  'prompts'
 
 export const OptionsChoiceResolver = async (options: any,
