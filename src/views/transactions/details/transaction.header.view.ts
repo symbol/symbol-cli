@@ -19,15 +19,17 @@
 import {CellRecord} from './transaction.view'
 import {transactionNameFromType} from './transactionNameFromType'
 import {Cell} from 'cli-table3'
-import {AggregateTransactionInfo, NetworkType, Transaction} from 'symbol-sdk'
+import {NetworkType, Transaction} from 'symbol-sdk'
 
 export interface ITransactionHeaderView extends CellRecord {
   'Title': Cell;
-  'Hash': string | null;
+  'Hash': string | undefined;
+  'Max fee': string;
+  'Height (Block)': string | undefined;
+  'Index': number | undefined;
   'Network type': string;
   'Deadline': string;
-  'Max fee': string;
-  'Signer': string | null;
+  'Signer': string | undefined;
 }
 
 export class TransactionHeaderView {
@@ -53,11 +55,13 @@ export class TransactionHeaderView {
   private render(): ITransactionHeaderView {
     return {
       ['Title']: this.title,
-      ['Hash']: this.hash,
+      ['Hash']: this.tx.transactionInfo?.hash,
+      ['Max fee']: this.tx.maxFee.compact().toLocaleString(),
+      ['Height (Block)']: this.tx.transactionInfo?.height.compact().toLocaleString(),
+      ['Index']: this.tx.transactionInfo?.index,
       ['Network type']: NetworkType[this.tx.networkType],
       ['Deadline']: this.formattedDeadline,
-      ['Max fee']: this.tx.maxFee.compact().toLocaleString(),
-      ['Signer']: this.signer,
+      ['Signer']: this.tx.signer?.address.pretty(),
     }
   }
 
@@ -73,31 +77,6 @@ export class TransactionHeaderView {
       colSpan: 2,
       hAlign: 'center',
     }
-  }
-
-  /**
-   * @readonly
-   * @protected
-   * @type {string | null} TransactionHash
-   */
-  protected get hash(): string | null {
-    const {transactionInfo} = this.tx
-    if (!transactionInfo) {return null }
-    if (transactionInfo instanceof AggregateTransactionInfo) {
-      return transactionInfo.aggregateHash
-    }
-    return transactionInfo.hash || null
-  }
-
-  /**
-   * @readonly
-   * @protected
-   * @type {string | null} Transaction signer
-   */
-  protected get signer(): string | null {
-    const {signer} = this.tx
-    if (!signer) {return null }
-    return signer.address.pretty()
   }
 
   /**
