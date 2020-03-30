@@ -20,6 +20,12 @@ import {Validator} from './validators/validator'
 import chalk from 'chalk'
 import * as prompts from 'prompts'
 
+/**
+ * Passed as option to Prompt,
+ * it enables a clean behaviour when an user abords a prompt serie
+ */
+const onCancel = () => process.exit()
+
 export const OptionsChoiceResolver = async (options: any,
                                             key: string,
                                             promptText: string,
@@ -44,7 +50,7 @@ export const OptionsChoiceResolver = async (options: any,
             choices,
             validate: validation !== undefined ?
                 (result) => validation.validate(result) : () => true,
-        }))[key]
+        }, {onCancel}))[key]
     }
 }
 
@@ -75,7 +81,7 @@ export const OptionsResolver = async (options: any,
             message: promptText,
             validate: validation !== undefined ?
                 (result) => validation.validate(result) : () => true,
-        }))[key]
+        }, {onCancel}))[key]
     }
     return value
 }
@@ -91,5 +97,5 @@ export const OptionsConfirmResolver = async (
         name,
         message: promptText,
         initial,
-    }))[name]
+    }, {onCancel}))[name]
 
