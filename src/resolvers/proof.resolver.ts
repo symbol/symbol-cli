@@ -22,7 +22,7 @@ export class ProofResolver implements Resolver {
             () => undefined,
             altText ? altText : 'Enter the original random set of bytes in hexadecimal:',
             'text',
-            new ProofValidator(hashType === undefined ? options.hashAlgorithm : hashType))
+            new ProofValidator(hashType))
         return resolution
     }
 }

@@ -22,53 +22,43 @@ import {HashType} from 'symbol-sdk'
 describe('Proof validator', () => {
 
     it('default case ', () => {
-        const upperCaseHash = '770DE78BF2AD0531BB7589C8839AB43F5764064785AB1E28160AEF7D3A4C2D4B'
-        const lowerCaseHash = '770de78bf2ad0531bb7589c8839ab43f5764064785ab1e28160aef7d3a4c2d4b'
-        expect(new ProofValidator('').validate(upperCaseHash))
-            .to.be.true
-        expect(new ProofValidator('').validate(lowerCaseHash))
+        const upperCaseHash = '64CHAR0000000000000000000000000000000000000000000000000000000000'
+        expect(new ProofValidator(undefined).validate(upperCaseHash))
             .to.be.true
     })
 
-    it('should throw error if private key length is not 64 nor 46', () => {
-        const privateKey = '770DE78BF2AD0531BB7589C8839AB43F5764064785AB1E28160AEF7D3A4C2D4'
+    it('should throw error if proof length is not 64 nor 40', () => {
+        const privateKey = '63CHAR000000000000000000000000000000000000000000000000000000000'
         expect(
-            new ProofValidator('').validate(privateKey)
-        ).to.be.equal('A proof should be 64 or 46 chars long.')
+            new ProofValidator(undefined).validate(privateKey)
+        ).to.be.equal('A proof should be 64 or 40 chars long.')
     })
 
-    it('should accept a 46 chars hash if no hashType is specified', () => {
-        const privateKey = '46CHARS000000000000000000000000000000000000000'
+    it('should accept a 40 chars hash if no hashType is specified', () => {
+        const privateKey = '40CHARS000000000000000000000000000000000'
         expect(
-            new ProofValidator('').validate(privateKey)
+            new ProofValidator(undefined).validate(privateKey)
         ).to.be.true
     })
 
     it('should accept a 64 chars hash if no hashType is specified', () => {
-        const privateKey = '770de78bf2ad0531bb7589c8839ab43f5764064785ab1e28160aef7d3a4c2d4b'
+        const privateKey = '64CHAR0000000000000000000000000000000000000000000000000000000000'
         expect(
-            new ProofValidator('').validate(privateKey)
+            new ProofValidator(undefined).validate(privateKey)
         ).to.be.true
     })
 
     it('should accept a 64 chars hash if a hashType is specified as HashType', () => {
-        const privateKey = '770de78bf2ad0531bb7589c8839ab43f5764064785ab1e28160aef7d3a4c2d4b'
+        const privateKey = '64CHAR0000000000000000000000000000000000000000000000000000000000'
         expect(
             new ProofValidator(HashType.Op_Hash_256).validate(privateKey)
         ).to.be.true
     })
 
-    it('should throw error if private key length is not 64 when a 64 char long hash is specified', () => {
-        const privateKey = '46CHARS000000000000000000000000000000000000000'
+    it('should throw error if proof length is not 64 when a 64 char long hash is specified', () => {
+        const privateKey = '40CHARS000000000000000000000000000000000'
         expect(
             new ProofValidator(HashType.Op_Hash_256).validate(privateKey)
-        ).to.be.equal('A proof should be 64 chars long.')
-    })
-
-    it('should throw error if private key length is not 64 when a 64 char long hash is specified as a string', () => {
-        const privateKey = '46CHARS000000000000000000000000000000000000000'
-        expect(
-            new ProofValidator('Op_Hash_256').validate(privateKey)
         ).to.be.equal('A proof should be 64 chars long.')
     })
 })

@@ -22,16 +22,7 @@ import {Validator} from './validator'
  * Private key validator
  */
 export class ProofValidator implements Validator<string> {
-    private readonly hashType: HashType
-
-    public constructor(hashType: string | HashType) {
-      try {
-        const h = typeof hashType === 'string' ? HashType[hashType as any] : hashType
-        this.hashType = h as HashType
-      } catch (error) {
-        // do nothing
-      }
-    }
+    public constructor(private readonly hashType: HashType | undefined) { }
 
     /**
      * Validates a hash length.
@@ -39,10 +30,10 @@ export class ProofValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-      // All hashes have a 64 char length exept Op_Hash_160 that can be 46
+      // All hashes have a 64 char length exept Op_Hash_160 that can be 40
       if (!this.hashType || this.hashType === HashType.Op_Hash_160) {
-        return value.length === 46 || value.length === 64
-          ? true : 'A proof should be 64 or 46 chars long.'
+        return value.length === 40 || value.length === 64
+          ? true : 'A proof should be 64 or 40 chars long.'
       }
 
       return value.length === 64 ? true : 'A proof should be 64 chars long.'

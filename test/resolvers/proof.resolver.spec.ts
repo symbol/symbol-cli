@@ -21,21 +21,19 @@ import {ProofResolver} from '../../src/resolvers/proof.resolver'
 
 describe('Proof resolver', () => {
     it('should return proof', async () => {
-        const proof = '0000000000000000000000000000000000000000000000000000000000000000'
-        const options = {proof} as any
-        expect(await new ProofResolver().resolve(options, HashType.Op_Hash_160))
+        const proof = '64CHAR0000000000000000000000000000000000000000000000000000000000'
+        expect(await new ProofResolver().resolve({proof} as any, HashType.Op_Hash_160))
             .to.be.equal(proof)
     })
 
-    it('should return proof with a length of 46 when declared as Op_Hash_160', async () => {
-        const proof = 'A000000000000000000000000000000000000000000000'
-        const options = {proof, hashAlgorithm: HashType.Op_Hash_160} as any
-        expect(await new ProofResolver().resolve(options))
+    it('should return proof with a length of 40 when declared as Op_Hash_160', async () => {
+        const proof = '40CHAR0000000000000000000000000000000000'
+        expect(await new ProofResolver().resolve({proof} as any, HashType.Op_Hash_160))
             .to.be.equal(proof)
     })
 
     it('should change key', async () => {
-        const key = '0000000000000000000000000000000000000000000000000000000000000000'
+        const key = '64CHAR0000000000000000000000000000000000000000000000000000000000'
         const options = {key} as any
         expect(await new ProofResolver()
             .resolve(options, undefined, 'altText', 'key'))
