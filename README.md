@@ -7,13 +7,13 @@
 
 Command Line Interface (CLI) to interact with Symbol.
 
-:information_source: Use the software for testing/development purposes.
+**NOTE:** Symbol-CLI is designed to help developers to architect solutions and interact with Symbol networks quickly from the command line prompt. To hold MAIN NET assets, refer to the [Symbol Desktop Wallet](https://github.com/nemfoundation/symbol-desktop-wallet) project.
 
 ## Important Notes
 
-- [0.18.1](CHANGELOG.md#0181-19-Feb-2020) - **Fushicho5 Network Compatibility (catapult-server@0.9.3.1)**
+- [0.18.x](CHANGELOG.md#0181-19-Feb-2020) - **Fushicho5 Network Compatibility (catapult-server@0.9.3.1)**
 
-:warning: 0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
+0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
 Private keys have now a new public key and address associated.
 Before installing ``symbol-cli@0.18.1``, backup and delete the file ``~ \.nem2rc.json``.
 
@@ -23,9 +23,10 @@ Find the complete release notes [here](CHANGELOG.md).
 
 ## Requirements
 
-- Node v12.13.0 (LTS)
+- Node.js 12 LTS
 
 ## Installation
+
 
 The Symbol CLI is distributed using the node package manager npm.
 
