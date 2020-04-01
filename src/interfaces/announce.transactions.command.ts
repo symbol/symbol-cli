@@ -56,7 +56,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
     /**
      * Announces a transaction waiting for the response.
-     * @param {SignedTransaction} signedTransaction
+     * @param {SignedTransaction} Signed transaction.
      * @param {Address} senderAddress - Address of the account sending the transaction.
      * @param {string} url - Node URL.
      */
@@ -105,8 +105,8 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
     /**
      * Announces a hash lock transaction. Once this is confirmed, announces an aggregate transaction.
-     * @param {SignedTransaction} signedHashLockTransaction
-     * @param {SignedTransaction} signedAggregateTransaction
+     * @param {signedHashLockTransaction} Signed hash lock transaction.
+     * @param {signedAggregateTransaction} Signed aggregate transaction.
      * @param {Address} senderAddress - Address of the account sending the transaction.
      * @param {string} url - Node URL.
      */

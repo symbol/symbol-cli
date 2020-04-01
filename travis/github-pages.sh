@@ -2,6 +2,7 @@
 set -e
 
 PUBLICATION_BRANCH=gh-pages
+
 # Checkout the branch
 REPO_PATH=$PWD
 CURRENT_VERSION=$(npm run version --silent)
@@ -9,9 +10,10 @@ rm -rf $HOME/publish
 cd $HOME
 git clone --branch=$PUBLICATION_BRANCH https://${GITHUB_TOKEN}@github.com/$TRAVIS_REPO_SLUG publish 2>&1 > /dev/null
 cd publish
-# Update pages
 
+# Update pages
 cp -r $REPO_PATH/docs/. ./
+
 # Commit and push latest version
 git add .
 git config user.name  "Travis"
