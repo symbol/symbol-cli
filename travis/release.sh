@@ -49,7 +49,8 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo "$CURRENT_VERSION"
   echo ""
 
-  git add .
+  git add package.json
+  git add package-lock.json
   git commit -m "Creating new version $CURRENT_VERSION"
   echo "Pushing code to $REMOTE_NAME $POST_RELEASE_BRANCH"
   git push --set-upstream $REMOTE_NAME $RELEASE_BRANCH:$POST_RELEASE_BRANCH
