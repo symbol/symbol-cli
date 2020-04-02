@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {AmountResolver} from '../../resolvers/amount.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {DivisibilityResolver} from '../../resolvers/divisibility.resolver'

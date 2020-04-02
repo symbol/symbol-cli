@@ -1,4 +1,5 @@
-import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceAggregateTransactionsOptions} from '../../interfaces/announceAggregateTransactions.options'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {KeyResolver} from '../../resolvers/key.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'

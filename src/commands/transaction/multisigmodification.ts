@@ -14,7 +14,8 @@
  * limitations under the License.
  *
  */
-import {AnnounceAggregateTransactionsOptions, AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceAggregateTransactionsOptions} from '../../interfaces/announceAggregateTransactions.options'
 import {ActionResolver} from '../../resolvers/action.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
