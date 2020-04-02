@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-import {ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {AmountResolver} from '../../resolvers/amount.resolver'
 import {Command, command, metadata, option} from 'clime'
 

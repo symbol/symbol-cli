@@ -16,7 +16,8 @@
  *
  */
 import {HttpErrorHandler} from '../services/httpErrorHandler.service'
-import {ProfileCommand, ProfileOptions} from './profile.command'
+import {ProfileCommand} from './profile.command'
+import {ProfileOptions} from './profile.options'
 import chalk from 'chalk'
 import {Address, Listener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionHttp } from 'symbol-sdk'
 import {merge} from 'rxjs'

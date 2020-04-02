@@ -15,11 +15,13 @@
  * limitations under the License.
  *
  */
+import {Command, ExpectedError} from 'clime'
+import {Spinner} from 'cli-spinner'
+
 import {Profile} from '../models/profile.model'
+import {ProfileOptions} from './profile.options'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
-import {Command, ExpectedError, option, Options} from 'clime'
-import {Spinner} from 'cli-spinner'
 
 /**
  * Base command class to use the stored profile.
@@ -84,14 +86,4 @@ export abstract class ProfileCommand extends Command {
         }
     }
 
-}
-
-/**
- * Profile options.
- */
-export class ProfileOptions extends Options {
-    @option({
-        description: '(Optional) Select between your profiles, by providing a profile name.',
-    })
-    profile: string
 }

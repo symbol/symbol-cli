@@ -15,34 +15,15 @@
  * limitations under the License.
  *
  */
-import {option} from 'clime'
-import {ProfileOptions} from './profile.options'
+
+import {Options, option} from 'clime'
 
 /**
- * Announce transactions options
+ * Profile options.
  */
-export class AnnounceTransactionsOptions extends ProfileOptions {
+export class ProfileOptions extends Options {
  @option({
-     flag: 'p',
-     description: 'Profile password.',
+     description: '(Optional) Select between your profiles, by providing a profile name.',
  })
- password: string
-
- @option({
-     flag: 'f',
-     description: 'Maximum fee (absolute amount).',
- })
- maxFee: string
-
- @option({
-     description: '(Optional) Wait until the server confirms or rejects the transaction.',
-     toggle: true,
- })
- sync: any
-
- @option({
-     description: '(Optional) Announce the transaction without double confirmation.',
-     toggle: true,
- })
- announce: any
+ profile: string
 }

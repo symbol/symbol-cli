@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileCommand} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import {command, metadata, option} from 'clime'

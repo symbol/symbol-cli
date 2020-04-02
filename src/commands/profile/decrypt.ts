@@ -16,7 +16,8 @@
  *
  */
 import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileCommand} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {PasswordResolver} from '../../resolvers/password.resolver'
 import {command, metadata} from 'clime'
 

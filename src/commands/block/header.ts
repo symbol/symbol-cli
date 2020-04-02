@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand, ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileCommand} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {HeightResolver} from '../../resolvers/height.resolver'
 import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
 import chalk from 'chalk'

@@ -1,5 +1,5 @@
 import {CreateProfileCommand} from '../../interfaces/create.profile.command'
-import {ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
 import {command, metadata} from 'clime'
 import chalk from 'chalk'
