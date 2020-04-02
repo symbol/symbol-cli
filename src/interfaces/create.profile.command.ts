@@ -17,7 +17,7 @@
  */
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
-import {ProfileOptions} from './profile.command'
+import {ProfileOptions} from './profile.options'
 import chalk from 'chalk'
 import {Spinner} from 'cli-spinner'
 import * as Table from 'cli-table3'

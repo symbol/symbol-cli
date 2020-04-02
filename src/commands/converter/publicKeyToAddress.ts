@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-import {ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
 import {Command, command, metadata, option} from 'clime'

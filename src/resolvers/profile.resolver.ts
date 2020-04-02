@@ -1,4 +1,4 @@
-import {ProfileOptions} from '../interfaces/profile.command'
+import {ProfileOptions} from '../interfaces/profile.options'
 import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 

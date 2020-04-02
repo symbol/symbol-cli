@@ -15,30 +15,31 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from './profile.command'
-import {ProfileOptions} from './profile.options'
 import {option} from 'clime'
+import {AnnounceTransactionsOptions} from './announceTransactions.options'
 
 /**
- * Base command class to listen the blockchain.
+ * Announce aggregate transactions options
  */
-export abstract class MonitorAddressCommand extends ProfileCommand {
+export class AnnounceAggregateTransactionsOptions extends AnnounceTransactionsOptions {
 
-    /**
-     * Constructor.
-     */
-    protected constructor() {
-        super()
-    }
-}
+ @option({
+     flag: 'F',
+     description: 'Maximum fee (absolute amount) to announce the hash lock transaction.',
+ })
+ maxFeeHashLock: string
 
-/**
- * Monitor address options.
- */
-export class MonitorAddressOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-    })
-    address: string
+ @option({
+     flag: 'D',
+     description: 'Hash lock duration expressed in blocks.',
+     default: '480',
+ })
+ duration: string
+
+ @option({
+     flag: 'L',
+     description: 'Relative amount of network mosaic to lock.',
+     default: '10',
+ })
+ amount: string
 }

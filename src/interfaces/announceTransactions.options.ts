@@ -15,30 +15,34 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from './profile.command'
-import {ProfileOptions} from './profile.options'
 import {option} from 'clime'
+import {ProfileOptions} from './profile.options'
 
 /**
- * Base command class to listen the blockchain.
+ * Announce transactions options
  */
-export abstract class MonitorAddressCommand extends ProfileCommand {
+export class AnnounceTransactionsOptions extends ProfileOptions {
+ @option({
+     flag: 'p',
+     description: 'Profile password.',
+ })
+ password: string
 
-    /**
-     * Constructor.
-     */
-    protected constructor() {
-        super()
-    }
-}
+ @option({
+     flag: 'f',
+     description: 'Maximum fee (absolute amount).',
+ })
+ maxFee: string
 
-/**
- * Monitor address options.
- */
-export class MonitorAddressOptions extends ProfileOptions {
-    @option({
-        flag: 'a',
-        description: 'Account address.',
-    })
-    address: string
+ @option({
+     description: '(Optional) Wait until the server confirms or rejects the transaction.',
+     toggle: true,
+ })
+ sync: any
+
+ @option({
+     description: '(Optional) Announce the transaction without double confirmation.',
+     toggle: true,
+ })
+ announce: any
 }

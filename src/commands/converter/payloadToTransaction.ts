@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-import {ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {PayloadResolver} from '../../resolvers/payload.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {Command, command, metadata, option} from 'clime'

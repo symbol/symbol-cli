@@ -16,9 +16,9 @@
  *
  */
 import {HttpErrorHandler} from '../services/httpErrorHandler.service'
-import {ProfileCommand, ProfileOptions} from './profile.command'
+import {ProfileCommand} from './profile.command'
+import {ProfileOptions} from './profile.options'
 import chalk from 'chalk'
-import {option} from 'clime'
 import {Address, Listener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionHttp } from 'symbol-sdk'
 import {merge} from 'rxjs'
 import {filter, mergeMap, tap} from 'rxjs/operators'
@@ -159,60 +159,4 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
             console.log(HttpErrorHandler.handleError(err))
         })
     }
-}
-
-/**
- * Announce transactions options
- */
-export class AnnounceTransactionsOptions extends ProfileOptions {
-    @option({
-        flag: 'p',
-        description: 'Profile password.',
-    })
-    password: string
-
-    @option({
-        flag: 'f',
-        description: 'Maximum fee (absolute amount).',
-    })
-    maxFee: string
-
-    @option({
-        description: '(Optional) Wait until the server confirms or rejects the transaction.',
-        toggle: true,
-    })
-    sync: any
-
-    @option({
-        description: '(Optional) Announce the transaction without double confirmation.',
-        toggle: true,
-    })
-    announce: any
-
-}
-
-/**
- * Announce aggregate transactions options
- */
-export class AnnounceAggregateTransactionsOptions extends AnnounceTransactionsOptions {
-
-    @option({
-        flag: 'F',
-        description: 'Maximum fee (absolute amount) to announce the hash lock transaction.',
-    })
-    maxFeeHashLock: string
-
-    @option({
-        flag: 'D',
-        description: 'Hash lock duration expressed in blocks.',
-        default: '480',
-    })
-    duration: string
-
-    @option({
-        flag: 'L',
-        description: 'Relative amount of network mosaic to lock.',
-        default: '10',
-    })
-    amount: string
 }

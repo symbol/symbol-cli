@@ -17,7 +17,7 @@
  *
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
 import {ProfileCommand} from '../../interfaces/profile.command'
 import {Profile} from '../../models/profile.model'
 import {HashResolver} from '../../resolvers/hash.resolver'

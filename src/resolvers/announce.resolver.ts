@@ -1,4 +1,4 @@
-import {AnnounceTransactionsOptions} from '../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../interfaces/announceTransactions.options'
 import {OptionsConfirmResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 
