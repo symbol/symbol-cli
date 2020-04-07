@@ -1,7 +1,7 @@
 # Symbol CLI
 
 [![npm version](https://badge.fury.io/js/symbol-cli.svg)](https://badge.fury.io/js/symbol-cli)
-[![Build Status](https://api.travis-ci.org/nemtech/symbol-cli.svg?branch=master)](https://travis-ci.org/nemtech/symbol-cli)
+[![Build Status](https://api.travis-ci.com/nemtech/symbol-cli.svg?branch=master)](https://travis-ci.com/nemtech/symbol-cli)
 [![Coverage Status](https://coveralls.io/repos/github/nemtech/symbol-cli/badge.svg?branch=master)](https://coveralls.io/github/nemtech/symbol-cli?branch=master)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
