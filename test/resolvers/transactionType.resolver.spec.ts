@@ -22,14 +22,14 @@ import {TransactionType} from 'symbol-sdk'
 describe('Transaction type resolver', () => {
 
     it('should return Transfer Transaction', async () => {
-        const transactionType = '4154'
+        const transactionType = 'TRANSFER'
         const options = {transactionType} as any
         expect(await new TransactionTypeResolver().resolve(options))
             .to.be.equal(TransactionType.TRANSFER)
     })
 
     it('should change key', async () => {
-        const key = '4154'
+        const key = 'TRANSFER'
         const options = {key} as any
         expect(await new TransactionTypeResolver()
             .resolve(options, 'altText', 'key'))
