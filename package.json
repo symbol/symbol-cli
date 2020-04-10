@@ -34,7 +34,7 @@
         "path": "^0.12.7",
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
-        "symbol-sdk": "^0.17.3",
+        "symbol-sdk": "^0.17.4",
         "symbol-uri-scheme": "^0.4.3",
         "update-notifier": "^4.1.0"
     },

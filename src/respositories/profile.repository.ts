@@ -85,8 +85,7 @@ export class ProfileRepository {
             throw new Error(`A profile named ${name} already exists.`)
         }
 
-        // @TODO: use SimpleWallet.toDTO() once it is available in the SDK
-        const simpleWalletDTO: ISimpleWalletDTO = JSON.parse(JSON.stringify(simpleWallet))
+        const simpleWalletDTO: ISimpleWalletDTO = simpleWallet.toDTO()
         profiles[name] = {
             simpleWallet: simpleWalletDTO,
             url,
