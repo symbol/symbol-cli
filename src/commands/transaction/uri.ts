@@ -50,9 +50,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const transactionURI = await new TransactionURIResolver().resolve(options)
         const transaction = transactionURI.toTransaction()
-        // @ts-ignore // @TODO
         const signedTransaction = account.sign(transaction, transactionURI.generationHash || profile.networkGenerationHash)
-        // @ts-ignore // @TODO
         new TransactionView(transaction, signedTransaction).print()
 
         const shouldAnnounce = await new AnnounceResolver().resolve(options)
