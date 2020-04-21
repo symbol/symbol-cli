@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import {Account, Password} from 'symbol-sdk'
+import {Account, Password, Crypto} from 'symbol-sdk'
 import {Command, ExpectedError} from 'clime'
 import {HorizontalTable} from 'cli-table3'
 import {Spinner} from 'cli-spinner'
@@ -23,7 +23,6 @@ import * as Table from 'cli-table3'
 import chalk from 'chalk'
 
 import {DerivationService} from '../services/derivation.service'
-import {EncryptionService} from '../services/encryption.service'
 import {HdProfile} from '../models/hdProfile.model'
 import {Profile} from '../models/profile.model'
 import {ProfileCreation} from '../models/profileCreation.types'
@@ -68,7 +67,7 @@ export class AccountCredentialsTable {
         const account = profile.simpleWallet.open(password)
 
         if (profile instanceof HdProfile) {
-            mnemonic = EncryptionService.decrypt(profile.encryptedPassphrase, password)
+            mnemonic = Crypto.decrypt(profile.encryptedPassphrase, password.value)
             pathNumber = profile.pathNumber
         }
 

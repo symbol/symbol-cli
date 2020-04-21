@@ -16,9 +16,9 @@
  *
  */
 import {command, metadata} from 'clime'
+import {Crypto} from 'symbol-sdk'
 
 import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
-import {EncryptionService} from '../../services/encryption.service'
 import {HdProfile} from '../../models/hdProfile.model'
 import {PasswordResolver} from '../../resolvers/password.resolver'
 import {ProfileCommand} from '../../interfaces/profile.command'
@@ -39,7 +39,7 @@ export default class extends ProfileCommand {
         const account = profile.decrypt(password)
 
         if (profile instanceof HdProfile) {
-            mnemonic = EncryptionService.decrypt(profile.encryptedPassphrase, password)
+            mnemonic = Crypto.decrypt(profile.encryptedPassphrase, password.value)
             pathNumber = profile.pathNumber
         }
 

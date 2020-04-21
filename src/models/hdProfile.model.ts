@@ -15,11 +15,9 @@
  * limitations under the License.
  *
  */
-
-import {SimpleWallet} from 'symbol-sdk'
+import {SimpleWallet, Crypto} from 'symbol-sdk'
 
 import {DerivationService} from '../services/derivation.service'
-import {EncryptionService} from '../services/encryption.service'
 import {HdProfileCreation} from './profileCreation.types'
 import {HdProfileDTO} from './profileDTO.types'
 import {NetworkCurrency} from './networkCurrency.model'
@@ -76,7 +74,7 @@ export class HdProfile extends Profile {
           CURRENT_PROFILE_VERSION,
           'HD',
           args.isDefault ? '1' : '0',
-          EncryptionService.encrypt(args.mnemonic, args.password),
+          Crypto.encrypt(args.mnemonic, args.password.value),
           path,
       )
    }
