@@ -42,7 +42,7 @@ export class SecretProofCommandOptions extends AnnounceTransactionsOptions {
     proof: string
 
     @option({
-        description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256). ',
+        description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Hash_160, Op_Hash_256). ',
         flag: 'H',
     })
     hashAlgorithm: string
