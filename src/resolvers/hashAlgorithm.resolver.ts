@@ -1,7 +1,7 @@
 import {OptionsChoiceResolver} from '../options-resolver'
 import {HashAlgorithmValidator} from '../validators/hashAlgorithm.validator'
 import {Resolver} from './resolver'
-import {HashType} from 'symbol-sdk'
+import {LockHashAlgorithm} from 'symbol-sdk'
 import {Options} from 'clime'
 
 /**
@@ -18,11 +18,11 @@ export class HashAlgorithmResolver implements Resolver {
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
         const choices = Object
-            .keys(HashType)
+            .keys(LockHashAlgorithm)
             .filter((key) => Number.isNaN(parseFloat(key)))
             .map((string) => ({
                 title: string,
-                value: HashType[string as any],
+                value: LockHashAlgorithm[string as any],
             }))
 
         const value = +(await OptionsChoiceResolver(options,

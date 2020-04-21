@@ -68,7 +68,7 @@ export class Profile {
         this.table.push(
             ['Name', this.simpleWallet.name],
             ['Address', this.simpleWallet.address.pretty()],
-            ['Network', NetworkType[this.simpleWallet.network]],
+            ['Network', NetworkType[this.simpleWallet.networkType]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
             ['NetworkCurrency', `name: ${namespaceId.fullName}, divisibility: ${divisibility}`],
@@ -88,7 +88,7 @@ export class Profile {
      * @returns {NetworkType}
      */
     get networkType(): NetworkType {
-        return this.simpleWallet.network
+        return this.simpleWallet.networkType
     }
 
     /**

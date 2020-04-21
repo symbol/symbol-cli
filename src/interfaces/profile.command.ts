@@ -22,6 +22,7 @@ import {Profile} from '../models/profile.model'
 import {ProfileOptions} from './profile.options'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
+import config from '../config/app.conf'
 
 /**
  * Base command class to use the stored profile.
@@ -35,7 +36,7 @@ export abstract class ProfileCommand extends Command {
      */
     constructor(fileUrl?: string) {
         super()
-        const profileRepository = new ProfileRepository(fileUrl || '.symbolrc.json')
+        const profileRepository = new ProfileRepository(fileUrl || config.PROFILES_FILE_NAME)
         this.profileService = new ProfileService(profileRepository)
         this.spinner.setSpinnerString('|/-\\')
     }

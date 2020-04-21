@@ -16,19 +16,19 @@
  *
  */
 import {expect} from 'chai'
-import {HashType} from 'symbol-sdk'
+import {LockHashAlgorithm} from 'symbol-sdk'
 import {ProofResolver} from '../../src/resolvers/proof.resolver'
 
 describe('Proof resolver', () => {
     it('should return proof', async () => {
         const proof = '64CHAR0000000000000000000000000000000000000000000000000000000000'
-        expect(await new ProofResolver().resolve({proof} as any, HashType.Op_Hash_160))
+        expect(await new ProofResolver().resolve({proof} as any, LockHashAlgorithm.Op_Hash_160))
             .to.be.equal(proof)
     })
 
     it('should return proof with a length of 40 when declared as Op_Hash_160', async () => {
         const proof = '40CHAR0000000000000000000000000000000000'
-        expect(await new ProofResolver().resolve({proof} as any, HashType.Op_Hash_160))
+        expect(await new ProofResolver().resolve({proof} as any, LockHashAlgorithm.Op_Hash_160))
             .to.be.equal(proof)
     })
 

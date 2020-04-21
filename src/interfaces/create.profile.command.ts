@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-import {ProfileRepository} from '../respositories/profile.repository'
-import {ProfileService} from '../services/profile.service'
-import {ProfileOptions} from './profile.options'
-import chalk from 'chalk'
+import {Account, Password, SimpleWallet} from 'symbol-sdk'
+import {Command, ExpectedError, option} from 'clime'
+import {HorizontalTable} from 'cli-table3'
 import {Spinner} from 'cli-spinner'
 import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {Command, ExpectedError, option} from 'clime'
-import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import chalk from 'chalk'
+
 import {NetworkCurrency} from '../models/networkCurrency.model'
+import {ProfileOptions} from './profile.options'
+import {ProfileRepository} from '../respositories/profile.repository'
+import {ProfileService} from '../services/profile.service'
+import config from '../config/app.conf'
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable
@@ -67,7 +69,7 @@ export abstract class CreateProfileCommand extends Command {
      */
     protected constructor(fileUrl?: string) {
         super()
-        const profileRepository = new ProfileRepository(fileUrl || '.symbolrc.json')
+        const profileRepository = new ProfileRepository(fileUrl || config.PROFILES_FILE_NAME)
         this.profileService = new ProfileService(profileRepository)
         this.spinner.setSpinnerString('|/-\\')
     }

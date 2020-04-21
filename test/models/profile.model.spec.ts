@@ -52,10 +52,7 @@ describe('Profile', () => {
                     },
                     creationDate: 'test',
                     schema: 'test',
-                    encryptedPrivateKey: {
-                        encryptedKey: 'test',
-                        iv: 'test',
-                    },
+                    encryptedPrivateKey: 'test',
                 },
                 networkGenerationHash: 'generationHash',
                 url: 'url',
