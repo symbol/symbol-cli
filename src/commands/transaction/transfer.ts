@@ -86,10 +86,7 @@ export default class extends AnnounceTransactionsCommand {
                     'Enter the recipient public key:', 'recipientPublicKey')
             recipientAddress = recipientPublicAccount.address
             const rawMessage = await new MessageResolver().resolve(options)
-            message = account.encryptMessage(
-                rawMessage,
-                recipientPublicAccount,
-                profile.networkType)
+            message = account.encryptMessage(rawMessage, recipientPublicAccount)
         } else {
             recipientAddress =  await new AddressAliasResolver()
                 .resolve(options, undefined, 'Enter the recipient address or @alias:', 'recipientAddress')

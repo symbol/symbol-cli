@@ -17,7 +17,7 @@
  */
 import {ProofValidator} from '../../src/validators/proof.validator'
 import {expect} from 'chai'
-import {HashType} from 'symbol-sdk'
+import {LockHashAlgorithm} from 'symbol-sdk'
 
 describe('Proof validator', () => {
 
@@ -51,14 +51,14 @@ describe('Proof validator', () => {
     it('should accept a 64 chars hash if a hashType is specified as HashType', () => {
         const privateKey = '64CHAR0000000000000000000000000000000000000000000000000000000000'
         expect(
-            new ProofValidator(HashType.Op_Hash_256).validate(privateKey)
+            new ProofValidator(LockHashAlgorithm.Op_Hash_256).validate(privateKey)
         ).to.be.true
     })
 
     it('should throw error if proof length is not 64 when a 64 char long hash is specified', () => {
         const privateKey = '40CHARS000000000000000000000000000000000'
         expect(
-            new ProofValidator(HashType.Op_Hash_256).validate(privateKey)
+            new ProofValidator(LockHashAlgorithm.Op_Hash_256).validate(privateKey)
         ).to.be.equal('A proof should be 64 chars long.')
     })
 })

@@ -18,13 +18,13 @@
 
 import {account1} from '../accounts.mock'
 import {sha3_256} from 'js-sha3'
-import {Convert, Deadline, HashType, NetworkType, SecretProofTransaction, UInt64} from 'symbol-sdk'
+import {Convert, Deadline, LockHashAlgorithm, NetworkType, SecretProofTransaction, UInt64} from 'symbol-sdk'
 
 const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'
 
 export const unsignedSecretProof1 = SecretProofTransaction.create(
  Deadline.create(),
- HashType.Op_Sha3_256,
+ LockHashAlgorithm.Op_Sha3_256,
  sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
  account1.address,
  proof,

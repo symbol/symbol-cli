@@ -2,7 +2,7 @@ import {OptionsResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 import {ProofValidator} from '../validators/proof.validator'
 import {SecretProofCommandOptions} from '../commands/transaction/secretproof'
-import {HashType} from 'symbol-sdk'
+import {LockHashAlgorithm} from 'symbol-sdk'
 
 /**
  * Proof resolver
@@ -16,7 +16,7 @@ export class ProofResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Promise<string>}
      */
-    async resolve(options: SecretProofCommandOptions, hashType?: HashType, altText?: string, altKey?: string): Promise<string> {
+    async resolve(options: SecretProofCommandOptions, hashType?: LockHashAlgorithm, altText?: string, altKey?: string): Promise<string> {
         const resolution = await OptionsResolver(options,
             altKey ? altKey : 'proof',
             () => undefined,
