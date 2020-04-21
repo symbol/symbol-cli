@@ -1,4 +1,4 @@
-import {CreateProfileOptions} from '../interfaces/create.profile.command'
+import {CreateProfileOptions} from '../interfaces/createProfile.options'
 import {OptionsConfirmResolver} from '../options-resolver'
 import {Resolver} from './resolver'
 

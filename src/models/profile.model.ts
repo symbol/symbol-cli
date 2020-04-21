@@ -15,25 +15,15 @@
  * limitations under the License.
  *
  */
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
+import {Account, Address, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
 import {ExpectedError} from 'clime'
-import {Account, Address, ISimpleWalletDTO, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {NetworkCurrency, NetworkCurrencyDTO} from './networkCurrency.model'
+import {HorizontalTable} from 'cli-table3'
+import * as Table from 'cli-table3'
 
-export const CURRENT_PROFILE_VERSION = 2
+import {NetworkCurrency} from './networkCurrency.model'
+import {ProfileDTO} from './profileDTO.types'
 
-/**
- * Profile data transfer object.
- */
-interface ProfileDTO {
-    simpleWallet: ISimpleWalletDTO;
-    url: string;
-    networkGenerationHash: string;
-    networkCurrency: NetworkCurrencyDTO;
-    version: number;
-    default: '0' | '1';
-}
+export const CURRENT_PROFILE_VERSION = 3
 
 /**
  * Profile DTO mapped by profile names
@@ -41,45 +31,74 @@ interface ProfileDTO {
 export type ProfileRecord = Record<string, ProfileDTO>
 
 /**
- * Profile model.
+ * Profile types.
  */
-export class Profile {
-    private readonly table: HorizontalTable
+export type ProfileType = 'PrivateKey' | 'HD'
+
+/**
+ * Base implementation of the Profile models
+ * @export
+ * @abstract
+ * @class Profile
+ */
+export abstract class Profile {
+    /**
+     * View of the profile properties
+     * @protected
+     * @type {HorizontalTable}
+     */
+    protected table: HorizontalTable
 
     /**
-     * Constructor.
-     * @param {SimpleWallet} simpleWallet - Wallet credentials.
-     * @param {string} url - Node URL.
-     * @param {string} networkGenerationHash - Network generation hash.
+     * Creates an instance of Profile.
+     * @param {SimpleWallet} simpleWallet
+     * @param {string} url
+     * @param {string} networkGenerationHash
+     * @param {NetworkCurrency} networkCurrency
+     * @param {number} version
+     * @param {ProfileType} type
+     * @param {('0' | '1')} isDefault
      */
-    constructor(public readonly simpleWallet: SimpleWallet,
-                public readonly url: string,
-                public readonly networkGenerationHash: string,
-                public readonly networkCurrency: NetworkCurrency,
-                public readonly version: number,
-    ) {
-        const {namespaceId, divisibility} = networkCurrency
+    protected constructor(
+        public readonly simpleWallet: SimpleWallet,
+        public readonly url: string,
+        public readonly networkGenerationHash: string,
+        public readonly networkCurrency: NetworkCurrency,
+        public readonly version: number,
+        public readonly type: ProfileType,
+        public readonly isDefault: '0' | '1',
+    ) { }
 
-        this.table = new Table({
+    /**
+     * returns a table with the properties common to all profiles
+     * @protected
+     * @returns {HorizontalTable}
+     */
+    protected getBaseTable(): HorizontalTable {
+        const {namespaceId, divisibility} = this.networkCurrency
+        const table = new Table({
             style: {head: ['cyan']},
             head: ['Property', 'Value'],
         }) as HorizontalTable
 
-        this.table.push(
+        table.push(
             ['Name', this.simpleWallet.name],
             ['Address', this.simpleWallet.address.pretty()],
             ['Network', NetworkType[this.simpleWallet.networkType]],
             ['Node URL', this.url],
             ['Generation Hash', this.networkGenerationHash],
-            ['NetworkCurrency', `name: ${namespaceId.fullName}, divisibility: ${divisibility}`],
+            ['Network Currency', `name: ${namespaceId.fullName}, divisibility: ${divisibility}`],
+            ['Profile type', this.type],
         )
+
+        return table
     }
 
     /**
      * Gets profile address.
      * @returns {Address}
      */
-    get address(): Address {
+    public get address(): Address {
         return this.simpleWallet.address
     }
 
@@ -87,7 +106,7 @@ export class Profile {
      * Gets profile network type.
      * @returns {NetworkType}
      */
-    get networkType(): NetworkType {
+    public get networkType(): NetworkType {
         return this.simpleWallet.networkType
     }
 
@@ -95,30 +114,23 @@ export class Profile {
      * Gets profile name.
      * @returns {string}
      */
-    get name(): string {
+    public get name(): string {
         return this.simpleWallet.name
     }
 
     /**
-     * Creates a profile object.
-     * @param {ProfileDTO} profileDTO
-     * @returns {Profile}
+     * Returns a profile DTO
+     * @returns {ProfileDTO}
      */
-    public static createFromDTO(profileDTO: ProfileDTO): Profile {
-        return new Profile(
-            SimpleWallet.createFromDTO(profileDTO.simpleWallet),
-            profileDTO.url,
-            profileDTO.networkGenerationHash,
-            NetworkCurrency.createFromDTO(profileDTO.networkCurrency),
-            profileDTO.version,
-        )
+    public toDTO(): ProfileDTO {
+        throw new Error('toDTO should be implemented in extended classes')
     }
 
     /**
      * Formats profile as a string.
      * @returns {string}
      */
-    toString(): string {
+    public toString(): string {
         return this.table.toString()
     }
 
@@ -127,7 +139,7 @@ export class Profile {
      * @param {Password} password.
      * @returns {boolean}
      */
-    isPasswordValid(password: Password): boolean {
+    public isPasswordValid(password: Password): boolean {
         try {
             this.simpleWallet.open(password)
             return true
@@ -142,7 +154,7 @@ export class Profile {
      * @throws {ExpectedError}
      * @returns {Account}
      */
-    decrypt(password: Password): Account {
+    public decrypt(password: Password): Account {
         if (!this.isPasswordValid(password)) {
             throw new ExpectedError('The password provided does not match your account password')
         }

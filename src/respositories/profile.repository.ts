@@ -16,11 +16,12 @@
  *
  */
 import * as fs from 'fs'
-import {Profile, ProfileRecord, CURRENT_PROFILE_VERSION} from '../models/profile.model'
-import {SimpleWallet, ISimpleWalletDTO} from 'symbol-sdk'
-import {NetworkCurrency} from '../models/networkCurrency.model'
-import {ProfileMigrations} from '../migrations/profile.migrations'
 import {ExpectedError} from 'clime'
+
+import {Profile, ProfileRecord, CURRENT_PROFILE_VERSION} from '../models/profile.model'
+import {ProfileMigrations} from '../migrations/profile.migrations'
+import {ProfileService} from '../services/profile.service'
+import {ISimpleWalletDTO} from 'symbol-sdk'
 
 /**
  * Profile repository
@@ -45,7 +46,7 @@ export class ProfileRepository {
     public find(name: string): Profile {
         const profiles = this.getProfiles()
         if (profiles[name]) {
-            return Profile.createFromDTO(profiles[name])
+            return ProfileService.createProfileFromDTO(profiles[name])
         }
         throw new Error(`${name} not found`)
     }
@@ -59,43 +60,28 @@ export class ProfileRepository {
         const list: Profile[] = []
         for (const name in profiles) {
             if (profiles.hasOwnProperty(name)) {
-                list.push(Profile.createFromDTO(profiles[name]))
+                list.push(ProfileService.createProfileFromDTO(profiles[name]))
             }
         }
         return list
     }
 
     /**
-     * Saves a new profile from a SimpleWallet.
-     * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
-     * @param {string} url - Node URL by default.
-     * @param {string} networkGenerationHash - Network's generation hash.
-     * @param {NetworkCurrency} networkCurrency - Network's generation hash.
+     * Persists a profile to the storage
+     * @param {Profile} profile
      * @returns {Profile}
      */
-    public save(
-        simpleWallet: SimpleWallet,
-        url: string,
-        networkGenerationHash: string,
-        networkCurrency: NetworkCurrency,
-    ): Profile {
+    public save(profile: Profile): Profile {
         const profiles = this.getProfiles()
-        const {name} = simpleWallet
+        const {name} = profile.simpleWallet
+
         if (profiles.hasOwnProperty(name)) {
             throw new Error(`A profile named ${name} already exists.`)
         }
 
-        const simpleWalletDTO: ISimpleWalletDTO = simpleWallet.toDTO()
-        profiles[name] = {
-            simpleWallet: simpleWalletDTO,
-            url,
-            networkGenerationHash,
-            networkCurrency: networkCurrency.toDTO(),
-            default: '0',
-            version: CURRENT_PROFILE_VERSION,
-        }
+        profiles[name] = profile.toDTO()
         this.saveProfiles(profiles)
-        return new Profile(simpleWallet, url, networkGenerationHash, networkCurrency, 2)
+        return profile
     }
 
     /**
@@ -204,20 +190,18 @@ export class ProfileRepository {
                 const [name, profile] = entry
                 const profileVersion = Number(profile.version) || 0
 
-                // migrate outdated files
-                if (profileVersion < CURRENT_PROFILE_VERSION) {
-                    // get migrations to apply
-                    const migrations = Object.entries(allMigrations)
-                        .filter(([version]) => Number(version) > profileVersion)
-                        .map(([, migration]) => migration)
+                // Skip if profile is up-to-date
+                if (profileVersion >= CURRENT_PROFILE_VERSION) {return {[name]: profile}}
 
-                    // return migrated profiles
-                    return migrations
-                        .map((migration) => migration({[name]: profile}))
-                        .reduce((acc, migratedProfile) => ({...acc, ...migratedProfile}), {})
-                }
+                // get migrations to apply
+                const migrations = Object.entries(allMigrations)
+                    .filter(([version]) => Number(version) > profileVersion)
+                    .map(([, migration]) => migration)
 
-                return {[name]: profile}
+                // apply migrations
+                let migrated = {[name]: profile}
+                migrations.forEach((migration) => { migrated = migration(migrated) })
+                return migrated
             })
             .reduce((acc, profile) => ({...acc, ...profile}), {})
     }

@@ -15,27 +15,36 @@
  * limitations under the License.
  *
  */
+import {command, metadata} from 'clime'
+
 import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
+import {EncryptionService} from '../../services/encryption.service'
+import {HdProfile} from '../../models/hdProfile.model'
+import {PasswordResolver} from '../../resolvers/password.resolver'
 import {ProfileCommand} from '../../interfaces/profile.command'
 import {ProfileOptions} from '../../interfaces/profile.options'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {command, metadata} from 'clime'
 
 @command({
     description: 'View profile credentials',
 })
 export default class extends ProfileCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() {super()}
 
     @metadata
     async execute(options: ProfileOptions) {
+        let mnemonic; let pathNumber
+
         const profile = this.getProfile(options)
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
-        const text = new AccountCredentialsTable(account).toString()
-        console.log(text)
+
+        if (profile instanceof HdProfile) {
+            mnemonic = EncryptionService.decrypt(profile.encryptedPassphrase, password)
+            pathNumber = profile.pathNumber
+        }
+
+        console.log(AccountCredentialsTable.createFromAccount(
+            account, mnemonic, pathNumber,
+        ).toString())
     }
 }

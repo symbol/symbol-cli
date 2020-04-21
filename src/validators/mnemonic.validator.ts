@@ -15,25 +15,20 @@
  * limitations under the License.
  *
  */
-import {SaveResolver} from '../../src/resolvers/save.resolver'
-import {expect} from 'chai'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
+import {Validator} from './validator'
 
-describe('Save resolver', () => {
+/**
+ * Mnemonic passphrase validator
+ */
+export class MnemonicValidator implements Validator<string> {
 
-    it('should return boolean', async () => {
-        const options = {
-            save: true,
-            url: '',
-            network: '',
-            profile: '',
-            password: '',
-            default: false,
-            generationHash: '1',
-            namespaceId: '',
-            divisibility: 0,
-            hd: false,
-        }
-        expect(await new SaveResolver().resolve(options)).to.be.equal(true)
-    })
-
-})
+    /**
+     * Validates a mnemonic passphrase.
+     * @param {string} value - Mnemonic passphrase.
+     * @returns {true | string}
+     */
+    validate(value: string): boolean | string {
+        return new MnemonicPassPhrase(value).isValid() || 'The provided mnemonic passphrase is invalid'
+    }
+}
