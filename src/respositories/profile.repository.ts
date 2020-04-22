@@ -18,10 +18,11 @@
 import * as fs from 'fs'
 import {ExpectedError} from 'clime'
 
+import {HdProfile} from '../models/hdProfile.model'
+import {PrivateKeyProfile} from '../models/privateKey.profile.model'
 import {Profile, ProfileRecord, CURRENT_PROFILE_VERSION} from '../models/profile.model'
+import {ProfileDTO} from '../models/profileDTO.types'
 import {ProfileMigrations} from '../migrations/profile.migrations'
-import {ProfileService} from '../services/profile.service'
-import {ISimpleWalletDTO} from 'symbol-sdk'
 
 /**
  * Profile repository
@@ -46,7 +47,7 @@ export class ProfileRepository {
     public find(name: string): Profile {
         const profiles = this.getProfiles()
         if (profiles[name]) {
-            return ProfileService.createProfileFromDTO(profiles[name])
+            return this.createProfileFromDTO(profiles[name])
         }
         throw new Error(`${name} not found`)
     }
@@ -60,7 +61,7 @@ export class ProfileRepository {
         const list: Profile[] = []
         for (const name in profiles) {
             if (profiles.hasOwnProperty(name)) {
-                list.push(ProfileService.createProfileFromDTO(profiles[name]))
+                list.push(this.createProfileFromDTO(profiles[name]))
             }
         }
         return list
@@ -216,5 +217,16 @@ export class ProfileRepository {
             JSON.stringify(profiles),
             'utf-8',
         )
+    }
+
+    /**
+     * Creates a new profile from a DTO
+     * @private
+     * @param {ProfileDTO} args
+     * @returns {Profile}
+     */
+    private createProfileFromDTO(args: ProfileDTO): Profile {
+        if ('encryptedPassphrase' in args) { return HdProfile.createFromDTO(args) }
+        return PrivateKeyProfile.createFromDTO(args)
     }
 }

@@ -20,12 +20,13 @@ import {NetworkType, Password, Account} from 'symbol-sdk'
 import {when, spy} from 'ts-mockito'
 import * as fs from 'fs'
 
+import {HdProfile} from '../../src/models/hdProfile.model'
 import {NetworkCurrency} from '../../src/models/networkCurrency.model'
+import {PrivateKeyProfile} from '../../src/models/privateKey.profile.model'
 import {Profile} from '../../src/models/profile.model'
 import {profileDTOv1, profileDTO2v2} from '../mocks/profiles/profileDTO.mock'
 import {ProfileRepository} from '../../src/respositories/profile.repository'
 import {ProfileService} from '../../src/services/profile.service'
-import {PrivateKeyProfile} from '../../src/models/privateKey.profile.model'
 
 const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
@@ -122,6 +123,26 @@ describe('ProfileRepository', () => {
         expect(savedProfile.name).to.be.equal(profile.name)
         expect(savedProfile.networkType).to.be.equal(networkType)
         expect(savedProfile.networkGenerationHash).to.be.equal(profile.networkGenerationHash)
+    })
+
+    it('should find an HD profile', () => {
+        const networkType = NetworkType.MIJIN_TEST
+        const profileRepository = new ProfileRepository(repositoryFileUrl)
+
+        const profile = new ProfileService(profileRepository).createNewProfile({
+            generationHash: 'test',
+            isDefault: false,
+            name: 'default',
+            networkCurrency,
+            networkType,
+            password: new Password('password'),
+            url: 'http://localhost:3000',
+            // eslint-disable-next-line max-len
+            mnemonic: 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense',
+            pathNumber: 0,
+        })
+
+        expect(profile).to.be.instanceOf(HdProfile)
     })
 
     it('should not find not saved account', () => {

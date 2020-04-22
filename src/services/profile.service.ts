@@ -19,7 +19,6 @@ import {HdProfile} from '../models/hdProfile.model'
 import {PrivateKeyProfile} from '../models/privateKey.profile.model'
 import {Profile} from '../models/profile.model'
 import {ProfileCreation} from '../models/profileCreation.types'
-import {ProfileDTO} from '../models/profileDTO.types'
 import {ProfileRepository} from '../respositories/profile.repository'
 
 /**
@@ -81,16 +80,5 @@ export class ProfileService {
 
         this.profileRepository.save(profile)
         return profile
-    }
-
-    /**
-     * Creates a new profile from a DTO
-     * @static
-     * @param {ProfileDTO} args
-     * @returns {Profile}
-     */
-    public static createProfileFromDTO(args: ProfileDTO): Profile {
-        if ('encryptedPassphrase' in args) { return HdProfile.createFromDTO(args) }
-        return PrivateKeyProfile.createFromDTO(args)
     }
 }

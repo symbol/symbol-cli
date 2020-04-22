@@ -118,37 +118,4 @@ describe('Configure service', () => {
 
         expect(profile).to.be.instanceOf(HdProfile)
     })
-
-    it('should create an HD profile from DTO', () => {
-        const networkType = NetworkType.TEST_NET
-        const name = 'profile name'
-        const password = new Password('password')
-        const simpleWallet = SimpleWallet.createFromPrivateKey(
-            name,
-            password,
-            'A58BD9618B47F5E6B6BACB9B37CC242EDE1A0461AAE8FF2084BC825209D90E18',
-            networkType,
-        )
-        const encryptedPassphrase = 'encryptedPassphrase'
-        const path = 'm/44\'/4343\'/0\'/0\'/0\''
-        const url = 'http://localhost:3000'
-        const networkGenerationHash = 'generationHash'
-        const version = 3
-        const isDefault = '0'
-        const type = 'HD'
-
-        const profile = ProfileService.createProfileFromDTO({
-            simpleWallet: simpleWallet.toDTO(),
-            url,
-            networkGenerationHash,
-            networkCurrency: networkCurrency.toDTO(),
-            version,
-            default: isDefault,
-            type,
-            encryptedPassphrase,
-            path,
-        })
-
-        expect(profile).to.be.instanceOf(HdProfile)
-    })
 })
