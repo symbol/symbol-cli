@@ -19,17 +19,17 @@ import {MultisigService} from '../../src/services/multisig.service'
 import {
   multisigGraphInfo1, multisigGraphInfoPublicAccount1, multisigGraphInfoPublicAccount5,
 } from '../mocks/multisigGraphInfo.mock'
-import {mockProfile1} from '../mocks/profiles/profile.mock'
+import {mockPrivateKeyProfile1} from '../mocks/profiles/profile.mock'
 import {expect} from 'chai'
 
 describe('Multisig service', () => {
   it('should create a multisig service', () => {
-    const multisigService = new MultisigService(mockProfile1)
+    const multisigService = new MultisigService(mockPrivateKeyProfile1)
     expect(multisigService).to.be.an.instanceOf(MultisigService)
   })
 
   it('should return all addresses from a MultisigGraphInfo', async () => {
-    const multisigService = new MultisigService(mockProfile1)
+    const multisigService = new MultisigService(mockPrivateKeyProfile1)
     const expectedAddresses = [
       multisigGraphInfoPublicAccount1.address,
       multisigGraphInfoPublicAccount5.address,

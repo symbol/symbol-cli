@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
+import {HdProfile} from '../models/hdProfile.model'
+import {PrivateKeyProfile} from '../models/privateKey.profile.model'
 import {Profile} from '../models/profile.model'
+import {ProfileCreation} from '../models/profileCreation.types'
 import {ProfileRepository} from '../respositories/profile.repository'
-import {SimpleWallet} from 'symbol-sdk'
-import {NetworkCurrency} from '../models/networkCurrency.model'
 
 /**
  * Profile service
@@ -32,23 +33,6 @@ export class ProfileService {
      */
     constructor(profileRepository: ProfileRepository) {
         this.profileRepository = profileRepository
-    }
-
-    /**
-     * Creates a new profile from a SimpleWallet.
-     * @param {SimpleWallet} simpleWallet - Wallet object with sensitive information.
-     * @param {string} url - Node URL by default.
-     * @param {string} networkGenerationHash - Network's generation hash.
-     * @param {NetworkCurrency} networkCurrency - Network currency.
-     * @returns {Profile}
-     */
-    createNewProfile(
-        simpleWallet: SimpleWallet,
-        url: string,
-        networkGenerationHash: string,
-        networkCurrency: NetworkCurrency,
-    ): Profile {
-        return this.profileRepository.save(simpleWallet, url, networkGenerationHash, networkCurrency)
     }
 
     /**
@@ -82,5 +66,19 @@ export class ProfileService {
      */
     getDefaultProfile(): Profile {
         return this.profileRepository.getDefaultProfile()
+    }
+
+    /**
+     * Creates and save a new profile
+     * @param {ProfileCreation} args
+     * @returns {Profile}
+     */
+    public createNewProfile(args: ProfileCreation): Profile {
+        const profile = 'mnemonic' in args
+            ? HdProfile.create(args)
+            : PrivateKeyProfile.create(args)
+
+        this.profileRepository.save(profile)
+        return profile
     }
 }

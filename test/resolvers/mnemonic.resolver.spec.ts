@@ -15,27 +15,16 @@
  * limitations under the License.
  *
  */
-import {DefaultResolver} from '../../src/resolvers/default.resolver'
 import {expect} from 'chai'
+import {MnemonicResolver} from '../../src/resolvers/mnemonic.resolver'
 
-describe('Default resolver', () => {
+describe('Mnemonic resolver', () => {
+   it('should return a mnemonic', async () => {
+      // eslint-disable-next-line max-len
+      const mnemonic = 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense'
 
-    it('should return boolean', async () => {
-        const options = {
-            'save': false,
-            'url': '',
-            'network': '',
-            'profile': '',
-            'password': '',
-            'default': true,
-            'generationHash': '1',
-            'namespaceId': '',
-            'divisibility': 0,
-            'private-key': true,
-            'mnemonic': false,
-            'hd': false,
-        }
-        expect(await new DefaultResolver().resolve(options)).to.be.equal(true)
-    })
-
+      const options = {mnemonic} as any
+      expect(await new MnemonicResolver().resolve(options))
+         .to.be.equal(mnemonic)
+   })
 })

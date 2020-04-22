@@ -28,6 +28,7 @@ export class ProfileMigrations {
  public static get(): Record<string, (profiles: ProfileRecord) => ProfileRecord> {
    return {
      2: ProfileMigrations.version2_networkCurrency,
+     3: ProfileMigrations.version3_profileType,
    }
  }
 
@@ -49,6 +50,25 @@ export class ProfileMigrations {
       namespaceId: 'symbol.xym',
       divisibility: 6,
      },
+    },
+   }))
+   .reduce((acc, profile) => ({...acc, ...profile}), {}) as ProfileRecord
+ }
+
+  /**
+  * Adds a profile type property
+  * @static
+  * @param {ProfileRecord} profiles
+  * @returns {ProfileRecord}
+  */
+ public static version3_profileType(profiles: ProfileRecord): ProfileRecord {
+  return Object
+   .entries(profiles)
+   .map(([name, profile]) => ({
+    [name]: {
+     ...profile,
+     version: 3,
+     type: 'PrivateKey',
     },
    }))
    .reduce((acc, profile) => ({...acc, ...profile}), {}) as ProfileRecord

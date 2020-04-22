@@ -33,7 +33,7 @@ export const OptionsChoiceResolver = async (options: any,
                                             type: SelectOptionType = 'select',
                                             validation: Validator<any> | undefined) => {
     if (options[key] !== undefined) {
-        const title = options[key].trim()
+        const title = `${options[key]}`
         if (validation !== undefined ) {
             const test = validation.validate(title)
             if (typeof test === 'string') {
