@@ -85,7 +85,12 @@ describe('Root namespace resolver', () => {
             profile: 'test',
             password: 'test',
             sync: false,
-            announce: false}
+            announce: false,
+            maxFeeHashLock: '50000',
+            lockAmount: '10',
+            lockDuration: '',
+            signer: '',
+        }
         expect(await new NamespaceTypeResolver()
             .resolve(options)).to.be.equal(NamespaceRegistrationType.RootNamespace)
     })
@@ -101,7 +106,12 @@ describe('Root namespace resolver', () => {
             profile: 'test',
             password: 'test',
             sync: false,
-            announce: false}
+            announce: false,
+            maxFeeHashLock: '50000',
+            lockAmount: '10',
+            lockDuration: '',
+            signer: '',
+        }
         expect(await new NamespaceTypeResolver()
             .resolve(options, 'altText'))
             .to.be.equal(NamespaceRegistrationType.SubNamespace)

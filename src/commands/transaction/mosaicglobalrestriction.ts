@@ -15,18 +15,21 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
 import {KeyResolver} from '../../resolvers/key.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {ProfileCommand} from '../../interfaces/profile.command'
 import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver'
 import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
 import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -72,9 +75,8 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Set a global restriction to a mosaic (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() {
-        super()
-    }
+    constructor() { super() }
+
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
@@ -92,6 +94,8 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicRestrictionTransactionService =
             new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp)
 
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+
         const transaction = await mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
                 Deadline.create(),
@@ -103,16 +107,13 @@ export default class extends AnnounceTransactionsCommand {
                 referenceMosaicId,
                 maxFee).toPromise()
 
-        const networkGenerationHash = profile.networkGenerationHash
-        const signedTransaction = account.sign(transaction, networkGenerationHash)
-
-        new TransactionView(transaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        this.signAndAnnounce(signatureOptions, options)
     }
 }

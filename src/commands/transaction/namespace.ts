@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+
 import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
 import {DurationResolver} from '../../resolvers/duration.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -65,10 +65,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 
 export default class extends AnnounceTransactionsCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -78,6 +75,7 @@ export default class extends AnnounceTransactionsCommand {
         const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name')
         const namespaceType = await new NamespaceTypeResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         let transaction: NamespaceRegistrationTransaction
         if (namespaceType === NamespaceRegistrationType.RootNamespace) {
@@ -90,15 +88,14 @@ export default class extends AnnounceTransactionsCommand {
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
                 Deadline.create(), name, parentName, profile.networkType, maxFee)
         }
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        new TransactionView(transaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        this.signAndAnnounce(signatureOptions, options)
     }
 }

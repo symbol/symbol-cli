@@ -16,13 +16,13 @@
  *
  */
 import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
 import {WebhookService} from '../../services/webhook.service'
 import {command, metadata, option} from 'clime'
 import {TransactionURIResolver} from '../../resolvers/transactionURI.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -37,10 +37,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 
 export default class extends AnnounceTransactionsCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -50,20 +47,20 @@ export default class extends AnnounceTransactionsCommand {
 
         const transactionURI = await new TransactionURIResolver().resolve(options)
         const transaction = transactionURI.toTransaction()
-        const signedTransaction = account.sign(transaction, transactionURI.generationHash || profile.networkGenerationHash)
-        new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, transactionURI.nodeUrl || profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, transactionURI.nodeUrl || profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee: transaction.maxFee,
         }
+
+        const signedTransactions = await this.signAndAnnounce(signatureOptions, options)
+
         if (transactionURI.webhookUrl){
             await WebhookService.postAnnounceTransactionWebhook(
                     transactionURI.webhookUrl,
-                    signedTransaction.hash,
-                    signedTransaction.signerPublicKey)
+                    signedTransactions[0].hash,
+                    signedTransactions[0].signerPublicKey)
         }
     }
 }

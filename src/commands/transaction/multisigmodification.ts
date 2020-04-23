@@ -14,27 +14,20 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceAggregateTransactionsOptions} from '../../interfaces/announceAggregateTransactions.options'
-import {ActionResolver} from '../../resolvers/action.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from '../../models/action.enum'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {
-    AggregateTransaction,
-    Deadline,
-    HashLockTransaction,
-    MultisigAccountModificationTransaction,
-    UInt64,
-} from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
-import chalk from 'chalk'
-import {DeltaResolver} from '../../resolvers/delta.resolver'
+import {Deadline, MultisigAccountModificationTransaction} from 'symbol-sdk'
 
-export class CommandOptions extends AnnounceAggregateTransactionsOptions {
+import {ActionResolver} from '../../resolvers/action.resolver'
+import {ActionType} from '../../models/action.enum'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {CosignatoryPublicKeyResolver} from '../../resolvers/publicKey.resolver'
+import {DeltaResolver} from '../../resolvers/delta.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+
+export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'R',
         description: 'Number of signatures needed to remove a cosignatory. ' +
@@ -72,10 +65,7 @@ export class CommandOptions extends AnnounceAggregateTransactionsOptions {
     description: 'Create or modify a multisig account',
 })
 export default class extends AnnounceTransactionsCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -83,9 +73,6 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options)
         const account = profile.decrypt(password)
         const action = await new ActionResolver().resolve(options)
-        const multisigAccount = await new PublicKeyResolver()
-            .resolve(options, profile.networkType,
-                'Enter the multisig account public key:', 'multisigAccountPublicKey')
         const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile)
         const minApprovalDelta = await new DeltaResolver().resolve(options,
             'Enter the number of signatures needed to approve a transaction. ' +
@@ -94,8 +81,7 @@ export default class extends AnnounceTransactionsCommand {
             'Enter the number of signatures needed to remove a cosignatory. ' +
             'If the account already exists, enter the number of cosignatories to add or remove:', 'minRemovalDelta' )
         const maxFee = await new MaxFeeResolver().resolve(options)
-        const maxFeeHashLock = await new MaxFeeResolver().resolve(options,
-            'Enter the maximum fee to announce the hashlock transaction (absolute amount):', 'maxFeeHashLock')
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
@@ -103,37 +89,17 @@ export default class extends AnnounceTransactionsCommand {
             minRemovalDelta,
             (action === ActionType.Add) ? cosignatories : [],
             (action === ActionType.Remove) ? cosignatories : [],
-            profile.networkType)
-
-        const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
-            [multisigAccountModificationTransaction.toAggregate(multisigAccount)],
             profile.networkType,
-            [],
-            maxFee)
+        )
 
-        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash)
-        console.log(chalk.green('Aggregate Hash:   '), signedTransaction.hash)
-
-        const hashLockTransaction = HashLockTransaction.create(
-            Deadline.create(),
-            profile.networkCurrency.createRelative(options.amount),
-            UInt64.fromNumericString(options.duration),
-            signedTransaction,
-            profile.networkType,
-            maxFeeHashLock)
-        const signedHashLockTransaction = account.sign(hashLockTransaction, profile.networkGenerationHash)
-
-        new TransactionView(aggregateTransaction, signedTransaction).print()
-        new TransactionView(hashLockTransaction, signedHashLockTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce) {
-            this.announceAggregateTransaction(
-                signedHashLockTransaction,
-                signedTransaction,
-                account.address,
-                profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [multisigAccountModificationTransaction],
+            maxFee,
+            signerMultisigInfo,
+            isAggregateBonded: true,
         }
+
+        this.signAndAnnounce(signatureOptions, options)
     }
 }

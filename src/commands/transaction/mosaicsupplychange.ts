@@ -14,17 +14,17 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {SupplyActionResolver} from '../../resolvers/action.resolver'
-import {AmountResolver} from '../../resolvers/amount.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
 import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
+
+import {AmountResolver} from '../../resolvers/amount.resolver'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {SupplyActionResolver} from '../../resolvers/action.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -66,6 +66,7 @@ export default class extends AnnounceTransactionsCommand {
         const amount = await new AmountResolver()
             .resolve(options, 'Enter absolute amount of supply change: ')
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         const transaction = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
@@ -74,15 +75,15 @@ export default class extends AnnounceTransactionsCommand {
             amount,
             profile.networkType,
             maxFee)
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        new TransactionView(transaction, signedTransaction).print()
 
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        this.signAndAnnounce(signatureOptions, options)
     }
 }

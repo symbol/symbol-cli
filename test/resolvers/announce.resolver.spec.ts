@@ -29,7 +29,12 @@ describe('Announce resolver', () => {
             password: '',
             generationHash: '1',
             maxFee: '1',
-            sync: false}
+            sync: false,
+            maxFeeHashLock: '0',
+            lockDuration: '0',
+            lockAmount: '0',
+            signer: '',
+        }
         expect(await new AnnounceResolver().resolve(options)).to.be.equal(true)
     })
 

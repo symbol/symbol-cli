@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'symbol-sdk'
+import {command, metadata, option} from 'clime'
+
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MessageResolver} from '../../resolvers/message.resolver'
 import {MosaicsResolver} from '../../resolvers/mosaic.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -67,10 +67,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 
 export default class extends AnnounceTransactionsCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -95,7 +92,9 @@ export default class extends AnnounceTransactionsCommand {
                 message = PlainMessage.create(rawMessage)
             }
         }
+
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         const transaction = TransferTransaction.create(
             Deadline.create(),
@@ -103,16 +102,16 @@ export default class extends AnnounceTransactionsCommand {
             mosaics,
             message,
             profile.networkType,
-            maxFee)
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
+            maxFee,
+        )
 
-        new TransactionView(transaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        this.signAndAnnounce(signatureOptions, options)
     }
 }

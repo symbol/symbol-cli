@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {command, metadata, option} from 'clime'
+import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
+
 import {ActionResolver} from '../../resolvers/action.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {ActionType} from '../../models/action.enum'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
-import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from '../../models/action.enum'
 import {PasswordResolver} from '../../resolvers/password.resolver'
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import {RestrictionAccountMosaicFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -53,9 +53,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Allow or block incoming transactions containing a given set of mosaics',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -66,6 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         const flags = await new RestrictionAccountMosaicFlagsResolver().resolve(options)
         const mosaic = await new MosaicIdAliasResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         const transaction = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
             Deadline.create(),
@@ -73,17 +72,16 @@ export default class extends AnnounceTransactionsCommand {
             (action === ActionType.Add) ? [mosaic] : [],
             (action === ActionType.Remove) ? [mosaic] : [],
             profile.networkType,
-            maxFee)
+            maxFee,
+        )
 
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
-
-        new TransactionView(transaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        this.signAndAnnounce(signatureOptions, options)
     }
 }
