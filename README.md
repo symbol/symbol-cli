@@ -11,13 +11,10 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
-- [0.18.x](CHANGELOG.md#0181-19-Feb-2020) - **Fushicho5 Network Compatibility (catapult-server@0.9.3.1)**
+- [0.19.x](CHANGELOG.md#0181-19-Feb-2020) - **Fushicho5 Network Compatibility (catapult-server@0.9.3.1)**
 
-0.18.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
-Private keys have now a new public key and address associated.
-Before installing ``symbol-cli@0.18.1``, backup and delete the file ``~ \.nem2rc.json``.
-
-- [0.17.1](CHANGELOG.md#0171-31-Jan-2020) - **Fushicho4 Network Compatibility (catapult-server@0.9.2.1)**
+0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
+Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``.
 
 Find the complete release notes [here](CHANGELOG.md).
 
