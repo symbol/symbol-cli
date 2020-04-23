@@ -86,9 +86,11 @@ export default class extends AnnounceTransactionsCommand {
             transactions: [metadataTransaction],
             maxFee,
             signerMultisigInfo,
+            isAggregate: targetAccount.publicKey === account.publicKey,
             isAggregateBonded: targetAccount.publicKey !== account.publicKey,
         }
 
-        this.signAndAnnounce(signatureOptions, options)
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
     }
 }

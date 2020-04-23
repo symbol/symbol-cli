@@ -100,6 +100,7 @@ export default class extends AnnounceTransactionsCommand {
             isAggregateBonded: true,
         }
 
-        this.signAndAnnounce(signatureOptions, options)
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
     }
 }

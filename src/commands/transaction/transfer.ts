@@ -112,6 +112,7 @@ export default class extends AnnounceTransactionsCommand {
             signerMultisigInfo,
         }
 
-        this.signAndAnnounce(signatureOptions, options)
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
     }
 }

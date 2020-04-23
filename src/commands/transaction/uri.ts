@@ -54,7 +54,8 @@ export default class extends AnnounceTransactionsCommand {
             maxFee: transaction.maxFee,
         }
 
-        const signedTransactions = await this.signAndAnnounce(signatureOptions, options)
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
 
         if (transactionURI.webhookUrl){
             await WebhookService.postAnnounceTransactionWebhook(

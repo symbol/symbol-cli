@@ -31,19 +31,15 @@ import {TransactionSignatureOptions, TransactionSignatureService} from '../servi
  * Base command class to announce transactions.
  */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
-    protected constructor() { super() }
+    protected constructor() {super()}
 
     /**
-     * Gets the signer multisig info if 
+     * Gets the signer multisig info if the transaction is multisig
      * @protected
      * @param {AnnounceTransactionsOptions} options
-     * @param {boolean} [forceMultisig=false] forbids the "normal" transaction announce mode 
      * @returns {(Promise<MultisigAccountInfo | null>)}
      */
-    protected async getSignerMultisigInfo(
-        options: AnnounceTransactionsOptions,
-        forceMultisig = false
-    ): Promise<MultisigAccountInfo | null> {
+    protected async getSignerMultisigInfo(options: AnnounceTransactionsOptions): Promise<MultisigAccountInfo | null> {
         const transactionAnnounceMode = await new TransactionAnnounceModeResolver().resolve(options)
 
         if (transactionAnnounceMode === TransactionAnnounceMode.normal) {return null}
@@ -89,20 +85,19 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
         return chosenSignerMultisigInfo
     }
 
-    protected async signAndAnnounce(
+    protected async signTransactions(
         signatureOptions: TransactionSignatureOptions,
         options: AnnounceTransactionsOptions,
     ): Promise<SignedTransaction[]> {
         const profile = this.getProfile(options)
+        return TransactionSignatureService.create(profile, options).signTransactions(signatureOptions)
+    }
 
-        const signedTransactions = await TransactionSignatureService
-            .create(profile, options)
-            .signTransactions(signatureOptions)
-
-        TransactionAnnounceService
-            .create(profile, options)
-            .announce(signedTransactions)
-
-        return signedTransactions
+    protected async announceTransactions(
+        options: AnnounceTransactionsOptions,
+        signedTransactions: SignedTransaction[],
+    ): Promise<void> {
+        const profile = this.getProfile(options)
+        TransactionAnnounceService.create(profile, options).announce(signedTransactions)
     }
 }
