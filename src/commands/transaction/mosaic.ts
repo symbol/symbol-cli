@@ -109,11 +109,13 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options)
         const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
+        const signerPublicAccount = signerMultisigInfo
+            ? signerMultisigInfo.account : account.publicAccount
 
         const mosaicDefinition = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, account.publicAccount),
+            MosaicId.createFromNonce(nonce, signerPublicAccount),
             mosaicFlags,
             divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
