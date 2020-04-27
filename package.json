@@ -1,6 +1,6 @@
 {
     "name": "symbol-cli",
-    "version": "0.18.5",
+    "version": "0.19.1",
     "description": "Command Line Interface (CLI) to interact with Symbol",
     "main": "index.js",
     "scripts": {
@@ -51,7 +51,7 @@
         "@typescript-eslint/eslint-plugin": "^2.18.0",
         "@typescript-eslint/parser": "^2.18.0",
         "chai": "^4.1.2",
-        "coveralls": "^3.0.9",
+        "coveralls": "^3.0.14",
         "eslint": "^6.8.0",
         "eslint-plugin-import": "^2.20.0",
         "eslint-plugin-prefer-arrow": "^1.1.7",

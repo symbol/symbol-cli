@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.19.1] - 23-Apr-2020
+
+:warning: 0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
+Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``.
+
+**Milestone**: Fushicho.5(RC4 0.9.3.1)
+
+### Added
+
+- HD Wallets support #176
+
+### Changed
+
+- ``symbol-sdk`` dependency to 0.18.0
+- Profiles are now stored in ``symbol-cli.config.json``
+
+### Fixed
+
+- Secret Proof are validated #227
+- Exit cleanly when aborting prompts #233
+- Transaction types resolvers as a list #263
+
 ## [0.18.4] - 25-Mar-2020
 
 **Milestone**: Fushicho.5(RC4 0.9.3.1)
