@@ -1,5 +1,5 @@
 import {Validator} from './validator'
-import {HashType} from 'symbol-sdk'
+import {LockHashAlgorithm} from 'symbol-sdk'
 
 /**
  * Hash algorithm validator
@@ -12,8 +12,8 @@ export class HashAlgorithmValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return value in HashType ? true : 'Hash algorithm must be one of (' +
-            Object.keys(HashType)
+        return value in LockHashAlgorithm ? true : 'Hash algorithm must be one of (' +
+            Object.keys(LockHashAlgorithm)
                 .filter((key) => Number.isNaN(parseFloat(key))) + ').'
     }
 }

@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand, ProfileOptions} from './profile.command'
+import {ProfileCommand} from './profile.command'
+import {ProfileOptions} from './profile.options'
 import {option} from 'clime'
 
 /**

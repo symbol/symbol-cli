@@ -17,20 +17,20 @@
  */
 import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
 import {expect} from 'chai'
-import {HashType} from 'symbol-sdk'
+import {LockHashAlgorithm} from 'symbol-sdk'
 
 describe('Hash algorithm resolver', () => {
 
     it('should return hash algorithm', async () => {
         const options = {hashAlgorithm: 'Op_Sha3_256'} as any
         expect(await new HashAlgorithmResolver().resolve(options))
-            .to.be.equal(HashType.Op_Sha3_256)
+            .to.be.equal(LockHashAlgorithm.Op_Sha3_256)
     })
 
     it('should change key', async () => {
         const options = {key: 'Op_Sha3_256'} as any
         expect(await new HashAlgorithmResolver()
             .resolve(options, 'altText', 'key'))
-            .to.be.equal(HashType.Op_Sha3_256)
+            .to.be.equal(LockHashAlgorithm.Op_Sha3_256)
     })
 })

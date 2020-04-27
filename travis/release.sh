@@ -4,7 +4,7 @@ set -e
 if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
 
   REMOTE_NAME="origin"
-  POST_RELEASE_BRANCH="post-$RELEASE_BRANCH"
+  POST_RELEASE_BRANCH="$POST_RELEASE_BRANCH"
 
   git remote rm $REMOTE_NAME
 
@@ -30,17 +30,17 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
 
   cp travis/.npmrc $HOME/.npmrc
 
- #  The $SKIP_RELEASE_PUBLISH env variable can avoid republishing the same version to npm if something in the release process fails.
+ # The $SKIP_RELEASE_PUBLISH env variable can avoid republishing the same version to npm if something in the release process fails.
   if [ "$SKIP_RELEASE_PUBLISH" = "true" ]; then
-    echo "Skipping publishing of sdk artifacts"
+    echo "Skipping publishing of CLI artifact"
     echo ""
   else
-    echo "Publishing SDK artifacts"
+    echo "Publishing CLI artifact"
     npm publish
     echo ""
   fi
 
-  echo "Increasing sdk version"
+  echo "Increasing CLI version"
   npm version patch -m "Increasing version to %s" --git-tag-version false
 
   CURRENT_VERSION=$(npm run version --silent)
@@ -49,7 +49,8 @@ if [ "$TRAVIS_BRANCH" = "$RELEASE_BRANCH" ]; then
   echo "$CURRENT_VERSION"
   echo ""
 
-  git add .
+  git add package.json
+  git add package-lock.json
   git commit -m "Creating new version $CURRENT_VERSION"
   echo "Pushing code to $REMOTE_NAME $POST_RELEASE_BRANCH"
   git push --set-upstream $REMOTE_NAME $RELEASE_BRANCH:$POST_RELEASE_BRANCH

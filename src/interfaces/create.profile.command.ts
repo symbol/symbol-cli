@@ -15,39 +15,82 @@
  * limitations under the License.
  *
  */
-import {ProfileRepository} from '../respositories/profile.repository'
-import {ProfileService} from '../services/profile.service'
-import {ProfileOptions} from './profile.command'
-import chalk from 'chalk'
+import {Account, Password, Crypto} from 'symbol-sdk'
+import {Command, ExpectedError} from 'clime'
+import {HorizontalTable} from 'cli-table3'
 import {Spinner} from 'cli-spinner'
 import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {Command, ExpectedError, option} from 'clime'
-import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {NetworkCurrency} from '../models/networkCurrency.model'
+import chalk from 'chalk'
+
+import {DerivationService} from '../services/derivation.service'
+import {HdProfile} from '../models/hdProfile.model'
+import {Profile} from '../models/profile.model'
+import {ProfileCreation} from '../models/profileCreation.types'
+import {ProfileRepository} from '../respositories/profile.repository'
+import {ProfileService} from '../services/profile.service'
+import config from '../config/app.conf'
 
 export class AccountCredentialsTable {
     private readonly table: HorizontalTable
+    private readonly account: Account
 
-    constructor(
-        public readonly account: Account,
-        public readonly password?: Password) {
+    private constructor(args: {
+        account: Account;
+        password?: Password;
+        mnemonic?: string;
+        pathNumber?: number | null;
+    }) {
+        this.account = args.account
 
         this.table = new Table({
-            style: { head: ['cyan'] },
+            style: {head: ['cyan']},
             head: ['Property', 'Value'],
+            colWidths: [15, 70],
+            wordWrap: true,
         }) as HorizontalTable
-        this.table.push(
-            ['Address', account.address.pretty()],
-            ['Public Key', account.publicKey],
-            ['Private Key', account.privateKey],
-        )
-        if (password) {
-            this.table.push(['Password', password.value])
+
+        this.renderAccountProperties()
+        if (args.password) {this.table.push(['Password', args.password.value])}
+        if (args.mnemonic) {this.table.push(['Mnemonic', args.mnemonic])}
+        if (args.pathNumber !== undefined && args.pathNumber !== null) {
+            this.table.push([
+                'Path',
+                // Address paths are 0-based but shown as 1-based to the users
+                `Seed wallet n. ${args.pathNumber + 1} (${DerivationService.getPathFromPathNumber(args.pathNumber)})`,
+            ])
         }
     }
 
-    toString(): string {
+    public static createFromProfile(profile: Profile, password: Password): AccountCredentialsTable {
+        let mnemonic; let pathNumber
+
+        const account = profile.simpleWallet.open(password)
+
+        if (profile instanceof HdProfile) {
+            mnemonic = Crypto.decrypt(profile.encryptedPassphrase, password.value)
+            pathNumber = profile.pathNumber
+        }
+
+        return new AccountCredentialsTable({account, password, mnemonic, pathNumber})
+    }
+
+    public static createFromAccount(
+        account: Account,
+        mnemonic?: string,
+        pathNumber?: number,
+    ): AccountCredentialsTable {
+        return new AccountCredentialsTable({account, mnemonic, pathNumber})
+    }
+
+     private renderAccountProperties() {
+        this.table.push(
+            ['Address', this.account.address.pretty()],
+            ['Public Key', this.account.publicKey],
+            ['Private Key', this.account.privateKey],
+        )
+    }
+
+    public toString(): string {
         let text = ''
         text += '\n' + chalk.green('Account') + '\n'
         text += this.table.toString()
@@ -60,6 +103,7 @@ export class AccountCredentialsTable {
  */
 export abstract class CreateProfileCommand extends Command {
     public spinner = new Spinner('processing.. %s')
+    private readonly profileRepository: ProfileRepository
     private readonly profileService: ProfileService
 
     /**
@@ -67,40 +111,25 @@ export abstract class CreateProfileCommand extends Command {
      */
     protected constructor(fileUrl?: string) {
         super()
-        const profileRepository = new ProfileRepository(fileUrl || '.symbolrc.json')
-        this.profileService = new ProfileService(profileRepository)
+        this.profileRepository = new ProfileRepository(fileUrl || config.PROFILES_FILE_NAME)
+        this.profileService = new ProfileService(this.profileRepository)
         this.spinner.setSpinnerString('|/-\\')
     }
 
     /**
      * Creates a new profile.
-     * @param {SimpleWallet} simpleWallet - The account credentials.
-     * @param {string} url - The node URL.
-     * @param {boolean} isDefault - If the profile has to be saved as default.
-     * @param {string} generationHash - The network generation hash.
-     * @param {NetworkCurrency} networkCurrency - The network generation hash.
-     * @return {Profile}.
+     * @protected
+     * @param {ProfileCreation} Profile creation arguments
+     * @returns {Profile}
      */
-    protected createProfile(simpleWallet: SimpleWallet,
-                            url: string,
-                            isDefault: boolean,
-                            generationHash: string,
-                            networkCurrency: NetworkCurrency,) {
-            let profile
-            try {
-                 profile = this.profileService.createNewProfile(
-                    simpleWallet,
-                    url,
-                    generationHash,
-                    networkCurrency,
-                )
-            } catch (ignored) {
-                throw new ExpectedError('The profile [' + simpleWallet.name + '] already exists')
-            }
-            if (isDefault) {
-                this.setDefaultProfile(simpleWallet.name)
-            }
+    protected createProfile(args: ProfileCreation): Profile {
+        try {
+            const profile = this.profileService.createNewProfile(args)
+            if (args.isDefault) {this.setDefaultProfile(args.name)}
             return profile
+        } catch (ignored) {
+            throw new ExpectedError(`The profile [${args.name}] already exists`)
+        }
     }
 
     /**
@@ -117,53 +146,4 @@ export abstract class CreateProfileCommand extends Command {
                 'if not, use \'symbol-cli profile create\' to create a profile')
         }
     }
-}
-
-/**
- * Monitor profile options.
- */
-export class CreateProfileOptions extends ProfileOptions {
-
-    @option({
-        flag: 'u',
-        description: '(Optional) When saving profile, provide a Symbol Node URL. Example: http://localhost:3000',
-    })
-    url: string
-
-    @option({
-        flag: 'n',
-        description: 'Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
-    })
-    network: string
-
-    @option({
-        flag: 'p',
-        description: '(Optional) When saving profile, provide the password.',
-    })
-    password: string
-
-    @option({
-        flag: 'd',
-        description: '(Optional) Set the profile as default.',
-        toggle: true,
-    })
-    default: any
-
-    @option({
-        flag: 'g',
-        description: '(Optional) Generation hash of the network. Necessary to create the profile offline.',
-    })
-    generationHash: string
-
-    @option({
-        flag: 'i',
-        description: '(Optional) Namespace Name of the network mosaic. (eg.: symbol.xym) Necessary to create the profile offline.',
-    })
-    namespaceId: string
-
-    @option({
-        flag: 'v',
-        description: '(Optional) Divisiblity of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
-    })
-    divisibility: number
 }

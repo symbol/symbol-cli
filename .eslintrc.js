@@ -81,12 +81,7 @@ module.exports = {
         "@typescript-eslint/require-await": "off",
         "@typescript-eslint/triple-slash-reference": "error",
         "@typescript-eslint/type-annotation-spacing": "error",
-        "@typescript-eslint/unbound-method": [
-            "error",
-            {
-                "ignoreStatic": true,
-            },
-        ],
+        "@typescript-eslint/unbound-method": [0, "never"],
         "@typescript-eslint/unified-signatures": "error",
         "arrow-body-style": "error",
         "arrow-parens": [

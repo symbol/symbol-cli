@@ -14,7 +14,8 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AmountResolver} from '../../resolvers/amount.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
@@ -55,7 +56,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     secret: string
 
     @option({
-        description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Keccak_256, Op_Hash_160, Op_Hash_256).',
+        description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Hash_160, Op_Hash_256).',
         flag: 'H',
     })
     hashAlgorithm: string

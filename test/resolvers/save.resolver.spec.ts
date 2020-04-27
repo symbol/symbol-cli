@@ -31,6 +31,7 @@ describe('Save resolver', () => {
             generationHash: '1',
             namespaceId: '',
             divisibility: 0,
+            hd: false,
         }
         expect(await new SaveResolver().resolve(options)).to.be.equal(true)
     })

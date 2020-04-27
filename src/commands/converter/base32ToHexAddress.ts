@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-import {ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {AddressResolver} from '../../resolvers/address.resolver'
 import {Command, command, metadata, option} from 'clime'
 import {Convert, RawAddress} from 'symbol-sdk'

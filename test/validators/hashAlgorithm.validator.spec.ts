@@ -5,7 +5,6 @@ describe('hashAlgorithm validator', () => {
 
     it('default case', () => {
         expect(new HashAlgorithmValidator().validate('Op_Sha3_256')).to.be.equal(true)
-        expect(new HashAlgorithmValidator().validate('Op_Keccak_256')).to.be.equal(true)
         expect(new HashAlgorithmValidator().validate('Op_Hash_160')).to.be.equal(true)
         expect(new HashAlgorithmValidator().validate('Op_Hash_256')).to.be.equal(true)
     })

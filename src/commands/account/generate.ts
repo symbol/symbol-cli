@@ -17,14 +17,22 @@
  */
 import chalk from 'chalk'
 import {command, metadata, option} from 'clime'
-import {Account, SimpleWallet} from 'symbol-sdk'
+import {Account} from 'symbol-sdk'
 
-import {AccountCredentialsTable, CreateProfileCommand, CreateProfileOptions} from '../../interfaces/create.profile.command'
+import {AccountCredentialsTable, CreateProfileCommand} from '../../interfaces/create.profile.command'
+import {CreateProfileOptions} from '../../interfaces/createProfile.options'
 import {DefaultResolver} from '../../resolvers/default.resolver'
+import {DerivationService} from '../../services/derivation.service'
 import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
+import {ImportType} from '../../models/importType.enum'
+import {ImportTypeResolver} from '../../resolvers/importType.resolver'
+import {MnemonicPassPhrase} from 'symbol-hd-wallets'
 import {NetworkCurrencyResolver} from '../../resolvers/networkCurrency.resolver'
 import {NetworkResolver} from '../../resolvers/network.resolver'
 import {PasswordResolver} from '../../resolvers/password.resolver'
+import {PathNumberResolver} from '../../resolvers/pathNumber.resolver'
+import {Profile} from '../../models/profile.model'
+import {ProfileCreationBase} from '../../models/profileCreation.types'
 import {ProfileNameResolver} from '../../resolvers/profile.resolver'
 import {SaveResolver} from '../../resolvers/save.resolver'
 import {URLResolver} from '../../resolvers/url.resolver'
@@ -51,23 +59,58 @@ export default class extends CreateProfileCommand {
     async execute(options: CommandOptions) {
         const networkType = await new NetworkResolver().resolve(options)
         const save = await new SaveResolver().resolve(options)
-        const account = Account.generateNewAccount(networkType)
-        console.log(new AccountCredentialsTable(account).toString())
-        if (save) {
-            options.url = await new URLResolver().resolve(options)
-            const profileName = await new ProfileNameResolver().resolve(options)
-            const password = await new PasswordResolver().resolve(options)
-            const isDefault = await new DefaultResolver().resolve(options)
-            const generationHash = await new GenerationHashResolver().resolve(options)
-            const networkCurrency = await new NetworkCurrencyResolver().resolve(options)
+        const importType = await new ImportTypeResolver().resolve(options)
 
-            const simpleWallet = SimpleWallet.createFromPrivateKey(
-                profileName,
-                password,
-                account.privateKey,
-                networkType)
-            this.createProfile(simpleWallet, options.url, isDefault, generationHash, networkCurrency)
-            console.log( chalk.green('\nStored ' + profileName + ' profile'))
+        if (!save) {
+            if (importType === ImportType.PrivateKey) {
+                const account = Account.generateNewAccount(networkType)
+                console.log(AccountCredentialsTable.createFromAccount(account).toString())
+            } else {
+                const pathNumber = await new PathNumberResolver().resolve(options)
+                const mnemonic = MnemonicPassPhrase.createRandom().plain
+                const privateKey = DerivationService.getPrivateKeyFromMnemonic(
+                    mnemonic, pathNumber,
+                )
+                console.log(AccountCredentialsTable.createFromAccount(
+                    Account.createFromPrivateKey(privateKey, networkType),
+                    mnemonic,
+                    pathNumber,
+                ).toString())
+            }
+            return
         }
+
+        options.url = await new URLResolver().resolve(options)
+        const name = await new ProfileNameResolver().resolve(options)
+        const password = await new PasswordResolver().resolve(options)
+        const isDefault = await new DefaultResolver().resolve(options)
+
+        this.spinner.start()
+        const generationHash = await new GenerationHashResolver().resolve(options)
+        const networkCurrency = await new NetworkCurrencyResolver().resolve(options)
+        this.spinner.stop(true)
+
+        const baseArguments: ProfileCreationBase = {
+            generationHash,
+            isDefault,
+            name,
+            networkCurrency,
+            networkType,
+            password,
+            url: options.url,
+        }
+
+        let profile: Profile
+
+        if (importType === ImportType.PrivateKey) {
+            const {privateKey} = Account.generateNewAccount(networkType)
+            profile = this.createProfile({...baseArguments, privateKey})
+        } else {
+            const mnemonic = MnemonicPassPhrase.createRandom().plain
+            profile = this.createProfile({...baseArguments, mnemonic, pathNumber: 1})
+        }
+
+        console.log(AccountCredentialsTable.createFromProfile(profile, password).toString())
+        console.log(chalk.green('\nStored ' + name + ' profile'))
     }
 }

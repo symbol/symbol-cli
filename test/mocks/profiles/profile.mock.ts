@@ -16,14 +16,34 @@
  *
  */
 
-import {NetworkType, Password, SimpleWallet} from 'symbol-sdk'
+import {NetworkType, Password, Account} from 'symbol-sdk'
 
 import {NetworkCurrency} from '../../../src/models/networkCurrency.model'
-import {Profile} from '../../../src/models/profile.model'
+import {PrivateKeyProfile} from '../../../src/models/privateKey.profile.model'
+import {HdProfile} from '../../../src/models/hdProfile.model'
 
-const simpleWallet1 = SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST)
-const url1 = 'http://localhost:1234'
-const networkGenerationHash1 = 'test'
 const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
 
-export const mockProfile1 = new Profile(simpleWallet1, url1, networkGenerationHash1, networkCurrency, 2)
+export const mockPrivateKeyProfile1 = PrivateKeyProfile.create({
+   generationHash: 'test',
+   isDefault: false,
+   name: 'default',
+   networkCurrency,
+   networkType: NetworkType.MIJIN_TEST,
+   password: new Password('password'),
+   url: 'http://localhost:1234',
+   privateKey: Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey,
+})
+
+export const mockHdProfile1 = HdProfile.create({
+   generationHash: 'test',
+   isDefault: false,
+   name: 'default',
+   networkCurrency,
+   networkType: NetworkType.MIJIN_TEST,
+   password: new Password('password'),
+   url: 'http://localhost:1234',
+   // eslint-disable-next-line max-len
+   mnemonic: 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense',
+   pathNumber: 0,
+})

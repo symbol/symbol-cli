@@ -15,11 +15,14 @@
  * limitations under the License.
  *
  */
+import {Command, ExpectedError} from 'clime'
+import {Spinner} from 'cli-spinner'
+
 import {Profile} from '../models/profile.model'
+import {ProfileOptions} from './profile.options'
 import {ProfileRepository} from '../respositories/profile.repository'
 import {ProfileService} from '../services/profile.service'
-import {Command, ExpectedError, option, Options} from 'clime'
-import {Spinner} from 'cli-spinner'
+import config from '../config/app.conf'
 
 /**
  * Base command class to use the stored profile.
@@ -33,7 +36,7 @@ export abstract class ProfileCommand extends Command {
      */
     constructor(fileUrl?: string) {
         super()
-        const profileRepository = new ProfileRepository(fileUrl || '.symbolrc.json')
+        const profileRepository = new ProfileRepository(fileUrl || config.PROFILES_FILE_NAME)
         this.profileService = new ProfileService(profileRepository)
         this.spinner.setSpinnerString('|/-\\')
     }
@@ -84,14 +87,4 @@ export abstract class ProfileCommand extends Command {
         }
     }
 
-}
-
-/**
- * Profile options.
- */
-export class ProfileOptions extends Options {
-    @option({
-        description: '(Optional) Select between your profiles, by providing a profile name.',
-    })
-    profile: string
 }

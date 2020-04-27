@@ -67,12 +67,11 @@ describe('Network currency', () => {
  })
 
  it('createRelative should throw when provided an invalid number', () => {
+  expect(() => mockNetworkCurrency.createRelative('not an amount')).to.throw()
   // @ts-ignore
-  expect(() => {mockNetworkCurrency.createRelative('not an amount')}).to.throws
+  expect(() => mockNetworkCurrency.createRelative(undefined)).to.throw()
   // @ts-ignore
-  expect(() => {mockNetworkCurrency.createRelative(undefined)}).to.throws
-  // @ts-ignore
-  expect(() => {mockNetworkCurrency.createRelative(null)}).to.throws
-  expect(() => {mockNetworkCurrency.createRelative(-1)}).to.throws
+  expect(() => mockNetworkCurrency.createRelative(null)).to.throw()
+  expect(() => mockNetworkCurrency.createRelative(-1)).to.throw()
  })
 })

@@ -15,7 +15,7 @@
 * limitations under the License.
 *
 */
-import {ProfileOptions} from '../../interfaces/profile.command'
+import {ProfileOptions} from '../../interfaces/profile.options'
 import {HexAddressResolver} from '../../resolvers/hexAddress.resolver'
 import {Command, command, metadata, option} from 'clime'
 import {Address} from 'symbol-sdk'

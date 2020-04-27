@@ -15,7 +15,8 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsCommand, AnnounceTransactionsOptions} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
 import {AnnounceResolver} from '../../resolvers/announce.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
@@ -85,10 +86,7 @@ export default class extends AnnounceTransactionsCommand {
                     'Enter the recipient public key:', 'recipientPublicKey')
             recipientAddress = recipientPublicAccount.address
             const rawMessage = await new MessageResolver().resolve(options)
-            message = account.encryptMessage(
-                rawMessage,
-                recipientPublicAccount,
-                profile.networkType)
+            message = account.encryptMessage(rawMessage, recipientPublicAccount)
         } else {
             recipientAddress =  await new AddressAliasResolver()
                 .resolve(options, undefined, 'Enter the recipient address or @alias:', 'recipientAddress')

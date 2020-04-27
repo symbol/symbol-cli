@@ -107,7 +107,8 @@ export class NetworkCurrency {
    */
   public createRelative(amount: number | string): Mosaic {
     const theAmount = Number(amount)
-    if (theAmount < 0) { throw new Error('The provided amount should be greater than 0') }
+    if (Number.isNaN(theAmount)) { throw new Error('The provided amount is invalid')}
+    if (!(theAmount > 0)) { throw new Error('The provided amount should be greater than 0') }
     const absoluteAmount = theAmount * Math.pow(10, this.divisibility)
     return new Mosaic(this.namespaceId, UInt64.fromUint(absoluteAmount))
   }

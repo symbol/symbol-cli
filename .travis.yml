@@ -12,7 +12,6 @@ before_script:
   - npm link
 script:
   - npm run test:cov
-  - npm run coveralls-report
   - npm run lint:all
   - npm run coveralls-report
   - CURRENT_VERSION=$(npm run version --silent)
