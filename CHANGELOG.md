@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.19.1] - 23-Apr-2020
+## [0.19.2] - 28-Apr-2020
 
 :warning: 0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
 Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``.
