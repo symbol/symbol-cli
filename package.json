@@ -34,8 +34,8 @@
         "path": "^0.12.7",
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
+        "symbol-hd-wallets": "^0.10.0",
         "symbol-sdk": "^0.18.0",
-        "symbol-hd-wallets": "^0.9.2",
         "symbol-uri-scheme": "^0.4.4",
         "update-notifier": "^4.1.0"
     },
