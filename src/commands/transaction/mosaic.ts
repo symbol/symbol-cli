@@ -15,19 +15,7 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AmountResolver} from '../../resolvers/amount.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {DivisibilityResolver} from '../../resolvers/divisibility.resolver'
-import {DurationResolver} from '../../resolvers/duration.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import { OptionsConfirmResolver } from '../../options-resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
 import {
-    AggregateTransaction,
     Deadline,
     MosaicDefinitionTransaction,
     MosaicId,
@@ -37,7 +25,17 @@ import {
     UInt64,
 } from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
-import chalk from 'chalk'
+
+import {AmountResolver} from '../../resolvers/amount.resolver'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {DivisibilityResolver} from '../../resolvers/divisibility.resolver'
+import {DurationResolver} from '../../resolvers/duration.resolver'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {MosaicFlagsResolver} from '../../resolvers/mosaic.resolver'
+import {OptionsConfirmResolver} from '../../options-resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -92,10 +90,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 
 export default class extends AnnounceTransactionsCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -112,43 +107,38 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicFlags = await new MosaicFlagsResolver().resolve(options)
         const amount = await new AmountResolver().resolve(options, 'Amount of mosaics units to create: ')
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
-        const mosaicDefinitionTransaction = MosaicDefinitionTransaction.create(
+        const signerPublicAccount = signerMultisigInfo
+            ? signerMultisigInfo.account : account.publicAccount
+
+        const mosaicDefinition = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, account.publicAccount),
+            MosaicId.createFromNonce(nonce, signerPublicAccount),
             mosaicFlags,
             divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
-            profile.networkType)
+            profile.networkType,
+        )
 
-        const mosaicSupplyChangeTransaction = MosaicSupplyChangeTransaction.create(
+        const mosaicSupplyChange = MosaicSupplyChangeTransaction.create(
             Deadline.create(),
-            mosaicDefinitionTransaction.mosaicId,
+            mosaicDefinition.mosaicId,
             MosaicSupplyChangeAction.Increase,
             amount,
             profile.networkType,
         )
 
-        const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
-            [
-                mosaicDefinitionTransaction.toAggregate(account.publicAccount),
-                mosaicSupplyChangeTransaction.toAggregate(account.publicAccount),
-            ],
-            profile.networkType,
-            [],
-            maxFee)
-        const signedTransaction = account.sign(aggregateTransaction, profile.networkGenerationHash)
-
-        new TransactionView(aggregateTransaction, signedTransaction).print()
-
-        console.log(chalk.green('The new mosaic id is: '), mosaicDefinitionTransaction.mosaicId.toHex())
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [mosaicDefinition, mosaicSupplyChange],
+            maxFee,
+            signerMultisigInfo,
+            isAggregateBonded: true,
         }
+
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
     }
 }

@@ -18,7 +18,7 @@ export class KeyResolver implements Resolver {
             () => undefined,
             altText ?
             altText : 'Enter a UInt64 key in hexadecimal format.' +
-                ' You can use the command \'symbol-cli converter stringtokey\' ' +
+                ' You can use the command \'symbol-cli converter stringToKey\' ' +
                 'to turn a string into a valid key:',
             'text',
             new KeyValidator())

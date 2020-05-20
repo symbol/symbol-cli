@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {command, metadata, option} from 'clime'
+import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
+
 import {AddressAliasResolver} from '../../resolvers/address.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
 import {KeyResolver} from '../../resolvers/key.resolver'
 import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
 import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
-import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
 import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -58,9 +58,8 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Set a mosaic restriction to an specific address (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() {
-        super()
-    }
+    constructor() { super() }
+
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options)
@@ -73,6 +72,7 @@ export default class extends AnnounceTransactionsCommand {
             .resolve(options, undefined, 'restrictionKey')
         const restrictionValue = await new RestrictionValueResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         const restrictionMosaicHttp = new RestrictionMosaicHttp(profile.url)
         const namespaceHttp = new NamespaceHttp(profile.url)
@@ -87,17 +87,17 @@ export default class extends AnnounceTransactionsCommand {
                 restrictionKey,
                 targetAddress,
                 restrictionValue,
-                maxFee).toPromise()
+                maxFee,
+            ).toPromise()
 
-        const signedTransaction = account.sign(mosaicAddressRestrictionTransaction, profile.networkGenerationHash)
-
-        new TransactionView(mosaicAddressRestrictionTransaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [mosaicAddressRestrictionTransaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
     }
 }

@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {ActionResolver} from '../../resolvers/action.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
-import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {ActionType} from '../../models/action.enum'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
 import {command, metadata, option} from 'clime'
+import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
+
+import {ActionResolver} from '../../resolvers/action.resolver'
+import {ActionType} from '../../models/action.enum'
+import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
+import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
+import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
+import {PasswordResolver} from '../../resolvers/password.resolver'
+import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
+import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver'
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -54,10 +54,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     description: 'Allow or block outgoing transactions by transaction type',
 })
 export default class extends AnnounceTransactionsCommand {
-
-    constructor() {
-        super()
-    }
+    constructor() { super() }
 
     @metadata
     async execute(options: CommandOptions) {
@@ -68,6 +65,7 @@ export default class extends AnnounceTransactionsCommand {
         const flags = await new RestrictionAccountOperationFlagsResolver().resolve(options)
         const transactionType = await new TransactionTypeResolver().resolve(options)
         const maxFee = await new MaxFeeResolver().resolve(options)
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
@@ -75,16 +73,17 @@ export default class extends AnnounceTransactionsCommand {
             (action === ActionType.Add) ? [transactionType] : [],
             (action === ActionType.Remove) ? [transactionType] : [],
             profile.networkType,
-            maxFee)
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
+            maxFee,
+        )
 
-        new TransactionView(transaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
         }
+
+        const signedTransactions = await this.signTransactions(signatureOptions, options)
+        this.announceTransactions(options, signedTransactions)
     }
 }
