@@ -15,28 +15,29 @@
  * limitations under the License.
  *
  */
-import {option} from 'clime'
-import {CreateProfileOptions} from './createProfile.options'
+import { option } from 'clime';
+
+import { CreateProfileOptions } from './createProfile.options';
 
 /**
  * Create profile options.
  */
 export class ImportProfileOptions extends CreateProfileOptions {
- @option({
-  flag: 'P',
-  description: 'Account private key.',
- })
- privateKey: string
+    @option({
+        flag: 'P',
+        description: 'Account private key.',
+    })
+    privateKey: string;
 
- @option({
-  flag: 'M',
-  description: '(Optional) Import a profile using a private key.',
- })
- mnemonic: string
+    @option({
+        flag: 'M',
+        description: '(Optional) Import a profile using a private key.',
+    })
+    mnemonic: string;
 
- @option({
-  flag: 'N',
-  description: '(Optional) HD wallet path number.',
- })
- pathNumber: number
+    @option({
+        flag: 'N',
+        description: '(Optional) HD wallet path number.',
+    })
+    pathNumber: number;
 }

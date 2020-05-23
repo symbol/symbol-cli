@@ -15,24 +15,21 @@
  * limitations under the License.
  *
  */
-import {ProfileNameResolver} from '../../src/resolvers/profile.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { ProfileNameResolver } from '../../src/resolvers/profile.resolver';
 
 describe('Profile name resolver', () => {
-
     it('should return profile name', async () => {
-        const profile = 'test'
-        const options = {profile} as any
-        expect(await new ProfileNameResolver().resolve(options))
-            .to.be.equal(profile)
-    })
+        const profile = 'test';
+        const options = { profile } as any;
+        expect(await new ProfileNameResolver().resolve(options)).to.be.equal(profile);
+    });
 
     it('should change key', async () => {
-        const key = 'test'
-        const options = {key} as any
-        expect(await new ProfileNameResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(key)
-    })
-
-})
+        const key = 'test';
+        const options = { key } as any;
+        expect(await new ProfileNameResolver().resolve(options, 'altText', 'key')).to.be.equal(key);
+    });
+});

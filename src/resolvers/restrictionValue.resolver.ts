@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import {OptionsResolver} from '../options-resolver'
-import {NumericStringValidator} from '../validators/numericString.validator'
-import {Resolver} from './resolver'
-import {Options} from 'clime'
+import { Options } from 'clime';
+
+import { OptionsResolver } from '../options-resolver';
+import { NumericStringValidator } from '../validators/numericString.validator';
+import { Resolver } from './resolver';
 
 /**
  * Restriction value resolver
  */
 export class RestrictionValueResolver implements Resolver {
-
     /**
      * Resolve a restriction value provided by a user.
      * @param {Options} options - Command options.
@@ -33,13 +33,14 @@ export class RestrictionValueResolver implements Resolver {
      * @return {Promise<string>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
-        const value = await OptionsResolver(options,
+        const value = await OptionsResolver(
+            options,
             altKey ? altKey : 'newRestrictionValue',
             () => undefined,
             altText ? altText : 'Enter new restriction value:',
             'text',
-            new NumericStringValidator()
-        )
-        return value
+            new NumericStringValidator(),
+        );
+        return value;
     }
 }

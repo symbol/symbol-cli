@@ -15,54 +15,57 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {command, metadata, option} from 'clime'
-import {NamespaceHttp} from 'symbol-sdk'
-import {forkJoin, of} from 'rxjs'
-import {catchError} from 'rxjs/operators'
+import { command, metadata, option } from 'clime';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { NamespaceHttp } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { NamespaceNameResolver } from '../../resolvers/namespace.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespaceName: string
+    namespaceName: string;
 }
 
 @command({
     description: 'Get mosaicId or address behind an namespace',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const namespaceId = await new NamespaceNameResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const namespaceId = await new NamespaceNameResolver().resolve(options);
 
-        this.spinner.start()
-        const namespaceHttp = new NamespaceHttp(profile.url)
+        this.spinner.start();
+        const namespaceHttp = new NamespaceHttp(profile.url);
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),
-        ).subscribe((res) => {
-                this.spinner.stop(true)
+        ).subscribe(
+            (res) => {
+                this.spinner.stop(true);
                 if (res[0]) {
-                    console.log('\n' + res[0].toHex())
+                    console.log('\n' + res[0].toHex());
                 } else if (res[1]) {
-                    console.log('\n' + res[1].pretty() )
+                    console.log('\n' + res[1].pretty());
                 } else {
-                    console.log('\nThe namespace is not linked with a mosaic or address.')
+                    console.log('\nThe namespace is not linked with a mosaic or address.');
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

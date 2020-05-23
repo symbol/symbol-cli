@@ -1,9 +1,3 @@
-import {Profile} from '../models/profile.model'
-import {Address, MultisigAccountGraphInfo, MultisigHttp, MultisigAccountInfo} from 'symbol-sdk'
-import {from, Observable, of} from 'rxjs'
-import {catchError, filter, flatMap, map, switchMap, toArray} from 'rxjs/operators'
-import {ExpectedError} from 'clime'
-
 /*
  *
  * Copyright 2018-present NEM
@@ -22,70 +16,67 @@ import {ExpectedError} from 'clime'
  *
  */
 
+import { Observable, from, of } from 'rxjs';
+import { catchError, filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
+import { Address, MultisigAccountGraphInfo, MultisigAccountInfo, MultisigHttp } from 'symbol-sdk';
+
+import { Profile } from '../models/profile.model';
+
 export class MultisigService {
-  /**
-   * Creates an instance of MultisigService.
-   * @param {Profile} profile
-   */
-  constructor(private readonly profile: Profile) {}
+    /**
+     * Creates an instance of MultisigService.
+     * @param {Profile} profile
+     */
+    constructor(private readonly profile: Profile) {}
 
-  /**
-   * Gets self and children multisig accounts addresses from the network
-   * @public
-   * @returns {Observable<Address[]>}
-   */
-  public getSelfAndChildrenAddresses(): Observable<Address[]> {
-    return new MultisigHttp(this.profile.url)
-      .getMultisigAccountGraphInfo(this.profile.address)
-      .pipe(
-        switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
-        catchError((ignored) => of([this.profile.address])),
-      )
-  }
+    /**
+     * Gets self and children multisig accounts addresses from the network
+     * @public
+     * @returns {Observable<Address[]>}
+     */
+    public getSelfAndChildrenAddresses(): Observable<Address[]> {
+        return new MultisigHttp(this.profile.url).getMultisigAccountGraphInfo(this.profile.address).pipe(
+            switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
+            catchError((ignored) => of([this.profile.address])),
+        );
+    }
 
-  /**
-   * Gets children multisig accounts nultisig info from the network
-   * @returns {Promise<MultisigAccountInfo[]>}
-   */
-  public getChildrenMultisigAccountInfo(): Promise<MultisigAccountInfo[] | null> {
-    return new MultisigHttp(this.profile.url)
-      .getMultisigAccountGraphInfo(this.profile.address)
-      .pipe(
-        switchMap((graphInfo) => this.multisigInfoFromGraphInfo(graphInfo)),
-        toArray(),
-        catchError((ignored) => of(null)),
-      )
-      .toPromise()
-  }
+    /**
+     * Gets children multisig accounts nultisig info from the network
+     * @returns {Promise<MultisigAccountInfo[]>}
+     */
+    public getChildrenMultisigAccountInfo(): Promise<MultisigAccountInfo[] | null> {
+        return new MultisigHttp(this.profile.url)
+            .getMultisigAccountGraphInfo(this.profile.address)
+            .pipe(
+                switchMap((graphInfo) => this.multisigInfoFromGraphInfo(graphInfo)),
+                toArray(),
+                catchError((ignored) => of(null)),
+            )
+            .toPromise();
+    }
 
-  /**
-   * Gets self and children multisig accounts addresses from a MultisigAccountGraphInfo
-   * @private
-   * @param {MultisigAccountGraphInfo} graphInfo
-   * @returns {Observable<Address[]>}
-   */
-  private getAddressesFromGraphInfo(
-    graphInfo: MultisigAccountGraphInfo,
-  ): Observable<Address[]> {
-    return this.multisigInfoFromGraphInfo(graphInfo)
-      .pipe(
-        map(({account}) => account.address),
-        toArray(),
-      )
-  }
+    /**
+     * Gets self and children multisig accounts addresses from a MultisigAccountGraphInfo
+     * @private
+     * @param {MultisigAccountGraphInfo} graphInfo
+     * @returns {Observable<Address[]>}
+     */
+    private getAddressesFromGraphInfo(graphInfo: MultisigAccountGraphInfo): Observable<Address[]> {
+        return this.multisigInfoFromGraphInfo(graphInfo).pipe(
+            map(({ account }) => account.address),
+            toArray(),
+        );
+    }
 
-  private multisigInfoFromGraphInfo(
-    graphInfo: MultisigAccountGraphInfo,
-  ): Observable<MultisigAccountInfo> {
-    const {multisigAccounts} = graphInfo
-    return from(
-      [...multisigAccounts.keys()]
-        .sort((a, b) => b - a), // Get addresses from top to bottom
-    )
-      .pipe(
-        map((key) => multisigAccounts.get(key) || []),
-        filter((x) => x.length > 0),
-        flatMap((multisigAccountInfo) => multisigAccountInfo),
-      )
-  }
+    private multisigInfoFromGraphInfo(graphInfo: MultisigAccountGraphInfo): Observable<MultisigAccountInfo> {
+        const { multisigAccounts } = graphInfo;
+        return from(
+            [...multisigAccounts.keys()].sort((a, b) => b - a), // Get addresses from top to bottom
+        ).pipe(
+            map((key) => multisigAccounts.get(key) || []),
+            filter((x) => x.length > 0),
+            flatMap((multisigAccountInfo) => multisigAccountInfo),
+        );
+    }
 }

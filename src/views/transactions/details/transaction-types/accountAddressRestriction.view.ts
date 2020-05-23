@@ -16,75 +16,78 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {AccountAddressRestrictionTransaction, AccountRestrictionFlags, Address, NamespaceId} from 'symbol-sdk'
+import { AccountAddressRestrictionTransaction, Address, AddressRestrictionFlag, NamespaceId } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class AccountAddressRestrictionView {
-  /**
-   * @static
-   * @param {AccountAddressRestrictionTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AccountAddressRestrictionTransaction): CellRecord {
-    return new AccountAddressRestrictionView(tx).render()
-  }
-
-  /**
-   * Creates an instance of AccountAddressRestrictionView.
-   * @param {AccountAddressRestrictionTransaction} tx
-   */
-  private constructor(private readonly tx: AccountAddressRestrictionTransaction) {}
-
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private render(): CellRecord {
-    return {
-      'Account restriction flag': AccountRestrictionFlags[this.tx.restrictionFlags],
-      ...this.getRestrictions(),
+    /**
+     * @static
+     * @param {AccountAddressRestrictionTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: AccountAddressRestrictionTransaction): CellRecord {
+        return new AccountAddressRestrictionView(tx).render();
     }
-  }
 
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private getRestrictions(): CellRecord {
-    const numberOfAdditions = this.tx.restrictionAdditions.length
-    const numberOfDeletions = this.tx.restrictionDeletions.length
-    return {
-      ...this.tx.restrictionAdditions.reduce((acc, account, index) => ({
-        ...acc,
-        ...this.renderRestriction(
-          account, index, numberOfAdditions, 'Addition',
-        ),
-      }), {}),
-      ...this.tx.restrictionDeletions.reduce((acc, account, index) => ({
-        ...acc,
-        ...this.renderRestriction(
-          account, index, numberOfDeletions, 'Deletion',
-        ),
-      }), {}),
+    /**
+     * Creates an instance of AccountAddressRestrictionView.
+     * @param {AccountAddressRestrictionTransaction} tx
+     */
+    private constructor(private readonly tx: AccountAddressRestrictionTransaction) {}
+
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private render(): CellRecord {
+        return {
+            'Account restriction flag': AddressRestrictionFlag[this.tx.restrictionFlags],
+            ...this.getRestrictions(),
+        };
     }
-  }
 
-  /**
-   * @private
-   * @param {(Address | NamespaceId)} account
-   * @param {number} index
-   * @param {number} numberOfRestrictions
-   * @param {('Addition' | 'Deletion')} additionOrDeletion
-   * @returns {CellRecord}
-   */
-  private renderRestriction(
-    account: Address | NamespaceId,
-    index: number,
-    numberOfRestrictions: number,
-    additionOrDeletion: 'Addition' | 'Deletion',
-  ): CellRecord {
-    const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`
-    const target = account instanceof Address ? account.pretty() : account.toHex()
-    return {[key]: target}
-  }
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private getRestrictions(): CellRecord {
+        const numberOfAdditions = this.tx.restrictionAdditions.length;
+        const numberOfDeletions = this.tx.restrictionDeletions.length;
+        return {
+            ...this.tx.restrictionAdditions.reduce(
+                (acc, account, index) => ({
+                    ...acc,
+                    ...this.renderRestriction(account, index, numberOfAdditions, 'Addition'),
+                }),
+                {},
+            ),
+            ...this.tx.restrictionDeletions.reduce(
+                (acc, account, index) => ({
+                    ...acc,
+                    ...this.renderRestriction(account, index, numberOfDeletions, 'Deletion'),
+                }),
+                {},
+            ),
+        };
+    }
+
+    /**
+     * @private
+     * @param {(Address | NamespaceId)} account
+     * @param {number} index
+     * @param {number} numberOfRestrictions
+     * @param {('Addition' | 'Deletion')} additionOrDeletion
+     * @returns {CellRecord}
+     */
+    private renderRestriction(
+        account: Address | NamespaceId,
+        index: number,
+        numberOfRestrictions: number,
+        additionOrDeletion: 'Addition' | 'Deletion',
+    ): CellRecord {
+        const key = `${additionOrDeletion} ${index + 1} of ${numberOfRestrictions}`;
+        const target = account instanceof Address ? account.pretty() : account.toHex();
+        return { [key]: target };
+    }
 }

@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-import {Validator} from './validator'
+import { MnemonicPassPhrase } from 'symbol-hd-wallets';
+
+import { Validator } from './validator';
 
 /**
  * Mnemonic passphrase validator
  */
 export class MnemonicValidator implements Validator<string> {
-
     /**
      * Validates a mnemonic passphrase.
      * @param {string} value - Mnemonic passphrase.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return new MnemonicPassPhrase(value).isValid() || 'The provided mnemonic passphrase is invalid'
+        return new MnemonicPassPhrase(value).isValid() || 'The provided mnemonic passphrase is invalid';
     }
 }

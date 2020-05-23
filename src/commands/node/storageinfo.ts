@@ -15,34 +15,35 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata} from 'clime'
-import {NodeHttp, StorageInfo} from 'symbol-sdk'
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata } from 'clime';
+import { NodeHttp, StorageInfo } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
 
 export class StorageTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
     constructor(public readonly storage: StorageInfo) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
         this.table.push(
             ['Number of Accounts', storage.numAccounts],
             ['Number of Blocks', storage.numBlocks],
             ['Number of Transactions', storage.numAccounts],
-        )
+        );
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Storage Information') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += '\n' + chalk.green('Storage Information') + '\n';
+        text += this.table.toString();
+        return text;
     }
 }
 
@@ -50,25 +51,25 @@ export class StorageTable {
     description: 'Get diagnostic information about the node storage',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     execute(options: ProfileOptions) {
+        const profile = this.getProfile(options);
 
-        const profile = this.getProfile(options)
-
-        this.spinner.start()
-        const nodeHttp = new NodeHttp(profile.url)
-        nodeHttp.getStorageInfo()
-            .subscribe((storage) => {
-                this.spinner.stop(true)
-                console.log(new StorageTable(storage).toString())
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        this.spinner.start();
+        const nodeHttp = new NodeHttp(profile.url);
+        nodeHttp.getStorageInfo().subscribe(
+            (storage) => {
+                this.spinner.stop(true);
+                console.log(new StorageTable(storage).toString());
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

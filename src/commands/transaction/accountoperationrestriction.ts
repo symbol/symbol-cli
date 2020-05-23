@@ -15,75 +15,76 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
 
-import {ActionResolver} from '../../resolvers/action.resolver'
-import {ActionType} from '../../models/action.enum'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {RestrictionAccountOperationFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
-import {TransactionTypeResolver} from '../../resolvers/transactionType.resolver'
+import { command, metadata, option } from 'clime';
+import { AccountRestrictionTransaction, Deadline } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { ActionType } from '../../models/action.enum';
+import { ActionResolver } from '../../resolvers/action.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { RestrictionAccountOperationFlagsResolver } from '../../resolvers/restrictionAccount.resolver';
+import { TransactionTypeResolver } from '../../resolvers/transactionType.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flag. (' +
-            'AllowOutgoingTransactionType,' +
-            'BlockOutgoingTransactionType)',
+        description: 'Restriction flag. (' + 'AllowOutgoingTransactionType,' + 'BlockOutgoingTransactionType)',
     })
-    flags: string
+    flags: string;
 
     @option({
         flag: 'a',
         description: 'Modification action. (Add, Remove).',
     })
-    action: string
+    action: string;
 
     @option({
         flag: 'v',
         description: 'Transaction type formatted as hex.',
     })
-    transactionType: string
+    transactionType: string;
 }
 
 @command({
     description: 'Allow or block outgoing transactions by transaction type',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const action = await new ActionResolver().resolve(options)
-        const flags = await new RestrictionAccountOperationFlagsResolver().resolve(options)
-        const transactionType = await new TransactionTypeResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const action = await new ActionResolver().resolve(options);
+        const flags = await new RestrictionAccountOperationFlagsResolver().resolve(options);
+        const transactionType = await new TransactionTypeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === ActionType.Add) ? [transactionType] : [],
-            (action === ActionType.Remove) ? [transactionType] : [],
+            action === ActionType.Add ? [transactionType] : [],
+            action === ActionType.Remove ? [transactionType] : [],
             profile.networkType,
             maxFee,
-        )
+        );
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

@@ -15,42 +15,44 @@
  * limitations under the License.
  *
  */
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {AccountHttp} from 'symbol-sdk'
-import {command, metadata} from 'clime'
+import { command, metadata } from 'clime';
+import { AccountHttp } from 'symbol-sdk';
+
+import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
     description: 'Fetch incoming transactions from account',
 })
 export default class extends AccountTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: AccountTransactionsOptions) {
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
 
-        this.spinner.start()
-        const accountHttp = new AccountHttp(profile.url)
-        accountHttp.getAccountIncomingTransactions(address, options.getQueryParams())
-            .subscribe((transactions) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const accountHttp = new AccountHttp(profile.url);
+        accountHttp.getAccountIncomingTransactions(address, options.getQueryParams()).subscribe(
+            (transactions) => {
+                this.spinner.stop(true);
                 transactions.map((transaction) => {
-                    new TransactionView(transaction).print()
-                })
+                    new TransactionView(transaction).print();
+                });
 
                 if (!transactions.length) {
-                    console.log('There aren\'t incoming transaction')
+                    console.log("There aren't incoming transaction");
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

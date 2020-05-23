@@ -16,19 +16,20 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {AccountLinkTransaction, LinkAction} from 'symbol-sdk'
+import { AccountKeyLinkTransaction, LinkAction } from 'symbol-sdk';
 
-export class AccountLinkView {
-  /**
-   * @static
-   * @param {AccountLinkTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AccountLinkTransaction): CellRecord {
-    return {
-      ['Action']: LinkAction[tx.linkAction],
-      ['Remote public key']: tx.remotePublicKey,
+import { CellRecord } from '../transaction.view';
+
+export class AccountKeyLinkView {
+    /**
+     * @static
+     * @param {AccountKeyLinkTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: AccountKeyLinkTransaction): CellRecord {
+        return {
+            ['Action']: LinkAction[tx.linkAction],
+            ['Linked key']: tx.linkedPublicKey,
+        };
     }
-  }
 }

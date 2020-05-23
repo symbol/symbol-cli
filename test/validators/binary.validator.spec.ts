@@ -15,31 +15,26 @@
  * limitations under the License.
  *
  */
-import {BinaryValidator} from '../../src/validators/binary.validator'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { BinaryValidator } from '../../src/validators/binary.validator';
 
 describe('binary validator', () => {
-
     it('default case', () => {
-        const positiveValue = 1
-        const zeroValue = 0
-        expect(new BinaryValidator().validate(positiveValue))
-            .to.be.equal(true)
-        expect(new BinaryValidator().validate(zeroValue))
-            .to.be.equal(true)
-    })
+        const positiveValue = 1;
+        const zeroValue = 0;
+        expect(new BinaryValidator().validate(positiveValue)).to.be.equal(true);
+        expect(new BinaryValidator().validate(zeroValue)).to.be.equal(true);
+    });
 
     it('should throw error if value is negative', () => {
-        const value = -1
-        expect(
-            new BinaryValidator().validate(value)
-        ).to.be.equal('The value must be 0 or 1')
-    })
+        const value = -1;
+        expect(new BinaryValidator().validate(value)).to.be.equal('The value must be 0 or 1');
+    });
 
     it('should throw error if value is decimal', () => {
-        const value = 1.1
-        expect(
-            new BinaryValidator().validate(value)
-        ).to.be.equal('The value must be 0 or 1')
-    })
-})
+        const value = 1.1;
+        expect(new BinaryValidator().validate(value)).to.be.equal('The value must be 0 or 1');
+    });
+});

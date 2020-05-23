@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-import {ISimpleWalletDTO} from 'symbol-sdk'
-import {NetworkCurrencyDTO} from './networkCurrency.model'
+import { ISimpleWalletDTO } from 'symbol-sdk';
+
+import { NetworkCurrencyDTO } from './networkCurrency.model';
 
 /**
  * Base properties of all profiles
@@ -24,13 +25,13 @@ import {NetworkCurrencyDTO} from './networkCurrency.model'
  * @interface ProfileDTOBase
  */
 export interface ProfileDTOBase {
-   simpleWallet: ISimpleWalletDTO;
-   url: string;
-   networkGenerationHash: string;
-   networkCurrency: NetworkCurrencyDTO;
-   version: number;
-   default: string;
-   type: string;
+    simpleWallet: ISimpleWalletDTO;
+    url: string;
+    networkGenerationHash: string;
+    networkCurrency: NetworkCurrencyDTO;
+    version: number;
+    default: string;
+    type: string;
 }
 
 /**
@@ -39,8 +40,8 @@ export interface ProfileDTOBase {
  * @extends {ProfileDTOBase}
  */
 export interface HdProfileDTO extends ProfileDTOBase {
-   encryptedPassphrase: string;
-   path: string;
+    encryptedPassphrase: string;
+    path: string;
 }
 
-export type ProfileDTO = ProfileDTOBase | HdProfileDTO
+export type ProfileDTO = ProfileDTOBase | HdProfileDTO;

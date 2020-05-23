@@ -15,10 +15,11 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
+import chalk from 'chalk';
+import { command, metadata } from 'clime';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
 
 export class CommandOptions extends ProfileOptions {}
 
@@ -26,27 +27,26 @@ export class CommandOptions extends ProfileOptions {}
     description: 'Display the list of stored profiles',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     execute(options: CommandOptions) {
-        let message = ''
+        let message = '';
         if (options.profile) {
-           const profile = this.getProfile(options)
-           console.log('\n' + profile.toString())
+            const profile = this.getProfile(options);
+            console.log('\n' + profile.toString());
         } else {
             this.findAllProfiles().map((profile) => {
-                message += '\n' + profile.toString()
-            })
-            console.log(message)
+                message += '\n' + profile.toString();
+            });
+            console.log(message);
             try {
-                const currentProfile = this.getDefaultProfile()
-                console.log(chalk.green('\n Default profile:', currentProfile.name))
+                const currentProfile = this.getDefaultProfile();
+                console.log(chalk.green('\n Default profile:', currentProfile.name));
             } catch {
-                console.log(chalk.green('\n Default profile: None'))
+                console.log(chalk.green('\n Default profile: None'));
             }
         }
     }

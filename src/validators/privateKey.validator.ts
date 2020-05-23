@@ -15,20 +15,18 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
+import { Validator } from './validator';
 
 /**
  * Private key validator
  */
 export class PrivateKeyValidator implements Validator<string> {
-
     /**
      * Validates a private key format.
      * @param {string} value - Private key.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return (value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value)) ?
-            'Private key should be a 64 characters hexadecimal string' : true
+        return value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value) ? 'Private key should be a 64 characters hexadecimal string' : true;
     }
 }

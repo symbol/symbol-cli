@@ -15,27 +15,28 @@
  * limitations under the License.
  *
  */
-import * as fs from 'fs'
-import {ExpectedError} from 'clime'
+import * as fs from 'fs';
 
-import {HdProfile} from '../models/hdProfile.model'
-import {PrivateKeyProfile} from '../models/privateKey.profile.model'
-import {Profile, ProfileRecord, CURRENT_PROFILE_VERSION} from '../models/profile.model'
-import {ProfileDTO} from '../models/profileDTO.types'
-import {ProfileMigrations} from '../migrations/profile.migrations'
+import { ExpectedError } from 'clime';
+
+import { ProfileMigrations } from '../migrations/profile.migrations';
+import { HdProfile } from '../models/hdProfile.model';
+import { PrivateKeyProfile } from '../models/privateKeyProfile.model';
+import { CURRENT_PROFILE_VERSION, Profile, ProfileRecord } from '../models/profile.model';
+import { ProfileDTO } from '../models/profileDTO.types';
 
 /**
  * Profile repository
  */
 export class ProfileRepository {
-    public readonly filePath: string
+    public readonly filePath: string;
 
     /**
      * Constructor
      * @param {string} fileUrl - File path where profiles are saved.
      */
     constructor(private readonly fileUrl: string) {
-        this.filePath = require('os').homedir() + '/' + fileUrl
+        this.filePath = require('os').homedir() + '/' + fileUrl;
     }
 
     /**
@@ -45,11 +46,11 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     public find(name: string): Profile {
-        const profiles = this.getProfiles()
+        const profiles = this.getProfiles();
         if (profiles[name]) {
-            return this.createProfileFromDTO(profiles[name])
+            return this.createProfileFromDTO(profiles[name]);
         }
-        throw new Error(`${name} not found`)
+        throw new Error(`${name} not found`);
     }
 
     /**
@@ -57,14 +58,14 @@ export class ProfileRepository {
      * @returns {Profile[]}
      */
     public all(): Profile[] {
-        const profiles = this.getProfiles()
-        const list: Profile[] = []
+        const profiles = this.getProfiles();
+        const list: Profile[] = [];
         for (const name in profiles) {
             if (profiles.hasOwnProperty(name)) {
-                list.push(this.createProfileFromDTO(profiles[name]))
+                list.push(this.createProfileFromDTO(profiles[name]));
             }
         }
-        return list
+        return list;
     }
 
     /**
@@ -73,16 +74,16 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     public save(profile: Profile): Profile {
-        const profiles = this.getProfiles()
-        const {name} = profile.simpleWallet
+        const profiles = this.getProfiles();
+        const { name } = profile.simpleWallet;
 
         if (profiles.hasOwnProperty(name)) {
-            throw new Error(`A profile named ${name} already exists.`)
+            throw new Error(`A profile named ${name} already exists.`);
         }
 
-        profiles[name] = profile.toDTO()
-        this.saveProfiles(profiles)
-        return profile
+        profiles[name] = profile.toDTO();
+        this.saveProfiles(profiles);
+        return profile;
     }
 
     /**
@@ -91,18 +92,18 @@ export class ProfileRepository {
      * @throws {Error}
      */
     public setDefault(name: string) {
-        const profiles = this.getProfiles()
+        const profiles = this.getProfiles();
         if (profiles.hasOwnProperty(name)) {
             for (const item in profiles) {
                 if (item !== name) {
-                    profiles[item].default = '0'
+                    profiles[item].default = '0';
                 } else {
-                    profiles[item].default = '1'
+                    profiles[item].default = '1';
                 }
             }
-            this.saveProfiles(profiles)
+            this.saveProfiles(profiles);
         } else {
-            throw new Error(`${name} not found`)
+            throw new Error(`${name} not found`);
         }
     }
 
@@ -111,17 +112,17 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     public getDefaultProfile(): Profile {
-        const profiles = this.getProfiles()
-        let defaultProfile = ''
+        const profiles = this.getProfiles();
+        let defaultProfile = '';
         for (const name in profiles) {
             if ('1' === profiles[name].default) {
-                defaultProfile = name
+                defaultProfile = name;
             }
         }
         if ('' === defaultProfile) {
-            throw new Error('default profile not found')
+            throw new Error('default profile not found');
         }
-        return this.find(defaultProfile)
+        return this.find(defaultProfile);
     }
 
     /**
@@ -132,35 +133,28 @@ export class ProfileRepository {
         // check if profile storage file exists, creates one if not
         try {
             if (!fs.existsSync(this.filePath)) {
-                fs.writeFileSync(this.filePath, '{}', 'utf-8')
-                return {}
+                fs.writeFileSync(this.filePath, '{}', 'utf-8');
+                return {};
             }
         } catch (error) {
-            throw new ExpectedError(
-                'Something went wrong when creating a file to store your profiles...',
-                + JSON.stringify(error),
-            )
+            throw new ExpectedError('Something went wrong when creating a file to store your profiles...', +JSON.stringify(error));
         }
-
 
         try {
             // get accounts from storage
-            const profiles = JSON.parse(fs.readFileSync(this.filePath, 'utf-8'))
+            const profiles = JSON.parse(fs.readFileSync(this.filePath, 'utf-8'));
 
             // migrate accounts if necessary
             if (!this.checkSchemaVersion(profiles)) {
-                const migratedProfiles = this.migrate(profiles)
+                const migratedProfiles = this.migrate(profiles);
                 // persist updated profiles
-                this.saveProfiles(migratedProfiles)
-                return migratedProfiles
+                this.saveProfiles(migratedProfiles);
+                return migratedProfiles;
             }
 
-            return profiles
+            return profiles;
         } catch (error) {
-            throw new ExpectedError(
-                'Something went wrong when retrieving your profiles from the storage...'
-                + JSON.stringify(error),
-            )
+            throw new ExpectedError('Something went wrong when retrieving your profiles from the storage...' + JSON.stringify(error));
         }
     }
 
@@ -170,13 +164,10 @@ export class ProfileRepository {
      * @return {boolean}  True if profiles are up to date, false if any requires migration
      */
     private checkSchemaVersion(profiles: ProfileRecord): boolean {
-        const profileNeedingMigration = Object.values(profiles).find(
-            ({version}) => !version || version < CURRENT_PROFILE_VERSION,
-        )
+        const profileNeedingMigration = Object.values(profiles).find(({ version }) => !version || version < CURRENT_PROFILE_VERSION);
 
-        return profileNeedingMigration === undefined
+        return profileNeedingMigration === undefined;
     }
-
 
     /**
      * Return a profile record with updated profiles
@@ -185,26 +176,30 @@ export class ProfileRepository {
      * @returns {ProfileRecord}
      */
     private migrate(profiles: ProfileRecord): ProfileRecord {
-        const allMigrations = ProfileMigrations.get()
+        const allMigrations = ProfileMigrations.get();
         return Object.entries(profiles)
             .map((entry) => {
-                const [name, profile] = entry
-                const profileVersion = Number(profile.version) || 0
+                const [name, profile] = entry;
+                const profileVersion = Number(profile.version) || 0;
 
                 // Skip if profile is up-to-date
-                if (profileVersion >= CURRENT_PROFILE_VERSION) {return {[name]: profile}}
+                if (profileVersion >= CURRENT_PROFILE_VERSION) {
+                    return { [name]: profile };
+                }
 
                 // get migrations to apply
                 const migrations = Object.entries(allMigrations)
                     .filter(([version]) => Number(version) > profileVersion)
-                    .map(([, migration]) => migration)
+                    .map(([, migration]) => migration);
 
                 // apply migrations
-                let migrated = {[name]: profile}
-                migrations.forEach((migration) => { migrated = migration(migrated) })
-                return migrated
+                let migrated = { [name]: profile };
+                migrations.forEach((migration) => {
+                    migrated = migration(migrated);
+                });
+                return migrated;
             })
-            .reduce((acc, profile) => ({...acc, ...profile}), {})
+            .reduce((acc, profile) => ({ ...acc, ...profile }), {});
     }
 
     /**
@@ -212,11 +207,7 @@ export class ProfileRepository {
      * @param {JSON} profiles
      */
     private saveProfiles(profiles: ProfileRecord) {
-        fs.writeFileSync(
-            this.filePath,
-            JSON.stringify(profiles),
-            'utf-8',
-        )
+        fs.writeFileSync(this.filePath, JSON.stringify(profiles), 'utf-8');
     }
 
     /**
@@ -226,7 +217,9 @@ export class ProfileRepository {
      * @returns {Profile}
      */
     private createProfileFromDTO(args: ProfileDTO): Profile {
-        if ('encryptedPassphrase' in args) { return HdProfile.createFromDTO(args) }
-        return PrivateKeyProfile.createFromDTO(args)
+        if ('encryptedPassphrase' in args) {
+            return HdProfile.createFromDTO(args);
+        }
+        return PrivateKeyProfile.createFromDTO(args);
     }
 }

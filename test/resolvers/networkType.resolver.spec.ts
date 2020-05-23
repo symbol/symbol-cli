@@ -15,47 +15,40 @@
  * limitations under the License.
  *
  */
-import {NetworkResolver} from '../../src/resolvers/network.resolver'
-import {expect} from 'chai'
-import {NetworkType} from 'symbol-sdk'
+
+import { expect } from 'chai';
+import { NetworkType } from 'symbol-sdk';
+
+import { NetworkResolver } from '../../src/resolvers/network.resolver';
 
 describe('Network type resolver', () => {
-
     it('should return MAIN_NET', async () => {
-        const network = 'MAIN_NET'
-        const options = {network} as any
-        expect(await new NetworkResolver().resolve(options))
-            .to.be.equal(NetworkType.MAIN_NET)
-    })
+        const network = 'MAIN_NET';
+        const options = { network } as any;
+        expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.MAIN_NET);
+    });
 
     it('should return TEST_NET', async () => {
-        const network = 'TEST_NET'
-        const options = {network} as any
-        expect(await new NetworkResolver().resolve(options))
-            .to.be.equal(NetworkType.TEST_NET)
-    })
+        const network = 'TEST_NET';
+        const options = { network } as any;
+        expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.TEST_NET);
+    });
 
     it('should return MIJIN', async () => {
-        const network = 'MIJIN'
-        const options = {network} as any
-        expect(await new NetworkResolver().resolve(options))
-            .to.be.equal(NetworkType.MIJIN)
-    })
+        const network = 'MIJIN';
+        const options = { network } as any;
+        expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.MIJIN);
+    });
 
     it('should return MIJIN_TEST', async () => {
-        const network = 'MIJIN_TEST'
-        const options = {network} as any
-        expect(await new NetworkResolver().resolve(options))
-            .to.be.equal(NetworkType.MIJIN_TEST)
-    })
+        const network = 'MIJIN_TEST';
+        const options = { network } as any;
+        expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.MIJIN_TEST);
+    });
 
     it('should change key', async () => {
-        const key = 'MIJIN_TEST'
-        const options = {key} as any
-        expect(await new NetworkResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(NetworkType.MIJIN_TEST)
-    })
-
-
-})
+        const key = 'MIJIN_TEST';
+        const options = { key } as any;
+        expect(await new NetworkResolver().resolve(options, 'altText', 'key')).to.be.equal(NetworkType.MIJIN_TEST);
+    });
+});

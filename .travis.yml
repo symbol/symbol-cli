@@ -4,6 +4,7 @@ node_js:
 cache:
   directories:
     - "node_modules"
+    - .eslintcache
 before_script:
   - sudo apt-get update
   - sudo apt-get install python3 python3-pip python3-setuptools
@@ -12,14 +13,14 @@ before_script:
   - npm link
 script:
   - npm run test:cov
-  - npm run lint:all
+  - npm run lint
   - npm run coveralls-report
   - CURRENT_VERSION=$(npm run version --silent)
   - catapult-docs-cli cli-usage --config .clidocs > docs/$CURRENT_VERSION.md
 deploy:
   - provider: script
     skip_cleanup: true
-    script: /bin/sh travis/github-pages.sh
+    script: /bin/sh travis/githubPages.sh
     on:
       branch: master
   - provider: script

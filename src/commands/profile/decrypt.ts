@@ -15,36 +15,38 @@
  * limitations under the License.
  *
  */
-import {command, metadata} from 'clime'
-import {Crypto} from 'symbol-sdk'
 
-import {AccountCredentialsTable} from '../../interfaces/create.profile.command'
-import {HdProfile} from '../../models/hdProfile.model'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
+import { command, metadata } from 'clime';
+import { Crypto } from 'symbol-sdk';
+
+import { AccountCredentialsTable } from '../../interfaces/create.profile.command';
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { HdProfile } from '../../models/hdProfile.model';
+import { PasswordResolver } from '../../resolvers/password.resolver';
 
 @command({
     description: 'View profile credentials',
 })
 export default class extends ProfileCommand {
-    constructor() {super()}
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: ProfileOptions) {
-        let mnemonic; let pathNumber
+        let mnemonic;
+        let pathNumber;
 
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
 
         if (profile instanceof HdProfile) {
-            mnemonic = Crypto.decrypt(profile.encryptedPassphrase, password.value)
-            pathNumber = profile.pathNumber
+            mnemonic = Crypto.decrypt(profile.encryptedPassphrase, password.value);
+            pathNumber = profile.pathNumber;
         }
 
-        console.log(AccountCredentialsTable.createFromAccount(
-            account, mnemonic, pathNumber,
-        ).toString())
+        console.log(AccountCredentialsTable.createFromAccount(account, mnemonic, pathNumber).toString());
     }
 }

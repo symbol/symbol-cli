@@ -15,41 +15,51 @@
  * limitations under the License.
  *
  */
-import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import {command, metadata} from 'clime'
-import {Listener} from 'symbol-sdk'
+import chalk from 'chalk';
+import { command, metadata } from 'clime';
+import { RepositoryFactoryHttp } from 'symbol-sdk';
+
+import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
 
 @command({
     description: 'Monitor cosignatures added',
 })
 export default class extends MonitorAddressCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
-        const listener = new Listener(profile.url)
-        listener.open().then(() => {
-            listener.cosignatureAdded(address).subscribe((transaction) => {
-                const transactionFormatted = '\nCosignatureSignedTransaction: ParentHash:' + transaction.parentHash +
-                    ' SignerPublicKey:' + transaction.signerPublicKey +
-                    ' Signature:' + transaction.signature
-                console.log(transactionFormatted)
-            }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
-                listener.close()
-            })
-        }, (err) => {
-            this.spinner.stop(true)
-            console.log(HttpErrorHandler.handleError(err))
-        })
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
+        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        listener.open().then(
+            () => {
+                listener.cosignatureAdded(address).subscribe(
+                    (transaction) => {
+                        const transactionFormatted =
+                            '\nCosignatureSignedTransaction: ParentHash:' +
+                            transaction.parentHash +
+                            ' SignerPublicKey:' +
+                            transaction.signerPublicKey +
+                            ' Signature:' +
+                            transaction.signature;
+                        console.log(transactionFormatted);
+                    },
+                    (err) => {
+                        console.log(HttpErrorHandler.handleError(err));
+                        listener.close();
+                    },
+                );
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

@@ -15,24 +15,21 @@
  * limitations under the License.
  *
  */
-import {HeightResolver} from '../../src/resolvers/height.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { HeightResolver } from '../../src/resolvers/height.resolver';
 
 describe('Height resolver', () => {
-
     it('should return height', async () => {
-        const height = '10'
-        const options = {height} as any
-        expect((await new HeightResolver().resolve(options)).compact())
-            .to.be.equal(10)
-    })
+        const height = '10';
+        const options = { height } as any;
+        expect((await new HeightResolver().resolve(options)).compact()).to.be.equal(10);
+    });
 
     it('should change key', async () => {
-        const key = '10'
-        const options = {key} as any
-        expect((await new HeightResolver()
-            .resolve(options, 'altText', 'key')).compact())
-            .to.be.equal(10)
-    })
-
-})
+        const key = '10';
+        const options = { key } as any;
+        expect((await new HeightResolver().resolve(options, 'altText', 'key')).compact()).to.be.equal(10);
+    });
+});

@@ -16,8 +16,8 @@
  *
  */
 
-import {NamespaceId} from 'symbol-sdk'
+import { NamespaceId } from 'symbol-sdk';
 
-export const namespaceId1 = new NamespaceId('symbol.xym')
-export const namespaceId2 = new NamespaceId('alice')
-export const namespaceId3 = new NamespaceId('bob')
+export const namespaceId1 = new NamespaceId('symbol.xym');
+export const namespaceId2 = new NamespaceId('alice');
+export const namespaceId3 = new NamespaceId('bob');

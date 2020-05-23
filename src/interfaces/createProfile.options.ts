@@ -15,59 +15,60 @@
  * limitations under the License.
  *
  */
-import {ProfileOptions} from './profile.options'
-import {option} from 'clime'
+import { option } from 'clime';
+
+import { ProfileOptions } from './profile.options';
 
 /**
  * Create profile options.
  */
 export class CreateProfileOptions extends ProfileOptions {
- @option({
-  description: '(Optional) Create an HD wallet.',
-  toggle: true,
- })
- hd: boolean
+    @option({
+        description: '(Optional) Create an HD wallet.',
+        toggle: true,
+    })
+    hd: boolean;
 
- @option({
-  flag: 'u',
-  description: '(Optional) When saving profile, provide a Symbol Node URL. Example: http://localhost:3000',
- })
- url: string
+    @option({
+        flag: 'u',
+        description: '(Optional) When saving profile, provide a Symbol Node URL. Example: http://localhost:3000',
+    })
+    url: string;
 
- @option({
-  flag: 'n',
-  description: '(Optional) Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
- })
- network: string
+    @option({
+        flag: 'n',
+        description: '(Optional) Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
+    })
+    network: string;
 
- @option({
-  flag: 'p',
-  description: '(Optional) When saving profile, provide the password.',
- })
- password: string
+    @option({
+        flag: 'p',
+        description: '(Optional) When saving profile, provide the password.',
+    })
+    password: string;
 
- @option({
-  flag: 'd',
-  description: '(Optional) Set the profile as default.',
-  toggle: true,
- })
- default: any
+    @option({
+        flag: 'd',
+        description: '(Optional) Set the profile as default.',
+        toggle: true,
+    })
+    default: any;
 
- @option({
-  flag: 'g',
-  description: '(Optional) Generation hash of the network. Necessary to create the profile offline.',
- })
- generationHash: string
+    @option({
+        flag: 'g',
+        description: '(Optional) Generation hash of the network. Necessary to create the profile offline.',
+    })
+    generationHash: string;
 
- @option({
-  flag: 'i',
-  description: '(Optional) Namespace Name of the network mosaic. (eg.: symbol.xym) Necessary to create the profile offline.',
- })
- namespaceId: string
+    @option({
+        flag: 'i',
+        description: '(Optional) Namespace Name of the network mosaic. (eg.: symbol.xym) Necessary to create the profile offline.',
+    })
+    namespaceId: string;
 
- @option({
-  flag: 'v',
-  description: '(Optional) Divisiblity of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
- })
- divisibility: number
+    @option({
+        flag: 'v',
+        description: '(Optional) Divisiblity of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
+    })
+    divisibility: number;
 }

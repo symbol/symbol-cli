@@ -15,24 +15,21 @@
  * limitations under the License.
  *
  */
-import {MessageResolver} from '../../src/resolvers/message.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { MessageResolver } from '../../src/resolvers/message.resolver';
 
 describe('Message resolver', () => {
-
     it('should return message', async () => {
-        const message = '10'
-        const options = {message} as any
-        expect(await new MessageResolver().resolve(options))
-            .to.be.equal('10')
-    })
+        const message = '10';
+        const options = { message } as any;
+        expect(await new MessageResolver().resolve(options)).to.be.equal('10');
+    });
 
     it('should change key', async () => {
-        const key = '10'
-        const options = {key} as any
-        expect(await new MessageResolver()
-            .resolve(options, undefined, 'altText', 'key'))
-            .to.be.equal('10')
-    })
-
-})
+        const key = '10';
+        const options = { key } as any;
+        expect(await new MessageResolver().resolve(options, undefined, 'altText', 'key')).to.be.equal('10');
+    });
+});

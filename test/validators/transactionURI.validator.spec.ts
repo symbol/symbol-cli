@@ -15,22 +15,22 @@
  * limitations under the License.
  *
  */
-import {TransactionURIValidator} from '../../src/validators/transactionURI.validator'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { TransactionURIValidator } from '../../src/validators/transactionURI.validator';
 
 describe('TransactionURI validator', () => {
-
     it('default case', () => {
-        const uri = 'web+symbol://transaction?data=data&generationHash=gh'
-        expect(new TransactionURIValidator().validate(uri))
-            .to.be.equal(true)
-    })
+        const uri = 'web+symbol://transaction?data=data&generationHash=gh';
+        expect(new TransactionURIValidator().validate(uri)).to.be.equal(true);
+    });
 
     it('should throw error if invalid uri', () => {
-        const uri = 'web+symbol://transaction?dat'
-        expect(new TransactionURIValidator().validate(uri))
-            .to.be.equal('Transaction URI format is not valid. ' +
-            'Example: web+symbol://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl')
-    })
-
-})
+        const uri = 'web+symbol://transaction?dat';
+        expect(new TransactionURIValidator().validate(uri)).to.be.equal(
+            'Transaction URI format is not valid. ' +
+                'Example: web+symbol://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl',
+        );
+    });
+});

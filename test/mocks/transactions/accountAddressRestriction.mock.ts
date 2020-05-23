@@ -16,14 +16,14 @@
  *
  */
 
-import {account1, account2, account3} from '../accounts.mock'
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'symbol-sdk'
+import { AccountRestrictionTransaction, AddressRestrictionFlag, Deadline, NetworkType } from 'symbol-sdk';
 
-export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction
- .createAddressRestrictionModificationTransaction(
-  Deadline.create(),
-  AccountRestrictionFlags.AllowIncomingAddress,
-  [account1.address, account2.address],
-  [account3.address],
-  NetworkType.MIJIN_TEST,
- )
+import { account1, account2, account3 } from '../accounts.mock';
+
+export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
+    Deadline.create(),
+    AddressRestrictionFlag.AllowIncomingAddress,
+    [account1.address, account2.address],
+    [account3.address],
+    NetworkType.MIJIN_TEST,
+);

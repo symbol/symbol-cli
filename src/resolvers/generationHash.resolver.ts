@@ -1,3 +1,4 @@
+import { ExpectedError } from 'clime';
 /*
  *
  * Copyright 2018-present NEM
@@ -15,31 +16,32 @@
  * limitations under the License.
  *
  */
-import {BlockHttp, UInt64} from 'symbol-sdk'
-import {ExpectedError} from 'clime'
+import { NodeHttp } from 'symbol-sdk';
 
-import {CreateProfileOptions} from '../interfaces/createProfile.options'
-import {Resolver} from './resolver'
+import { CreateProfileOptions } from '../interfaces/createProfile.options';
+import { Resolver } from './resolver';
 
 /**
  * Generation hash resolver
  */
 export class GenerationHashResolver implements Resolver {
-
     /**
      * Resolves generationHash. If not provided by the user, this is asked to the node.
      * @param {CreateProfileOptions} options - Command options.
      * @returns {Promise<string>}
      */
     async resolve(options: CreateProfileOptions): Promise<string> {
-        let generationHash = ''
-        const blockHttp = new BlockHttp(options.url)
+        let generationHash = '';
+        const nodeHttp = new NodeHttp(options.url);
         try {
             generationHash = options.generationHash
-                ? options.generationHash : (await blockHttp.getBlockByHeight(UInt64.fromUint(1)).toPromise()).generationHash
+                ? options.generationHash
+                : (await nodeHttp.getNodeInfo().toPromise()).networkGenerationHashSeed;
         } catch (ignored) {
-            throw new ExpectedError('Check if you can reach the Symbol url provided: ' + options.url + '/block/1')
+            throw new ExpectedError(
+                'The CLI cannot reach the node. Please, check if you can reach the Symbol url provided: ' + options.url + '/node/info',
+            );
         }
-        return generationHash
+        return generationHash;
     }
 }

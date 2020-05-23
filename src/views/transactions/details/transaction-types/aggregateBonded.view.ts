@@ -16,53 +16,60 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {AggregateView} from './aggregate.view'
-import {AggregateTransaction} from 'symbol-sdk'
+import { AggregateTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
+import { AggregateView } from './aggregate.view';
 
 export class AggregateBondedView extends AggregateView {
-  /**
-   * @static
-   * @param {AggregateTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AggregateTransaction): CellRecord {
-    return new AggregateBondedView(tx).render()
-  }
-
-  /**
-   * Creates an instance of AggregateBondedView.
-   * @param {AggregateTransaction} tx
-   */
-  private constructor(tx: AggregateTransaction) {
-    super(tx)
-  }
-
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private render(): CellRecord {
-    const innerTransactionsViews = this.getInnerTransactionViews()
-
-    return {
-      ...innerTransactionsViews,
-      ...this.getCosignedBy(),
+    /**
+     * @static
+     * @param {AggregateTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: AggregateTransaction): CellRecord {
+        return new AggregateBondedView(tx).render();
     }
-  }
 
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private getCosignedBy(): CellRecord {
-    if (!this.tx.signer) {return {} }
-
-    return {
-      'Cosigner 1': this.tx.signer.address.pretty(),
-      ...this.tx.cosignatures.reduce((acc, {signer}, index) => ({
-        ...acc, [`Cosigner ${index + 2}`]: signer.address.pretty(),
-      }), {}),
+    /**
+     * Creates an instance of AggregateBondedView.
+     * @param {AggregateTransaction} tx
+     */
+    private constructor(tx: AggregateTransaction) {
+        super(tx);
     }
-  }
+
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private render(): CellRecord {
+        const innerTransactionsViews = this.getInnerTransactionViews();
+
+        return {
+            ...innerTransactionsViews,
+            ...this.getCosignedBy(),
+        };
+    }
+
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private getCosignedBy(): CellRecord {
+        if (!this.tx.signer) {
+            return {};
+        }
+
+        return {
+            'Cosigner 1': this.tx.signer.address.pretty(),
+            ...this.tx.cosignatures.reduce(
+                (acc, { signer }, index) => ({
+                    ...acc,
+                    [`Cosigner ${index + 2}`]: signer.address.pretty(),
+                }),
+                {},
+            ),
+        };
+    }
 }

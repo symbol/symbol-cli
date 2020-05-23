@@ -15,62 +15,60 @@
  * limitations under the License.
  *
  */
-import {ProfileRecord} from '../models/profile.model'
+import { ProfileRecord } from '../models/profile.model';
 
 export class ProfileMigrations {
- /**
-  * Get all migrations
-  * **NOTE: CURRENT_PROFILE_VERSION variable should be updated** in Profile model
-  * when adding a new migration
-  * @static
-  * @returns {Record<string, (profiles: ProfileRecord) => ProfileRecord>}
-  */
- public static get(): Record<string, (profiles: ProfileRecord) => ProfileRecord> {
-   return {
-     2: ProfileMigrations.version2_networkCurrency,
-     3: ProfileMigrations.version3_profileType,
-   }
- }
+    /**
+     * Get all migrations
+     * **NOTE: CURRENT_PROFILE_VERSION variable should be updated** in Profile model
+     * when adding a new migration
+     * @static
+     * @returns {Record<string, (profiles: ProfileRecord) => ProfileRecord>}
+     */
+    public static get(): Record<string, (profiles: ProfileRecord) => ProfileRecord> {
+        return {
+            2: ProfileMigrations.version2_networkCurrency,
+            3: ProfileMigrations.version3_profileType,
+        };
+    }
 
- /**
-  * Adds a version property
-  * Adds a networkCurrency property
-  * @static
-  * @param {ProfileRecord} profiles
-  * @returns {ProfileRecord}
-  */
- public static version2_networkCurrency(profiles: ProfileRecord): ProfileRecord {
-  return Object
-   .entries(profiles)
-   .map(([name, profile]) => ({
-    [name]: {
-     ...profile,
-     version: 2,
-     networkCurrency: {
-      namespaceId: 'symbol.xym',
-      divisibility: 6,
-     },
-    },
-   }))
-   .reduce((acc, profile) => ({...acc, ...profile}), {}) as ProfileRecord
- }
+    /**
+     * Adds a version property
+     * Adds a networkCurrency property
+     * @static
+     * @param {ProfileRecord} profiles
+     * @returns {ProfileRecord}
+     */
+    public static version2_networkCurrency(profiles: ProfileRecord): ProfileRecord {
+        return Object.entries(profiles)
+            .map(([name, profile]) => ({
+                [name]: {
+                    ...profile,
+                    version: 2,
+                    networkCurrency: {
+                        namespaceId: 'symbol.xym',
+                        divisibility: 6,
+                    },
+                },
+            }))
+            .reduce((acc, profile) => ({ ...acc, ...profile }), {}) as ProfileRecord;
+    }
 
-  /**
-  * Adds a profile type property
-  * @static
-  * @param {ProfileRecord} profiles
-  * @returns {ProfileRecord}
-  */
- public static version3_profileType(profiles: ProfileRecord): ProfileRecord {
-  return Object
-   .entries(profiles)
-   .map(([name, profile]) => ({
-    [name]: {
-     ...profile,
-     version: 3,
-     type: 'PrivateKey',
-    },
-   }))
-   .reduce((acc, profile) => ({...acc, ...profile}), {}) as ProfileRecord
- }
+    /**
+     * Adds a profile type property
+     * @static
+     * @param {ProfileRecord} profiles
+     * @returns {ProfileRecord}
+     */
+    public static version3_profileType(profiles: ProfileRecord): ProfileRecord {
+        return Object.entries(profiles)
+            .map(([name, profile]) => ({
+                [name]: {
+                    ...profile,
+                    version: 3,
+                    type: 'PrivateKey',
+                },
+            }))
+            .reduce((acc, profile) => ({ ...acc, ...profile }), {}) as ProfileRecord;
+    }
 }

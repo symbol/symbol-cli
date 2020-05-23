@@ -15,22 +15,20 @@
  * limitations under the License.
  *
  */
-import {HashAlgorithmResolver} from '../../src/resolvers/hashAlgorithm.resolver'
-import {expect} from 'chai'
-import {LockHashAlgorithm} from 'symbol-sdk'
+
+import { expect } from 'chai';
+import { LockHashAlgorithm } from 'symbol-sdk';
+
+import { HashAlgorithmResolver } from '../../src/resolvers/hashAlgorithm.resolver';
 
 describe('Hash algorithm resolver', () => {
-
     it('should return hash algorithm', async () => {
-        const options = {hashAlgorithm: 'Op_Sha3_256'} as any
-        expect(await new HashAlgorithmResolver().resolve(options))
-            .to.be.equal(LockHashAlgorithm.Op_Sha3_256)
-    })
+        const options = { hashAlgorithm: 'Op_Sha3_256' } as any;
+        expect(await new HashAlgorithmResolver().resolve(options)).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
+    });
 
     it('should change key', async () => {
-        const options = {key: 'Op_Sha3_256'} as any
-        expect(await new HashAlgorithmResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(LockHashAlgorithm.Op_Sha3_256)
-    })
-})
+        const options = { key: 'Op_Sha3_256' } as any;
+        expect(await new HashAlgorithmResolver().resolve(options, 'altText', 'key')).to.be.equal(LockHashAlgorithm.Op_Sha3_256);
+    });
+});

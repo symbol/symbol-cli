@@ -15,21 +15,13 @@
  * limitations under the License.
  *
  */
-
-import axios, {AxiosResponse} from 'axios'
-import {Address, NamespaceId} from 'symbol-sdk'
-import {AnnounceTransactionWebhookBuilder} from 'symbol-uri-scheme'
+import axios, { AxiosResponse } from 'axios';
+import { AnnounceTransactionWebhookBuilder } from 'symbol-uri-scheme';
 
 /**
  * Webhook service
  */
 export class WebhookService {
-
-    /**
-     * Constructor
-     */
-    constructor() {}
-
     /**
      * Posts AnnounceTransactionWebhookDTO to webhookUrl.
      * @param {string} webhookUrl - URL to post AnnounceTransactionWebhookDTO.
@@ -37,8 +29,11 @@ export class WebhookService {
      * @param {string} signerPublicKey - Transaction signer public key.
      * @returns {Address | NamespaceId}
      */
-    static postAnnounceTransactionWebhook <T, R = AxiosResponse<T>>(
-        webhookUrl: string, hash: string, signerPublicKey: string): Promise<AxiosResponse<T>>{
-        return axios.post(webhookUrl, new AnnounceTransactionWebhookBuilder(hash, signerPublicKey).build())
+    static postAnnounceTransactionWebhook<T, R = AxiosResponse<T>>(
+        webhookUrl: string,
+        hash: string,
+        signerPublicKey: string,
+    ): Promise<AxiosResponse<T>> {
+        return axios.post(webhookUrl, new AnnounceTransactionWebhookBuilder(hash, signerPublicKey).build());
     }
 }

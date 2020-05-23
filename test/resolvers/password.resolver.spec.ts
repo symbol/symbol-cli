@@ -15,25 +15,21 @@
  * limitations under the License.
  *
  */
-import {PasswordResolver} from '../../src/resolvers/password.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { PasswordResolver } from '../../src/resolvers/password.resolver';
 
 describe('Password resolver', () => {
-
     it('should return password', async () => {
-        const password = '12345678'
-        const options = {password} as any
-        expect((await new PasswordResolver().resolve(options)).value)
-            .to.be.equal(password)
-    })
+        const password = '12345678';
+        const options = { password } as any;
+        expect((await new PasswordResolver().resolve(options)).value).to.be.equal(password);
+    });
 
     it('should change key', async () => {
-        const key = '12345678'
-        const options = {key} as any
-        expect((await new PasswordResolver()
-            .resolve(options, 'altText', 'key')).value)
-            .to.be.equal(key)
-    })
-
-
-})
+        const key = '12345678';
+        const options = { key } as any;
+        expect((await new PasswordResolver().resolve(options, 'altText', 'key')).value).to.be.equal(key);
+    });
+});

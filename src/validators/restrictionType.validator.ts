@@ -15,37 +15,65 @@
  * limitations under the License.
  *
  */
-import {Validator} from 'clime'
-import {AccountRestrictionFlags, MosaicRestrictionType} from 'symbol-sdk'
+import { Validator } from 'clime';
+import { AddressRestrictionFlag, MosaicRestrictionFlag, MosaicRestrictionType, OperationRestrictionFlag } from 'symbol-sdk';
 
 /**
  * Validator of mosaic restriction type
  */
-export class MosaicRestrictionTypeValidator implements Validator<string> {
+export class RestrictionMosaicTypeValidator implements Validator<string> {
     /**
      * Validates if a mosaic restriction type is valid.
      * @param {number} value - Mosaic restriction type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(MosaicRestrictionType)
-            .filter((key) => Number.isNaN(parseFloat(key)))
-        return keys.includes(value) ? true : 'MosaicRestrictionType must be one of (' + keys + ').'
+        const keys = Object.keys(MosaicRestrictionType).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'MosaicRestrictionType must be one of (' + keys + ').';
     }
 }
 
 /**
- * Validator of account restriction flag
+ * Validator of account restriction address flag
  */
-export class AccountRestrictionFlagsValidator implements Validator<string> {
+export class RestrictionAccountAddressFlagValidator implements Validator<string> {
     /**
-     * Validates if an account restriction flag is valid.
-     * @param {number} value - account restriction flag.
+     * Validates if an account restriction address flag is valid.
+     * @param {number} value - account address restriction flag.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(AccountRestrictionFlags)
-            .filter((key) => Number.isNaN(parseFloat(key)))
-        return keys.includes(value) ? true : 'AccountRestrictionFlags must be one of (' + keys + ').'
+        const keys = Object.keys(AddressRestrictionFlag).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'AddressRestrictionFlag must be one of (' + keys + ').';
+    }
+}
+
+/**
+ * Validator of account restriction mosaic flag
+ */
+export class RestrictionAccountMosaicFlagValidator implements Validator<string> {
+    /**
+     * Validates if an account restriction mosaic flag is valid.
+     * @param {number} value - account mosaic restriction flag.
+     * @returns {true | string}
+     */
+    validate(value: string): boolean | string {
+        const keys = Object.keys(MosaicRestrictionFlag).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'MosaicRestrictionFlag must be one of (' + keys + ').';
+    }
+}
+
+/**
+ * Validator of account restriction operation flag
+ */
+export class RestrictionAccountOperationFlagValidator implements Validator<string> {
+    /**
+     * Validates if an account restriction operation flag is valid.
+     * @param {number} value - account operation restriction flag.
+     * @returns {true | string}
+     */
+    validate(value: string): boolean | string {
+        const keys = Object.keys(OperationRestrictionFlag).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'OperationRestrictionFlag must be one of (' + keys + ').';
     }
 }

@@ -16,21 +16,22 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {AccountMetadataTransaction} from 'symbol-sdk'
+import { AccountMetadataTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class AccountMetadataView {
-  /**
-   * @static
-   * @param {AccountMetadataTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AccountMetadataTransaction): CellRecord {
-    return {
-      'Target public key': tx.targetPublicKey,
-      'Scoped metadata key': tx.scopedMetadataKey.toHex(),
-      'Value size delta': tx.valueSizeDelta.toString(),
-      'Value': tx.value,
+    /**
+     * @static
+     * @param {AccountMetadataTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: AccountMetadataTransaction): CellRecord {
+        return {
+            'Target public key': tx.targetPublicKey,
+            'Scoped metadata key': tx.scopedMetadataKey.toHex(),
+            'Value size delta': tx.valueSizeDelta.toString(),
+            Value: tx.value,
+        };
     }
-  }
 }

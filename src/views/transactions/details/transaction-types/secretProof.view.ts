@@ -16,22 +16,23 @@
  *
  */
 
-import {RecipientsView} from '../../../recipients.view'
-import {CellRecord} from '../transaction.view'
-import {LockHashAlgorithm, SecretProofTransaction} from 'symbol-sdk'
+import { LockHashAlgorithm, SecretProofTransaction } from 'symbol-sdk';
+
+import { RecipientsView } from '../../../recipients.view';
+import { CellRecord } from '../transaction.view';
 
 export class SecretProofView {
-  /**
-   * @static
-   * @param {SecretProofTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: SecretProofTransaction): CellRecord {
-    return {
-      'Recipient': RecipientsView.get(tx.recipientAddress),
-      'Hash type': LockHashAlgorithm[tx.hashAlgorithm],
-      'Secret': tx.secret,
-      'Proof': tx.proof,
+    /**
+     * @static
+     * @param {SecretProofTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: SecretProofTransaction): CellRecord {
+        return {
+            Recipient: RecipientsView.get(tx.recipientAddress),
+            'Hash type': LockHashAlgorithm[tx.hashAlgorithm],
+            Secret: tx.secret,
+            Proof: tx.proof,
+        };
     }
-  }
 }

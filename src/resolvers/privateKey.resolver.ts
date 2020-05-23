@@ -1,13 +1,30 @@
-import {OptionsResolver} from '../options-resolver'
-import {PrivateKeyValidator} from '../validators/privateKey.validator'
-import {Resolver} from './resolver'
-import {Options} from 'clime'
+/*
+ *
+ * Copyright 2018-present NEM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ */
+import { Options } from 'clime';
+
+import { OptionsResolver } from '../options-resolver';
+import { PrivateKeyValidator } from '../validators/privateKey.validator';
+import { Resolver } from './resolver';
 
 /**
  * Private key resolver
  */
 export class PrivateKeyResolver implements Resolver {
-
     /**
      * Resolves a private key provided by the user.
      * @param {Options} options - Command options.
@@ -16,12 +33,14 @@ export class PrivateKeyResolver implements Resolver {
      * @returns {Promise<string>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
-        const resolution = await OptionsResolver(options,
+        const resolution = await OptionsResolver(
+            options,
             altKey ? altKey : 'privateKey',
             () => undefined,
             altText ? altText : 'Enter your account private key:',
             'password',
-            new PrivateKeyValidator())
-        return resolution
+            new PrivateKeyValidator(),
+        );
+        return resolution;
     }
 }

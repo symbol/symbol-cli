@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-import {OptionsChoiceResolver} from '../options-resolver'
-import {MosaicRestrictionTypeValidator} from '../validators/restrictionType.validator'
-import {Resolver} from './resolver'
-import {MosaicRestrictionType} from 'symbol-sdk'
-import {Options} from 'clime'
+import { Options } from 'clime';
+import { MosaicRestrictionType } from 'symbol-sdk';
+
+import { OptionsChoiceResolver } from '../options-resolver';
+import { RestrictionMosaicTypeValidator } from '../validators/restrictionType.validator';
+import { Resolver } from './resolver';
 
 /**
  * Restriction type resolver
@@ -33,21 +34,21 @@ export class RestrictionTypeResolver implements Resolver {
      * @return {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = Object
-            .keys(MosaicRestrictionType)
+        const choices = Object.keys(MosaicRestrictionType)
             .filter((key) => Number.isNaN(parseFloat(key)))
             .map((string) => ({
                 title: string,
                 value: MosaicRestrictionType[string as any],
-            }))
+            }));
 
-        const value = +(await OptionsChoiceResolver(options,
+        const value = +(await OptionsChoiceResolver(
+            options,
             altKey ? altKey : 'newRestrictionType',
             altText ? altText : 'Select the new restriction type:',
             choices,
             'select',
-            new MosaicRestrictionTypeValidator()
-        ))
-        return value
+            new RestrictionMosaicTypeValidator(),
+        ));
+        return value;
     }
 }

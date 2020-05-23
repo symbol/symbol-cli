@@ -15,24 +15,21 @@
  * limitations under the License.
  *
  */
-import {AmountResolver} from '../../src/resolvers/amount.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { AmountResolver } from '../../src/resolvers/amount.resolver';
 
 describe('Amount resolver', () => {
-
     it('should return amount', async () => {
-        const amount = '10'
-        const options = {amount} as any
-        expect((await new AmountResolver().resolve(options)).compact())
-            .to.be.equal(10)
-    })
+        const amount = '10';
+        const options = { amount } as any;
+        expect((await new AmountResolver().resolve(options)).compact()).to.be.equal(10);
+    });
 
     it('should change key', async () => {
-        const key = '10'
-        const options = {key} as any
-        expect((await new AmountResolver()
-            .resolve(options, 'altText', 'key')).compact())
-            .to.be.equal(10)
-    })
-
-})
+        const key = '10';
+        const options = { key } as any;
+        expect((await new AmountResolver().resolve(options, 'altText', 'key')).compact()).to.be.equal(10);
+    });
+});

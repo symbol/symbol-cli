@@ -15,36 +15,35 @@
  * limitations under the License.
  *
  */
-import { MosaicValidator } from '../../src/validators/mosaic.validator'
-import { expect } from 'chai'
+
+import { expect } from 'chai';
+
+import { MosaicValidator } from '../../src/validators/mosaic.validator';
 
 describe('Mosaic validator', () => {
-
     it('default case (@aliasName)', () => {
-        const mosaic = '@symbol.xym::1000000'
-        expect(new MosaicValidator().validate(mosaic))
-            .to.be.equal(true)
-    })
+        const mosaic = '@symbol.xym::1000000';
+        expect(new MosaicValidator().validate(mosaic)).to.be.equal(true);
+    });
 
     it('default case (hex)', () => {
-        const mosaic = '85BBEA6CC462B244::1000000'
-        expect(new MosaicValidator().validate(mosaic))
-            .to.be.equal(true)
-    })
+        const mosaic = '85BBEA6CC462B244::1000000';
+        expect(new MosaicValidator().validate(mosaic)).to.be.equal(true);
+    });
 
     it('should throw error if alias does not start with @ symbol', () => {
-        const mosaic = 'cat.currencxy::1000000'
-        expect(
-            new MosaicValidator().validate(mosaic)
-        ).to.be.equal('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
-            '(Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
-    })
+        const mosaic = 'cat.currencxy::1000000';
+        expect(new MosaicValidator().validate(mosaic)).to.be.equal(
+            'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
+                '(Ex: sending 1 symbol.xym, @symbol.xym::1000000)',
+        );
+    });
 
     it('should throw error if format is invalid', () => {
-        const mosaic = 'cat.currencxy:1000000'
-        expect(
-            new MosaicValidator().validate(mosaic)
-        ).to.be.equal('Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
-            '(Ex: sending 1 symbol.xym, @symbol.xym::1000000)')
-    })
-})
+        const mosaic = 'cat.currencxy:1000000';
+        expect(new MosaicValidator().validate(mosaic)).to.be.equal(
+            'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount, ' +
+                '(Ex: sending 1 symbol.xym, @symbol.xym::1000000)',
+        );
+    });
+});

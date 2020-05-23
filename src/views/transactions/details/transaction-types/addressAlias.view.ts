@@ -16,21 +16,22 @@
  *
  */
 
-import {NamespacesView} from '../../../namespaces.view'
-import {CellRecord} from '../transaction.view'
-import {AddressAliasTransaction, AliasAction} from 'symbol-sdk'
+import { AddressAliasTransaction, AliasAction } from 'symbol-sdk';
+
+import { NamespacesView } from '../../../namespaces.view';
+import { CellRecord } from '../transaction.view';
 
 export class AddressAliasView {
-  /**
-   * @static
-   * @param {AddressAliasTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AddressAliasTransaction): CellRecord {
-    return {
-      action: tx.aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
-      address: tx.address.pretty(),
-      namespace: NamespacesView.getNamespaceLabel(tx.namespaceId),
+    /**
+     * @static
+     * @param {AddressAliasTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: AddressAliasTransaction): CellRecord {
+        return {
+            action: tx.aliasAction === AliasAction.Link ? 'Link' : 'Unlink',
+            address: tx.address.pretty(),
+            namespace: NamespacesView.getNamespaceLabel(tx.namespaceId),
+        };
     }
-  }
 }

@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from './profile.command'
-import {ProfileOptions} from './profile.options'
-import {option} from 'clime'
+import { option } from 'clime';
+
+import { ProfileCommand } from './profile.command';
+import { ProfileOptions } from './profile.options';
 
 /**
  * Base command class to listen the blockchain.
  */
 export abstract class MonitorAddressCommand extends ProfileCommand {
-
     /**
      * Constructor.
      */
     protected constructor() {
-        super()
+        super();
     }
 }
 
@@ -40,5 +40,5 @@ export class MonitorAddressOptions extends ProfileOptions {
         flag: 'a',
         description: 'Account address.',
     })
-    address: string
+    address: string;
 }

@@ -16,91 +16,90 @@
  *
  */
 
-import {TableBuilder} from '../../../models/tableBuilder.model'
-import {ITransactionHeaderView, TransactionHeaderView} from './transaction.header.view'
-import {ITransactionViewSignature, TransactionSignatureView} from './transaction.signature.view'
-import {transactionDetailViewFactory} from './transactionDetailViewFactory'
-import {SignedTransaction, Transaction} from 'symbol-sdk'
-import {Cell, HorizontalTable} from 'cli-table3'
+import { Cell, HorizontalTable } from 'cli-table3';
+import { SignedTransaction, Transaction } from 'symbol-sdk';
 
-export type CellRecord = Record<string, string | Cell>
+import { TableBuilder } from '../../table.builder';
+import { ITransactionHeaderView, TransactionHeaderView } from './transaction.header.view';
+import { ITransactionViewSignature, TransactionSignatureView } from './transaction.signature.view';
+import { transactionDetailViewFactory } from './transactionDetailViewFactory';
+
+export type CellRecord = Record<string, string | Cell>;
 
 export class TransactionView {
-  /**
-   * Properties common to all transactions
-   * @type {ITransactionHeaderView}
-   */
-  header: ITransactionHeaderView
-  /**
-   * Properties specific to the transaction type
-   * @type {CellRecord}
-   */
-  details: CellRecord
-  /**
-   * Properties specific to a transaction signature
-   * @type {ITransactionViewSignature}
-   */
-  signature?: ITransactionViewSignature
+    /**
+     * Properties common to all transactions
+     * @type {ITransactionHeaderView}
+     */
+    header: ITransactionHeaderView;
+    /**
+     * Properties specific to the transaction type
+     * @type {CellRecord}
+     */
+    details: CellRecord;
+    /**
+     * Properties specific to a transaction signature
+     * @type {ITransactionViewSignature}
+     */
+    signature?: ITransactionViewSignature;
 
-  /**
-   * Creates an instance of TransactionView.
-   * @param {Transaction} transaction
-   * @param {SignedTransaction} [signedTransaction]
-   */
-  constructor(transaction: Transaction, signedTransaction?: SignedTransaction) {
-    this.header = TransactionHeaderView.get(transaction)
-    this.details = transactionDetailViewFactory(transaction)
-    this.signature = signedTransaction && TransactionSignatureView.get(signedTransaction)
-  }
-
-  /**
-   * Logs the table
-   */
-  print(): void {
-    console.log(this.render().toString())
-  }
-
-  /**
-   * @returns {HorizontalTable}
-   */
-  render(): HorizontalTable {
-    return TableBuilder.renderTableFromObject(this.sanitizedCellRecord)
-  }
-
-  /**
-   * The whole CellRecord to render in a table, without empty values
-   * @readonly
-   * @protected
-   * @type {CellRecord}
-   */
-  protected get sanitizedCellRecord(): CellRecord {
-    const headerNoNull = this.filterNullValues(this.header)
-    const detailsNoNull = this.filterNullValues(this.details)
-    const signatureNoNull = this.signature ? this.filterNullValues(this.signature) : undefined
-
-    const allCellRecordsNoNull = {
-      ...headerNoNull,
-      ...detailsNoNull,
-      ...signatureNoNull,
+    /**
+     * Creates an instance of TransactionView.
+     * @param {Transaction} transaction
+     * @param {SignedTransaction} [signedTransaction]
+     */
+    constructor(transaction: Transaction, signedTransaction?: SignedTransaction) {
+        this.header = TransactionHeaderView.get(transaction);
+        this.details = transactionDetailViewFactory(transaction);
+        this.signature = signedTransaction && TransactionSignatureView.get(signedTransaction);
     }
 
-    if (!allCellRecordsNoNull) {
-      throw new Error('Something went wrong at sanitizedCellRecord')
+    /**
+     * Logs the table
+     */
+    print(): void {
+        console.log(this.render().toString());
     }
 
-    return allCellRecordsNoNull
-  }
+    /**
+     * @returns {HorizontalTable}
+     */
+    render(): HorizontalTable {
+        return TableBuilder.renderTableFromObject(this.sanitizedCellRecord);
+    }
 
-  /**
-   * Filters out null values (eg. hash in ITransactionHeaderView)
-   * @private
-   * @param {CellRecord} cellRecord
-   * @returns {CellRecord}
-   */
-  private filterNullValues(cellRecord: CellRecord): CellRecord {
-    Object.keys(cellRecord).forEach(
-        (key) => (cellRecord[key] == null) && delete cellRecord[key],
-    )
-    return cellRecord
-  }
+    /**
+     * The whole CellRecord to render in a table, without empty values
+     * @readonly
+     * @protected
+     * @type {CellRecord}
+     */
+    protected get sanitizedCellRecord(): CellRecord {
+        const headerNoNull = this.filterNullValues(this.header);
+        const detailsNoNull = this.filterNullValues(this.details);
+        const signatureNoNull = this.signature ? this.filterNullValues(this.signature) : undefined;
+
+        const allCellRecordsNoNull = {
+            ...headerNoNull,
+            ...detailsNoNull,
+            ...signatureNoNull,
+        };
+
+        if (!allCellRecordsNoNull) {
+            throw new Error('Something went wrong at sanitizedCellRecord');
+        }
+
+        return allCellRecordsNoNull;
+    }
+
+    /**
+     * Filters out null values (eg. hash in ITransactionHeaderView)
+     * @private
+     * @param {CellRecord} cellRecord
+     * @returns {CellRecord}
+     */
+    private filterNullValues(cellRecord: CellRecord): CellRecord {
+        Object.keys(cellRecord).forEach((key) => cellRecord[key] == null && delete cellRecord[key]);
+        return cellRecord;
+    }
 }

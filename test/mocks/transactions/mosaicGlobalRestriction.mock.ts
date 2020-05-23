@@ -16,18 +16,18 @@
  *
  */
 
-import {mosaicId1, mosaicId2} from '../mosaics.mock'
-import {Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64} from 'symbol-sdk'
+import { Deadline, MosaicGlobalRestrictionTransaction, MosaicRestrictionType, NetworkType, UInt64 } from 'symbol-sdk';
 
-export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransaction
-    .create(
-        Deadline.create(),
-        mosaicId1,
-        UInt64.fromUint(1),
-        UInt64.fromUint(9),
-        MosaicRestrictionType.EQ,
-        UInt64.fromUint(8),
-        MosaicRestrictionType.GE,
-        NetworkType.MIJIN_TEST,
-        mosaicId2,
-    )
+import { mosaicId1, mosaicId2 } from '../mosaics.mock';
+
+export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransaction.create(
+    Deadline.create(),
+    mosaicId1,
+    UInt64.fromUint(1),
+    UInt64.fromUint(9),
+    MosaicRestrictionType.EQ,
+    UInt64.fromUint(8),
+    MosaicRestrictionType.GE,
+    NetworkType.MIJIN_TEST,
+    mosaicId2,
+);

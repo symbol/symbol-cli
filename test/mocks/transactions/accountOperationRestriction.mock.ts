@@ -16,17 +16,16 @@
  *
  */
 
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType, TransactionType} from 'symbol-sdk'
+import { AccountRestrictionTransaction, Deadline, NetworkType, OperationRestrictionFlag, TransactionType } from 'symbol-sdk';
 
-export const operation1 = TransactionType.ADDRESS_ALIAS
-export const operation2 = TransactionType.ACCOUNT_LINK
-export const operation3 = TransactionType.TRANSFER
+export const operation1 = TransactionType.ADDRESS_ALIAS;
+export const operation2 = TransactionType.ACCOUNT_KEY_LINK;
+export const operation3 = TransactionType.TRANSFER;
 
-export const unsignedAccountOperationRestriction1 = AccountRestrictionTransaction
-    .createOperationRestrictionModificationTransaction(
-        Deadline.create(),
-        AccountRestrictionFlags.AllowIncomingTransactionType,
-        [operation1, operation2],
-        [operation3],
-        NetworkType.MIJIN_TEST,
-    )
+export const unsignedAccountOperationRestriction1 = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
+    Deadline.create(),
+    OperationRestrictionFlag.AllowOutgoingTransactionType,
+    [operation1, operation2],
+    [operation3],
+    NetworkType.MIJIN_TEST,
+);

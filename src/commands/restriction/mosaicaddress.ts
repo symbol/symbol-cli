@@ -15,53 +15,51 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {RestrictionMosaicHttp} from 'symbol-sdk'
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { RestrictionMosaicHttp } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string
+    address: string;
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string
+    mosaicId: string;
 }
 
 export class MosaicAddressRestrictionsTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
 
-    constructor(public readonly mosaicAddressRestrictions:  Map<string, string>) {
+    constructor(public readonly mosaicAddressRestrictions: Map<string, string>) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Type', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
 
         mosaicAddressRestrictions.forEach((value: string, key: string) => {
-            this.table.push(
-                ['Key', key],
-                ['Value', value],
-            )
-        })
-}
+            this.table.push(['Key', key], ['Value', value]);
+        });
+    }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Mosaic Address Restrictions') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += '\n' + chalk.green('Mosaic Address Restrictions') + '\n';
+        text += this.table.toString();
+        return text;
     }
 }
 
@@ -69,31 +67,31 @@ export class MosaicAddressRestrictionsTable {
     description: 'Fetch mosaic restrictions assigned to an address',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
 
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
-        const mosaicId = await new MosaicIdResolver().resolve(options)
-
-        this.spinner.start()
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url)
-        restrictionHttp.getMosaicAddressRestriction(mosaicId, address)
-            .subscribe((mosaicRestrictions) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        restrictionHttp.getMosaicAddressRestriction(mosaicId, address).subscribe(
+            (mosaicRestrictions) => {
+                this.spinner.stop(true);
                 if (mosaicRestrictions.restrictions.size > 0) {
-                    console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString())
+                    console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The address does not have mosaic address restrictions assigned.')
+                    console.log('\n The address does not have mosaic address restrictions assigned.');
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

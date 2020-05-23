@@ -15,80 +15,86 @@
  * limitations under the License.
  *
  */
-import {AccountRestrictionTransaction, Deadline} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
 
-import {ActionResolver} from '../../resolvers/action.resolver'
-import {ActionType} from '../../models/action.enum'
-import {AddressAliasResolver} from '../../resolvers/address.resolver'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {RestrictionAccountAddressFlagsResolver} from '../../resolvers/restrictionAccount.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { command, metadata, option } from 'clime';
+import { AccountRestrictionTransaction, Deadline } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { ActionType } from '../../models/action.enum';
+import { ActionResolver } from '../../resolvers/action.resolver';
+import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { RestrictionAccountAddressFlagsResolver } from '../../resolvers/restrictionAccount.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'f',
-        description: 'Restriction flags.(' +
+        description:
+            'Restriction flags.(' +
             'AllowOutgoingAddress, ' +
             'BlockOutgoingAddress, ' +
             'AllowIncomingAddress, ' +
             'BlockIncomingAddress)',
     })
-    flags: string
+    flags: string;
 
     @option({
         flag: 'a',
-        description: 'Modification action. (' +
-            'Add, ' +
-            'Remove).',
+        description: 'Modification action. (' + 'Add, ' + 'Remove).',
     })
-    action: string
+    action: string;
 
     @option({
         flag: 'v',
         description: 'Address or @alias to allow/block.',
     })
-    recipientAddress: string
+    recipientAddress: string;
 }
 
 @command({
     description: 'Allow or block incoming and outgoing transactions for a given a set of addresses',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const action = await new ActionResolver().resolve(options)
-        const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options)
-        const address = await new AddressAliasResolver()
-        .resolve(options, undefined, 'Enter the recipient address (or @alias):', 'recipientAddress')
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const action = await new ActionResolver().resolve(options);
+        const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options);
+        const address = await new AddressAliasResolver().resolve(
+            options,
+            undefined,
+            'Enter the recipient address (or @alias):',
+            'recipientAddress',
+        );
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
             flags,
-            (action === ActionType.Add) ? [address] : [],
-            (action === ActionType.Remove) ? [address] : [],
+            action === ActionType.Add ? [address] : [],
+            action === ActionType.Remove ? [address] : [],
             profile.networkType,
             maxFee,
-        )
+        );
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

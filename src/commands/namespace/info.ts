@@ -15,69 +15,62 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {NamespaceIdResolver, NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {NamespaceHttp, NamespaceInfo} from 'symbol-sdk'
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { NamespaceHttp, NamespaceInfo } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { NamespaceIdResolver, NamespaceNameResolver } from '../../resolvers/namespace.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
         description: 'Namespace name. Example: symbol.xym',
     })
-    namespaceName: string
+    namespaceName: string;
 
     @option({
         flag: 'h',
         description: 'Namespace id in hexadecimal.',
     })
-    namespaceId: string
+    namespaceId: string;
 }
 
 export class NamespaceInfoTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
     constructor(public readonly namespaceInfo: NamespaceInfo) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
         this.table.push(
             ['Id', namespaceInfo.id.toHex()],
             ['Registration Type', namespaceInfo.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
             ['Owner', namespaceInfo.owner.address.pretty()],
-            ['Start Height',  namespaceInfo.startHeight.toString()],
+            ['Start Height', namespaceInfo.startHeight.toString()],
             ['End Height', namespaceInfo.endHeight.toString()],
-        )
+        );
         if (namespaceInfo.isSubnamespace()) {
-            this.table.push(
-                ['Parent Id', namespaceInfo.parentNamespaceId().toHex()],
-            )
+            this.table.push(['Parent Id', namespaceInfo.parentNamespaceId().toHex()]);
         }
         if (namespaceInfo.hasAlias()) {
             if (namespaceInfo.alias.address) {
-                this.table.push(
-                    ['Alias Type', 'Address'],
-                    ['Alias Address', namespaceInfo.alias.address.pretty()],
-                )
+                this.table.push(['Alias Type', 'Address'], ['Alias Address', namespaceInfo.alias.address.pretty()]);
             } else if (namespaceInfo.alias.mosaicId) {
-                this.table.push(
-                    ['Alias Type', 'MosaicId'],
-                    ['Alias MosaicId', namespaceInfo.alias.mosaicId.toHex()],
-                )
+                this.table.push(['Alias Type', 'MosaicId'], ['Alias MosaicId', namespaceInfo.alias.mosaicId.toHex()]);
             }
         }
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Namespace Information') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += '\n' + chalk.green('Namespace Information') + '\n';
+        text += this.table.toString();
+        return text;
     }
 }
 
@@ -85,27 +78,28 @@ export class NamespaceInfoTable {
     description: 'Fetch namespace info',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const namespaceId = options.namespaceName ?
-        await new NamespaceNameResolver().resolve(options) :
-        await new NamespaceIdResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const namespaceId = options.namespaceName
+            ? await new NamespaceNameResolver().resolve(options)
+            : await new NamespaceIdResolver().resolve(options);
 
-        this.spinner.start()
-        const namespaceHttp = new NamespaceHttp(profile.url)
-        namespaceHttp.getNamespace(namespaceId)
-            .subscribe((namespaceInfo) => {
-                this.spinner.stop(true)
-                console.log(new NamespaceInfoTable(namespaceInfo).toString())
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        this.spinner.start();
+        const namespaceHttp = new NamespaceHttp(profile.url);
+        namespaceHttp.getNamespace(namespaceId).subscribe(
+            (namespaceInfo) => {
+                this.spinner.stop(true);
+                console.log(new NamespaceInfoTable(namespaceInfo).toString());
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

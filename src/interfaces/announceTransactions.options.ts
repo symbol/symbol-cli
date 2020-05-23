@@ -15,8 +15,9 @@
  * limitations under the License.
  *
  */
-import {option} from 'clime'
-import {ProfileOptions} from './profile.options'
+import { option } from 'clime';
+
+import { ProfileOptions } from './profile.options';
 
 /**
  * Announce transactions options
@@ -26,50 +27,50 @@ export class AnnounceTransactionsOptions extends ProfileOptions {
         flag: 'p',
         description: 'Profile password.',
     })
-    password: string
+    password: string;
 
     @option({
         flag: 'f',
         description: 'Maximum fee (absolute amount).',
     })
-    maxFee: string
+    maxFee: string;
 
     @option({
         description: '(Optional) Wait until the server confirms or rejects the transaction.',
         toggle: true,
     })
-    sync: any
+    sync: any;
 
     @option({
         description: '(Optional) Announce the transaction without double confirmation.',
         toggle: true,
     })
-    announce: any
+    announce: any;
 
     @option({
         flag: 'S',
         description: '(Multisig only) Transaction signer',
         default: '',
     })
-    signer: string
+    signer: string;
 
     @option({
         flag: 'F',
         description: '(Multisig aggregate bonded only) Maximum fee (absolute amount) to announce the hash lock transaction.',
     })
-    maxFeeHashLock: string
+    maxFeeHashLock: string;
 
     @option({
         flag: 'D',
         description: '(Multisig aggregate bonded only) Hash lock duration expressed in blocks.',
         default: '480',
     })
-    lockDuration: string
+    lockDuration: string;
 
     @option({
         flag: 'L',
         description: '(Multisig aggregate bonded only) Relative amount of network mosaic to lock.',
         default: '10',
     })
-    lockAmount: string
+    lockAmount: string;
 }

@@ -15,25 +15,26 @@
  * limitations under the License.
  *
  */
-import {Account, Address, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {ExpectedError} from 'clime'
-import {HorizontalTable} from 'cli-table3'
-import * as Table from 'cli-table3'
 
-import {NetworkCurrency} from './networkCurrency.model'
-import {ProfileDTO} from './profileDTO.types'
+import { HorizontalTable } from 'cli-table3';
+import * as Table from 'cli-table3';
+import { ExpectedError } from 'clime';
+import { Account, Address, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
 
-export const CURRENT_PROFILE_VERSION = 3
+import { NetworkCurrency } from './networkCurrency.model';
+import { ProfileDTO } from './profileDTO.types';
+
+export const CURRENT_PROFILE_VERSION = 3;
 
 /**
  * Profile DTO mapped by profile names
  */
-export type ProfileRecord = Record<string, ProfileDTO>
+export type ProfileRecord = Record<string, ProfileDTO>;
 
 /**
  * Profile types.
  */
-export type ProfileType = 'PrivateKey' | 'HD'
+export type ProfileType = 'PrivateKey' | 'HD';
 
 /**
  * Base implementation of the Profile models
@@ -47,7 +48,7 @@ export abstract class Profile {
      * @protected
      * @type {HorizontalTable}
      */
-    protected table: HorizontalTable
+    protected table: HorizontalTable;
 
     /**
      * Creates an instance of Profile.
@@ -67,7 +68,7 @@ export abstract class Profile {
         public readonly version: number,
         public readonly type: ProfileType,
         public readonly isDefault: '0' | '1',
-    ) { }
+    ) {}
 
     /**
      * returns a table with the properties common to all profiles
@@ -75,11 +76,11 @@ export abstract class Profile {
      * @returns {HorizontalTable}
      */
     protected getBaseTable(): HorizontalTable {
-        const {namespaceId, divisibility} = this.networkCurrency
+        const { namespaceId, divisibility } = this.networkCurrency;
         const table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
 
         table.push(
             ['Name', this.simpleWallet.name],
@@ -89,9 +90,9 @@ export abstract class Profile {
             ['Generation Hash', this.networkGenerationHash],
             ['Network Currency', `name: ${namespaceId.fullName}, divisibility: ${divisibility}`],
             ['Profile type', this.type],
-        )
+        );
 
-        return table
+        return table;
     }
 
     /**
@@ -99,7 +100,7 @@ export abstract class Profile {
      * @returns {Address}
      */
     public get address(): Address {
-        return this.simpleWallet.address
+        return this.simpleWallet.address;
     }
 
     /**
@@ -107,7 +108,7 @@ export abstract class Profile {
      * @returns {NetworkType}
      */
     public get networkType(): NetworkType {
-        return this.simpleWallet.networkType
+        return this.simpleWallet.networkType;
     }
 
     /**
@@ -115,7 +116,7 @@ export abstract class Profile {
      * @returns {string}
      */
     public get name(): string {
-        return this.simpleWallet.name
+        return this.simpleWallet.name;
     }
 
     /**
@@ -123,7 +124,7 @@ export abstract class Profile {
      * @returns {ProfileDTO}
      */
     public toDTO(): ProfileDTO {
-        throw new Error('toDTO should be implemented in extended classes')
+        throw new Error('toDTO should be implemented in extended classes');
     }
 
     /**
@@ -131,7 +132,7 @@ export abstract class Profile {
      * @returns {string}
      */
     public toString(): string {
-        return this.table.toString()
+        return this.table.toString();
     }
 
     /**
@@ -141,10 +142,10 @@ export abstract class Profile {
      */
     public isPasswordValid(password: Password): boolean {
         try {
-            this.simpleWallet.open(password)
-            return true
+            this.simpleWallet.open(password);
+            return true;
         } catch (error) {
-            return false
+            return false;
         }
     }
 
@@ -156,8 +157,8 @@ export abstract class Profile {
      */
     public decrypt(password: Password): Account {
         if (!this.isPasswordValid(password)) {
-            throw new ExpectedError('The password provided does not match your account password')
+            throw new ExpectedError('The password provided does not match your account password');
         }
-        return this.simpleWallet.open(password)
+        return this.simpleWallet.open(password);
     }
 }

@@ -16,15 +16,15 @@
  *
  */
 
-import {mosaicId1, mosaicId2} from '../mosaics.mock'
-import {namespaceId1} from '../namespaces.mock'
-import {AccountRestrictionFlags, AccountRestrictionTransaction, Deadline, NetworkType} from 'symbol-sdk'
+import { AccountRestrictionTransaction, Deadline, MosaicRestrictionFlag, NetworkType } from 'symbol-sdk';
 
-export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction
-    .createMosaicRestrictionModificationTransaction(
-        Deadline.create(),
-        AccountRestrictionFlags.AllowMosaic,
-        [mosaicId1],
-        [mosaicId2, namespaceId1],
-        NetworkType.MIJIN_TEST,
-    )
+import { mosaicId1, mosaicId2 } from '../mosaics.mock';
+import { namespaceId1 } from '../namespaces.mock';
+
+export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction.createMosaicRestrictionModificationTransaction(
+    Deadline.create(),
+    MosaicRestrictionFlag.AllowMosaic,
+    [mosaicId1],
+    [mosaicId2, namespaceId1],
+    NetworkType.MIJIN_TEST,
+);

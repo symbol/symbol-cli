@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-import {SaveResolver} from '../../src/resolvers/save.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { SaveResolver } from '../../src/resolvers/save.resolver';
 
 describe('Save resolver', () => {
-
     it('should return boolean', async () => {
         const options = {
             save: true,
@@ -32,8 +33,7 @@ describe('Save resolver', () => {
             namespaceId: '',
             divisibility: 0,
             hd: false,
-        }
-        expect(await new SaveResolver().resolve(options)).to.be.equal(true)
-    })
-
-})
+        };
+        expect(await new SaveResolver().resolve(options)).to.be.equal(true);
+    });
+});

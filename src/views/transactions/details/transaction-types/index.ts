@@ -16,24 +16,24 @@
  *
  */
 
-export  {AccountMetadataView} from './accountMetadata.view'
-export  {AccountAddressRestrictionView} from './accountAddressRestriction.view'
-export  {AccountMosaicRestrictionView} from './accountMosaicRestriction.view'
-export  {AccountOperationRestrictionView} from './accountOperationRestriction.view'
-export  {AddressAliasView} from './addressAlias.view'
-export  {AggregateBondedView} from './aggregateBonded.view'
-export  {AggregateCompleteView} from './aggregateComplete.view'
-export  {AccountLinkView} from './accountLink.view'
-export  {LockFundsView} from './lockFunds.view'
-export  {MultisigAccountModificationView} from './multisigAccountModification.view'
-export  {MosaicAddressRestrictionView} from './mosaicAddressRestriction.view'
-export  {MosaicAliasView} from './mosaicAlias.view'
-export  {MosaicDefinitionView} from './mosaicDefinition.view'
-export  {MosaicGlobalRestrictionView} from './mosaicGlobalRestriction.view'
-export  {MosaicMetadataView} from './mosaicMetadata.view'
-export  {MosaicSupplyChangeView} from './mosaicSupplyChange.view'
-export  {NamespaceMetadataView} from './namespaceMetadata.view'
-export  {NamespaceRegistrationView} from './namespaceRegistration.view'
-export  {SecretLockView} from './secretLock.view'
-export  {SecretProofView} from './secretProof.view'
-export  {TransferView} from './transfer.view'
+export { AccountMetadataView } from './accountMetadata.view';
+export { AccountAddressRestrictionView } from './accountAddressRestriction.view';
+export { AccountMosaicRestrictionView } from './accountMosaicRestriction.view';
+export { AccountOperationRestrictionView } from './accountOperationRestriction.view';
+export { AddressAliasView } from './addressAlias.view';
+export { AggregateBondedView } from './aggregateBonded.view';
+export { AggregateCompleteView } from './aggregateComplete.view';
+export { AccountKeyLinkView } from './accountKeyLink.view';
+export { LockFundsView } from './lockFunds.view';
+export { MultisigAccountModificationView } from './multisigAccountModification.view';
+export { MosaicAddressRestrictionView } from './mosaicAddressRestriction.view';
+export { MosaicAliasView } from './mosaicAlias.view';
+export { MosaicDefinitionView } from './mosaicDefinition.view';
+export { MosaicGlobalRestrictionView } from './mosaicGlobalRestriction.view';
+export { MosaicMetadataView } from './mosaicMetadata.view';
+export { MosaicSupplyChangeView } from './mosaicSupplyChange.view';
+export { NamespaceMetadataView } from './namespaceMetadata.view';
+export { NamespaceRegistrationView } from './namespaceRegistration.view';
+export { SecretLockView } from './secretLock.view';
+export { SecretProofView } from './secretProof.view';
+export { TransferView } from './transfer.view';

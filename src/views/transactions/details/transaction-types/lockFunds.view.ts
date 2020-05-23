@@ -16,20 +16,21 @@
  *
  */
 
-import {MosaicsView} from '../../../mosaics.view'
-import {CellRecord} from '../transaction.view'
-import {LockFundsTransaction} from 'symbol-sdk'
+import { LockFundsTransaction } from 'symbol-sdk';
+
+import { MosaicsView } from '../../../mosaics.view';
+import { CellRecord } from '../transaction.view';
 
 export class LockFundsView {
-  /**
-   * @static
-   * @param {LockFundsTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: LockFundsTransaction): CellRecord {
-    return {
-      Duration: `${tx.duration.compact().toLocaleString()} blocks`,
-      ...MosaicsView.get([tx.mosaic]),
+    /**
+     * @static
+     * @param {LockFundsTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: LockFundsTransaction): CellRecord {
+        return {
+            Duration: `${tx.duration.compact().toLocaleString()} blocks`,
+            ...MosaicsView.get([tx.mosaic]),
+        };
     }
-  }
 }

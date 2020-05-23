@@ -16,19 +16,21 @@
  *
  */
 
-import {NamespaceId} from 'symbol-sdk'
+import { NamespaceId } from 'symbol-sdk';
 
 export class NamespacesView {
- /**
-  * Renders a string to be displayed in the view
-  * Renders a namespace name if available (eg: symbol.xym (E74B99BA41F4AFEE))
-  * @static
-  * @param {NamespaceId} NamespaceId
-  * @returns {string}
-  */
- static getNamespaceLabel(namespaceId: NamespaceId): string {
-  const hexId = namespaceId.toHex()
-  if (namespaceId.fullName) {return `${namespaceId.fullName} (${hexId})` }
-  return hexId
- }
+    /**
+     * Renders a string to be displayed in the view
+     * Renders a namespace name if available (eg: symbol.xym (E74B99BA41F4AFEE))
+     * @static
+     * @param {NamespaceId} NamespaceId
+     * @returns {string}
+     */
+    static getNamespaceLabel(namespaceId: NamespaceId): string {
+        const hexId = namespaceId.toHex();
+        if (namespaceId.fullName) {
+            return `${namespaceId.fullName} (${hexId})`;
+        }
+        return hexId;
+    }
 }

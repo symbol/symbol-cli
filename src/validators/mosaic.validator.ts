@@ -15,21 +15,21 @@
  * limitations under the License.
  *
  */
-import {MosaicService} from '../services/mosaic.service'
-import {Validator} from 'clime'
+import { Validator } from 'clime';
+
+import { MosaicService } from '../services/mosaic.service';
 
 /**
  * Mosaic validator
  */
 export class MosaicValidator implements Validator<string> {
-
     /**
      * Validates if a mosaic object can be created from a string.
      * @param {string} value - Mosaic in the form mosaicId::amount.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return MosaicService.validate(value)
+        return MosaicService.validate(value);
     }
 }
 
@@ -37,20 +37,23 @@ export class MosaicValidator implements Validator<string> {
  * Mosaics validator
  */
 export class MosaicsValidator implements Validator<string> {
-
     /**
      * Validates if an array of mosaic objects can be created from a string.
      * @param {string} value - Mosaics in the form mosaicId::amount, separated by commas.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const mosaics = value.split(',')
-        let error = ''
+        const mosaics = value.split(',');
+        let error = '';
         mosaics.forEach((mosaic) => {
-            const validation = MosaicService.validate(mosaic)
-            if (typeof validation === 'string') {error = validation}
-        })
-        if (!error) {return true}
-        return error
+            const validation = MosaicService.validate(mosaic);
+            if (typeof validation === 'string') {
+                error = validation;
+            }
+        });
+        if (!error) {
+            return true;
+        }
+        return error;
     }
 }

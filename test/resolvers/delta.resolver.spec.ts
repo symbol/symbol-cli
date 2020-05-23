@@ -15,24 +15,21 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {DeltaResolver} from '../../src/resolvers/delta.resolver'
+
+import { expect } from 'chai';
+
+import { DeltaResolver } from '../../src/resolvers/delta.resolver';
 
 describe('Delta resolver', () => {
-
     it('should return delta', async () => {
-        const delta = '10'
-        const options = {delta} as any
-        expect(await new DeltaResolver().resolve(options, 'altText'))
-            .to.be.equal(10)
-    })
+        const delta = '10';
+        const options = { delta } as any;
+        expect(await new DeltaResolver().resolve(options, 'altText')).to.be.equal(10);
+    });
 
     it('should change key', async () => {
-        const key = '10'
-        const options = {key} as any
-        expect((await new DeltaResolver()
-            .resolve(options, 'altText', 'key')))
-            .to.be.equal(10)
-    })
-
-})
+        const key = '10';
+        const options = { key } as any;
+        expect(await new DeltaResolver().resolve(options, 'altText', 'key')).to.be.equal(10);
+    });
+});

@@ -16,64 +16,66 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
+import { NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class NamespaceRegistrationView {
-  /**
-   * @static
-   * @param {NamespaceRegistrationTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: NamespaceRegistrationTransaction): CellRecord {
-    return new NamespaceRegistrationView(tx).render()
-  }
-
-  /**
-   * Creates an instance of NamespaceRegistrationView.
-   * @param {NamespaceRegistrationTransaction} tx
-   */
-  private constructor(private readonly tx: NamespaceRegistrationTransaction) {}
-
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private render(): CellRecord {
-    return {
-      'Namespace name': this.tx.namespaceName,
-      ...this.tx.registrationType === NamespaceRegistrationType.RootNamespace
-        ? this.getRootNamespaceProps() : this.getSubNamespaceProps(),
-    }
-  }
-
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private getRootNamespaceProps(): CellRecord {
-    if (!this.tx.duration) {
-      throw new Error('No duration found in getRootNamespaceProps')
+    /**
+     * @static
+     * @param {NamespaceRegistrationTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: NamespaceRegistrationTransaction): CellRecord {
+        return new NamespaceRegistrationView(tx).render();
     }
 
-    return {
-      Type: 'Root namespace',
-      Duration: `${this.tx.duration.toString()} blocks`,
-    }
-  }
+    /**
+     * Creates an instance of NamespaceRegistrationView.
+     * @param {NamespaceRegistrationTransaction} tx
+     */
+    private constructor(private readonly tx: NamespaceRegistrationTransaction) {}
 
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private getSubNamespaceProps(): CellRecord {
-    if (!this.tx.parentId) {
-      throw new Error('No parent Id found in getSubNamespaceProps')
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private render(): CellRecord {
+        return {
+            'Namespace name': this.tx.namespaceName,
+            ...(this.tx.registrationType === NamespaceRegistrationType.RootNamespace
+                ? this.getRootNamespaceProps()
+                : this.getSubNamespaceProps()),
+        };
     }
 
-    return {
-      'Type': 'Sub namespace',
-      'Parent Id': this.tx.parentId.toHex(),
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private getRootNamespaceProps(): CellRecord {
+        if (!this.tx.duration) {
+            throw new Error('No duration found in getRootNamespaceProps');
+        }
+
+        return {
+            Type: 'Root namespace',
+            Duration: `${this.tx.duration.toString()} blocks`,
+        };
     }
-  }
+
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private getSubNamespaceProps(): CellRecord {
+        if (!this.tx.parentId) {
+            throw new Error('No parent Id found in getSubNamespaceProps');
+        }
+
+        return {
+            Type: 'Sub namespace',
+            'Parent Id': this.tx.parentId.toHex(),
+        };
+    }
 }

@@ -15,20 +15,18 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
+import { Validator } from './validator';
 
 /**
  * Delta validator
  */
 export class DeltaValidator implements Validator<number> {
-
     /**
      * Validates if an delta value is an integer.
      * @param {number} value - Action type.
      * @returns {true | string}
      */
     validate(value: number): boolean | string {
-        return (Number.isInteger(+value)) ?
-            true : 'Delta value should be an integer'
+        return Number.isInteger(+value) ? true : 'Delta value should be an integer';
     }
 }

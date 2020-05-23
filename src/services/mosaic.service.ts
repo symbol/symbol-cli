@@ -16,19 +16,13 @@
  *
  */
 
-import {Mosaic, MosaicId, NamespaceId, UInt64} from 'symbol-sdk'
+import { Mosaic, MosaicId, NamespaceId, UInt64 } from 'symbol-sdk';
 
 /**
  * Mosaic service
  */
 export class MosaicService {
-
-    public static ALIAS_TAG = '@'
-
-    /**
-     * Constructor
-     */
-    constructor() {}
+    public static ALIAS_TAG = '@';
 
     /**
      * Validates a mosaic object from a string.
@@ -36,22 +30,23 @@ export class MosaicService {
      * @returns {true | string}
      */
     static validate(value: string) {
-        const mosaicParts = value.split('::')
-        let valid = true
+        const mosaicParts = value.split('::');
+        let valid = true;
         try {
             if (isNaN(+mosaicParts[1])) {
-                valid = false
+                valid = false;
             }
-            const ignored = new Mosaic(this.getMosaicId(mosaicParts[0]),
-                UInt64.fromUint(+mosaicParts[1]))
+            const ignored = new Mosaic(this.getMosaicId(mosaicParts[0]), UInt64.fromUint(+mosaicParts[1]));
         } catch (err) {
-            valid = false
+            valid = false;
         }
         if (!valid) {
-            return 'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+            return (
+                'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
                 ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)'
+            );
         }
-        return valid
+        return valid;
     }
 
     /**
@@ -60,13 +55,13 @@ export class MosaicService {
      * @returns {MosaicId | NamespaceId}
      */
     static getMosaicId(rawMosaicId: string): MosaicId | NamespaceId {
-        let mosaicId: MosaicId | NamespaceId
+        let mosaicId: MosaicId | NamespaceId;
         if (rawMosaicId.charAt(0) === MosaicService.ALIAS_TAG) {
-            mosaicId = new NamespaceId(rawMosaicId.substring(1))
+            mosaicId = new NamespaceId(rawMosaicId.substring(1));
         } else {
-            mosaicId = new MosaicId(rawMosaicId)
+            mosaicId = new MosaicId(rawMosaicId);
         }
-        return mosaicId
+        return mosaicId;
     }
 
     /**
@@ -75,13 +70,12 @@ export class MosaicService {
      * @returns {Mosaic[]}
      */
     static getMosaics(rawMosaics: string): Mosaic[] {
-        const mosaics: Mosaic[] = []
-        const mosaicsData = rawMosaics.split(',')
+        const mosaics: Mosaic[] = [];
+        const mosaicsData = rawMosaics.split(',');
         mosaicsData.forEach((mosaicData) => {
-                const mosaicParts = mosaicData.split('::')
-                mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]),
-                    UInt64.fromNumericString(mosaicParts[1])))
-            })
-        return mosaics
+            const mosaicParts = mosaicData.split('::');
+            mosaics.push(new Mosaic(this.getMosaicId(mosaicParts[0]), UInt64.fromNumericString(mosaicParts[1])));
+        });
+        return mosaics;
     }
 }

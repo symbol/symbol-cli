@@ -16,34 +16,35 @@
  *
  */
 
-import {NetworkType, Password, Account} from 'symbol-sdk'
+import { Account, NetworkType, Password } from 'symbol-sdk';
 
-import {NetworkCurrency} from '../../../src/models/networkCurrency.model'
-import {PrivateKeyProfile} from '../../../src/models/privateKey.profile.model'
-import {HdProfile} from '../../../src/models/hdProfile.model'
+import { HdProfile } from '../../../src/models/hdProfile.model';
+import { NetworkCurrency } from '../../../src/models/networkCurrency.model';
+import { PrivateKeyProfile } from '../../../src/models/privateKeyProfile.model';
 
-const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 
 export const mockPrivateKeyProfile1 = PrivateKeyProfile.create({
-   generationHash: 'test',
-   isDefault: false,
-   name: 'default',
-   networkCurrency,
-   networkType: NetworkType.MIJIN_TEST,
-   password: new Password('password'),
-   url: 'http://localhost:1234',
-   privateKey: Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey,
-})
+    generationHash: 'test',
+    isDefault: false,
+    name: 'default',
+    networkCurrency,
+    networkType: NetworkType.MIJIN_TEST,
+    password: new Password('password'),
+    url: 'http://localhost:1234',
+    privateKey: Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey,
+});
 
 export const mockHdProfile1 = HdProfile.create({
-   generationHash: 'test',
-   isDefault: false,
-   name: 'default',
-   networkCurrency,
-   networkType: NetworkType.MIJIN_TEST,
-   password: new Password('password'),
-   url: 'http://localhost:1234',
-   // eslint-disable-next-line max-len
-   mnemonic: 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense',
-   pathNumber: 0,
-})
+    generationHash: 'test',
+    isDefault: false,
+    name: 'default',
+    networkCurrency,
+    networkType: NetworkType.MIJIN_TEST,
+    password: new Password('password'),
+    url: 'http://localhost:1234',
+    // eslint-disable-next-line max-len
+    mnemonic:
+        'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense',
+    pathNumber: 0,
+});

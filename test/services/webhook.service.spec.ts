@@ -15,12 +15,14 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {WebhookService} from '../../src/services/webhook.service'
+
+import { expect } from 'chai';
+
+import { WebhookService } from '../../src/services/webhook.service';
 
 describe('Webhook service', () => {
-  it('should create a Webhook service', () => {
-    const webhookService = new WebhookService()
-    expect(webhookService).to.be.an.instanceOf(WebhookService)
-  })
-})
+    it('should create a Webhook service', () => {
+        const webhookService = new WebhookService();
+        expect(webhookService).to.be.an.instanceOf(WebhookService);
+    });
+});

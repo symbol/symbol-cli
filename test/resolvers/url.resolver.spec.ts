@@ -15,31 +15,27 @@
  * limitations under the License.
  *
  */
-import {URLResolver} from '../../src/resolvers/url.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { URLResolver } from '../../src/resolvers/url.resolver';
 
 describe('Url resolver', () => {
-
     it('should return url', async () => {
-        const url = 'https://localhost:3000'
-        const options = {url} as any
-        expect(await new URLResolver().resolve(options))
-            .to.be.equal(url)
-    })
+        const url = 'https://localhost:3000';
+        const options = { url } as any;
+        expect(await new URLResolver().resolve(options)).to.be.equal(url);
+    });
 
     it('should return url without trailing backslash', async () => {
-        const url = 'https://localhost:3000/'
-        const options = {url} as any
-        expect(await new URLResolver().resolve(options))
-            .to.be.equal('https://localhost:3000')
-    })
+        const url = 'https://localhost:3000/';
+        const options = { url } as any;
+        expect(await new URLResolver().resolve(options)).to.be.equal('https://localhost:3000');
+    });
 
     it('should change key', async () => {
-        const key = 'https://localhost:3000/'
-        const options = {key} as any
-        expect(await new URLResolver()
-            .resolve(options, undefined, 'altText', 'key'))
-            .to.be.equal('https://localhost:3000')
-    })
-
-})
+        const key = 'https://localhost:3000/';
+        const options = { key } as any;
+        expect(await new URLResolver().resolve(options, undefined, 'altText', 'key')).to.be.equal('https://localhost:3000');
+    });
+});
