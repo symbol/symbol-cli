@@ -15,14 +15,16 @@
  * limitations under the License.
  *
  */
+import { expect } from 'chai';
+import { LinkAction } from 'symbol-sdk';
 
-import { AccountKeyLinkTransaction, Deadline, LinkAction, NetworkType } from 'symbol-sdk';
+import { VotingKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
+import { unsignedVotingKeyLink1 } from '../../../../mocks/transactions/votingKeyLink.mock';
 
-import { account1 } from '../accounts.mock';
-
-export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
-    Deadline.create(),
-    account1.publicKey,
-    LinkAction.Link,
-    NetworkType.MIJIN_TEST,
-);
+describe('VotingKeyLinkView', () => {
+    it('should return a view', () => {
+        const view = VotingKeyLinkView.get(unsignedVotingKeyLink1);
+        expect(view['Action']).equal(LinkAction[LinkAction.Link]);
+        expect(view['Linked key']).equal('0'.repeat(96));
+    });
+});

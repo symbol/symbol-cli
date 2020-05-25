@@ -16,13 +16,20 @@
  *
  */
 
-import { AccountKeyLinkTransaction, Deadline, LinkAction, NetworkType } from 'symbol-sdk';
+import { LinkAction, VotingKeyLinkTransaction } from 'symbol-sdk';
 
-import { account1 } from '../accounts.mock';
+import { CellRecord } from '../transaction.view';
 
-export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
-    Deadline.create(),
-    account1.publicKey,
-    LinkAction.Link,
-    NetworkType.MIJIN_TEST,
-);
+export class VotingKeyLinkView {
+    /**
+     * @static
+     * @param {VotingKeyLinkTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: VotingKeyLinkTransaction): CellRecord {
+        return {
+            ['Action']: LinkAction[tx.linkAction],
+            ['Linked key']: tx.linkedPublicKey,
+        };
+    }
+}

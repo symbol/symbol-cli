@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
+import { expect } from 'chai';
 
-import { AccountKeyLinkTransaction, Deadline, LinkAction, NetworkType } from 'symbol-sdk';
+import { HashLockView } from '../../../../../src/views/transactions/details/transaction-types';
+import { unsignedLockFunds1 } from '../../../../mocks/transactions/lockFunds.mock';
 
-import { account1 } from '../accounts.mock';
-
-export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
-    Deadline.create(),
-    account1.publicKey,
-    LinkAction.Link,
-    NetworkType.MIJIN_TEST,
-);
+describe('HashLockView', () => {
+    it('should return a view', () => {
+        const view = HashLockView.get(unsignedLockFunds1);
+        expect(view['Duration']).equal('10 blocks');
+        expect(view['Mosaic (1/1)']).equal('1,234,567,890 symbol.xym (E74B99BA41F4AFEE)');
+    });
+});

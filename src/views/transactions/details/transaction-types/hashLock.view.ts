@@ -16,13 +16,21 @@
  *
  */
 
-import { AccountKeyLinkTransaction, Deadline, LinkAction, NetworkType } from 'symbol-sdk';
+import { HashLockTransaction } from 'symbol-sdk';
 
-import { account1 } from '../accounts.mock';
+import { MosaicsView } from '../../../mosaics.view';
+import { CellRecord } from '../transaction.view';
 
-export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
-    Deadline.create(),
-    account1.publicKey,
-    LinkAction.Link,
-    NetworkType.MIJIN_TEST,
-);
+export class HashLockView {
+    /**
+     * @static
+     * @param {HashLockTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: HashLockTransaction): CellRecord {
+        return {
+            Duration: `${tx.duration.compact().toLocaleString()} blocks`,
+            ...MosaicsView.get([tx.mosaic]),
+        };
+    }
+}

@@ -16,13 +16,20 @@
  *
  */
 
-import { AccountKeyLinkTransaction, Deadline, LinkAction, NetworkType } from 'symbol-sdk';
+import { LinkAction, VrfKeyLinkTransaction } from 'symbol-sdk';
 
-import { account1 } from '../accounts.mock';
+import { CellRecord } from '../transaction.view';
 
-export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
-    Deadline.create(),
-    account1.publicKey,
-    LinkAction.Link,
-    NetworkType.MIJIN_TEST,
-);
+export class VrfKeyLinkView {
+    /**
+     * @static
+     * @param {VrfKeyLinkTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: VrfKeyLinkTransaction): CellRecord {
+        return {
+            ['Action']: LinkAction[tx.linkAction],
+            ['Linked key']: tx.linkedPublicKey,
+        };
+    }
+}

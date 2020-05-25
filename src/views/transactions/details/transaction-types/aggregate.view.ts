@@ -20,7 +20,7 @@ import { Cell } from 'cli-table3';
 import { AggregateTransaction, TransactionType } from 'symbol-sdk';
 
 import { CellRecord } from '../transaction.view';
-import { transactionDetailViewFactory } from '../transactionDetailViewFactory';
+import { transactionDetailViewFactory } from '../transactionDetailView.factory';
 
 export abstract class AggregateView {
     /**
@@ -66,7 +66,7 @@ export abstract class AggregateView {
      * @returns {Cell}
      */
     private getInnerTransactionTitle(index: number): Cell {
-        const txType = TransactionType[this.tx.type];
+        const txType = TransactionType[this.tx.innerTransactions[index].type];
 
         return {
             content: `Inner transaction ${index + 1} of ${this.numberOfInnerTx} - ${txType}`,

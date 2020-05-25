@@ -25,7 +25,7 @@ describe('Transaction header view', () => {
     it('should return a view of an unsigned transaction', () => {
         const headerView = TransactionHeaderView.get(unsignedTransfer1);
         expect(headerView['Title']).deep.equal({
-            content: 'Transfer',
+            content: 'TRANSFER',
             colSpan: 2,
             hAlign: 'center',
         });
@@ -42,7 +42,7 @@ describe('Transaction header view', () => {
         const [signedNamespaceRegistration] = block1Transactions;
         const headerView = TransactionHeaderView.get(signedNamespaceRegistration);
         expect(headerView['Title']).deep.equal({
-            content: 'Namespace registration',
+            content: 'NAMESPACE_REGISTRATION',
             colSpan: 2,
             hAlign: 'center',
         });

@@ -25,7 +25,7 @@ describe('AggregateCompleteView', () => {
         const view = AggregateCompleteView.get(unsignedAggregateComplete1);
 
         expect(view['title0']).deep.equal({
-            content: 'Inner transaction 1 of 2 - Transfer',
+            content: 'Inner transaction 1 of 2 - TRANSFER',
             colSpan: 2,
             hAlign: 'center',
         });
@@ -35,7 +35,7 @@ describe('AggregateCompleteView', () => {
         expect(view['[Inner tx. 1 of 2] Mosaic (1/1)']).equal('1 D525AD41D95FCF29');
 
         expect(view['title1']).deep.equal({
-            content: 'Inner transaction 2 of 2 - Transfer',
+            content: 'Inner transaction 2 of 2 - TRANSFER',
             colSpan: 2,
             hAlign: 'center',
         });

@@ -29,7 +29,7 @@ import {
 describe('AccountOperationRestrictionView', () => {
     it('should return a view', () => {
         const view = AccountOperationRestrictionView.get(unsignedAccountOperationRestriction1);
-        expect(view['Account restriction flag']).equal('AllowIncomingTransactionType');
+        expect(view['Account restriction flag']).equal('AllowOutgoingTransactionType');
         expect(view['Addition 1 of 2']).equal(TransactionType[operation1]);
         expect(view['Addition 2 of 2']).equal(TransactionType[operation2]);
         expect(view['Deletion 1 of 1']).equal(TransactionType[operation3]);

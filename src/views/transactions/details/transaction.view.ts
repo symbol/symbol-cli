@@ -22,7 +22,7 @@ import { SignedTransaction, Transaction } from 'symbol-sdk';
 import { TableBuilder } from '../../table.builder';
 import { ITransactionHeaderView, TransactionHeaderView } from './transaction.header.view';
 import { ITransactionViewSignature, TransactionSignatureView } from './transaction.signature.view';
-import { transactionDetailViewFactory } from './transactionDetailViewFactory';
+import { transactionDetailViewFactory } from './transactionDetailView.factory';
 
 export type CellRecord = Record<string, string | Cell>;
 

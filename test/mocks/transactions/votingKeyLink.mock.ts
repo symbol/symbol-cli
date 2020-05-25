@@ -16,21 +16,11 @@
  *
  */
 
-import { LockFundsTransaction } from 'symbol-sdk';
+import { Deadline, LinkAction, NetworkType, VotingKeyLinkTransaction } from 'symbol-sdk';
 
-import { MosaicsView } from '../../../mosaics.view';
-import { CellRecord } from '../transaction.view';
-
-export class LockFundsView {
-    /**
-     * @static
-     * @param {LockFundsTransaction} tx
-     * @returns {CellRecord}
-     */
-    static get(tx: LockFundsTransaction): CellRecord {
-        return {
-            Duration: `${tx.duration.compact().toLocaleString()} blocks`,
-            ...MosaicsView.get([tx.mosaic]),
-        };
-    }
-}
+export const unsignedVotingKeyLink1 = VotingKeyLinkTransaction.create(
+    Deadline.create(),
+    '0'.repeat(96),
+    LinkAction.Link,
+    NetworkType.MIJIN_TEST,
+);

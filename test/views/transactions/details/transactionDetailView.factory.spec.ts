@@ -17,10 +17,10 @@
  */
 import { assert } from 'chai';
 
-import { transactionDetailViewFactory } from '../../../../../src/views/transactions/details/transactionDetailViewFactory';
+import { transactionDetailViewFactory } from '../../../../src/views/transactions/details/transactionDetailView.factory';
 import {
     unsignedAccountAddressRestriction1,
-    unsignedAccountLink1,
+    unsignedAccountKeyLink1,
     unsignedAccountMetadata1,
     unsignedAccountMosaicRestriction1,
     unsignedAccountOperationRestriction1,
@@ -37,17 +37,19 @@ import {
     unsignedMultisigAccountModification1,
     unsignedNamespaceMetadata1,
     unsignedNamespaceRegistration1,
+    unsignedNodeKeyLink1,
     unsignedSecretLock1,
     unsignedSecretProof1,
     unsignedTransfer1,
-} from '../../../../mocks/transactions/index';
+    unsignedVotingKeyLink1,
+    unsignedVrfKeyLink1,
+} from '../../../mocks/transactions/index';
 
 describe('Transaction detail view factory', () => {
     it('should return an object for each transaction type', () => {
         const allTransactions = [
             unsignedAccountAddressRestriction1,
-            ,
-            unsignedAccountLink1,
+            unsignedAccountKeyLink1,
             unsignedAccountMetadata1,
             unsignedAccountMosaicRestriction1,
             unsignedAccountOperationRestriction1,
@@ -64,9 +66,12 @@ describe('Transaction detail view factory', () => {
             unsignedMultisigAccountModification1,
             unsignedNamespaceMetadata1,
             unsignedNamespaceRegistration1,
+            unsignedNodeKeyLink1,
             unsignedSecretLock1,
             unsignedSecretProof1,
             unsignedTransfer1,
+            unsignedVotingKeyLink1,
+            unsignedVrfKeyLink1,
         ];
 
         allTransactions.forEach((tx) =>

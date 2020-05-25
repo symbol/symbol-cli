@@ -18,14 +18,13 @@
 import { expect } from 'chai';
 import { LinkAction } from 'symbol-sdk';
 
-import { AccountKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
-import { account1 } from '../../../../mocks/accounts.mock';
-import { unsignedAccountLink1 } from '../../../../mocks/transactions/accountKeyLink.mock';
+import { VrfKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
+import { unsignedVrfKeyLink1 } from '../../../../mocks/transactions/vrfKeyLink.mock';
 
-describe('AccountLinkView', () => {
+describe('VrfLinkView', () => {
     it('should return a view', () => {
-        const view = AccountKeyLinkView.get(unsignedAccountLink1);
+        const view = VrfKeyLinkView.get(unsignedVrfKeyLink1);
         expect(view['Action']).equal(LinkAction[LinkAction.Link]);
-        expect(view['Remote public key']).equal(account1.publicKey);
+        expect(view['Linked key']).equal('0'.repeat(64));
     });
 });
