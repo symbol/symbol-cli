@@ -42,7 +42,7 @@
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
         "symbol-hd-wallets": "^0.11.0",
-        "symbol-sdk": "^0.19.1",
+        "symbol-sdk": "^0.19.2",
         "symbol-uri-scheme": "^0.4.5",
         "update-notifier": "^4.1.0"
     },
