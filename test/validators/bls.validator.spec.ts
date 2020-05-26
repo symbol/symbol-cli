@@ -28,12 +28,12 @@ describe('BLSPublicKeyValidator validator', () => {
         expect(new BLSPublicKeyValidator().validate(lowerCasePublicKey)).to.be.equal(true);
     });
 
-    it('should throw error if private key length is not 96', () => {
+    it('should throw error if public key length is not 96', () => {
         const publicKey = '0'.repeat(95);
         expect(new BLSPublicKeyValidator().validate(publicKey)).to.be.equal('BLS public key should be a 96 characters hexadecimal string');
     });
 
-    it('should throw error if private key has special chars', () => {
+    it('should throw error if public key has special chars', () => {
         const publicKey = '0'.repeat(95) + '!';
         expect(new BLSPublicKeyValidator().validate(publicKey)).to.be.equal('BLS public key should be a 96 characters hexadecimal string');
     });
