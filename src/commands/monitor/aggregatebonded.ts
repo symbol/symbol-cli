@@ -17,7 +17,6 @@
  */
 import chalk from 'chalk';
 import { command, metadata } from 'clime';
-import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -38,7 +37,7 @@ export default class extends MonitorAddressCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 listener.aggregateBondedAdded(address).subscribe(

@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { AccountHttp, MosaicHttp, MosaicService, MosaicView } from 'symbol-sdk';
+import { MosaicService, MosaicView } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -86,7 +86,10 @@ export default class extends ProfileCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
         this.spinner.start();
-        const mosaicService = new MosaicService(new AccountHttp(profile.url), new MosaicHttp(profile.url));
+        const repositoryFactory = profile.repositoryFactory;
+        const accountHttp = repositoryFactory.createAccountRepository();
+        const mosaicHttp = repositoryFactory.createMosaicRepository();
+        const mosaicService = new MosaicService(accountHttp, mosaicHttp);
         mosaicService.mosaicsView([mosaicId]).subscribe(
             (mosaicViews) => {
                 this.spinner.stop(true);

@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { Metadata, MetadataEntry, MetadataHttp } from 'symbol-sdk';
+import { Metadata, MetadataEntry } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -71,7 +71,7 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         metadataHttp.getAccountMetadata(address).subscribe(
             (metadataEntries) => {
                 this.spinner.stop(true);
