@@ -31,7 +31,6 @@ import { ProfileOptions } from './profile.options';
 export abstract class ProfileCommand extends Command {
     public spinner = new Spinner('processing.. %s');
     private readonly profileService: ProfileService;
-
     /**
      * Constructor.
      */

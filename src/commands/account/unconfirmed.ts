@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-import { AccountHttp } from 'symbol-sdk';
 
 import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -37,7 +36,7 @@ export default class extends AccountTransactionsCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const accountHttp = new AccountHttp(profile.url);
+        const accountHttp = profile.repositoryFactory.createAccountRepository();
         accountHttp.getAccountUnconfirmedTransactions(address, options.getQueryParams()).subscribe(
             (transactions) => {
                 this.spinner.stop(true);

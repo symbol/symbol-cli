@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-import { ChainHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -35,7 +34,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = profile.repositoryFactory.createChainRepository();
         chainHttp.getBlockchainHeight().subscribe(
             (height) => {
                 this.spinner.stop(true);

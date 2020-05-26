@@ -18,7 +18,6 @@
 import { command, metadata, option } from 'clime';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { NamespaceHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -47,7 +46,7 @@ export default class extends ProfileCommand {
         const namespaceId = await new NamespaceNameResolver().resolve(options);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),

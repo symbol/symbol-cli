@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -37,7 +36,7 @@ export default class extends MonitorAddressCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 listener.unconfirmedAdded(address).subscribe(

@@ -18,7 +18,7 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { NamespaceHttp, NamespaceInfo } from 'symbol-sdk';
+import { NamespaceInfo } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -89,7 +89,7 @@ export default class extends ProfileCommand {
             : await new NamespaceIdResolver().resolve(options);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespace(namespaceId).subscribe(
             (namespaceInfo) => {
                 this.spinner.stop(true);

@@ -1,6 +1,6 @@
 import { command, metadata } from 'clime';
 import { merge } from 'rxjs';
-import { AggregateTransaction, BlockInfo, RepositoryFactoryHttp, Transaction, TransactionStatusError } from 'symbol-sdk';
+import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } from 'symbol-sdk';
 
 /*
  *
@@ -38,7 +38,7 @@ export default class extends MonitorAddressCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 merge(

@@ -18,7 +18,7 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
-import { NodeHttp, StorageInfo } from 'symbol-sdk';
+import { StorageInfo } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -59,7 +59,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const nodeHttp = new NodeHttp(profile.url);
+        const nodeHttp = profile.repositoryFactory.createNodeRepository();
         nodeHttp.getStorageInfo().subscribe(
             (storage) => {
                 this.spinner.stop(true);

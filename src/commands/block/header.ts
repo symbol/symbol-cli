@@ -19,7 +19,7 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { BlockHttp, BlockInfo, NetworkType } from 'symbol-sdk';
+import { BlockInfo, NetworkType } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -86,7 +86,7 @@ export default class extends ProfileCommand {
         const height = await new HeightResolver().resolve(options);
 
         this.spinner.start();
-        const blockHttp = new BlockHttp(profile.url);
+        const blockHttp = profile.repositoryFactory.createBlockRepository();
         blockHttp.getBlockByHeight(height).subscribe(
             (blockInfo) => {
                 this.spinner.stop(true);
