@@ -1,4 +1,3 @@
-ç;
 /*
  *
  * Copyright 2018-present NEM
