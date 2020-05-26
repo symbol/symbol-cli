@@ -48,7 +48,7 @@ export default class extends AccountTransactionsCommand {
         const blockHttp = new BlockHttp(profile.url);
         blockHttp.getBlockTransactions(height, options.getQueryParams()).subscribe(
             (transactions) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
 
                 if (!transactions.length) {
                     console.log("There aren't transactions");
@@ -59,7 +59,7 @@ export default class extends AccountTransactionsCommand {
                 });
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

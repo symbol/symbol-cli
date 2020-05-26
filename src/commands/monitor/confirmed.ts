@@ -52,7 +52,7 @@ export default class extends MonitorAddressCommand {
                 );
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

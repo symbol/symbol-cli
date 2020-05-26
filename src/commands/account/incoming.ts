@@ -40,7 +40,7 @@ export default class extends AccountTransactionsCommand {
         const accountHttp = new AccountHttp(profile.url);
         accountHttp.getAccountIncomingTransactions(address, options.getQueryParams()).subscribe(
             (transactions) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 transactions.map((transaction) => {
                     new TransactionView(transaction).print();
                 });
@@ -50,7 +50,7 @@ export default class extends AccountTransactionsCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

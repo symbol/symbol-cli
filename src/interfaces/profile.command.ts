@@ -16,8 +16,8 @@
  *
  */
 
-import { Spinner } from 'cli-spinner';
 import { Command, ExpectedError } from 'clime';
+import ora from 'ora';
 
 import config from '../config/app.conf';
 import { Profile } from '../models/profile.model';
@@ -29,7 +29,7 @@ import { ProfileOptions } from './profile.options';
  * Base command class to use the stored profile.
  */
 export abstract class ProfileCommand extends Command {
-    public spinner = new Spinner('processing.. %s');
+    public spinner: any;
     private readonly profileService: ProfileService;
 
     /**
@@ -37,9 +37,9 @@ export abstract class ProfileCommand extends Command {
      */
     constructor(fileUrl?: string) {
         super();
+        this.spinner = ora('Processing');
         const profileRepository = new ProfileRepository(fileUrl || config.PROFILES_FILE_NAME);
         this.profileService = new ProfileService(profileRepository);
-        this.spinner.setSpinnerString('|/-\\');
     }
 
     /**

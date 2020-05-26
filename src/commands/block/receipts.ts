@@ -49,11 +49,11 @@ export default class extends ProfileCommand {
         const receiptHttp = new ReceiptHttp(profile.url);
         receiptHttp.getBlockReceipts(height).subscribe(
             (statement: any) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 new StatementsView(statement).print();
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

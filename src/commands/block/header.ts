@@ -90,11 +90,11 @@ export default class extends ProfileCommand {
         const blockHttp = new BlockHttp(profile.url);
         blockHttp.getBlockByHeight(height).subscribe(
             (blockInfo) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new BlockHeaderTable(blockInfo).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

@@ -68,11 +68,11 @@ export default class extends ProfileCommand {
         const nodeHttp = new NodeHttp(profile.url);
         nodeHttp.getNodeInfo().subscribe(
             (nodeInfo) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new NodeInfoTable(nodeInfo).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

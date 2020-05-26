@@ -54,7 +54,7 @@ export default class extends CreateProfileCommand {
         this.spinner.start();
         const generationHash = await new GenerationHashResolver().resolve(options);
         const networkCurrency = await new NetworkCurrencyResolver().resolve(options);
-        this.spinner.stop(true);
+        this.spinner.stop();
 
         const importType = await new ImportTypeResolver().resolve(options);
 

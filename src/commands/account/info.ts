@@ -189,12 +189,12 @@ export default class extends ProfileCommand {
                     new BalanceInfoTable(mosaicsInfo).toString(),
                     new MultisigInfoTable(multisigInfo).toString(),
                 );
-                this.spinner.stop(true);
+                this.spinner.stop();
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
-                if (err instanceof Object && 'message' in err && JSON.parse(err.message).statusCode === 404) {
+                if (err instanceof Object && 'message') {
                     console.log(
                         chalk.blue('Info'),
                         'The account has to receive at least ' + 'one transaction to be recorded on the network.',

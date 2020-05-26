@@ -73,7 +73,7 @@ export default class extends ProfileCommand {
         const restrictionHttp = new RestrictionMosaicHttp(profile.url);
         restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe(
             (mosaicRestrictions) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 if (mosaicRestrictions.restrictions.size > 0) {
                     console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
@@ -81,7 +81,7 @@ export default class extends ProfileCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

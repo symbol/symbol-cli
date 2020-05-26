@@ -78,11 +78,11 @@ export default class extends ProfileCommand {
         const transactionHttp = new TransactionHttp(profile.url);
         transactionHttp.getTransactionStatus(hash).subscribe(
             (status) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new TransactionStatusTable(status).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

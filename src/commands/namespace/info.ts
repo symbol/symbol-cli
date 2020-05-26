@@ -93,11 +93,11 @@ export default class extends ProfileCommand {
         const namespaceHttp = new NamespaceHttp(profile.url);
         namespaceHttp.getNamespace(namespaceId).subscribe(
             (namespaceInfo) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new NamespaceInfoTable(namespaceInfo).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );

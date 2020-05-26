@@ -75,7 +75,7 @@ export default class extends ProfileCommand {
         const restrictionHttp = new RestrictionAccountHttp(profile.url);
         restrictionHttp.getAccountRestrictions(address).subscribe(
             (accountRestrictions: any) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 if (accountRestrictions.length > 0) {
                     console.log(new AccountRestrictionsTable(accountRestrictions).toString());
                 } else {
@@ -83,7 +83,7 @@ export default class extends ProfileCommand {
                 }
             },
             (err: any) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(HttpErrorHandler.handleError(err));
             },
         );
