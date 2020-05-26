@@ -1,8 +1,3 @@
-import chalk from 'chalk';
-import { command, metadata } from 'clime';
-import { merge } from 'rxjs';
-import { AggregateTransaction, BlockInfo, RepositoryFactoryHttp, Transaction, TransactionStatusError } from 'symbol-sdk';
-
 /*
  *
  * Copyright 2018-present NEM
@@ -20,6 +15,11 @@ import { AggregateTransaction, BlockInfo, RepositoryFactoryHttp, Transaction, Tr
  * limitations under the License.
  *
  */
+import chalk from 'chalk';
+import { command, metadata } from 'clime';
+import { merge } from 'rxjs';
+import { AggregateTransaction, BlockInfo, RepositoryFactoryHttp, Transaction, TransactionStatusError } from 'symbol-sdk';
+
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
