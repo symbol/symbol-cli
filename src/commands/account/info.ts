@@ -139,13 +139,13 @@ export class MultisigInfoTable {
     toString(): string {
         let text = '';
         if (this.multisigTable) {
-            text += FormatterService.title('\n' + 'Multisig Account Information');
+            text += FormatterService.title('Multisig Account Information');
             text += this.multisigTable.toString();
-            text += FormatterService.title('\n' + 'Cosignatories');
+            text += FormatterService.title('Cosignatories');
             text += this.cosignatoriesTable.toString();
         }
         if (this.cosignatoryOfTable) {
-            text += FormatterService.title('\n' + 'Is cosignatory of');
+            text += FormatterService.title('Is cosignatory of');
             text += this.cosignatoryOfTable.toString();
         }
         return text;

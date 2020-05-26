@@ -115,7 +115,7 @@ export class TransactionAnnounceService {
         transactionHttp.announce(signedTransaction).subscribe(
             (ignored) => {
                 this.spinner.stop(true);
-                console.log(FormatterService.success('\nTransaction announced correctly.'));
+                console.log(FormatterService.success('Transaction announced correctly.'));
                 console.log(
                     FormatterService.info(
                         "To check if the network confirms or rejects the transaction, run the command 'symbol-cli transaction status'.",

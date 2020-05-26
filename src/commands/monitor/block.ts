@@ -40,8 +40,7 @@ export default class extends ProfileCommand {
             () => {
                 listener.newBlock().subscribe(
                     (block) => {
-                        console.log('\n');
-                        console.log(block);
+                        console.log('\n' + block);
                     },
                     (err) => {
                         console.log(FormatterService.error(err));

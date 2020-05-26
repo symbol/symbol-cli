@@ -110,6 +110,6 @@ export default class extends CreateProfileCommand {
         }
 
         console.log(AccountCredentialsTable.createFromProfile(profile, password).toString());
-        console.log(FormatterService.success('\nStored ' + name + ' profile'));
+        console.log(FormatterService.success('Stored ' + name + ' profile'));
     }
 }
