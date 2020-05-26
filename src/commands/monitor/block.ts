@@ -20,7 +20,7 @@ import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 @command({
     description: 'Monitor new blocks',
@@ -44,14 +44,14 @@ export default class extends ProfileCommand {
                         console.log(block);
                     },
                     (err) => {
-                        console.log(HttpErrorHandler.handleError(err));
+                        console.log(FormatterService.error(err));
                         listener.close();
                     },
                 );
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

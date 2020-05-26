@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
@@ -24,7 +23,7 @@ import { Metadata, MetadataEntry, MetadataHttp } from 'symbol-sdk';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -51,8 +50,8 @@ export class MetadataEntryTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n';
-        text += this.table.toString();
+        text += '\n' + FormatterService.title('Key:' + this.entry.scopedMetadataKey.toHex());
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -80,12 +79,12 @@ export default class extends ProfileCommand {
                         console.log(new MetadataEntryTable(entry.metadataEntry).toString());
                     });
                 } else {
-                    console.log('\n The address does not have metadata entries assigned.');
+                    console.log(FormatterService.error('The address does not have metadata entries assigned'));
                 }
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

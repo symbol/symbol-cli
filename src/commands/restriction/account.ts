@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
@@ -24,7 +23,7 @@ import { AccountRestriction, RestrictionAccountHttp } from 'symbol-sdk';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -52,8 +51,8 @@ export class AccountRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Account Restrictions') + '\n';
-        text += this.table.toString();
+        text += '\n' + FormatterService.title('Account Restrictions');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -79,12 +78,12 @@ export default class extends ProfileCommand {
                 if (accountRestrictions.length > 0) {
                     console.log(new AccountRestrictionsTable(accountRestrictions).toString());
                 } else {
-                    console.log('\n The address does not have account restrictions assigned.');
+                    console.log(FormatterService.error('The address does not have account restrictions assigned'));
                 }
             },
             (err: any) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

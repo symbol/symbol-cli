@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
@@ -35,7 +34,7 @@ import {
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -64,8 +63,8 @@ export class AccountInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Account Information') + '\n';
-        text += this.table.toString();
+        text += '\n' + FormatterService.title('Account Information');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -95,8 +94,8 @@ export class BalanceInfoTable {
     toString(): string {
         let text = '';
         if (this.table) {
-            text += '\n' + chalk.green('Balance Information') + '\n';
-            text += this.table.toString();
+            text += '\n' + FormatterService.title('Balance Information');
+            text += '\n' + this.table.toString();
         }
         return text;
     }
@@ -140,13 +139,13 @@ export class MultisigInfoTable {
     toString(): string {
         let text = '';
         if (this.multisigTable) {
-            text += chalk.green('\n' + 'Multisig Account Information') + '\n';
+            text += FormatterService.title('\n' + 'Multisig Account Information');
             text += this.multisigTable.toString();
-            text += chalk.green('\n' + 'Cosignatories') + '\n';
+            text += FormatterService.title('\n' + 'Cosignatories');
             text += this.cosignatoriesTable.toString();
         }
         if (this.cosignatoryOfTable) {
-            text += chalk.green('\n' + 'Is cosignatory of') + '\n';
+            text += FormatterService.title('\n' + 'Is cosignatory of');
             text += this.cosignatoryOfTable.toString();
         }
         return text;
@@ -193,12 +192,9 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
-                if (err instanceof Object && 'message' in err && JSON.parse(err.message).statusCode === 404) {
-                    console.log(
-                        chalk.blue('Info'),
-                        'The account has to receive at least ' + 'one transaction to be recorded on the network.',
-                    );
+                console.log(FormatterService.error(err));
+                if (err instanceof Object) {
+                    console.log(FormatterService.info('The account has to receive at least one transaction to be recorded on the network'));
                 }
             },
         );

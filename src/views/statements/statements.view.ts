@@ -16,9 +16,9 @@
  *
  */
 
-import chalk from 'chalk';
 import { Statement } from 'symbol-sdk';
 
+import { FormatterService } from '../../services/formatter.service';
 import { TableBuilder } from '../table.builder';
 import { CellRecord } from '../transactions/details/transaction.view';
 import { ResolutionStatementViews } from './resolutionStatements.view';
@@ -35,7 +35,7 @@ export class StatementsView {
             if (!entries) {
                 return;
             }
-            console.log(chalk.bold(tableName));
+            console.log(FormatterService.title(tableName));
             entries.forEach((entry) => console.log(`${TableBuilder.renderTableFromArray(entry)} \n\n`));
         });
     }
