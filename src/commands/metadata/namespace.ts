@@ -46,7 +46,7 @@ export default class extends ProfileCommand {
         const namespaceId = await new NamespaceNameResolver().resolve(options);
 
         this.spinner.start();
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         metadataHttp.getNamespaceMetadata(namespaceId).subscribe(
             (metadataEntries) => {
                 this.spinner.stop(true);

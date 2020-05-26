@@ -70,7 +70,7 @@ export default class extends ProfileCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
         this.spinner.start();
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const restrictionHttp = profile.repositoryFactory.createRestrictionMosaicRepository();
         restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe(
             (mosaicRestrictions) => {
                 this.spinner.stop(true);

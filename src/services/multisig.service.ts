@@ -1,3 +1,4 @@
+ç;
 /*
  *
  * Copyright 2018-present NEM
@@ -18,16 +19,19 @@
 
 import { Observable, from, of } from 'rxjs';
 import { catchError, filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
-import { Address, MultisigAccountGraphInfo, MultisigAccountInfo, MultisigHttp } from 'symbol-sdk';
+import { Address, MultisigAccountGraphInfo, MultisigAccountInfo, MultisigRepository } from 'symbol-sdk';
 
 import { Profile } from '../models/profile.model';
 
 export class MultisigService {
+    private multisigHttp: MultisigRepository;
     /**
      * Creates an instance of MultisigService.
      * @param {Profile} profile
      */
-    constructor(private readonly profile: Profile) {}
+    constructor(private readonly profile: Profile) {
+        this.multisigHttp = this.profile.repositoryFactory.createMultisigRepository();
+    }
 
     /**
      * Gets self and children multisig accounts addresses from the network
@@ -35,7 +39,7 @@ export class MultisigService {
      * @returns {Observable<Address[]>}
      */
     public getSelfAndChildrenAddresses(): Observable<Address[]> {
-        return new MultisigHttp(this.profile.url).getMultisigAccountGraphInfo(this.profile.address).pipe(
+        return this.multisigHttp.getMultisigAccountGraphInfo(this.profile.address).pipe(
             switchMap((graphInfo) => this.getAddressesFromGraphInfo(graphInfo)),
             catchError((ignored) => of([this.profile.address])),
         );
@@ -46,7 +50,7 @@ export class MultisigService {
      * @returns {Promise<MultisigAccountInfo[]>}
      */
     public getChildrenMultisigAccountInfo(): Promise<MultisigAccountInfo[] | null> {
-        return new MultisigHttp(this.profile.url)
+        return this.multisigHttp
             .getMultisigAccountGraphInfo(this.profile.address)
             .pipe(
                 switchMap((graphInfo) => this.multisigInfoFromGraphInfo(graphInfo)),

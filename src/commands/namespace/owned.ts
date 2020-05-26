@@ -46,7 +46,7 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespacesFromAccount(address).subscribe(
             (namespaces) => {
                 this.spinner.stop(true);

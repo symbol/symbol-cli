@@ -19,13 +19,11 @@ import chalk from 'chalk';
 import { command, metadata, option } from 'clime';
 import { filter, flatMap, switchMap, tap } from 'rxjs/operators';
 import {
-    AccountHttp,
     Address,
     AggregateTransaction,
     CosignatureSignedTransaction,
     CosignatureTransaction,
     QueryParams,
-    TransactionHttp,
 } from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
@@ -101,7 +99,7 @@ export default class extends ProfileCommand {
     private getSequentialFetcher(): SequentialFetcher {
         const queryParams = new QueryParams({ pageSize: 100 });
         const networkCall = (address: Address) =>
-            new AccountHttp(this.profile.url).getAccountPartialTransactions(address, queryParams).toPromise();
+            this.profile.repositoryFactory.createAccountRepository().getAccountPartialTransactions(address, queryParams).toPromise();
 
         return SequentialFetcher.create(networkCall);
     }
@@ -140,7 +138,10 @@ export default class extends ProfileCommand {
      */
     private async announceAggregateBondedCosignature(signedCosignature: CosignatureSignedTransaction): Promise<void> {
         try {
-            await new TransactionHttp(this.profile.url).announceAggregateBondedCosignature(signedCosignature).toPromise();
+            await this.profile.repositoryFactory
+                .createTransactionRepository()
+                .announceAggregateBondedCosignature(signedCosignature)
+                .toPromise();
             this.spinner.stop(true);
             console.log(chalk.green('Transaction cosigned and announced correctly.'));
         } catch (err) {

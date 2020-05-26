@@ -47,7 +47,7 @@ export default class extends ProfileCommand {
         const namespaceId = await new NamespaceNameResolver().resolve(options);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         forkJoin(
             namespaceHttp.getLinkedMosaicId(namespaceId).pipe(catchError(() => of(null))),
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),

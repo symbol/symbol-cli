@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
-import { BlockchainScore, ChainHttp } from 'symbol-sdk';
+import { BlockchainScore } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -56,7 +56,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = profile.repositoryFactory.createChainRepository();
         chainHttp.getChainScore().subscribe(
             (score) => {
                 this.spinner.stop(true);

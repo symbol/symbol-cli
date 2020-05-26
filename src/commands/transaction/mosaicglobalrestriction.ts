@@ -82,8 +82,9 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
         const referenceMosaicId = new MosaicIdAliasResolver().optionalResolve(options);
 
-        const restrictionMosaicHttp = new RestrictionMosaicHttp(profile.url);
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const repositoryFactory = profile.repositoryFactory;
+        const restrictionMosaicHttp = repositoryFactory.createRestrictionMosaicRepository();
+        const namespaceHttp = repositoryFactory.createNamespaceRepository();
         const mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp);
 
         const signerMultisigInfo = await this.getSignerMultisigInfo(options);

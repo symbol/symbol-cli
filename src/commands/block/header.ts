@@ -87,7 +87,7 @@ export default class extends ProfileCommand {
         const height = await new HeightResolver().resolve(options);
 
         this.spinner.start();
-        const blockHttp = new BlockHttp(profile.url);
+        const blockHttp = profile.repositoryFactory.createBlockRepository();
         blockHttp.getBlockByHeight(height).subscribe(
             (blockInfo) => {
                 this.spinner.stop(true);

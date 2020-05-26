@@ -56,7 +56,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const nodeHttp = new NodeHttp(profile.url);
+        const nodeHttp = profile.repositoryFactory.createNodeRepository();
         nodeHttp.getServerInfo().subscribe(
             (serverInfo) => {
                 this.spinner.stop(true);

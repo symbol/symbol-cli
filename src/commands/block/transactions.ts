@@ -45,7 +45,7 @@ export default class extends AccountTransactionsCommand {
         const height = await new HeightResolver().resolve(options);
 
         this.spinner.start();
-        const blockHttp = new BlockHttp(profile.url);
+        const blockHttp = profile.repositoryFactory.createBlockRepository();
         blockHttp.getBlockTransactions(height, options.getQueryParams()).subscribe(
             (transactions) => {
                 this.spinner.stop(true);

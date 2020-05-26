@@ -72,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
         const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataHttp);
         const metadataTransaction = await metadataTransactionService
             .createMetadataTransaction(

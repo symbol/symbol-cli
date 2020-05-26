@@ -72,7 +72,7 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const restrictionHttp = new RestrictionAccountHttp(profile.url);
+        const restrictionHttp = profile.repositoryFactory.createRestrictionAccountRepository();
         restrictionHttp.getAccountRestrictions(address).subscribe(
             (accountRestrictions: any) => {
                 this.spinner.stop(true);

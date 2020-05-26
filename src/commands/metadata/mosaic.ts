@@ -46,7 +46,7 @@ export default class extends ProfileCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
         this.spinner.start();
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         metadataHttp.getMosaicMetadata(mosaicId).subscribe(
             (metadataEntries) => {
                 this.spinner.stop(true);

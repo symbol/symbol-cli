@@ -35,7 +35,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = profile.repositoryFactory.createChainRepository();
         chainHttp.getBlockchainHeight().subscribe(
             (height) => {
                 this.spinner.stop(true);

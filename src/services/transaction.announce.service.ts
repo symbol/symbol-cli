@@ -20,12 +20,14 @@ import { Spinner } from 'cli-spinner';
 import { merge } from 'rxjs';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 import {
+    IListener,
     Listener,
     NamespaceHttp,
     SignedTransaction,
     Transaction,
     TransactionAnnounceResponse,
     TransactionHttp,
+    TransactionRepository,
     TransactionType,
 } from 'symbol-sdk';
 
@@ -36,6 +38,8 @@ import { HttpErrorHandler } from '../services/httpErrorHandler.service';
 
 export class TransactionAnnounceService {
     public spinner = new Spinner('processing.. %s');
+    private transactionHttp: TransactionRepository;
+    private listener: IListener;
 
     /**
      * Creates an instance of Transaction Announce Service
@@ -53,15 +57,10 @@ export class TransactionAnnounceService {
      * @param {Profile} profile
      * @param {AnnounceTransactionsOptions} options
      */
-    private constructor(private readonly profile: Profile, private readonly options: AnnounceTransactionsOptions) {}
-
-    /**
-     * The endpoint used to announce transactions
-     * @readonly
-     * @type {string}
-     */
-    public get url(): string {
-        return this.profile.url;
+    private constructor(private readonly profile: Profile, private readonly options: AnnounceTransactionsOptions) {
+        const repositoryFactory = profile.repositoryFactory;
+        this.transactionHttp = repositoryFactory.createTransactionRepository();
+        this.listener = repositoryFactory.createListener();
     }
 
     /**
@@ -112,8 +111,7 @@ export class TransactionAnnounceService {
      * @param {SignedTransaction} signedTransaction
      */
     private announceTransaction(signedTransaction: SignedTransaction): void {
-        const transactionHttp = new TransactionHttp(this.url);
-        transactionHttp.announce(signedTransaction).subscribe(
+        this.transactionHttp.announce(signedTransaction).subscribe(
             (ignored) => {
                 this.spinner.stop(true);
                 console.log(chalk.green('\nTransaction announced correctly.'));
@@ -135,16 +133,13 @@ export class TransactionAnnounceService {
      */
     public announceTransactionSync(signedTransaction: SignedTransaction) {
         this.spinner.start();
-        const transactionHttp = new TransactionHttp(this.url);
-        const namespaceHttp = new NamespaceHttp(this.url);
-        const listener = new Listener(this.url, namespaceHttp);
         const senderAddress = signedTransaction.getSignerAddress();
 
-        listener.open().then(
+        this.listener.open().then(
             () => {
                 merge(
-                    transactionHttp.announce(signedTransaction),
-                    listener
+                    this.transactionHttp.announce(signedTransaction),
+                    this.listener
                         .confirmed(senderAddress)
                         .pipe(
                             filter(
@@ -153,7 +148,7 @@ export class TransactionAnnounceService {
                                     transaction.transactionInfo.hash === signedTransaction.hash,
                             ),
                         ),
-                    listener.status(senderAddress).pipe(
+                    this.listener.status(senderAddress).pipe(
                         filter((error) => error.hash === signedTransaction.hash),
                         tap((error) => {
                             throw new Error(error.code);
@@ -166,20 +161,20 @@ export class TransactionAnnounceService {
                             console.log(chalk.green('\nTransaction announced.'));
                             this.spinner.start();
                         } else if (response instanceof Transaction) {
-                            listener.close();
+                            this.listener.close();
                             this.spinner.stop(true);
                             console.log(chalk.green('\nTransaction confirmed.'));
                         }
                     },
                     (err) => {
-                        listener.close();
+                        this.listener.close();
                         this.spinner.stop(true);
                         console.log(HttpErrorHandler.handleError(err));
                     },
                 );
             },
             (err) => {
-                listener.close();
+                this.listener.close();
                 this.spinner.stop(true);
                 console.log(chalk.red('Error'), err.message);
             },
@@ -205,27 +200,24 @@ export class TransactionAnnounceService {
         }
 
         let confirmations = 0;
-        const transactionHttp = new TransactionHttp(this.url);
-        const namespaceHttp = new NamespaceHttp(this.url);
-        const listener = new Listener(this.url, namespaceHttp);
         const senderAddress = hashLock.getSignerAddress();
 
-        listener.open().then(
+        this.listener.open().then(
             () => {
                 merge(
-                    transactionHttp.announce(hashLock),
-                    listener.status(senderAddress).pipe(
+                    this.transactionHttp.announce(hashLock),
+                    this.listener.status(senderAddress).pipe(
                         filter((error) => error.hash === hashLock.hash),
                         tap((error) => {
                             throw new Error(error.code);
                         }),
                     ),
-                    listener.confirmed(senderAddress).pipe(
+                    this.listener.confirmed(senderAddress).pipe(
                         filter(
                             (transaction) =>
                                 transaction.transactionInfo !== undefined && transaction.transactionInfo.hash === hashLock.hash,
                         ),
-                        mergeMap((ignored) => transactionHttp.announceAggregateBonded(aggregate)),
+                        mergeMap((ignored) => this.transactionHttp.announceAggregateBonded(aggregate)),
                     ),
                 ).subscribe(
                     (ignored) => {
@@ -235,21 +227,21 @@ export class TransactionAnnounceService {
                             console.log(chalk.green('\n Hash lock transaction announced.'));
                             this.spinner.start();
                         } else if (confirmations === 2) {
-                            listener.close();
+                            this.listener.close();
                             this.spinner.stop(true);
                             console.log(chalk.green('\n Hash lock transaction confirmed.'));
                             console.log(chalk.green('\n Aggregate transaction announced.'));
                         }
                     },
                     (err) => {
-                        listener.close();
+                        this.listener.close();
                         this.spinner.stop(true);
                         console.log(HttpErrorHandler.handleError(err));
                     },
                 );
             },
             (err) => {
-                listener.close();
+                this.listener.close();
                 this.spinner.stop(true);
                 console.log(HttpErrorHandler.handleError(err));
             },

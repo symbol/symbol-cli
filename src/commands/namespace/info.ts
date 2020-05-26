@@ -90,7 +90,7 @@ export default class extends ProfileCommand {
             : await new NamespaceIdResolver().resolve(options);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespace(namespaceId).subscribe(
             (namespaceInfo) => {
                 this.spinner.stop(true);

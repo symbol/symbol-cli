@@ -38,7 +38,7 @@ export default class extends MonitorAddressCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 listener.confirmed(address).subscribe(
