@@ -15,33 +15,33 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
+import chalk from 'chalk';
 
 /**
  * Http error handler service.
  */
-export class HttpErrorHandler  {
+export class HttpErrorHandler {
     /**
      * Handle errors thrown by an HTTP call.
      * @param {any} err - err data.
      * @returns {string}
      */
     public static handleError(err: any): string {
-        let result = chalk.red('Error') + ' '
-        if ( err instanceof Object && 'message' in err){
-            try{
-                const message = JSON.parse(err.message)
-                if ('errorDetails' in message && 'statusMessage' in message.errorDetails){
-                    result += message.errorDetails.statusMessage
+        let result = chalk.red('Error') + ' ';
+        if (err instanceof Object && 'message' in err) {
+            try {
+                const message = JSON.parse(err.message);
+                if ('errorDetails' in message && 'statusMessage' in message.errorDetails) {
+                    result += message.errorDetails.statusMessage;
                 } else {
-                    result += err.message
+                    result += err.message;
                 }
-            } catch(e){
-                result += err.message
+            } catch (e) {
+                result += err.message;
             }
         } else {
-            result += err
+            result += err;
         }
-        return result
+        return result;
     }
 }

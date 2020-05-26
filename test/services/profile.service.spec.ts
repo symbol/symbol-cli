@@ -15,78 +15,75 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {instance, mock, when} from 'ts-mockito'
-import {NetworkType, Password, SimpleWallet, Account} from 'symbol-sdk'
 
-import {HdProfile} from '../../src/models/hdProfile.model'
-import {mockPrivateKeyProfile1} from '../mocks/profiles/profile.mock'
-import {NetworkCurrency} from '../../src/models/networkCurrency.model'
-import {PrivateKeyProfile} from '../../src/models/privateKey.profile.model'
-import {Profile} from '../../src/models/profile.model'
-import {ProfileRepository} from '../../src/respositories/profile.repository'
-import {ProfileService} from '../../src/services/profile.service'
+import { expect } from 'chai';
+import { Account, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
+import { instance, mock, when } from 'ts-mockito';
 
-const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+import { HdProfile } from '../../src/models/hdProfile.model';
+import { NetworkCurrency } from '../../src/models/networkCurrency.model';
+import { PrivateKeyProfile } from '../../src/models/privateKeyProfile.model';
+import { Profile } from '../../src/models/profile.model';
+import { ProfileRepository } from '../../src/respositories/profile.repository';
+import { ProfileService } from '../../src/services/profile.service';
+import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
+
+const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 describe('Configure service', () => {
-
     it('should create profile service', () => {
-        const mockProfileRepository = mock(ProfileRepository)
-        expect(new ProfileService(instance(mockProfileRepository))).to.not.be.equal(undefined)
-    })
+        const mockProfileRepository = mock(ProfileRepository);
+        expect(new ProfileService(instance(mockProfileRepository))).to.not.be.equal(undefined);
+    });
 
     it('should create configure service instance via constructor', () => {
-        const mockProfileRepository = mock(ProfileRepository)
-        const profileService = new ProfileService(instance(mockProfileRepository))
-        expect(profileService).to.not.be.equal(undefined)
-    })
+        const mockProfileRepository = mock(ProfileRepository);
+        const profileService = new ProfileService(instance(mockProfileRepository));
+        expect(profileService).to.not.be.equal(undefined);
+    });
 
     it('should find account account with name', () => {
-        const profile = mockPrivateKeyProfile1
-        const mockProfileRepository = mock(ProfileRepository)
+        const profile = mockPrivateKeyProfile1;
+        const mockProfileRepository = mock(ProfileRepository);
 
-        when(mockProfileRepository.find('default')).thenReturn(profile)
+        when(mockProfileRepository.find('default')).thenReturn(profile);
 
-        const profileService = new ProfileService(instance(mockProfileRepository))
-        const createdProfile = profileService.findProfileNamed('default')
+        const profileService = new ProfileService(instance(mockProfileRepository));
+        const createdProfile = profileService.findProfileNamed('default');
 
         if (createdProfile instanceof Profile) {
-            expect(createdProfile.simpleWallet).to.be.equal(profile.simpleWallet)
-            expect(createdProfile.url).to.be.equal(profile.url)
-            expect(createdProfile.name).to.be.equal('default')
-            expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST)
-            expect(createdProfile.networkGenerationHash).to.be.equal(profile.networkGenerationHash)
+            expect(createdProfile.simpleWallet).to.be.equal(profile.simpleWallet);
+            expect(createdProfile.url).to.be.equal(profile.url);
+            expect(createdProfile.name).to.be.equal('default');
+            expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+            expect(createdProfile.networkGenerationHash).to.be.equal(profile.networkGenerationHash);
         }
-    })
+    });
 
     it('should return undefined when no account found for name', () => {
-        const mockProfileRepository = mock(ProfileRepository)
-        when(mockProfileRepository.find('default'))
-            .thenThrow(new Error('profile default not found'))
+        const mockProfileRepository = mock(ProfileRepository);
+        when(mockProfileRepository.find('default')).thenThrow(new Error('profile default not found'));
 
-        const profileService = new ProfileService(instance(mockProfileRepository))
+        const profileService = new ProfileService(instance(mockProfileRepository));
         expect(() => {
-            profileService.findProfileNamed('default')
-        }).to.throw(Error)
-    })
+            profileService.findProfileNamed('default');
+        }).to.throw(Error);
+    });
 
     it('should get current profile', () => {
-        const simpleWallet = SimpleWallet
-            .create('test', new Password('password'), NetworkType.MIJIN_TEST)
-        const profile = mockPrivateKeyProfile1
-        const mockProfileRepository = mock(ProfileRepository)
-        when(mockProfileRepository.find('test'))
-            .thenReturn(profile)
+        const simpleWallet = SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST);
+        const profile = mockPrivateKeyProfile1;
+        const mockProfileRepository = mock(ProfileRepository);
+        when(mockProfileRepository.find('test')).thenReturn(profile);
 
-        const profileService = new ProfileService(instance(mockProfileRepository))
-        const currentProfile = profileService.getDefaultProfile()
+        const profileService = new ProfileService(instance(mockProfileRepository));
+        const currentProfile = profileService.getDefaultProfile();
         if (currentProfile instanceof Profile) {
-            expect(currentProfile.simpleWallet).to.be.equal(simpleWallet)
+            expect(currentProfile.simpleWallet).to.be.equal(simpleWallet);
         }
-    })
+    });
 
     it('should create a private key profile', () => {
-        const mockProfileRepository = mock(ProfileRepository)
+        const mockProfileRepository = mock(ProfileRepository);
         const profile = new ProfileService(mockProfileRepository).createNewProfile({
             generationHash: 'default',
             isDefault: false,
@@ -96,13 +93,13 @@ describe('Configure service', () => {
             password: new Password('password'),
             url: 'http://localhost:3000',
             privateKey: Account.generateNewAccount(NetworkType.MAIN_NET).privateKey,
-        })
+        });
 
-        expect(profile).to.be.instanceOf(PrivateKeyProfile)
-    })
+        expect(profile).to.be.instanceOf(PrivateKeyProfile);
+    });
 
     it('should create an HD profile', () => {
-        const mockProfileRepository = mock(ProfileRepository)
+        const mockProfileRepository = mock(ProfileRepository);
         const profile = new ProfileService(instance(mockProfileRepository)).createNewProfile({
             generationHash: 'default',
             isDefault: false,
@@ -112,10 +109,11 @@ describe('Configure service', () => {
             password: new Password('password'),
             url: 'http://localhost:3000',
             // eslint-disable-next-line max-len
-            mnemonic: 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense',
+            mnemonic:
+                'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense',
             pathNumber: 0,
-        })
+        });
 
-        expect(profile).to.be.instanceOf(HdProfile)
-    })
-})
+        expect(profile).to.be.instanceOf(HdProfile);
+    });
+});

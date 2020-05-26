@@ -1,4 +1,5 @@
 /*
+ *
  * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,77 +15,67 @@
  * limitations under the License.
  *
  */
-import {Deadline, MosaicSupplyChangeTransaction} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import { command, metadata, option } from 'clime';
+import { Deadline, MosaicSupplyChangeTransaction } from 'symbol-sdk';
 
-import {AmountResolver} from '../../resolvers/amount.resolver'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {SupplyActionResolver} from '../../resolvers/action.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { SupplyActionResolver } from '../../resolvers/action.resolver';
+import { AmountResolver } from '../../resolvers/amount.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Mosaic supply change action (Increase, Decrease).',
     })
-    action: string
+    action: string;
 
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string
+    mosaicId: string;
 
     @option({
         flag: 'd',
         description: 'Atomic amount of supply change.',
     })
-    amount: string
+    amount: string;
 }
 
 @command({
     description: 'Change a mosaic supply',
 })
-
 export default class extends AnnounceTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const mosaicId = await new MosaicIdResolver().resolve(options)
-        const action = await new SupplyActionResolver().resolve(options)
-        const amount = await new AmountResolver()
-            .resolve(options, 'Enter absolute amount of supply change: ')
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
+        const action = await new SupplyActionResolver().resolve(options);
+        const amount = await new AmountResolver().resolve(options, 'Enter absolute amount of supply change: ');
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const transaction = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
-            mosaicId,
-            action,
-            amount,
-            profile.networkType,
-            maxFee)
-
+        const transaction = MosaicSupplyChangeTransaction.create(Deadline.create(), mosaicId, action, amount, profile.networkType, maxFee);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

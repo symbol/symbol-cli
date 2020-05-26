@@ -15,22 +15,21 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {NetworkType} from 'symbol-sdk'
+import { NetworkType } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Network validator
  */
 export class NetworkValidator implements Validator<string> {
-
     /**
      * Validates if a network is supported.
      * @param {string} value - Network type friendly name.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(NetworkType)
-            .filter((key) => Number.isNaN(parseFloat(key)))
-        return keys.includes(value) ? true : 'Network must be one of (' + keys + ').'
+        const keys = Object.keys(NetworkType).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'Network must be one of (' + keys + ').';
     }
 }

@@ -15,15 +15,15 @@
  * limitations under the License.
  *
  */
-import {AccountService} from '../services/account.service'
-import {Validator} from './validator'
-import {Address} from 'symbol-sdk'
+import { Address } from 'symbol-sdk';
+
+import { AccountService } from '../services/account.service';
+import { Validator } from './validator';
 
 /**
  * Address validator
  */
 export class AddressValidator implements Validator<string> {
-
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address.
@@ -31,11 +31,11 @@ export class AddressValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            Address.createFromRawAddress(value)
+            Address.createFromRawAddress(value);
         } catch (err) {
-            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP'
+            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP';
         }
-        return true
+        return true;
     }
 }
 
@@ -43,7 +43,6 @@ export class AddressValidator implements Validator<string> {
  * Address alias validator
  */
 export class AddressAliasValidator implements Validator<string> {
-
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address. If starts with '@', then it is an alias.
@@ -51,10 +50,10 @@ export class AddressAliasValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            AccountService.getRecipient(value)
+            AccountService.getRecipient(value);
         } catch {
-            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP'
+            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP';
         }
-        return true
+        return true;
     }
 }

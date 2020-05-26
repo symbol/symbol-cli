@@ -16,17 +16,18 @@
  *
  */
 
-import {account1} from '../accounts.mock'
-import {mosaicId1} from '../mosaics.mock'
-import {Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64} from 'symbol-sdk'
+import { Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64 } from 'symbol-sdk';
+
+import { account1 } from '../accounts.mock';
+import { mosaicId1 } from '../mosaics.mock';
 
 export const unsignedMosaicMetadata1 = MosaicMetadataTransaction.create(
- Deadline.create(),
- account1.publicKey,
- UInt64.fromUint(1000),
- mosaicId1,
- 1,
- Convert.uint8ToUtf8(new Uint8Array(10)),
- NetworkType.MIJIN_TEST,
- new UInt64([1, 0]),
-)
+    Deadline.create(),
+    account1.publicKey,
+    UInt64.fromUint(1000),
+    mosaicId1,
+    1,
+    Convert.uint8ToUtf8(new Uint8Array(10)),
+    NetworkType.MIJIN_TEST,
+    new UInt64([1, 0]),
+);

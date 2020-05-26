@@ -15,32 +15,32 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {UInt64} from 'symbol-sdk'
+import { UInt64 } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Height validator
  */
 export class HeightValidator implements Validator<string> {
-
     /**
      * Validates if height value is bigger than 0.
      * @param {string} value - Height.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        let valid = true
+        let valid = true;
         if (value === '0') {
-            valid = false
+            valid = false;
         }
         try {
-            UInt64.fromNumericString(value)
+            UInt64.fromNumericString(value);
         } catch (e) {
-            valid = false
+            valid = false;
         }
         if (!valid) {
-            return 'The block height must be a positive integer'
+            return 'The block height must be a positive integer';
         }
-        return valid
+        return valid;
     }
 }

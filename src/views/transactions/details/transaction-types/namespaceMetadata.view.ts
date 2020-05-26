@@ -16,23 +16,24 @@
  *
  */
 
-import {NamespacesView} from '../../../namespaces.view'
-import {CellRecord} from '../transaction.view'
-import {NamespaceMetadataTransaction} from 'symbol-sdk'
+import { NamespaceMetadataTransaction } from 'symbol-sdk';
+
+import { NamespacesView } from '../../../namespaces.view';
+import { CellRecord } from '../transaction.view';
 
 export class NamespaceMetadataView {
-  /**
-   * @static
-   * @param {NamespaceMetadataTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: NamespaceMetadataTransaction): CellRecord {
-    return {
-      'Target public key': tx.targetPublicKey,
-      'Scoped metadata key': tx.scopedMetadataKey.toHex(),
-      'Target namespace Id': NamespacesView.getNamespaceLabel(tx.targetNamespaceId),
-      'Value size delta': tx.valueSizeDelta.toString(),
-      'Value': tx.value,
+    /**
+     * @static
+     * @param {NamespaceMetadataTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: NamespaceMetadataTransaction): CellRecord {
+        return {
+            'Target public key': tx.targetPublicKey,
+            'Scoped metadata key': tx.scopedMetadataKey.toHex(),
+            'Target namespace Id': NamespacesView.getNamespaceLabel(tx.targetNamespaceId),
+            'Value size delta': tx.valueSizeDelta.toString(),
+            Value: tx.value,
+        };
     }
-  }
 }

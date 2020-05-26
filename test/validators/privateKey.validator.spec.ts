@@ -15,32 +15,26 @@
  * limitations under the License.
  *
  */
-import {PrivateKeyValidator} from '../../src/validators/privateKey.validator'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { PrivateKeyValidator } from '../../src/validators/privateKey.validator';
 
 describe('Private key validator', () => {
-
     it('default case ', () => {
-        const upperCasePrivateKey = '0'.repeat(63) + 'A'
-        const lowerCasePrivateKey = '0'.repeat(63) + 'a'
-        expect(new PrivateKeyValidator().validate(upperCasePrivateKey))
-            .to.be.equal(true)
-        expect(new PrivateKeyValidator().validate(lowerCasePrivateKey))
-            .to.be.equal(true)
-    })
+        const upperCasePrivateKey = '0'.repeat(63) + 'A';
+        const lowerCasePrivateKey = '0'.repeat(63) + 'a';
+        expect(new PrivateKeyValidator().validate(upperCasePrivateKey)).to.be.equal(true);
+        expect(new PrivateKeyValidator().validate(lowerCasePrivateKey)).to.be.equal(true);
+    });
 
     it('should throw error if private key length is not 64', () => {
-        const privateKey = '0'.repeat(63)
-        expect(
-            new PrivateKeyValidator().validate(privateKey)
-        ).to.be.equal('Private key should be a 64 characters hexadecimal string')
-    })
+        const privateKey = '0'.repeat(63);
+        expect(new PrivateKeyValidator().validate(privateKey)).to.be.equal('Private key should be a 64 characters hexadecimal string');
+    });
 
     it('should throw error if private key has special chars', () => {
-        const privateKey = '0'.repeat(63) + '!'
-        expect(
-            new PrivateKeyValidator().validate(privateKey)
-        ).to.be.equal('Private key should be a 64 characters hexadecimal string')
-    })
-
-})
+        const privateKey = '0'.repeat(63) + '!';
+        expect(new PrivateKeyValidator().validate(privateKey)).to.be.equal('Private key should be a 64 characters hexadecimal string');
+    });
+});

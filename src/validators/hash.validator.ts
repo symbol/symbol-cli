@@ -15,19 +15,18 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
+import { Validator } from './validator';
 
 /**
  * Numeric string
  */
 export class HashValidator implements Validator<string> {
-
     /**
      * Validates if a string is a valid hash.
      * @param {string} value     * @returns {true | string}
      */
     validate(value: string): boolean | string {
-      const hashLength = 64
-      return (typeof value !== 'string' || value.length !== hashLength) ?  'The transaction hash is invalid' : true
+        const hashLength = 64;
+        return typeof value !== 'string' || value.length !== hashLength ? 'The transaction hash is invalid' : true;
     }
 }

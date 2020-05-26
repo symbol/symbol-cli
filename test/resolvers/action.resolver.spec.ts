@@ -15,58 +15,45 @@
  * limitations under the License.
  *
  */
-import {ActionType} from '../../src/models/action.enum'
-import {ActionResolver, LinkActionResolver, SupplyActionResolver} from '../../src/resolvers/action.resolver'
-import {expect} from 'chai'
-import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
+
+import { expect } from 'chai';
+import { LinkAction, MosaicSupplyChangeAction } from 'symbol-sdk';
+
+import { ActionType } from '../../src/models/action.enum';
+import { ActionResolver, LinkActionResolver, SupplyActionResolver } from '../../src/resolvers/action.resolver';
 
 describe('Action resolver', () => {
-
     it('should return action', async () => {
-        const options = {action: 'Remove'} as any
-        expect(await new ActionResolver().resolve(options))
-            .to.be.equal(ActionType.Remove)
-    })
+        const options = { action: 'Remove' } as any;
+        expect(await new ActionResolver().resolve(options)).to.be.equal(ActionType.Remove);
+    });
 
     it('should change key', async () => {
-        const options = {key: 'Remove'} as any
-        expect(await new ActionResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(ActionType.Remove)
-    })
-
-})
+        const options = { key: 'Remove' } as any;
+        expect(await new ActionResolver().resolve(options, 'altText', 'key')).to.be.equal(ActionType.Remove);
+    });
+});
 
 describe('Link action resolver', () => {
-
     it('default case', async () => {
-        const options = {action: 'Unlink'} as any
-        expect(await new LinkActionResolver().resolve(options))
-            .to.be.equal(LinkAction.Unlink)
-    })
+        const options = { action: 'Unlink' } as any;
+        expect(await new LinkActionResolver().resolve(options)).to.be.equal(LinkAction.Unlink);
+    });
 
     it('should change key', async () => {
-        const options = {key: 'Unlink'} as any
-        expect(await new LinkActionResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(LinkAction.Unlink)
-    })
-
-})
+        const options = { key: 'Unlink' } as any;
+        expect(await new LinkActionResolver().resolve(options, 'altText', 'key')).to.be.equal(LinkAction.Unlink);
+    });
+});
 
 describe('Supply action resolver', () => {
-
     it('default case', async () => {
-        const options = {action: 'Decrease'} as any
-        expect(await new SupplyActionResolver().resolve(options))
-            .to.be.equal(MosaicSupplyChangeAction.Decrease)
-    })
+        const options = { action: 'Decrease' } as any;
+        expect(await new SupplyActionResolver().resolve(options)).to.be.equal(MosaicSupplyChangeAction.Decrease);
+    });
 
     it('should change key', async () => {
-        const options = {key: 'Decrease'} as any
-        expect(await new SupplyActionResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(MosaicSupplyChangeAction.Decrease)
-    })
-
-})
+        const options = { key: 'Decrease' } as any;
+        expect(await new SupplyActionResolver().resolve(options, 'altText', 'key')).to.be.equal(MosaicSupplyChangeAction.Decrease);
+    });
+});

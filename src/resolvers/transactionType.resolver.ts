@@ -15,18 +15,18 @@
  * limitations under the License.
  *
  */
-import {Options} from 'clime'
-import {TransactionType} from 'symbol-sdk'
 
-import {OptionsChoiceResolver} from '../options-resolver'
-import {Resolver} from './resolver'
-import {TransactionTypeValidator} from '../validators/transactionType.validator'
+import { Options } from 'clime';
+import { TransactionType } from 'symbol-sdk';
+
+import { OptionsChoiceResolver } from '../options-resolver';
+import { TransactionTypeValidator } from '../validators/transactionType.validator';
+import { Resolver } from './resolver';
 
 /**
  * Transaction type resolver
  */
 export class TransactionTypeResolver implements Resolver {
-
     /**
      * Resolves a transaction type provided by the user.
      * @param {Options} options - Command options.
@@ -35,20 +35,21 @@ export class TransactionTypeResolver implements Resolver {
      * @returns {Promise<number>}
      */
     async resolve(options: Options, altText?: string, altKey?: string): Promise<number> {
-        const choices = Object
-            .keys(TransactionType)
+        const choices = Object.keys(TransactionType)
             .filter((key) => Number.isNaN(parseFloat(key)) && key !== 'RESERVED')
             .map((string) => ({
-                title:  string,
+                title: string,
                 value: `${TransactionType[string as any]}`,
-            }))
+            }));
 
-        const value = +(await OptionsChoiceResolver(options,
+        const value = +(await OptionsChoiceResolver(
+            options,
             altKey ? altKey : 'transactionType',
             altText ? altText : 'Chose a transaction type:',
             choices,
             'select',
-            new TransactionTypeValidator()))
-        return value
+            new TransactionTypeValidator(),
+        ));
+        return value;
     }
 }

@@ -15,32 +15,26 @@
  * limitations under the License.
  *
  */
-import {NumericStringValidator} from '../../src/validators/numericString.validator'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { NumericStringValidator } from '../../src/validators/numericString.validator';
 
 describe('Numeric string validator', () => {
-
     it('default case', () => {
-        const zeroValue = '0'
-        const largePositiveValue = '10000000000000000000000000'
-        expect(new NumericStringValidator().validate(zeroValue))
-            .to.be.equal(true)
-        expect(new NumericStringValidator().validate(largePositiveValue))
-            .to.be.equal(true)
-    })
+        const zeroValue = '0';
+        const largePositiveValue = '10000000000000000000000000';
+        expect(new NumericStringValidator().validate(zeroValue)).to.be.equal(true);
+        expect(new NumericStringValidator().validate(largePositiveValue)).to.be.equal(true);
+    });
 
     it('should throw error if not a numeric string', () => {
-        const value = 'test'
-        expect(
-            new NumericStringValidator().validate(value)
-        ).to.be.equal('Enter an integer number')
-    })
+        const value = 'test';
+        expect(new NumericStringValidator().validate(value)).to.be.equal('Enter an integer number');
+    });
 
     it('should throw error if numeric string is negative', () => {
-        const value = '-1'
-        expect(
-            new NumericStringValidator().validate(value)
-        ).to.be.equal('Enter an integer number')
-    })
-
-})
+        const value = '-1';
+        expect(new NumericStringValidator().validate(value)).to.be.equal('Enter an integer number');
+    });
+});

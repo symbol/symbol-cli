@@ -16,23 +16,24 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {MosaicDefinitionTransaction} from 'symbol-sdk'
+import { MosaicDefinitionTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class MosaicDefinitionView {
-  /**
-   * @static
-   * @param {MosaicDefinitionTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MosaicDefinitionTransaction): CellRecord {
-    return {
-      ['Mosaic Id']: tx.mosaicId.toHex(),
-      ['Duration']: tx.duration.compact() > 0 ? `${tx.duration.compact().toLocaleString()} blocks` : 'unlimited',
-      ['Divisibility']: `${tx.divisibility}`,
-      ['Supply mutable']: `${tx.flags.supplyMutable}`,
-      ['Transferable']: `${tx.flags.transferable}`,
-      ['Restrictable']: `${tx.flags.restrictable}`,
+    /**
+     * @static
+     * @param {MosaicDefinitionTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MosaicDefinitionTransaction): CellRecord {
+        return {
+            ['Mosaic Id']: tx.mosaicId.toHex(),
+            ['Duration']: tx.duration.compact() > 0 ? `${tx.duration.compact().toLocaleString()} blocks` : 'unlimited',
+            ['Divisibility']: `${tx.divisibility}`,
+            ['Supply mutable']: `${tx.flags.supplyMutable}`,
+            ['Transferable']: `${tx.flags.transferable}`,
+            ['Restrictable']: `${tx.flags.restrictable}`,
+        };
     }
-  }
 }

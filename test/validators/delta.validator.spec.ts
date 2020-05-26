@@ -15,27 +15,23 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {DeltaValidator} from '../../src/validators/delta.validator'
+
+import { expect } from 'chai';
+
+import { DeltaValidator } from '../../src/validators/delta.validator';
 
 describe('Delta validator', () => {
-
     it('default case', () => {
-        const zeroValue = 0
-        const positiveValue = 1
-        const negativeValue = -1
-        expect(new DeltaValidator().validate(zeroValue))
-            .to.be.equal(true)
-        expect(new DeltaValidator().validate(positiveValue))
-            .to.be.equal(true)
-        expect(new DeltaValidator().validate(negativeValue))
-    })
+        const zeroValue = 0;
+        const positiveValue = 1;
+        const negativeValue = -1;
+        expect(new DeltaValidator().validate(zeroValue)).to.be.equal(true);
+        expect(new DeltaValidator().validate(positiveValue)).to.be.equal(true);
+        expect(new DeltaValidator().validate(negativeValue));
+    });
 
     it('should throw error if delta is decimal', () => {
-        const value = 1.1
-        expect(
-            new DeltaValidator().validate(value)
-        ).to.be.equal('Delta value should be an integer')
-    })
-
-})
+        const value = 1.1;
+        expect(new DeltaValidator().validate(value)).to.be.equal('Delta value should be an integer');
+    });
+});

@@ -15,52 +15,53 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {MetadataEntryTable} from './account'
-import {Metadata, MetadataHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import { command, metadata, option } from 'clime';
+import { Metadata, MetadataHttp } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { NamespaceNameResolver } from '../../resolvers/namespace.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { MetadataEntryTable } from './account';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespaceName: string
+    namespaceName: string;
 }
 
 @command({
     description: 'Fetch metadata entries from an namespace',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const namespaceId = await new NamespaceNameResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const namespaceId = await new NamespaceNameResolver().resolve(options);
 
-        this.spinner.start()
-        const metadataHttp = new MetadataHttp(profile.url)
-        metadataHttp.getNamespaceMetadata(namespaceId)
-            .subscribe((metadataEntries) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const metadataHttp = new MetadataHttp(profile.url);
+        metadataHttp.getNamespaceMetadata(namespaceId).subscribe(
+            (metadataEntries) => {
+                this.spinner.stop(true);
                 if (metadataEntries.length > 0) {
-                    metadataEntries
-                        .map((entry: Metadata) => {
-                            console.log(new MetadataEntryTable(entry.metadataEntry).toString())
-                        })
+                    metadataEntries.map((entry: Metadata) => {
+                        console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                    });
                 } else {
-                    console.log('\n The namespace does not have metadata entries assigned.')
+                    console.log('\n The namespace does not have metadata entries assigned.');
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

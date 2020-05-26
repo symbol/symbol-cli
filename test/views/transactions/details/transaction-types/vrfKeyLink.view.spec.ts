@@ -15,21 +15,16 @@
  * limitations under the License.
  *
  */
+import { expect } from 'chai';
+import { LinkAction } from 'symbol-sdk';
 
-import {MosaicsView} from '../../../mosaics.view'
-import {CellRecord} from '../transaction.view'
-import {LockFundsTransaction} from 'symbol-sdk'
+import { VrfKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
+import { unsignedVrfKeyLink1 } from '../../../../mocks/transactions/vrfKeyLink.mock';
 
-export class LockFundsView {
-  /**
-   * @static
-   * @param {LockFundsTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: LockFundsTransaction): CellRecord {
-    return {
-      Duration: `${tx.duration.compact().toLocaleString()} blocks`,
-      ...MosaicsView.get([tx.mosaic]),
-    }
-  }
-}
+describe('VrfLinkView', () => {
+    it('should return a view', () => {
+        const view = VrfKeyLinkView.get(unsignedVrfKeyLink1);
+        expect(view['Action']).equal(LinkAction[LinkAction.Link]);
+        expect(view['Linked key']).equal('0'.repeat(64));
+    });
+});

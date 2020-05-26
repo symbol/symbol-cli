@@ -16,21 +16,22 @@
  *
  */
 
-import {NamespacesView} from '../../../namespaces.view'
-import {CellRecord} from '../transaction.view'
-import {AliasAction, MosaicAliasTransaction} from 'symbol-sdk'
+import { AliasAction, MosaicAliasTransaction } from 'symbol-sdk';
+
+import { NamespacesView } from '../../../namespaces.view';
+import { CellRecord } from '../transaction.view';
 
 export class MosaicAliasView {
-  /**
-   * @static
-   * @param {MosaicAliasTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MosaicAliasTransaction): CellRecord {
-    return {
-      'Alias action': AliasAction[tx.aliasAction],
-      'Mosaic Id': tx.mosaicId.toHex(),
-      'Namespace Id': NamespacesView.getNamespaceLabel(tx.namespaceId),
+    /**
+     * @static
+     * @param {MosaicAliasTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MosaicAliasTransaction): CellRecord {
+        return {
+            'Alias action': AliasAction[tx.aliasAction],
+            'Mosaic Id': tx.mosaicId.toHex(),
+            'Namespace Id': NamespacesView.getNamespaceLabel(tx.namespaceId),
+        };
     }
-  }
 }

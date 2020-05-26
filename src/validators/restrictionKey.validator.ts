@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {Validator} from 'clime'
-import {UInt64} from 'symbol-sdk'
+import { Validator } from 'clime';
+import { UInt64 } from 'symbol-sdk';
 
 /**
  * Validator of mosaic restriction key
@@ -29,10 +29,10 @@ export class MosaicRestrictionKeyValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            UInt64.fromNumericString(value)
+            UInt64.fromNumericString(value);
         } catch (err) {
-            return 'Restriction key is an invalid UInt64 string'
+            return 'Restriction key is an invalid UInt64 string';
         }
-        return true
+        return true;
     }
 }

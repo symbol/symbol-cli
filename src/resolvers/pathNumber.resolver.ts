@@ -15,27 +15,26 @@
  * limitations under the License.
  *
  */
-import {Options} from 'clime'
 
-import {OptionsChoiceResolver} from '../options-resolver'
-import {Resolver} from './resolver'
+import { Options } from 'clime';
+
+import { OptionsChoiceResolver } from '../options-resolver';
+import { Resolver } from './resolver';
 
 /**
  * Path number resolver
  */
 export class PathNumberResolver implements Resolver {
-
     /**
      * Resolves a path number provided by the user.
      * @returns {Promise<number>}
      */
     async resolve(options: Options): Promise<number> {
-        const choices = [...Array(10).keys()]
-            .map((key) => ({
-                // Index is shown as 1-based to match with other wallets UX
-                title: `${key+ 1}`,
-                value: key,
-            }))
+        const choices = [...Array(10).keys()].map((key) => ({
+            // Index is shown as 1-based to match with other wallets UX
+            title: `${key + 1}`,
+            value: key,
+        }));
 
         const value = +(await OptionsChoiceResolver(
             options,
@@ -44,7 +43,7 @@ export class PathNumberResolver implements Resolver {
             choices,
             'select',
             undefined,
-        ))
-        return value
+        ));
+        return value;
     }
 }

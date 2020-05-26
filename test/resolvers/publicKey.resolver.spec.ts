@@ -1,3 +1,5 @@
+import { expect } from 'chai';
+
 /*
  *
  * Copyright 2018-present NEM
@@ -15,56 +17,44 @@
  * limitations under the License.
  *
  */
-import {CosignatoryPublicKeyResolver, PublicKeyResolver} from '../../src/resolvers/publicKey.resolver'
-import {expect} from 'chai'
+import { CosignatoryPublicKeyResolver, PublicKeyResolver } from '../../src/resolvers/publicKey.resolver';
 
 describe('Public key resolver', () => {
-
     it('should return public key', async () => {
-        const publicKey = '0000000000000000000000000000000000000000000000000000000000000000'
-        const options = {publicKey} as any
-        expect((await new PublicKeyResolver().resolve(options)).publicKey)
-            .to.be.equal(publicKey)
-    })
-
-})
+        const publicKey = '0000000000000000000000000000000000000000000000000000000000000000';
+        const options = { publicKey } as any;
+        expect((await new PublicKeyResolver().resolve(options)).publicKey).to.be.equal(publicKey);
+    });
+});
 
 describe('Multisig account public key resolver', () => {
-
     it('should return public key', async () => {
-        const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000'
-        const options = {multisigAccountPublicKey} as any
-        expect((await new PublicKeyResolver().resolve(options, undefined,
-            'test', 'multisigAccountPublicKey')).publicKey)
-            .to.be.equal(multisigAccountPublicKey)
-    })
-
-})
+        const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
+        const options = { multisigAccountPublicKey } as any;
+        expect((await new PublicKeyResolver().resolve(options, undefined, 'test', 'multisigAccountPublicKey')).publicKey).to.be.equal(
+            multisigAccountPublicKey,
+        );
+    });
+});
 
 describe('Cosignatory public key resolver', () => {
-
     it('should return public key', async () => {
-        const cosignatoryPublicKey = '0000000000000000000000000000000000000000000000000000000000000000,' +
-            '0000000000000000000000000000000000000000000000000000000000000001'
-        const options = {cosignatoryPublicKey} as any
-        const resolution = await new CosignatoryPublicKeyResolver().resolve(options)
-        expect(resolution[0].publicKey)
-            .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000')
-        expect(resolution[1].publicKey)
-            .to.be.equal('0000000000000000000000000000000000000000000000000000000000000001')
-    })
+        const cosignatoryPublicKey =
+            '0000000000000000000000000000000000000000000000000000000000000000,' +
+            '0000000000000000000000000000000000000000000000000000000000000001';
+        const options = { cosignatoryPublicKey } as any;
+        const resolution = await new CosignatoryPublicKeyResolver().resolve(options);
+        expect(resolution[0].publicKey).to.be.equal('0000000000000000000000000000000000000000000000000000000000000000');
+        expect(resolution[1].publicKey).to.be.equal('0000000000000000000000000000000000000000000000000000000000000001');
+    });
 
     it('should change key', async () => {
-        const key = '0000000000000000000000000000000000000000000000000000000000000000,' +
-            '0000000000000000000000000000000000000000000000000000000000000001'
-        const options = {key} as any
-        const resolution = await new CosignatoryPublicKeyResolver()
-            .resolve(options,undefined, 'altText', 'key')
-        expect(resolution[0].publicKey)
-            .to.be.equal('0000000000000000000000000000000000000000000000000000000000000000')
-        expect(resolution[1].publicKey)
-            .to.be.equal('0000000000000000000000000000000000000000000000000000000000000001')
-    })
-
-
-})
+        const key =
+            '0000000000000000000000000000000000000000000000000000000000000000,' +
+            '0000000000000000000000000000000000000000000000000000000000000001';
+        const options = { key } as any;
+        const resolution = await new CosignatoryPublicKeyResolver().resolve(options, undefined, 'altText', 'key');
+        expect(resolution[0].publicKey).to.be.equal('0000000000000000000000000000000000000000000000000000000000000000');
+        expect(resolution[1].publicKey).to.be.equal('0000000000000000000000000000000000000000000000000000000000000001');
+    });
+});

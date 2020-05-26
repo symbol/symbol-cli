@@ -14,64 +14,70 @@
  * limitations under the License.
  *
  */
-import {Deadline, SecretProofTransaction} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
 
-import {AddressAliasResolver} from '../../resolvers/address.resolver'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {ProofResolver} from '../../resolvers/proof.resolver'
-import {SecretResolver} from '../../resolvers/secret.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { command, metadata, option } from 'clime';
+import { Deadline, SecretProofTransaction } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { HashAlgorithmResolver } from '../../resolvers/hashAlgorithm.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { ProofResolver } from '../../resolvers/proof.resolver';
+import { SecretResolver } from '../../resolvers/secret.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class SecretProofCommandOptions extends AnnounceTransactionsOptions {
-
     @option({
         description: 'Proof hashed in hexadecimal. ',
         flag: 's',
     })
-    secret: string
+    secret: string;
 
     @option({
         description: 'Original random set of bytes in hexadecimal. ',
         flag: 'p',
     })
-    proof: string
+    proof: string;
 
     @option({
         description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Hash_160, Op_Hash_256). ',
         flag: 'H',
     })
-    hashAlgorithm: string
+    hashAlgorithm: string;
 
     @option({
         description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
     })
-    recipientAddress: string
+    recipientAddress: string;
 }
 
 @command({
     description: 'Announce a secret proof transaction',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: SecretProofCommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const recipientAddress = await new AddressAliasResolver()
-            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked:', 'recipientAddress')
-        const secret = await new SecretResolver().resolve(options)
-        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options)
-        const proof = await new ProofResolver().resolve(options, hashAlgorithm)
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const recipientAddress = await new AddressAliasResolver().resolve(
+            options,
+            undefined,
+            'Enter the address (or @alias) that receives the funds once unlocked:',
+            'recipientAddress',
+        );
+        const secret = await new SecretResolver().resolve(options);
+        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
+        const proof = await new ProofResolver().resolve(options, hashAlgorithm);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
         const transaction = SecretProofTransaction.create(
             Deadline.create(),
@@ -81,15 +87,15 @@ export default class extends AnnounceTransactionsCommand {
             proof,
             profile.networkType,
             maxFee,
-        )
+        );
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

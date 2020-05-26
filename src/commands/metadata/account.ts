@@ -15,48 +15,45 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {Metadata, MetadataEntry, MetadataHttp} from 'symbol-sdk'
+import chalk from 'chalk';
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { Metadata, MetadataEntry, MetadataHttp } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string
+    address: string;
 }
 
 export class MetadataEntryTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
 
     constructor(public readonly entry: MetadataEntry) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Type', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
 
-        this.table.push(
-            ['Sender Public Key', entry.senderPublicKey],
-            ['Target Public Key', entry.targetPublicKey],
-            ['Value', entry.value],
-        )
+        this.table.push(['Sender Public Key', entry.senderPublicKey], ['Target Public Key', entry.targetPublicKey], ['Value', entry.value]);
         if (entry.targetId) {
-            this.table.push(['Target Id', entry.targetId.toHex()])
+            this.table.push(['Target Id', entry.targetId.toHex()]);
         }
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += '\n' + chalk.green('Key:' + this.entry.scopedMetadataKey.toHex()) + '\n';
+        text += this.table.toString();
+        return text;
     }
 }
 
@@ -64,32 +61,32 @@ export class MetadataEntryTable {
     description: 'Fetch metadata entries from an account',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
 
-        this.spinner.start()
-        const metadataHttp = new MetadataHttp(profile.url)
-        metadataHttp.getAccountMetadata(address)
-            .subscribe((metadataEntries) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const metadataHttp = new MetadataHttp(profile.url);
+        metadataHttp.getAccountMetadata(address).subscribe(
+            (metadataEntries) => {
+                this.spinner.stop(true);
                 if (metadataEntries.length > 0) {
-                    metadataEntries
-                        .map((entry: Metadata) => {
-                            console.log(new MetadataEntryTable(entry.metadataEntry).toString())
-                        })
+                    metadataEntries.map((entry: Metadata) => {
+                        console.log(new MetadataEntryTable(entry.metadataEntry).toString());
+                    });
                 } else {
-                    console.log('\n The address does not have metadata entries assigned.')
+                    console.log('\n The address does not have metadata entries assigned.');
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop(true);
+                console.log(HttpErrorHandler.handleError(err));
+            },
+        );
     }
 }

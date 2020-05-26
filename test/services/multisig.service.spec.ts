@@ -15,31 +15,28 @@
  * limitations under the License.
  *
  */
-import {MultisigService} from '../../src/services/multisig.service'
-import {
-  multisigGraphInfo1, multisigGraphInfoPublicAccount1, multisigGraphInfoPublicAccount5,
-} from '../mocks/multisigGraphInfo.mock'
-import {mockPrivateKeyProfile1} from '../mocks/profiles/profile.mock'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { MultisigService } from '../../src/services/multisig.service';
+import { multisigGraphInfo1, multisigGraphInfoPublicAccount1, multisigGraphInfoPublicAccount5 } from '../mocks/multisigGraphInfo.mock';
+import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
 
 describe('Multisig service', () => {
-  it('should create a multisig service', () => {
-    const multisigService = new MultisigService(mockPrivateKeyProfile1)
-    expect(multisigService).to.be.an.instanceOf(MultisigService)
-  })
+    it('should create a multisig service', () => {
+        const multisigService = new MultisigService(mockPrivateKeyProfile1);
+        expect(multisigService).to.be.an.instanceOf(MultisigService);
+    });
 
-  it('should return all addresses from a MultisigGraphInfo', async () => {
-    const multisigService = new MultisigService(mockPrivateKeyProfile1)
-    const expectedAddresses = [
-      multisigGraphInfoPublicAccount1.address,
-      multisigGraphInfoPublicAccount5.address,
-    ]
+    it('should return all addresses from a MultisigGraphInfo', async () => {
+        const multisigService = new MultisigService(mockPrivateKeyProfile1);
+        const expectedAddresses = [multisigGraphInfoPublicAccount1.address, multisigGraphInfoPublicAccount5.address];
 
-    multisigService
-      // @ts-ignore
-      .getAddressesFromGraphInfo(multisigGraphInfo1)
-      .toPromise()
-      .then((results) => expect(results).deep.equal(expectedAddresses))
-      .catch((err) => console.error(err))
-  })
-})
+        multisigService
+            // @ts-ignore
+            .getAddressesFromGraphInfo(multisigGraphInfo1)
+            .toPromise()
+            .then((results) => expect(results).deep.equal(expectedAddresses))
+            .catch((err) => console.error(err));
+    });
+});

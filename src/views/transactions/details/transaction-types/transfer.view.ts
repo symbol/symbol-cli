@@ -16,45 +16,48 @@
  *
  */
 
-import {MosaicsView} from '../../../mosaics.view'
-import {RecipientsView} from '../../../recipients.view'
-import {CellRecord} from '../transaction.view'
-import {TransferTransaction} from 'symbol-sdk'
+import { TransferTransaction } from 'symbol-sdk';
+
+import { MosaicsView } from '../../../mosaics.view';
+import { RecipientsView } from '../../../recipients.view';
+import { CellRecord } from '../transaction.view';
 
 export class TransferView {
-  /**
-   * @static
-   * @param {TransferTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: TransferTransaction): CellRecord {
-    return new TransferView(tx).render()
-  }
-
-  /**
-   * Creates an instance of TransferView.
-   * @param {TransferTransaction} tx
-   */
-  private constructor(private readonly tx: TransferTransaction) {}
-
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private render(): CellRecord {
-    return {
-      Recipient: this.getRecipient(),
-      Message: this.tx.message.payload || 'N/A',
-      ...MosaicsView.get(this.tx.mosaics),
+    /**
+     * @static
+     * @param {TransferTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: TransferTransaction): CellRecord {
+        return new TransferView(tx).render();
     }
-  }
 
-  /**
-   * @private
-   * @returns {string}
-   */
-  private getRecipient(): string {
-    if (!this.tx.recipientAddress) {return '' }
-    return RecipientsView.get(this.tx.recipientAddress)
-  }
+    /**
+     * Creates an instance of TransferView.
+     * @param {TransferTransaction} tx
+     */
+    private constructor(private readonly tx: TransferTransaction) {}
+
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private render(): CellRecord {
+        return {
+            Recipient: this.getRecipient(),
+            Message: this.tx.message.payload || 'N/A',
+            ...MosaicsView.get(this.tx.mosaics),
+        };
+    }
+
+    /**
+     * @private
+     * @returns {string}
+     */
+    private getRecipient(): string {
+        if (!this.tx.recipientAddress) {
+            return '';
+        }
+        return RecipientsView.get(this.tx.recipientAddress);
+    }
 }

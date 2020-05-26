@@ -15,24 +15,24 @@
  * limitations under the License.
  *
  */
-import {ActionType} from '../models/action.enum'
-import {Validator} from './validator'
-import {LinkAction, MosaicSupplyChangeAction} from 'symbol-sdk'
+
+import { LinkAction, MosaicSupplyChangeAction } from 'symbol-sdk';
+
+import { ActionType } from '../models/action.enum';
+import { Validator } from './validator';
 
 /**
  * Action validator
  */
 export class ActionValidator implements Validator<string> {
-
     /**
      * Validates if an action is valid.
      * @param {number} value - Action type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(ActionType)
-            .filter((key) => Number.isNaN(parseFloat(key)))
-        return keys.includes(value) ? true : 'ActionType must be one of (' + keys + ').'
+        const keys = Object.keys(ActionType).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'ActionType must be one of (' + keys + ').';
     }
 }
 
@@ -40,29 +40,25 @@ export class ActionValidator implements Validator<string> {
  * LinkAction validator
  */
 export class LinkActionValidator implements Validator<string> {
-
     /**
      * Validates if a link action is valid.
      * @param {number} value - LinkAction type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(LinkAction)
-            .filter((key) => Number.isNaN(parseFloat(key)))
-        return keys.includes(value) ? true : 'LinkAction must be one of (' + keys + ').'
+        const keys = Object.keys(LinkAction).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'LinkAction must be one of (' + keys + ').';
     }
 }
 
 export class MosaicSupplyChangeActionValidator implements Validator<string> {
-
     /**
      * Validates if a mosaic supply change action is valid.
      * @param {number} value - MosaicSupplyChangeAction type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(MosaicSupplyChangeAction)
-            .filter((key) => Number.isNaN(parseFloat(key)))
-        return keys.includes(value) ? true : 'MosaicSupplyChangeAction must be one of (' + keys + ').'
+        const keys = Object.keys(MosaicSupplyChangeAction).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'MosaicSupplyChangeAction must be one of (' + keys + ').';
     }
 }

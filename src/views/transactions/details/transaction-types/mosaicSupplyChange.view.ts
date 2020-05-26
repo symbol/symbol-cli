@@ -16,21 +16,21 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {MosaicSupplyChangeAction, MosaicSupplyChangeTransaction} from 'symbol-sdk'
+import { MosaicSupplyChangeAction, MosaicSupplyChangeTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class MosaicSupplyChangeView {
-  /**
-   * @static
-   * @param {MosaicSupplyChangeTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MosaicSupplyChangeTransaction): CellRecord {
-    return {
-      'Mosaic Id': tx.mosaicId.toHex(),
-      'Direction': tx.action === MosaicSupplyChangeAction.Increase
-        ? 'Increase supply' : 'Decrease supply',
-      'Delta': tx.delta.compact().toLocaleString(),
+    /**
+     * @static
+     * @param {MosaicSupplyChangeTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MosaicSupplyChangeTransaction): CellRecord {
+        return {
+            'Mosaic Id': tx.mosaicId.toHex(),
+            Direction: tx.action === MosaicSupplyChangeAction.Increase ? 'Increase supply' : 'Decrease supply',
+            Delta: tx.delta.compact().toLocaleString(),
+        };
     }
-  }
 }

@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-import {GenerationHashResolver} from '../../src/resolvers/generationHash.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { GenerationHashResolver } from '../../src/resolvers/generationHash.resolver';
 
 describe('Generation hash resolver', () => {
-
     it('should return generation hash', async () => {
-        const options = {generationHash: '1'} as any
-        expect(await new GenerationHashResolver().resolve(options))
-            .to.be.equal('1')
-    })
-
-})
+        const options = { generationHash: '1' } as any;
+        expect(await new GenerationHashResolver().resolve(options)).to.be.equal('1');
+    });
+});

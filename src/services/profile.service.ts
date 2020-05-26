@@ -15,24 +15,24 @@
  * limitations under the License.
  *
  */
-import {HdProfile} from '../models/hdProfile.model'
-import {PrivateKeyProfile} from '../models/privateKey.profile.model'
-import {Profile} from '../models/profile.model'
-import {ProfileCreation} from '../models/profileCreation.types'
-import {ProfileRepository} from '../respositories/profile.repository'
+import { HdProfile } from '../models/hdProfile.model';
+import { PrivateKeyProfile } from '../models/privateKeyProfile.model';
+import { Profile } from '../models/profile.model';
+import { ProfileCreation } from '../models/profileCreation.types';
+import { ProfileRepository } from '../respositories/profile.repository';
 
 /**
  * Profile service
  */
 export class ProfileService {
-    private readonly profileRepository: ProfileRepository
+    private readonly profileRepository: ProfileRepository;
 
     /**
      * Constructor
      * @param {ProfileRepository} profileRepository
      */
     constructor(profileRepository: ProfileRepository) {
-        this.profileRepository = profileRepository
+        this.profileRepository = profileRepository;
     }
 
     /**
@@ -41,7 +41,7 @@ export class ProfileService {
      * @returns {Profile}
      */
     findProfileNamed(name: string): Profile {
-        return this.profileRepository.find(name)
+        return this.profileRepository.find(name);
     }
 
     /**
@@ -49,7 +49,7 @@ export class ProfileService {
      * @returns {Profile[]}
      */
     findAllProfiles(): Profile[] {
-        return this.profileRepository.all()
+        return this.profileRepository.all();
     }
 
     /**
@@ -57,7 +57,7 @@ export class ProfileService {
      * @param {string} name - Profile name.
      */
     setDefaultProfile(name: string) {
-        this.profileRepository.setDefault(name)
+        this.profileRepository.setDefault(name);
     }
 
     /**
@@ -65,7 +65,7 @@ export class ProfileService {
      * @returns {Profile}
      */
     getDefaultProfile(): Profile {
-        return this.profileRepository.getDefaultProfile()
+        return this.profileRepository.getDefaultProfile();
     }
 
     /**
@@ -74,11 +74,9 @@ export class ProfileService {
      * @returns {Profile}
      */
     public createNewProfile(args: ProfileCreation): Profile {
-        const profile = 'mnemonic' in args
-            ? HdProfile.create(args)
-            : PrivateKeyProfile.create(args)
+        const profile = 'mnemonic' in args ? HdProfile.create(args) : PrivateKeyProfile.create(args);
 
-        this.profileRepository.save(profile)
-        return profile
+        this.profileRepository.save(profile);
+        return profile;
     }
 }

@@ -16,69 +16,68 @@
  *
  */
 
-import {ResolutionType, ResolutionStatement, ResolutionEntry, Address, MosaicId, NamespaceId} from 'symbol-sdk'
-import {AbstractStatementView} from './abstractStatementView.view'
-import {CellRecord} from '../transactions/details/transaction.view'
-import {RecipientsView} from '../recipients.view'
+import { Address, MosaicId, NamespaceId, ResolutionEntry, ResolutionStatement, ResolutionType } from 'symbol-sdk';
+
+import { RecipientsView } from '../recipients.view';
+import { CellRecord } from '../transactions/details/transaction.view';
+import { AbstractStatementView } from './abstractStatementView.view';
 
 export class ResolutionStatementViews extends AbstractStatementView {
- constructor(private readonly statements: ResolutionStatement[]) {super()}
+    constructor(private readonly statements: ResolutionStatement[]) {
+        super();
+    }
 
- /**
-  * Renders cell records
-  * @returns {CellRecord[]}
-  */
- public render(): CellRecord[][] | null {
-  if (!this.statements.length) {return null}
+    /**
+     * Renders cell records
+     * @returns {CellRecord[]}
+     */
+    public render(): CellRecord[][] | null {
+        if (!this.statements.length) {
+            return null;
+        }
 
-  const statementTypeLabel = ResolutionType[this.statements[0].resolutionType]
+        const statementTypeLabel = ResolutionType[this.statements[0].resolutionType];
 
-  return this.statements.map(({
-    height,
-    unresolved,
-    resolutionEntries,
-   }, index, self) => ([
-    this.getSectionTitle(`${statementTypeLabel} statement ${index + 1} of ${self.length}`),
-    {Height: height.compact()},
-    {Unresolved: this.getUnresolved(unresolved)},
-    ...this.renderResolutionEntries(resolutionEntries),
-   ]))
- }
+        return this.statements.map(({ height, unresolved, resolutionEntries }, index, self) => [
+            this.getSectionTitle(`${statementTypeLabel} statement ${index + 1} of ${self.length}`),
+            { Height: height.compact() },
+            { Unresolved: this.getUnresolved(unresolved) },
+            ...this.renderResolutionEntries(resolutionEntries),
+        ]);
+    }
 
- /**
-  * Renders resolution entries
-  * @private
-  * @param {ResolutionEntry[]} entries
-  * @returns {CellRecord[]}
-  */
- private renderResolutionEntries(entries: ResolutionEntry[]): CellRecord[] {
-  return entries
-   .map((entry, index, self) => this.renderResolutionEntry(entry, index, self.length))
-   .reduce((acc, entry) => ([...acc, ...entry]), [])
- }
+    /**
+     * Renders resolution entries
+     * @private
+     * @param {ResolutionEntry[]} entries
+     * @returns {CellRecord[]}
+     */
+    private renderResolutionEntries(entries: ResolutionEntry[]): CellRecord[] {
+        return entries
+            .map((entry, index, self) => this.renderResolutionEntry(entry, index, self.length))
+            .reduce((acc, entry) => [...acc, ...entry], []);
+    }
 
- /**
-  * Renders resolution a entry
-  * @private
-  * @param {ResolutionEntry} entry
-  * @param {number} index
-  * @param {number} numberOfReceipts
-  * @returns {CellRecord[]}
-  */
- private renderResolutionEntry(
-  entry: ResolutionEntry,
-  index: number,
-  numberOfReceipts: number,
- ): CellRecord[] {
-  return [
-   this.getSectionTitle(`Resolution ${index + 1} of ${numberOfReceipts}`),
-   {Resolved: this.getUnresolved(entry.resolved)},
-   {Source: `Primary Id: ${entry.source.primaryId}, Secondary Id: ${entry.source.secondaryId}`},
-  ]
- }
+    /**
+     * Renders resolution a entry
+     * @private
+     * @param {ResolutionEntry} entry
+     * @param {number} index
+     * @param {number} numberOfReceipts
+     * @returns {CellRecord[]}
+     */
+    private renderResolutionEntry(entry: ResolutionEntry, index: number, numberOfReceipts: number): CellRecord[] {
+        return [
+            this.getSectionTitle(`Resolution ${index + 1} of ${numberOfReceipts}`),
+            { Resolved: this.getUnresolved(entry.resolved) },
+            { Source: `Primary Id: ${entry.source.primaryId}, Secondary Id: ${entry.source.secondaryId}` },
+        ];
+    }
 
- private getUnresolved(entry: Address | MosaicId | NamespaceId): string {
-  if (entry instanceof MosaicId) {return entry.toHex()}
-  return RecipientsView.get(entry)
- }
+    private getUnresolved(entry: Address | MosaicId | NamespaceId): string {
+        if (entry instanceof MosaicId) {
+            return entry.toHex();
+        }
+        return RecipientsView.get(entry);
+    }
 }

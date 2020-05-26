@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {UInt64} from 'symbol-sdk'
+import { UInt64 } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Numeric string
  */
 export class NumericStringValidator implements Validator<string> {
-
     /**
      * Validates if a string is composed by numbers.
      * @param {string} value - Numeric string.
@@ -30,10 +30,10 @@ export class NumericStringValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            UInt64.fromNumericString(value)
+            UInt64.fromNumericString(value);
         } catch (err) {
-            return 'Enter an integer number'
+            return 'Enter an integer number';
         }
-        return true
+        return true;
     }
 }

@@ -16,19 +16,18 @@
  *
  */
 
-import {Validator} from './validator'
+import { Validator } from './validator';
 
 /**
  * Binary validator
  */
 export class BinaryValidator implements Validator<number> {
-
     /**
      * Validates if value is 0 or 1.
      * @param {number} value
      * @returns {true | string}
      */
     validate(value: number): boolean | string {
-        return (value !== 0 && value !== 1) ? 'The value must be 0 or 1' : true
+        return value !== 0 && value !== 1 ? 'The value must be 0 or 1' : true;
     }
 }

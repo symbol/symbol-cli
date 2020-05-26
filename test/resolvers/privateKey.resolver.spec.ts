@@ -15,25 +15,20 @@
  * limitations under the License.
  *
  */
-import {PrivateKeyResolver} from '../../src/resolvers/privateKey.resolver'
-import {expect} from 'chai'
+import { expect } from 'chai';
+
+import { PrivateKeyResolver } from '../../src/resolvers/privateKey.resolver';
 
 describe('Private key resolver', () => {
-
     it('should return private key', async () => {
-        const privateKey = '0'.repeat(64)
-        const options = {privateKey} as any
-        expect(await new PrivateKeyResolver().resolve(options))
-            .to.be.equal(privateKey)
-    })
+        const privateKey = '0'.repeat(64);
+        const options = { privateKey } as any;
+        expect(await new PrivateKeyResolver().resolve(options)).to.be.equal(privateKey);
+    });
 
     it('should change key', async () => {
-        const key = '0'.repeat(64)
-        const options = {key} as any
-        expect(await new PrivateKeyResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(key)
-    })
-
-
-})
+        const key = '0'.repeat(64);
+        const options = { key } as any;
+        expect(await new PrivateKeyResolver().resolve(options, 'altText', 'key')).to.be.equal(key);
+    });
+});

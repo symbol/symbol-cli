@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {TransactionURI} from 'symbol-uri-scheme'
+
+import { TransactionURI } from 'symbol-uri-scheme';
+
+import { Validator } from './validator';
 
 /**
  * TransactionURI validator
  */
 export class TransactionURIValidator implements Validator<string> {
-
     /*
      * Validates a transaction URI.
      * @param {string} value - Transaction URI.
@@ -30,11 +31,13 @@ export class TransactionURIValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            TransactionURI.fromURI(value)
+            TransactionURI.fromURI(value);
         } catch {
-            return 'Transaction URI format is not valid. ' +
+            return (
+                'Transaction URI format is not valid. ' +
                 'Example: web+symbol://transaction?data=:data&generationHash=:generationHash&nodeUrl=:nodeUrl&webhookUrl=:webhookUrl'
+            );
         }
-        return true
+        return true;
     }
 }

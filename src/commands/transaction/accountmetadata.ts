@@ -15,71 +15,78 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import { Deadline, MetadataHttp, MetadataTransactionService, MetadataType } from 'symbol-sdk'
 
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {KeyResolver} from '../../resolvers/key.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {StringResolver} from '../../resolvers/string.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { command, metadata, option } from 'clime';
+import { Deadline, MetadataHttp, MetadataTransactionService, MetadataType } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { KeyResolver } from '../../resolvers/key.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
+import { StringResolver } from '../../resolvers/string.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 't',
         description: 'Metadata target public key.',
     })
-    targetPublicKey: string
+    targetPublicKey: string;
 
     @option({
         flag: 'k',
         description: 'Metadata key (UInt64) in hexadecimal format.',
     })
-    key: string
+    key: string;
 
     @option({
         flag: 'v',
         description: 'Metadata value.',
     })
-    value: string
+    value: string;
 }
 
 @command({
     description: 'Add custom data to an account (requires internet)',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const targetAccount = await new PublicKeyResolver()
-            .resolve(options, profile.networkType,
-                'Enter the target account public key:', 'targetPublicKey')
-        const key = await new KeyResolver().resolve(options)
-        const value = await new StringResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const targetAccount = await new PublicKeyResolver().resolve(
+            options,
+            profile.networkType,
+            'Enter the target account public key:',
+            'targetPublicKey',
+        );
+        const key = await new KeyResolver().resolve(options);
+        const value = await new StringResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const metadataHttp = new MetadataHttp(profile.url)
-        const metadataTransactionService = new MetadataTransactionService(metadataHttp)
+        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataTransactionService = new MetadataTransactionService(metadataHttp);
         const metadataTransaction = await metadataTransactionService
             .createMetadataTransaction(
-            Deadline.create(),
-            account.networkType,
-            MetadataType.Account,
-            targetAccount,
-            key,
-            value,
-            account.publicAccount,
-            undefined,
-            maxFee,
-        ).toPromise()
+                Deadline.create(),
+                account.networkType,
+                MetadataType.Account,
+                targetAccount,
+                key,
+                value,
+                account.publicAccount,
+                undefined,
+                maxFee,
+            )
+            .toPromise();
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
@@ -88,9 +95,9 @@ export default class extends AnnounceTransactionsCommand {
             signerMultisigInfo,
             isAggregate: targetAccount.publicKey === account.publicKey,
             isAggregateBonded: targetAccount.publicKey !== account.publicKey,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

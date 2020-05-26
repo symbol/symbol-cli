@@ -17,96 +17,66 @@
  */
 
 import {
- ResolutionStatement,
- ResolutionType,
- UInt64,
- ResolutionEntry,
- ReceiptSource,
- ReceiptType,
- BalanceChangeReceipt,
- BalanceTransferReceipt,
- ArtifactExpiryReceipt,
- TransactionStatement,
- Statement,
- InflationReceipt,
-} from 'symbol-sdk'
-import {mosaicId1, mosaicId2, mosaicId3} from './mosaics.mock'
-import {account1, account2} from './accounts.mock'
-import {namespaceId1} from './namespaces.mock'
+    ArtifactExpiryReceipt,
+    BalanceChangeReceipt,
+    BalanceTransferReceipt,
+    InflationReceipt,
+    ReceiptSource,
+    ReceiptType,
+    ResolutionEntry,
+    ResolutionStatement,
+    ResolutionType,
+    Statement,
+    TransactionStatement,
+    UInt64,
+} from 'symbol-sdk';
 
-export const mosaicResolutionStatement = new ResolutionStatement(
- ResolutionType.Mosaic,
- UInt64.fromNumericString('1'),
- mosaicId1,
- [
-  new ResolutionEntry(
-   mosaicId2,
-   new ReceiptSource(1, 0)
-  ),
-  new ResolutionEntry(
-   mosaicId3,
-   new ReceiptSource(3, 5)
-  ),
- ]
-)
+import { account1, account2 } from './accounts.mock';
+import { mosaicId1, mosaicId2, mosaicId3 } from './mosaics.mock';
+import { namespaceId1 } from './namespaces.mock';
 
-export const addressResolutionStatement = new ResolutionStatement(
- ResolutionType.Address,
- UInt64.fromNumericString('2'),
- account1.address,
- [
-  new ResolutionEntry(
-   mosaicId2,
-   new ReceiptSource(5, 0)
-  ),
- ]
-)
+export const mosaicResolutionStatement = new ResolutionStatement(ResolutionType.Mosaic, UInt64.fromNumericString('1'), mosaicId1, [
+    new ResolutionEntry(mosaicId2, new ReceiptSource(1, 0)),
+    new ResolutionEntry(mosaicId3, new ReceiptSource(3, 5)),
+]);
+
+export const addressResolutionStatement = new ResolutionStatement(ResolutionType.Address, UInt64.fromNumericString('2'), account1.address, [
+    new ResolutionEntry(mosaicId2, new ReceiptSource(5, 0)),
+]);
 
 export const balanceChangeReceipt = new BalanceChangeReceipt(
- account1.publicAccount,
- mosaicId1,
- UInt64.fromNumericString('10'),
- 1,
- ReceiptType.Harvest_Fee,
-)
+    account1.publicAccount,
+    mosaicId1,
+    UInt64.fromNumericString('10'),
+    1,
+    ReceiptType.Harvest_Fee,
+);
 
 export const balanceTransferReceipt = new BalanceTransferReceipt(
- account1.publicAccount,
- account2.address,
- mosaicId1,
- UInt64.fromNumericString('2'),
- 1,
- ReceiptType.Transaction_Group,
-)
+    account1.publicAccount,
+    account2.address,
+    mosaicId1,
+    UInt64.fromNumericString('2'),
+    1,
+    ReceiptType.Transaction_Group,
+);
 
-export const artifactExpiryReceipt = new ArtifactExpiryReceipt(
- namespaceId1,
- 1,
- ReceiptType.Namespace_Expired
-)
+export const artifactExpiryReceipt = new ArtifactExpiryReceipt(namespaceId1, 1, ReceiptType.Namespace_Expired);
 
-export const inflationReceipt = new InflationReceipt(
- mosaicId1,
- UInt64.fromNumericString('100'),
- 1,
- ReceiptType.Inflation,
- 100,
-)
+export const inflationReceipt = new InflationReceipt(mosaicId1, UInt64.fromNumericString('100'), 1, ReceiptType.Inflation, 100);
 
-export const transactionStatement1 = new TransactionStatement(
- UInt64.fromNumericString('1'),
- new ReceiptSource(1, 2),
- [balanceChangeReceipt, balanceTransferReceipt]
-)
+export const transactionStatement1 = new TransactionStatement(UInt64.fromNumericString('1'), new ReceiptSource(1, 2), [
+    balanceChangeReceipt,
+    balanceTransferReceipt,
+]);
 
-export const transactionStatement2 = new TransactionStatement(
- UInt64.fromNumericString('2'),
- new ReceiptSource(3, 4),
- [artifactExpiryReceipt, inflationReceipt]
-)
+export const transactionStatement2 = new TransactionStatement(UInt64.fromNumericString('2'), new ReceiptSource(3, 4), [
+    artifactExpiryReceipt,
+    inflationReceipt,
+]);
 
 export const statement = new Statement(
- [transactionStatement1, transactionStatement2],
- [addressResolutionStatement],
- [mosaicResolutionStatement],
-)
+    [transactionStatement1, transactionStatement2],
+    [addressResolutionStatement],
+    [mosaicResolutionStatement],
+);

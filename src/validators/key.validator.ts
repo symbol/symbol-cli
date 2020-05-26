@@ -15,8 +15,8 @@
  * limitations under the License.
  *
  */
-import {Validator} from 'clime'
-import {UInt64} from 'symbol-sdk'
+import { Validator } from 'clime';
+import { UInt64 } from 'symbol-sdk';
 
 /**
  * Key validator
@@ -29,10 +29,10 @@ export class KeyValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            UInt64.fromHex(value)
+            UInt64.fromHex(value);
         } catch (err) {
-            return 'Invalid key'
+            return 'Invalid key';
         }
-        return true
+        return true;
     }
 }

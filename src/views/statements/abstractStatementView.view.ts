@@ -16,22 +16,22 @@
  *
  */
 
-import {CellRecord} from '../transactions/details/transaction.view'
+import { CellRecord } from '../transactions/details/transaction.view';
 
 export abstract class AbstractStatementView {
- /**
- * Renders a section header
- * @private
- * @param {string} sectionName
- * @returns {CellRecord}
- */
- protected getSectionTitle(sectionName: string): CellRecord {
-  return {
-   title: {content: sectionName, colSpan: 2, hAlign: 'left'},
-  }
- }
+    /**
+     * Renders a section header
+     * @private
+     * @param {string} sectionName
+     * @returns {CellRecord}
+     */
+    protected getSectionTitle(sectionName: string): CellRecord {
+        return {
+            title: { content: sectionName, colSpan: 2, hAlign: 'left' },
+        };
+    }
 
- public render() {
-  throw new Error('The render class must be overriden by implementation classes')
- }
+    public render() {
+        throw new Error('The render class must be overriden by implementation classes');
+    }
 }

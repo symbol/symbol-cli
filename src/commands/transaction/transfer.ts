@@ -15,104 +15,106 @@
  * limitations under the License.
  *
  */
-import {Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
 
-import {AddressAliasResolver} from '../../resolvers/address.resolver'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MessageResolver} from '../../resolvers/message.resolver'
-import {MosaicsResolver} from '../../resolvers/mosaic.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { command, metadata, option } from 'clime';
+import { Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { MessageResolver } from '../../resolvers/message.resolver';
+import { MosaicsResolver } from '../../resolvers/mosaic.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Recipient address or @alias.',
     })
-    recipientAddress: string
+    recipientAddress: string;
 
     @option({
         flag: 'm',
         description: 'Transaction message.',
     })
-    message: string
+    message: string;
 
     @option({
         flag: 'e',
-        description: '(Optional) Send an encrypted message. ' +
-            'If you set this value, you should set the value of \'recipientPublicKey\' as well).',
+        description:
+            '(Optional) Send an encrypted message. ' + "If you set this value, you should set the value of 'recipientPublicKey' as well).",
         toggle: true,
     })
-    encrypted: any
+    encrypted: any;
 
     @option({
         flag: 'c',
         description: 'Mosaic to transfer in the format (mosaicId(hex)|@aliasName)::absoluteAmount. Add multiple mosaics with commas.',
     })
-    mosaics: string
+    mosaics: string;
 
     @option({
         flag: 'u',
         description: '(Optional) Recipient public key in an encrypted message.',
     })
-    recipientPublicKey: string
+    recipientPublicKey: string;
 }
 
 @command({
     description: 'Send transfer transaction',
 })
-
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const mosaics = await new MosaicsResolver().resolve(options)
-        let recipientAddress: Address | NamespaceId
-        let message = EmptyMessage
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const mosaics = await new MosaicsResolver().resolve(options);
+        let recipientAddress: Address | NamespaceId;
+        let message = EmptyMessage;
         if (options.encrypted) {
-            const recipientPublicAccount = await new PublicKeyResolver()
-                .resolve(options, profile.networkType,
-                    'Enter the recipient public key:', 'recipientPublicKey')
-            recipientAddress = recipientPublicAccount.address
-            const rawMessage = await new MessageResolver().resolve(options)
-            message = account.encryptMessage(rawMessage, recipientPublicAccount)
+            const recipientPublicAccount = await new PublicKeyResolver().resolve(
+                options,
+                profile.networkType,
+                'Enter the recipient public key:',
+                'recipientPublicKey',
+            );
+            recipientAddress = recipientPublicAccount.address;
+            const rawMessage = await new MessageResolver().resolve(options);
+            message = account.encryptMessage(rawMessage, recipientPublicAccount);
         } else {
-            recipientAddress =  await new AddressAliasResolver()
-                .resolve(options, undefined, 'Enter the recipient address or @alias:', 'recipientAddress')
-            const rawMessage = await new MessageResolver().resolve(options)
+            recipientAddress = await new AddressAliasResolver().resolve(
+                options,
+                undefined,
+                'Enter the recipient address or @alias:',
+                'recipientAddress',
+            );
+            const rawMessage = await new MessageResolver().resolve(options);
             if (rawMessage) {
-                message = PlainMessage.create(rawMessage)
+                message = PlainMessage.create(rawMessage);
             }
         }
 
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const transaction = TransferTransaction.create(
-            Deadline.create(),
-            recipientAddress,
-            mosaics,
-            message,
-            profile.networkType,
-            maxFee,
-        )
+        const transaction = TransferTransaction.create(Deadline.create(), recipientAddress, mosaics, message, profile.networkType, maxFee);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

@@ -15,24 +15,21 @@
  * limitations under the License.
  *
  */
-import {HashResolver} from '../../src/resolvers/hash.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { HashResolver } from '../../src/resolvers/hash.resolver';
 
 describe('Hash resolver', () => {
+    it('should return hash', async () => {
+        const hash = '0000000000000000000000000000000000000000000000000000000000000000';
+        const options = { hash } as any;
+        expect(await new HashResolver().resolve(options)).to.be.equal(hash);
+    });
 
     it('should return hash', async () => {
-        const hash = '0000000000000000000000000000000000000000000000000000000000000000'
-        const options = {hash} as any
-        expect(await new HashResolver().resolve(options))
-            .to.be.equal(hash)
-    })
-
-    it('should return hash', async () => {
-        const key = '0000000000000000000000000000000000000000000000000000000000000000'
-        const options = {key} as any
-        expect(await new HashResolver()
-            .resolve(options, 'altText', 'key'))
-            .to.be.equal(key)
-    })
-
-})
+        const key = '0000000000000000000000000000000000000000000000000000000000000000';
+        const options = { key } as any;
+        expect(await new HashResolver().resolve(options, 'altText', 'key')).to.be.equal(key);
+    });
+});

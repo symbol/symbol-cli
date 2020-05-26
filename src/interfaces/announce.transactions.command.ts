@@ -15,23 +15,26 @@
  * limitations under the License.
  *
  */
-import {ExpectedError} from 'clime'
-import {MultisigAccountInfo, SignedTransaction} from 'symbol-sdk'
 
-import {AnnounceTransactionsOptions} from './announceTransactions.options'
-import {MultisigService} from '../services/multisig.service'
-import {Profile} from '../models/profile.model'
-import {ProfileCommand} from './profile.command'
-import {PublicKeyChoiceResolver} from '../resolvers/publicKey.resolver'
-import {TransactionAnnounceModeResolver, TransactionAnnounceMode} from '../resolvers/transactionAnnounceMode.resolver'
-import {TransactionAnnounceService} from '../services/transaction.announce.service'
-import {TransactionSignatureOptions, TransactionSignatureService} from '../services/transaction.signature.service'
+import { ExpectedError } from 'clime';
+import { MultisigAccountInfo, SignedTransaction } from 'symbol-sdk';
+
+import { Profile } from '../models/profile.model';
+import { PublicKeyChoiceResolver } from '../resolvers/publicKey.resolver';
+import { TransactionAnnounceMode, TransactionAnnounceModeResolver } from '../resolvers/transactionAnnounceMode.resolver';
+import { MultisigService } from '../services/multisig.service';
+import { TransactionAnnounceService } from '../services/transaction.announce.service';
+import { TransactionSignatureOptions, TransactionSignatureService } from '../services/transaction.signature.service';
+import { AnnounceTransactionsOptions } from './announceTransactions.options';
+import { ProfileCommand } from './profile.command';
 
 /**
  * Base command class to announce transactions.
  */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
-    protected constructor() {super()}
+    protected constructor() {
+        super();
+    }
 
     /**
      * Gets the signer multisig info if the transaction is multisig
@@ -40,64 +43,56 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @returns {(Promise<MultisigAccountInfo | null>)}
      */
     protected async getSignerMultisigInfo(options: AnnounceTransactionsOptions): Promise<MultisigAccountInfo | null> {
-        const transactionAnnounceMode = await new TransactionAnnounceModeResolver().resolve(options)
+        const transactionAnnounceMode = await new TransactionAnnounceModeResolver().resolve(options);
 
-        if (transactionAnnounceMode === TransactionAnnounceMode.normal) {return null}
+        if (transactionAnnounceMode === TransactionAnnounceMode.normal) {
+            return null;
+        }
 
         // Get the profile's multisig accounts multisig account info
-        const profile: Profile = this.getProfile(options)
-        const childMultisigAccountsInfo = await new MultisigService(profile).getChildrenMultisigAccountInfo()
+        const profile: Profile = this.getProfile(options);
+        const childMultisigAccountsInfo = await new MultisigService(profile).getChildrenMultisigAccountInfo();
 
         if (!childMultisigAccountsInfo) {
-            throw new ExpectedError('The selected profile does not have multisig accounts')
+            throw new ExpectedError('The selected profile does not have multisig accounts');
         }
 
         // A signer public key was provided as an option,
         if (options.signer) {
-            const multisigInfo = childMultisigAccountsInfo.find(
-                ({account}) => account.publicKey === options.signer,
-            )
+            const multisigInfo = childMultisigAccountsInfo.find(({ account }) => account.publicKey === options.signer);
 
             if (!multisigInfo) {
                 throw new ExpectedError(`
                     ${options.signer} is not a multisig account of the profile ${profile.name}
-                `)
+                `);
             }
 
-            return multisigInfo
+            return multisigInfo;
         }
 
-        const availablePublicKeys = childMultisigAccountsInfo.map(
-            ({account}) => account.publicKey,
-        )
+        const availablePublicKeys = childMultisigAccountsInfo.map(({ account }) => account.publicKey);
 
-        const chosenSigner = await new PublicKeyChoiceResolver()
-            .resolve(availablePublicKeys)
+        const chosenSigner = await new PublicKeyChoiceResolver().resolve(availablePublicKeys);
 
-        const chosenSignerMultisigInfo = childMultisigAccountsInfo.find(
-            ({account}) => account.publicKey === chosenSigner,
-        )
+        const chosenSignerMultisigInfo = childMultisigAccountsInfo.find(({ account }) => account.publicKey === chosenSigner);
 
         if (!chosenSignerMultisigInfo) {
-            throw new ExpectedError('Something went wrong when selecting a signer')
+            throw new ExpectedError('Something went wrong when selecting a signer');
         }
 
-        return chosenSignerMultisigInfo
+        return chosenSignerMultisigInfo;
     }
 
     protected async signTransactions(
         signatureOptions: TransactionSignatureOptions,
         options: AnnounceTransactionsOptions,
     ): Promise<SignedTransaction[]> {
-        const profile = this.getProfile(options)
-        return TransactionSignatureService.create(profile, options).signTransactions(signatureOptions)
+        const profile = this.getProfile(options);
+        return TransactionSignatureService.create(profile, options).signTransactions(signatureOptions);
     }
 
-    protected async announceTransactions(
-        options: AnnounceTransactionsOptions,
-        signedTransactions: SignedTransaction[],
-    ): Promise<void> {
-        const profile = this.getProfile(options)
-        TransactionAnnounceService.create(profile, options).announce(signedTransactions)
+    protected async announceTransactions(options: AnnounceTransactionsOptions, signedTransactions: SignedTransaction[]): Promise<void> {
+        const profile = this.getProfile(options);
+        TransactionAnnounceService.create(profile, options).announce(signedTransactions);
     }
 }

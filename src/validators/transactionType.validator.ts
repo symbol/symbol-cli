@@ -15,8 +15,10 @@
  * limitations under the License.
  *
  */
-import {TransactionType} from 'symbol-sdk'
-import {Validator} from './validator'
+
+import { TransactionType } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Transaction type validator
@@ -30,11 +32,15 @@ export class TransactionTypeValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            if (typeof value !== 'string') {throw new Error()}
-            if (value.trim().toUpperCase() in TransactionType) {return true}
-            throw new Error()
+            if (typeof value !== 'string') {
+                throw new Error();
+            }
+            if (value.trim().toUpperCase() in TransactionType) {
+                return true;
+            }
+            throw new Error();
         } catch (err) {
-            return 'The provided transaction type is invalid'
+            return 'The provided transaction type is invalid';
         }
     }
 }

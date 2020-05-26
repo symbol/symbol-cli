@@ -16,15 +16,16 @@
  *
  */
 
-import {mosaicId1} from '../mosaics.mock'
-import {Deadline, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce, NetworkType, UInt64} from 'symbol-sdk'
+import { Deadline, MosaicDefinitionTransaction, MosaicFlags, MosaicNonce, NetworkType, UInt64 } from 'symbol-sdk';
+
+import { mosaicId1 } from '../mosaics.mock';
 
 export const unsignedMosaicDefinition1 = MosaicDefinitionTransaction.create(
- Deadline.create(),
- new MosaicNonce(new Uint8Array([0xE6, 0xDE, 0x84, 0xB8])), // nonce
- mosaicId1, // ID
- MosaicFlags.create(true, true, true),
- 3,
- UInt64.fromUint(1000),
- NetworkType.MIJIN_TEST,
-)
+    Deadline.create(),
+    new MosaicNonce(new Uint8Array([0xe6, 0xde, 0x84, 0xb8])), // nonce
+    mosaicId1, // ID
+    MosaicFlags.create(true, true, true),
+    3,
+    UInt64.fromUint(1000),
+    NetworkType.MIJIN_TEST,
+);

@@ -15,66 +15,61 @@
  * limitations under the License.
  *
  */
-import {command, metadata, option} from 'clime'
-import {AccountLinkTransaction, Deadline} from 'symbol-sdk'
+import { command, metadata, option } from 'clime';
+import { AccountKeyLinkTransaction, Deadline } from 'symbol-sdk';
 
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {LinkActionResolver} from '../../resolvers/action.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { LinkActionResolver } from '../../resolvers/action.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: 'Remote account public key.',
     })
-    publicKey: string
+    publicKey: string;
 
     @option({
         flag: 'a',
         description: 'Alias action (Link, Unlink).',
     })
-    action: string
+    action: string;
 }
 
 @command({
     description: 'Delegate the account importance to a proxy account',
 })
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const publicKey = (await new PublicKeyResolver().resolve(
-            options,
-            profile.networkType,
-            'Enter the public key of the remote account: ')).publicKey
-        const action = await new LinkActionResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const publicKey = (
+            await new PublicKeyResolver().resolve(options, profile.networkType, 'Enter the public key of the remote account: ')
+        ).publicKey;
+        const action = await new LinkActionResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const transaction = AccountLinkTransaction.create(
-            Deadline.create(),
-            publicKey,
-            action,
-            profile.networkType,
-            maxFee,
-        )
+        const transaction = AccountKeyLinkTransaction.create(Deadline.create(), publicKey, action, profile.networkType, maxFee);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

@@ -16,18 +16,19 @@
  *
  */
 
-import {account1} from '../accounts.mock'
-import {sha3_256} from 'js-sha3'
-import {Convert, Deadline, LockHashAlgorithm, NetworkType, SecretProofTransaction, UInt64} from 'symbol-sdk'
+import { sha3_256 } from 'js-sha3';
+import { Convert, Deadline, LockHashAlgorithm, NetworkType, SecretProofTransaction, UInt64 } from 'symbol-sdk';
 
-const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7'
+import { account1 } from '../accounts.mock';
+
+const proof = 'B778A39A3663719DFC5E48C9D78431B1E45C2AF9DF538782BF199C189DABEAC7';
 
 export const unsignedSecretProof1 = SecretProofTransaction.create(
- Deadline.create(),
- LockHashAlgorithm.Op_Sha3_256,
- sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
- account1.address,
- proof,
- NetworkType.MIJIN_TEST,
- new UInt64([1, 0]),
-)
+    Deadline.create(),
+    LockHashAlgorithm.Op_Sha3_256,
+    sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
+    account1.address,
+    proof,
+    NetworkType.MIJIN_TEST,
+    new UInt64([1, 0]),
+);

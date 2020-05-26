@@ -16,24 +16,25 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {MosaicGlobalRestrictionTransaction, MosaicRestrictionType} from 'symbol-sdk'
+import { MosaicGlobalRestrictionTransaction, MosaicRestrictionType } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class MosaicGlobalRestrictionView {
-  /**
-   * @static
-   * @param {MosaicGlobalRestrictionTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MosaicGlobalRestrictionTransaction): CellRecord {
-    return {
-      'Mosaic Id': tx.mosaicId.toHex(),
-      'Reference mosaic Id': tx.referenceMosaicId.toHex(),
-      'Restriction key': tx.restrictionKey.toHex(),
-      'Previous restriction value': tx.previousRestrictionValue.toString(),
-      'Previous restriction type': MosaicRestrictionType[tx.previousRestrictionType],
-      'New restriction value': tx.newRestrictionValue.toString(),
-      'New restriction type': MosaicRestrictionType[tx.newRestrictionType],
+    /**
+     * @static
+     * @param {MosaicGlobalRestrictionTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MosaicGlobalRestrictionTransaction): CellRecord {
+        return {
+            'Mosaic Id': tx.mosaicId.toHex(),
+            'Reference mosaic Id': tx.referenceMosaicId.toHex(),
+            'Restriction key': tx.restrictionKey.toHex(),
+            'Previous restriction value': tx.previousRestrictionValue.toString(),
+            'Previous restriction type': MosaicRestrictionType[tx.previousRestrictionType],
+            'New restriction value': tx.newRestrictionValue.toString(),
+            'New restriction type': MosaicRestrictionType[tx.newRestrictionType],
+        };
     }
-  }
 }

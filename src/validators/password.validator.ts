@@ -15,25 +15,25 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {Password} from 'symbol-sdk'
+import { Password } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Password validator
  */
 export class PasswordValidator implements Validator<string> {
-
-     /**
-      * Validates if a password has at least 8 chars.
-      * @param {string} value - Password.
-      * @returns {true | string}
-      */
-     validate(value: string): boolean | string {
+    /**
+     * Validates if a password has at least 8 chars.
+     * @param {string} value - Password.
+     * @returns {true | string}
+     */
+    validate(value: string): boolean | string {
         try {
-             const ignored = new Password(value)
-         } catch (error) {
-              return 'Password should have a minimum of 8 characters'
-         }
-         return true
-     }
+            const ignored = new Password(value);
+        } catch (error) {
+            return 'Password should have a minimum of 8 characters';
+        }
+        return true;
+    }
 }

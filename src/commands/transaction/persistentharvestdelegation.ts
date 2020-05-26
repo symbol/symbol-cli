@@ -15,54 +15,62 @@
  * limitations under the License.
  *
  */
-import {Deadline, PersistentHarvestingDelegationMessage, TransferTransaction} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import { command, metadata, option } from 'clime';
+import { Deadline, PersistentHarvestingDelegationMessage, TransferTransaction } from 'symbol-sdk';
 
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {PrivateKeyResolver} from '../../resolvers/privateKey.resolver'
-import {PublicKeyResolver} from '../../resolvers/publicKey.resolver'
-import {TransactionSignatureOptions} from '../../services/transaction.signature.service'
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PrivateKeyResolver } from '../../resolvers/privateKey.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'r',
         description: 'Private key of the remote account.',
     })
-    remotePrivateKey: string
+    remotePrivateKey: string;
 
     @option({
         flag: 'u',
         description: 'Public key of the node to request persistent harvesting delegation.',
     })
-    recipientPublicKey: string
+    recipientPublicKey: string;
 }
 
 @command({
     description: 'Requests a node to add a remote account as a delegated harvester',
 })
-
 export default class extends AnnounceTransactionsCommand {
-    constructor() { super() }
+    constructor() {
+        super();
+    }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const remotePrivateKey = await new PrivateKeyResolver()
-            .resolve(options, 'Enter the remote account private key:', 'remotePrivateKey')
-        const recipientPublicAccount = await new PublicKeyResolver()
-            .resolve(options, profile.networkType,
-                'Enter the public key of the node:', 'recipientPublicKey')
-       const message = PersistentHarvestingDelegationMessage.create(
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const remotePrivateKey = await new PrivateKeyResolver().resolve(
+            options,
+            'Enter the remote account private key:',
+            'remotePrivateKey',
+        );
+        const recipientPublicAccount = await new PublicKeyResolver().resolve(
+            options,
+            profile.networkType,
+            'Enter the public key of the node:',
+            'recipientPublicKey',
+        );
+        const message = PersistentHarvestingDelegationMessage.create(
             remotePrivateKey,
             recipientPublicAccount.publicKey,
-            profile.networkType)
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options)
+            profile.networkType,
+        );
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
         const transaction = TransferTransaction.create(
             Deadline.create(),
@@ -71,16 +79,16 @@ export default class extends AnnounceTransactionsCommand {
             message,
             profile.networkType,
             maxFee,
-        )
+        );
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-        }
+        };
 
-        const signedTransactions = await this.signTransactions(signatureOptions, options)
-        this.announceTransactions(options, signedTransactions)
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }
