@@ -44,6 +44,13 @@ describe('Mosaic id alias validator', () => {
 });
 
 describe('Mosaics resolver', () => {
+    it('should return empty list', async () => {
+        const mosaics = '';
+        const options = { mosaics } as any;
+        const resolution = await new MosaicsResolver().resolve(options);
+        expect(resolution.length).to.be.equal(0);
+    });
+
     it('should return array of mosaics', async () => {
         const mosaics = '0DC67FBE1CAD29E3::1,@test::2';
         const options = { mosaics } as any;
