@@ -142,11 +142,11 @@ export class MultisigInfoTable {
             text += FormatterService.title('Multisig Account Information');
             text += this.multisigTable.toString();
             text += FormatterService.title('Cosignatories');
-            text += this.cosignatoriesTable.toString();
+            text += '\n' + this.cosignatoriesTable.toString();
         }
         if (this.cosignatoryOfTable) {
             text += FormatterService.title('Is cosignatory of');
-            text += this.cosignatoryOfTable.toString();
+            text += '\n' + this.cosignatoryOfTable.toString();
         }
         return text;
     }
