@@ -25,4 +25,10 @@ describe('BLS public key resolver', () => {
         const options = { linkedPublicKey } as any;
         expect(await new BLSPublicKeyResolver().resolve(options)).to.be.equal(linkedPublicKey);
     });
+
+    it('should return public key (alternative)', async () => {
+        const publicKey = '0'.repeat(96);
+        const options = { publicKey } as any;
+        expect(await new BLSPublicKeyResolver().resolve(options, 'test', 'publicKey')).to.be.equal(publicKey);
+    });
 });
