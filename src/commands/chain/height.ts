@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-import { ChainHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';

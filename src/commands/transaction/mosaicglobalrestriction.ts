@@ -17,7 +17,7 @@
  */
 
 import { command, metadata, option } from 'clime';
-import { Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp } from 'symbol-sdk';
+import { Deadline, MosaicRestrictionTransactionService } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';

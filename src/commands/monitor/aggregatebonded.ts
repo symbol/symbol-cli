@@ -17,7 +17,6 @@
  */
 import chalk from 'chalk';
 import { command, metadata } from 'clime';
-import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';

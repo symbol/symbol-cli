@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Metadata, MetadataHttp } from 'symbol-sdk';
+import { Metadata } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';

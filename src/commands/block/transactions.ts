@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { BlockHttp } from 'symbol-sdk';
 
 import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
 import { HeightResolver } from '../../resolvers/height.resolver';

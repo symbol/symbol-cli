@@ -19,17 +19,7 @@ import chalk from 'chalk';
 import { Spinner } from 'cli-spinner';
 import { merge } from 'rxjs';
 import { filter, mergeMap, tap } from 'rxjs/operators';
-import {
-    IListener,
-    Listener,
-    NamespaceHttp,
-    SignedTransaction,
-    Transaction,
-    TransactionAnnounceResponse,
-    TransactionHttp,
-    TransactionRepository,
-    TransactionType,
-} from 'symbol-sdk';
+import { IListener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionRepository, TransactionType } from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
 import { Profile } from '../models/profile.model';

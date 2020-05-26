@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-import { AccountHttp } from 'symbol-sdk';
 
 import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
 import { AddressResolver } from '../../resolvers/address.resolver';

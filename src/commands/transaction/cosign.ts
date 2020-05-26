@@ -18,13 +18,7 @@
 import chalk from 'chalk';
 import { command, metadata, option } from 'clime';
 import { filter, flatMap, switchMap, tap } from 'rxjs/operators';
-import {
-    Address,
-    AggregateTransaction,
-    CosignatureSignedTransaction,
-    CosignatureTransaction,
-    QueryParams,
-} from 'symbol-sdk';
+import { Address, AggregateTransaction, CosignatureSignedTransaction, CosignatureTransaction, QueryParams } from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';

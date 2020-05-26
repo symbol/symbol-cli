@@ -17,7 +17,7 @@
  */
 
 import { command, metadata, option } from 'clime';
-import { Deadline, MetadataHttp, MetadataTransactionService, MetadataType } from 'symbol-sdk';
+import { Deadline, MetadataTransactionService, MetadataType } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
