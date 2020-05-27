@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata } from 'clime';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { Account } from 'symbol-sdk';
@@ -33,6 +32,7 @@ import { NetworkCurrencyResolver } from '../../resolvers/networkCurrency.resolve
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { ProfileNameResolver } from '../../resolvers/profile.resolver';
 import { URLResolver } from '../../resolvers/url.resolver';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends CreateProfileOptions {}
 
@@ -80,6 +80,6 @@ export default class extends CreateProfileCommand {
         }
 
         console.log(AccountCredentialsTable.createFromProfile(profile, password).toString());
-        console.log(chalk.green('\nStored ' + name + ' profile'));
+        console.log(FormatterService.success('Stored ' + name + ' profile'));
     }
 }

@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata } from 'clime';
 
 import { AccountCredentialsTable, CreateProfileCommand } from '../../interfaces/create.profile.command';
@@ -34,6 +33,7 @@ import { PathNumberResolver } from '../../resolvers/pathNumber.resolver';
 import { PrivateKeyResolver } from '../../resolvers/privateKey.resolver';
 import { ProfileNameResolver } from '../../resolvers/profile.resolver';
 import { URLResolver } from '../../resolvers/url.resolver';
+import { FormatterService } from '../../services/formatter.service';
 
 @command({
     description: 'Create a new profile with existing private key',
@@ -80,6 +80,6 @@ export default class extends CreateProfileCommand {
         }
 
         console.log(AccountCredentialsTable.createFromProfile(profile, password).toString());
-        console.log(chalk.green('\nStored ' + name + ' profile'));
+        console.log(FormatterService.success('Stored ' + name + ' profile'));
     }
 }

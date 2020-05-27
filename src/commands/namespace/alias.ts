@@ -22,7 +22,7 @@ import { catchError } from 'rxjs/operators';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { NamespaceNameResolver } from '../../resolvers/namespace.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -58,12 +58,12 @@ export default class extends ProfileCommand {
                 } else if (res[1]) {
                     console.log('\n' + res[1].pretty());
                 } else {
-                    console.log('\nThe namespace is not linked with a mosaic or address.');
+                    console.log(FormatterService.error('The namespace is not linked with a mosaic or address'));
                 }
             },
             (err) => {
                 this.spinner.stop();
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

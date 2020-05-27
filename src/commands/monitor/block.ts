@@ -19,7 +19,7 @@ import { command, metadata } from 'clime';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 @command({
     description: 'Monitor new blocks',
@@ -39,18 +39,17 @@ export default class extends ProfileCommand {
             () => {
                 listener.newBlock().subscribe(
                     (block) => {
-                        console.log('\n');
-                        console.log(block);
+                        console.log('\n' + block);
                     },
                     (err) => {
-                        console.log(HttpErrorHandler.handleError(err));
+                        console.log(FormatterService.error(err));
                         listener.close();
                     },
                 );
             },
             (err) => {
                 this.spinner.stop();
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

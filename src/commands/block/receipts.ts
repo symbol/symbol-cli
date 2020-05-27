@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { HeightResolver } from '../../resolvers/height.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { StatementsView } from '../../views/statements/statements.view';
 
 export class CommandOptions extends ProfileOptions {
@@ -53,7 +53,7 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop();
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

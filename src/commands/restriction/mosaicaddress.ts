@@ -15,7 +15,6 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
@@ -24,7 +23,7 @@ import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -56,8 +55,8 @@ export class MosaicAddressRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Mosaic Address Restrictions') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Mosaic Address Restrictions');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -84,12 +83,12 @@ export default class extends ProfileCommand {
                 if (mosaicRestrictions.restrictions.size > 0) {
                     console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The address does not have mosaic address restrictions assigned.');
+                    console.log(FormatterService.error('The address does not have mosaic address restrictions assigned'));
                 }
             },
             (err) => {
                 this.spinner.stop();
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

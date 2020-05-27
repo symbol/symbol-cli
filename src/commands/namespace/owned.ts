@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { NamespaceInfoTable } from './info';
 
 export class CommandOptions extends ProfileOptions {
@@ -51,7 +51,7 @@ export default class extends ProfileCommand {
                 this.spinner.stop();
 
                 if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces.');
+                    console.log(FormatterService.error('The address ' + address.pretty() + ' does not own any namespaces'));
                 }
                 namespaces.map((namespace) => {
                     console.log(new NamespaceInfoTable(namespace).toString());
@@ -59,7 +59,7 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop();
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }
