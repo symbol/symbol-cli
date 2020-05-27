@@ -16,11 +16,10 @@
  *
  */
 import { command, metadata } from 'clime';
-import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 @command({
     description: 'Monitor new blocks',
@@ -35,23 +34,22 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         console.log(`Using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 listener.newBlock().subscribe(
                     (block) => {
-                        console.log('\n');
-                        console.log(block);
+                        console.log('\n' + block);
                     },
                     (err) => {
-                        console.log(HttpErrorHandler.handleError(err));
+                        console.log(FormatterService.error(err));
                         listener.close();
                     },
                 );
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

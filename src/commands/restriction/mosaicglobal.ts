@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp } from 'symbol-sdk';
+import { MosaicGlobalRestrictionItem, MosaicRestrictionType } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -50,8 +49,8 @@ export class MosaicGlobalRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Mosaic Global Restrictions') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Mosaic Global Restrictions');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -70,19 +69,19 @@ export default class extends ProfileCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
         this.spinner.start();
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url);
+        const restrictionHttp = profile.repositoryFactory.createRestrictionMosaicRepository();
         restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe(
             (mosaicRestrictions) => {
                 this.spinner.stop(true);
                 if (mosaicRestrictions.restrictions.size > 0) {
                     console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The mosaicId does not have mosaic global restrictions assigned.');
+                    console.log(FormatterService.error('The mosaicId does not have mosaic global restrictions assigned'));
                 }
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

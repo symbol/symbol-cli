@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { NamespaceHttp, NamespaceInfo } from 'symbol-sdk';
+import { NamespaceInfo } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { NamespaceIdResolver, NamespaceNameResolver } from '../../resolvers/namespace.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -68,8 +67,8 @@ export class NamespaceInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Namespace Information') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Namespace Information');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -90,7 +89,7 @@ export default class extends ProfileCommand {
             : await new NamespaceIdResolver().resolve(options);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespace(namespaceId).subscribe(
             (namespaceInfo) => {
                 this.spinner.stop(true);
@@ -98,7 +97,7 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

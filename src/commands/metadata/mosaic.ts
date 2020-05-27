@@ -16,12 +16,12 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Metadata, MetadataHttp } from 'symbol-sdk';
+import { Metadata } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { MetadataEntryTable } from './account';
 
 export class CommandOptions extends ProfileOptions {
@@ -46,7 +46,7 @@ export default class extends ProfileCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
         this.spinner.start();
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         metadataHttp.getMosaicMetadata(mosaicId).subscribe(
             (metadataEntries) => {
                 this.spinner.stop(true);
@@ -55,12 +55,12 @@ export default class extends ProfileCommand {
                         console.log(new MetadataEntryTable(entry.metadataEntry).toString());
                     });
                 } else {
-                    console.log('\n The mosaic does not have metadata entries assigned.');
+                    console.log(FormatterService.error('The mosaic does not have metadata entries assigned'));
                 }
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

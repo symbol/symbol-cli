@@ -19,7 +19,7 @@
 import { HorizontalTable } from 'cli-table3';
 import * as Table from 'cli-table3';
 import { ExpectedError } from 'clime';
-import { Account, Address, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
+import { Account, Address, NetworkType, Password, RepositoryFactoryHttp, SimpleWallet } from 'symbol-sdk';
 
 import { NetworkCurrency } from './networkCurrency.model';
 import { ProfileDTO } from './profileDTO.types';
@@ -120,19 +120,11 @@ export abstract class Profile {
     }
 
     /**
-     * Returns a profile DTO
-     * @returns {ProfileDTO}
+     * Gets repository factory.
+     * @returns {RepositoryFactoryHttp}
      */
-    public toDTO(): ProfileDTO {
-        throw new Error('toDTO should be implemented in extended classes');
-    }
-
-    /**
-     * Formats profile as a string.
-     * @returns {string}
-     */
-    public toString(): string {
-        return this.table.toString();
+    public get repositoryFactory(): RepositoryFactoryHttp {
+        return new RepositoryFactoryHttp(this.url);
     }
 
     /**
@@ -160,5 +152,21 @@ export abstract class Profile {
             throw new ExpectedError('The password provided does not match your account password');
         }
         return this.simpleWallet.open(password);
+    }
+
+    /**
+     * Returns a profile DTO
+     * @returns {ProfileDTO}
+     */
+    public toDTO(): ProfileDTO {
+        throw new Error('toDTO should be implemented in extended classes');
+    }
+
+    /**
+     * Formats profile as a string.
+     * @returns {string}
+     */
+    public toString(): string {
+        return this.table.toString();
     }
 }

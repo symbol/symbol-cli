@@ -15,13 +15,11 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata } from 'clime';
-import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
@@ -37,8 +35,8 @@ export default class extends MonitorAddressCommand {
         const profile = this.getProfile(options);
         const address = await new AddressResolver().resolve(options, profile);
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 listener.aggregateBondedAdded(address).subscribe(
@@ -46,14 +44,14 @@ export default class extends MonitorAddressCommand {
                         new TransactionView(transaction).print();
                     },
                     (err) => {
-                        console.log(HttpErrorHandler.handleError(err));
+                        console.log(FormatterService.error(err));
                         listener.close();
                     },
                 );
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

@@ -15,10 +15,10 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as prompts from 'prompts';
 
 import { Choices, ConfirmOptionType, InputOptionType, SelectOptionType } from './interfaces/options.interface';
+import { FormatterService } from './services/formatter.service';
 import { Validator } from './validators/validator';
 
 /**
@@ -40,7 +40,7 @@ export const OptionsChoiceResolver = async (
         if (validation !== undefined) {
             const test = validation.validate(title);
             if (typeof test === 'string') {
-                console.log(chalk.red('ERR'), test);
+                FormatterService.error(test);
                 return process.exit();
             }
         }
@@ -75,7 +75,7 @@ export const OptionsResolver = async (
         if (validation !== undefined) {
             const test = validation.validate(value);
             if (typeof test === 'string') {
-                console.log(chalk.red('ERR'), test);
+                FormatterService.error(test);
                 return process.exit();
             }
         }

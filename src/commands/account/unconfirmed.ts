@@ -16,11 +16,10 @@
  *
  */
 import { command, metadata } from 'clime';
-import { AccountHttp } from 'symbol-sdk';
 
 import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
@@ -37,7 +36,7 @@ export default class extends AccountTransactionsCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const accountHttp = new AccountHttp(profile.url);
+        const accountHttp = profile.repositoryFactory.createAccountRepository();
         accountHttp.getAccountUnconfirmedTransactions(address, options.getQueryParams()).subscribe(
             (transactions) => {
                 this.spinner.stop(true);
@@ -46,12 +45,12 @@ export default class extends AccountTransactionsCommand {
                 });
 
                 if (!transactions.length) {
-                    console.log("There aren't unconfirmed transactions");
+                    console.log(FormatterService.error("There aren't unconfirmed transactions"));
                 }
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

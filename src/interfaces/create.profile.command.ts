@@ -16,7 +16,6 @@
  *
  */
 
-import chalk from 'chalk';
 import { Spinner } from 'cli-spinner';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
@@ -29,6 +28,7 @@ import { Profile } from '../models/profile.model';
 import { ProfileCreation } from '../models/profileCreation.types';
 import { ProfileRepository } from '../respositories/profile.repository';
 import { DerivationService } from '../services/derivation.service';
+import { FormatterService } from '../services/formatter.service';
 import { ProfileService } from '../services/profile.service';
 
 export class AccountCredentialsTable {
@@ -89,8 +89,8 @@ export class AccountCredentialsTable {
 
     public toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Account') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Account');
+        text += '\n' + this.table.toString();
         return text;
     }
 }

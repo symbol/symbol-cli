@@ -15,41 +15,33 @@
  * limitations under the License.
  *
  */
-
 import { command, metadata, option } from 'clime';
-import { Deadline, MetadataTransactionService, MetadataType } from 'symbol-sdk';
+import { AccountKeyLinkTransaction, Deadline } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
-import { KeyResolver } from '../../resolvers/key.resolver';
+import { LinkActionResolver } from '../../resolvers/action.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
-import { StringResolver } from '../../resolvers/string.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
-        flag: 't',
-        description: 'Metadata target public key.',
+        flag: 'u',
+        description: 'Linked Public Key.',
     })
-    targetPublicKey: string;
+    linkedPublicKey: string;
 
     @option({
-        flag: 'k',
-        description: 'Metadata key (UInt64) in hexadecimal format.',
+        flag: 'a',
+        description: 'Alias action (Link, Unlink).',
     })
-    key: string;
-
-    @option({
-        flag: 'v',
-        description: 'Metadata value.',
-    })
-    value: string;
+    action: string;
 }
 
 @command({
-    description: 'Add custom data to an account (requires internet)',
+    description: 'Delegate the account importance to a proxy account. Required for all accounts willing to activate delegated harvesting.',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -61,40 +53,25 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        const targetAccount = await new PublicKeyResolver().resolve(
-            options,
-            profile.networkType,
-            'Enter the target account public key:',
-            'targetPublicKey',
-        );
-        const key = await new KeyResolver().resolve(options);
-        const value = await new StringResolver().resolve(options);
+        const linkedPublicKey = (
+            await new PublicKeyResolver().resolve(
+                options,
+                profile.networkType,
+                'Enter the public key of the remote account: ',
+                'linkedPublicKey',
+            )
+        ).publicKey;
+        const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
         const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
-        const metadataTransactionService = new MetadataTransactionService(metadataHttp);
-        const metadataTransaction = await metadataTransactionService
-            .createMetadataTransaction(
-                Deadline.create(),
-                account.networkType,
-                MetadataType.Account,
-                targetAccount,
-                key,
-                value,
-                account.publicAccount,
-                undefined,
-                maxFee,
-            )
-            .toPromise();
+        const transaction = AccountKeyLinkTransaction.create(Deadline.create(), linkedPublicKey, action, profile.networkType, maxFee);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
-            transactions: [metadataTransaction],
+            transactions: [transaction],
             maxFee,
             signerMultisigInfo,
-            isAggregate: targetAccount.publicKey === account.publicKey,
-            isAggregateBonded: targetAccount.publicKey !== account.publicKey,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

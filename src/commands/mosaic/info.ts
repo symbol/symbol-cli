@@ -15,16 +15,15 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { AccountHttp, MosaicHttp, MosaicService, MosaicView } from 'symbol-sdk';
+import { MosaicService, MosaicView } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -66,8 +65,8 @@ export class MosaicViewTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Mosaic Information') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Mosaic Information');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -86,19 +85,22 @@ export default class extends ProfileCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
 
         this.spinner.start();
-        const mosaicService = new MosaicService(new AccountHttp(profile.url), new MosaicHttp(profile.url));
+        const repositoryFactory = profile.repositoryFactory;
+        const accountHttp = repositoryFactory.createAccountRepository();
+        const mosaicHttp = repositoryFactory.createMosaicRepository();
+        const mosaicService = new MosaicService(accountHttp, mosaicHttp);
         mosaicService.mosaicsView([mosaicId]).subscribe(
             (mosaicViews) => {
                 this.spinner.stop(true);
                 if (mosaicViews.length === 0) {
-                    console.log('No mosaic exists with this id ' + mosaicId.toHex());
+                    console.log(FormatterService.error('No mosaic exists with this id ' + mosaicId.toHex()));
                 } else {
                     console.log(new MosaicViewTable(mosaicViews[0]).toString());
                 }
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

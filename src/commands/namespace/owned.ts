@@ -16,12 +16,11 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { NamespaceHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { NamespaceInfoTable } from './info';
 
 export class CommandOptions extends ProfileOptions {
@@ -46,13 +45,13 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespacesFromAccount(address).subscribe(
             (namespaces) => {
                 this.spinner.stop(true);
 
                 if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces.');
+                    console.log(FormatterService.error('The address ' + address.pretty() + ' does not own any namespaces'));
                 }
                 namespaces.map((namespace) => {
                     console.log(new NamespaceInfoTable(namespace).toString());
@@ -60,7 +59,7 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

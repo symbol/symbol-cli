@@ -15,27 +15,17 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
 import { forkJoin, of } from 'rxjs';
 import { catchError, mergeMap, toArray } from 'rxjs/operators';
-import {
-    AccountHttp,
-    AccountInfo,
-    MosaicAmountView,
-    MosaicHttp,
-    MosaicService,
-    MultisigAccountInfo,
-    MultisigHttp,
-    PublicAccount,
-} from 'symbol-sdk';
+import { AccountInfo, MosaicAmountView, MosaicService, MultisigAccountInfo, PublicAccount } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
@@ -64,8 +54,8 @@ export class AccountInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Account Information') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Account Information');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -95,8 +85,8 @@ export class BalanceInfoTable {
     toString(): string {
         let text = '';
         if (this.table) {
-            text += '\n' + chalk.green('Balance Information') + '\n';
-            text += this.table.toString();
+            text += FormatterService.title('Balance Information');
+            text += '\n' + this.table.toString();
         }
         return text;
     }
@@ -140,14 +130,14 @@ export class MultisigInfoTable {
     toString(): string {
         let text = '';
         if (this.multisigTable) {
-            text += chalk.green('\n' + 'Multisig Account Information') + '\n';
+            text += FormatterService.title('Multisig Account Information');
             text += this.multisigTable.toString();
-            text += chalk.green('\n' + 'Cosignatories') + '\n';
-            text += this.cosignatoriesTable.toString();
+            text += FormatterService.title('Cosignatories');
+            text += '\n' + this.cosignatoriesTable.toString();
         }
         if (this.cosignatoryOfTable) {
-            text += chalk.green('\n' + 'Is cosignatory of') + '\n';
-            text += this.cosignatoryOfTable.toString();
+            text += FormatterService.title('Is cosignatory of');
+            text += '\n' + this.cosignatoryOfTable.toString();
         }
         return text;
     }
@@ -167,9 +157,10 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const accountHttp = new AccountHttp(profile.url);
-        const multisigHttp = new MultisigHttp(profile.url);
-        const mosaicHttp = new MosaicHttp(profile.url);
+        const repositoryFactory = profile.repositoryFactory;
+        const accountHttp = repositoryFactory.createAccountRepository();
+        const multisigHttp = repositoryFactory.createMultisigRepository();
+        const mosaicHttp = repositoryFactory.createMosaicRepository();
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
 
         forkJoin(
@@ -193,12 +184,9 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
-                if (err instanceof Object && 'message' in err && JSON.parse(err.message).statusCode === 404) {
-                    console.log(
-                        chalk.blue('Info'),
-                        'The account has to receive at least ' + 'one transaction to be recorded on the network.',
-                    );
+                console.log(FormatterService.error(err));
+                if (err instanceof Object) {
+                    console.log(FormatterService.info('The account has to receive at least one transaction to be recorded on the network'));
                 }
             },
         );

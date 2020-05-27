@@ -16,11 +16,10 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { BlockHttp } from 'symbol-sdk';
 
 import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
 import { HeightResolver } from '../../resolvers/height.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AccountTransactionsOptions {
@@ -45,22 +44,22 @@ export default class extends AccountTransactionsCommand {
         const height = await new HeightResolver().resolve(options);
 
         this.spinner.start();
-        const blockHttp = new BlockHttp(profile.url);
+        const blockHttp = profile.repositoryFactory.createBlockRepository();
         blockHttp.getBlockTransactions(height, options.getQueryParams()).subscribe(
             (transactions) => {
                 this.spinner.stop(true);
 
                 if (!transactions.length) {
-                    console.log("There aren't transactions");
+                    console.log(FormatterService.error('The block ' + height.toString() + ' does not have transactions'));
                 }
-
+                console.log(FormatterService.title('Transactions'));
                 transactions.forEach((transaction) => {
                     new TransactionView(transaction).print();
                 });
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

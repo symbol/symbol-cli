@@ -15,25 +15,16 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata, option } from 'clime';
 import { filter, flatMap, switchMap, tap } from 'rxjs/operators';
-import {
-    AccountHttp,
-    Address,
-    AggregateTransaction,
-    CosignatureSignedTransaction,
-    CosignatureTransaction,
-    QueryParams,
-    TransactionHttp,
-} from 'symbol-sdk';
+import { Address, AggregateTransaction, CosignatureSignedTransaction, CosignatureTransaction, QueryParams } from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { Profile } from '../../models/profile.model';
 import { HashResolver } from '../../resolvers/hash.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { MultisigService } from '../../services/multisig.service';
 import { SequentialFetcher } from '../../services/sequentialFetcher.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
@@ -74,7 +65,7 @@ export default class extends ProfileCommand {
                 flatMap((transaction: AggregateTransaction[]) => transaction),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined && _.transactionInfo.hash === hash),
                 tap((transaction) => {
-                    console.log('\n \n Transaction to cosign:');
+                    console.log(FormatterService.title(' Transaction to cosign:'));
                     new TransactionView(transaction).print();
                 }),
             )
@@ -88,7 +79,7 @@ export default class extends ProfileCommand {
                 },
                 (err) => {
                     this.spinner.stop(true);
-                    console.log(HttpErrorHandler.handleError(err));
+                    console.log(FormatterService.error(err));
                 },
             );
     }
@@ -101,7 +92,7 @@ export default class extends ProfileCommand {
     private getSequentialFetcher(): SequentialFetcher {
         const queryParams = new QueryParams({ pageSize: 100 });
         const networkCall = (address: Address) =>
-            new AccountHttp(this.profile.url).getAccountPartialTransactions(address, queryParams).toPromise();
+            this.profile.repositoryFactory.createAccountRepository().getAccountPartialTransactions(address, queryParams).toPromise();
 
         return SequentialFetcher.create(networkCall);
     }
@@ -126,8 +117,7 @@ export default class extends ProfileCommand {
             return account.signCosignatureTransaction(cosignatureTransaction);
         } catch (err) {
             this.spinner.stop(true);
-            const text = `${chalk.red('Error')}`;
-            console.log(text, 'The profile', this.profile.name, 'cannot cosign the transaction with hash', hash, '.');
+            console.log(FormatterService.error('The profile ' + this.profile.name + ' cannot cosign the transaction with hash ' + hash));
             return null;
         }
     }
@@ -140,12 +130,15 @@ export default class extends ProfileCommand {
      */
     private async announceAggregateBondedCosignature(signedCosignature: CosignatureSignedTransaction): Promise<void> {
         try {
-            await new TransactionHttp(this.profile.url).announceAggregateBondedCosignature(signedCosignature).toPromise();
+            await this.profile.repositoryFactory
+                .createTransactionRepository()
+                .announceAggregateBondedCosignature(signedCosignature)
+                .toPromise();
             this.spinner.stop(true);
-            console.log(chalk.green('Transaction cosigned and announced correctly.'));
+            console.log(FormatterService.success('Transaction cosigned and announced correctly.'));
         } catch (err) {
             this.spinner.stop(true);
-            console.log(HttpErrorHandler.handleError(err));
+            console.log(FormatterService.error(err));
         }
     }
 }

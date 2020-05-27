@@ -15,15 +15,14 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
-import { BlockchainScore, ChainHttp } from 'symbol-sdk';
+import { BlockchainScore } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class ChainScoreTable {
     private readonly table: HorizontalTable;
@@ -37,8 +36,8 @@ export class ChainScoreTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Storage Information') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Storage Information');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -56,7 +55,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const chainHttp = new ChainHttp(profile.url);
+        const chainHttp = profile.repositoryFactory.createChainRepository();
         chainHttp.getChainScore().subscribe(
             (score) => {
                 this.spinner.stop(true);
@@ -64,7 +63,7 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

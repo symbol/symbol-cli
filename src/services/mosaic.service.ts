@@ -29,9 +29,9 @@ export class MosaicService {
      * @param {string} value - Mosaic in the form mosaicId::amount.
      * @returns {true | string}
      */
-    static validate(value: string) {
-        const mosaicParts = value.split('::');
+    static validate(value: string): boolean | string {
         let valid = true;
+        const mosaicParts = value.split('::');
         try {
             if (isNaN(+mosaicParts[1])) {
                 valid = false;
@@ -40,13 +40,10 @@ export class MosaicService {
         } catch (err) {
             valid = false;
         }
-        if (!valid) {
-            return (
-                'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
-                ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)'
-            );
-        }
-        return valid;
+        return valid
+            ? valid
+            : 'Mosaic should be in the format (mosaicId(hex)|@aliasName)::absoluteAmount,' +
+                  ' (Ex: sending 1 symbol.xym, @symbol.xym::1000000)';
     }
 
     /**
