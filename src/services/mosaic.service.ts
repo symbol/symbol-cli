@@ -29,7 +29,7 @@ export class MosaicService {
      * @param {string} value - Mosaic in the form mosaicId::amount.
      * @returns {true | string}
      */
-    static validate(value: string) {
+    static validate(value: string): boolean | string {
         let valid = true;
         const mosaicParts = value.split('::');
         try {
