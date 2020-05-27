@@ -16,10 +16,10 @@
  *
  */
 
-import { Spinner } from 'cli-spinner';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { Command, ExpectedError } from 'clime';
+import ora from 'ora';
 import { Account, Crypto, Password } from 'symbol-sdk';
 
 import config from '../config/app.conf';
@@ -99,7 +99,7 @@ export class AccountCredentialsTable {
  * Base command class to create a new profile.
  */
 export abstract class CreateProfileCommand extends Command {
-    public spinner = new Spinner('processing.. %s');
+    public spinner: any;
     private readonly profileRepository: ProfileRepository;
     private readonly profileService: ProfileService;
 
@@ -108,9 +108,9 @@ export abstract class CreateProfileCommand extends Command {
      */
     protected constructor(fileUrl?: string) {
         super();
+        this.spinner = ora('Processing');
         this.profileRepository = new ProfileRepository(fileUrl || config.PROFILES_FILE_NAME);
         this.profileService = new ProfileService(this.profileRepository);
-        this.spinner.setSpinnerString('|/-\\');
     }
 
     /**

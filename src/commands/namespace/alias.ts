@@ -52,7 +52,7 @@ export default class extends ProfileCommand {
             namespaceHttp.getLinkedAddress(namespaceId).pipe(catchError(() => of(null))),
         ).subscribe(
             (res) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 if (res[0]) {
                     console.log('\n' + res[0].toHex());
                 } else if (res[1]) {
@@ -62,7 +62,7 @@ export default class extends ProfileCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

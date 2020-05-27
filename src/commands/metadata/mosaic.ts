@@ -49,7 +49,7 @@ export default class extends ProfileCommand {
         const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         metadataHttp.getMosaicMetadata(mosaicId).subscribe(
             (metadataEntries) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 if (metadataEntries.length > 0) {
                     metadataEntries.map((entry: Metadata) => {
                         console.log(new MetadataEntryTable(entry.metadataEntry).toString());
@@ -59,7 +59,7 @@ export default class extends ProfileCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

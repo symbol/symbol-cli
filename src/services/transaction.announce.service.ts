@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { Spinner } from 'cli-spinner';
+import ora from 'ora';
 import { merge } from 'rxjs';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 import { IListener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionRepository, TransactionType } from 'symbol-sdk';
@@ -26,12 +26,12 @@ import { AnnounceResolver } from '../resolvers/announce.resolver';
 import { FormatterService } from './formatter.service';
 
 export class TransactionAnnounceService {
-    public spinner = new Spinner('processing.. %s');
+    public spinner: any;
     private transactionHttp: TransactionRepository;
     private listener: IListener;
 
     /**
-     * Creates an instance of Transaction Announce Service
+     * Creates an instance of TransactionAnnounceService.
      * @static
      * @param {Profile} profile
      * @param {AnnounceTransactionsOptions} options
@@ -47,14 +47,15 @@ export class TransactionAnnounceService {
      * @param {AnnounceTransactionsOptions} options
      */
     private constructor(private readonly profile: Profile, private readonly options: AnnounceTransactionsOptions) {
+        this.spinner = ora('Processing');
         const repositoryFactory = profile.repositoryFactory;
         this.transactionHttp = repositoryFactory.createTransactionRepository();
         this.listener = repositoryFactory.createListener();
     }
 
     /**
-     * Announce any transactions
-     * Takes no more than 1 aggregate bounded with its hash lock
+     * Announce any transactions.
+     * Takes no more than 1 aggregate bounded with its hash lock.
      * @param {SignedTransaction[]} transactions
      * @returns {Promise<void>}
      */
@@ -78,7 +79,7 @@ export class TransactionAnnounceService {
     }
 
     /**
-     * Announces transactions that are not aggregate bounded
+     * Announces transactions that are not aggregate bounded.
      * @private
      * @param {SignedTransaction[]} transactions
      */
@@ -102,7 +103,7 @@ export class TransactionAnnounceService {
     private announceTransaction(signedTransaction: SignedTransaction): void {
         this.transactionHttp.announce(signedTransaction).subscribe(
             (ignored) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.success('Transaction announced correctly.'));
                 console.log(
                     FormatterService.info(
@@ -111,7 +112,7 @@ export class TransactionAnnounceService {
                 );
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );
@@ -147,25 +148,25 @@ export class TransactionAnnounceService {
                 ).subscribe(
                     (response) => {
                         if (response instanceof TransactionAnnounceResponse) {
-                            this.spinner.stop(true);
+                            this.spinner.stop();
                             console.log(FormatterService.title('Transaction announced.'));
                             this.spinner.start();
                         } else if (response instanceof Transaction) {
                             this.listener.close();
-                            this.spinner.stop(true);
+                            this.spinner.stop();
                             console.log(FormatterService.title('Transaction confirmed.'));
                         }
                     },
                     (err) => {
                         this.listener.close();
-                        this.spinner.stop(true);
+                        this.spinner.stop();
                         console.log(FormatterService.error(err));
                     },
                 );
             },
             (err) => {
                 this.listener.close();
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );
@@ -213,26 +214,26 @@ export class TransactionAnnounceService {
                     (ignored) => {
                         confirmations = confirmations + 1;
                         if (confirmations === 1) {
-                            this.spinner.stop(true);
+                            this.spinner.stop();
                             console.log(FormatterService.success('Hash lock transaction announced.'));
                             this.spinner.start();
                         } else if (confirmations === 2) {
                             this.listener.close();
-                            this.spinner.stop(true);
+                            this.spinner.stop();
                             console.log(FormatterService.success('Hash lock transaction confirmed'));
                             console.log(FormatterService.success('Aggregate transaction announced.'));
                         }
                     },
                     (err) => {
                         this.listener.close();
-                        this.spinner.stop(true);
+                        this.spinner.stop();
                         console.log(FormatterService.error(err));
                     },
                 );
             },
             (err) => {
                 this.listener.close();
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

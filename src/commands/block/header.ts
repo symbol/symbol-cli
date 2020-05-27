@@ -89,11 +89,11 @@ export default class extends ProfileCommand {
         const blockHttp = profile.repositoryFactory.createBlockRepository();
         blockHttp.getBlockByHeight(height).subscribe(
             (blockInfo) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new BlockHeaderTable(blockInfo).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

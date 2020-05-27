@@ -47,7 +47,7 @@ export default class extends AccountTransactionsCommand {
         const blockHttp = profile.repositoryFactory.createBlockRepository();
         blockHttp.getBlockTransactions(height, options.getQueryParams()).subscribe(
             (transactions) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
 
                 if (!transactions.length) {
                     console.log(FormatterService.error('The block ' + height.toString() + ' does not have transactions'));
@@ -58,7 +58,7 @@ export default class extends AccountTransactionsCommand {
                 });
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

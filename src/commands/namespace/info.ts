@@ -92,11 +92,11 @@ export default class extends ProfileCommand {
         const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespace(namespaceId).subscribe(
             (namespaceInfo) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new NamespaceInfoTable(namespaceInfo).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

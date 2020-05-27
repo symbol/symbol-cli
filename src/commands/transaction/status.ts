@@ -77,11 +77,11 @@ export default class extends ProfileCommand {
         const transactionHttp = profile.repositoryFactory.createTransactionRepository();
         transactionHttp.getTransactionStatus(hash).subscribe(
             (status) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new TransactionStatusTable(status).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

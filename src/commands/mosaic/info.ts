@@ -91,7 +91,7 @@ export default class extends ProfileCommand {
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
         mosaicService.mosaicsView([mosaicId]).subscribe(
             (mosaicViews) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 if (mosaicViews.length === 0) {
                     console.log(FormatterService.error('No mosaic exists with this id ' + mosaicId.toHex()));
                 } else {
@@ -99,7 +99,7 @@ export default class extends ProfileCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

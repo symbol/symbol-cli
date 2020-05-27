@@ -48,7 +48,7 @@ export default class extends ProfileCommand {
         const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespacesFromAccount(address).subscribe(
             (namespaces) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
 
                 if (namespaces.length === 0) {
                     console.log(FormatterService.error('The address ' + address.pretty() + ' does not own any namespaces'));
@@ -58,7 +58,7 @@ export default class extends ProfileCommand {
                 });
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

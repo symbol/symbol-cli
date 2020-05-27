@@ -58,11 +58,11 @@ export default class extends ProfileCommand {
         const nodeHttp = profile.repositoryFactory.createNodeRepository();
         nodeHttp.getServerInfo().subscribe(
             (serverInfo) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new ServerInfoTable(serverInfo).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

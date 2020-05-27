@@ -65,7 +65,7 @@ export default class extends ProfileCommand {
                 flatMap((transaction: AggregateTransaction[]) => transaction),
                 filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined && _.transactionInfo.hash === hash),
                 tap((transaction) => {
-                    console.log(FormatterService.title(' Transaction to cosign:'));
+                    console.log(FormatterService.title('Transaction to cosign:'));
                     new TransactionView(transaction).print();
                 }),
             )
@@ -78,7 +78,7 @@ export default class extends ProfileCommand {
                     }
                 },
                 (err) => {
-                    this.spinner.stop(true);
+                    this.spinner.stop();
                     console.log(FormatterService.error(err));
                 },
             );
@@ -110,13 +110,13 @@ export default class extends ProfileCommand {
     ): Promise<CosignatureSignedTransaction | null> {
         try {
             const cosignatureTransaction = CosignatureTransaction.create(transaction);
-            this.spinner.stop(true);
+            this.spinner.stop();
             const password = await new PasswordResolver().resolve(this.options);
             this.spinner.start();
             const account = this.profile.decrypt(password);
             return account.signCosignatureTransaction(cosignatureTransaction);
         } catch (err) {
-            this.spinner.stop(true);
+            this.spinner.stop();
             console.log(FormatterService.error('The profile ' + this.profile.name + ' cannot cosign the transaction with hash ' + hash));
             return null;
         }
@@ -134,10 +134,10 @@ export default class extends ProfileCommand {
                 .createTransactionRepository()
                 .announceAggregateBondedCosignature(signedCosignature)
                 .toPromise();
-            this.spinner.stop(true);
+            this.spinner.stop();
             console.log(FormatterService.success('Transaction cosigned and announced correctly.'));
         } catch (err) {
-            this.spinner.stop(true);
+            this.spinner.stop();
             console.log(FormatterService.error(err));
         }
     }

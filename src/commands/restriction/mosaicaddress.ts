@@ -79,7 +79,7 @@ export default class extends ProfileCommand {
         const restrictionHttp = profile.repositoryFactory.createRestrictionMosaicRepository();
         restrictionHttp.getMosaicAddressRestriction(mosaicId, address).subscribe(
             (mosaicRestrictions) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 if (mosaicRestrictions.restrictions.size > 0) {
                     console.log(new MosaicAddressRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
@@ -87,7 +87,7 @@ export default class extends ProfileCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

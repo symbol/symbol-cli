@@ -1,7 +1,3 @@
-import { command, metadata } from 'clime';
-import { merge } from 'rxjs';
-import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } from 'symbol-sdk';
-
 /*
  *
  * Copyright 2018-present NEM
@@ -19,6 +15,10 @@ import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } 
  * limitations under the License.
  *
  */
+import { command, metadata } from 'clime';
+import { merge } from 'rxjs';
+import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } from 'symbol-sdk';
+
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { FormatterService } from '../../services/formatter.service';
@@ -72,7 +72,7 @@ export default class extends MonitorAddressCommand {
                 );
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

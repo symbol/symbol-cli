@@ -62,11 +62,11 @@ export default class extends ProfileCommand {
         const nodeHttp = profile.repositoryFactory.createNodeRepository();
         nodeHttp.getStorageInfo().subscribe(
             (storage) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new StorageTable(storage).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

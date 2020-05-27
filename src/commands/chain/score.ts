@@ -58,11 +58,11 @@ export default class extends ProfileCommand {
         const chainHttp = profile.repositoryFactory.createChainRepository();
         chainHttp.getChainScore().subscribe(
             (score) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new ChainScoreTable(score).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

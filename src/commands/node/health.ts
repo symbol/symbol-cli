@@ -59,11 +59,11 @@ export default class extends ProfileCommand {
         const nodeHttp = profile.repositoryFactory.createNodeRepository();
         nodeHttp.getNodeHealth().subscribe(
             (health) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(new NodeHealthTable(health).toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

@@ -49,11 +49,11 @@ export default class extends ProfileCommand {
         const transactionHttp = new TransactionHttp(profile.url);
         transactionHttp.getTransaction(hash).subscribe(
             (transaction) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 new TransactionView(transaction).print();
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

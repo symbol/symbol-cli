@@ -39,7 +39,7 @@ export default class extends AccountTransactionsCommand {
         const accountHttp = profile.repositoryFactory.createAccountRepository();
         accountHttp.getAccountUnconfirmedTransactions(address, options.getQueryParams()).subscribe(
             (transactions) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 transactions.forEach((transaction) => {
                     new TransactionView(transaction).print();
                 });
@@ -49,7 +49,7 @@ export default class extends AccountTransactionsCommand {
                 }
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );

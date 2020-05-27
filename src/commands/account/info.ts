@@ -180,10 +180,10 @@ export default class extends ProfileCommand {
                     new BalanceInfoTable(mosaicsInfo).toString(),
                     new MultisigInfoTable(multisigInfo).toString(),
                 );
-                this.spinner.stop(true);
+                this.spinner.stop();
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
                 if (err instanceof Object) {
                     console.log(FormatterService.info('The account has to receive at least one transaction to be recorded on the network'));

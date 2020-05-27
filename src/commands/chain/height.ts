@@ -37,11 +37,11 @@ export default class extends ProfileCommand {
         const chainHttp = profile.repositoryFactory.createChainRepository();
         chainHttp.getBlockchainHeight().subscribe(
             (height) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(height.toString());
             },
             (err) => {
-                this.spinner.stop(true);
+                this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
         );
