@@ -33,7 +33,7 @@ export default class extends MonitorAddressCommand {
     async execute(options: MonitorAddressOptions) {
         const profile = this.getProfile(options);
         const address = await new AddressResolver().resolve(options, profile);
-        
+
         console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
         const listener = profile.repositoryFactory.createListener();
         listener.open().then(
