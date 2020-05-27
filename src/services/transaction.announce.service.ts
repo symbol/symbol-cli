@@ -149,12 +149,12 @@ export class TransactionAnnounceService {
                     (response) => {
                         if (response instanceof TransactionAnnounceResponse) {
                             this.spinner.stop();
-                            console.log(FormatterService.title('Transaction announced.'));
+                            console.log(FormatterService.success('Transaction announced'));
                             this.spinner.start();
                         } else if (response instanceof Transaction) {
                             this.listener.close();
                             this.spinner.stop();
-                            console.log(FormatterService.title('Transaction confirmed.'));
+                            console.log(FormatterService.success('Transaction confirmed'));
                         }
                     },
                     (err) => {
@@ -221,7 +221,7 @@ export class TransactionAnnounceService {
                             this.listener.close();
                             this.spinner.stop();
                             console.log(FormatterService.success('Hash lock transaction confirmed'));
-                            console.log(FormatterService.success('Aggregate transaction announced.'));
+                            console.log(FormatterService.success('Aggregate transaction announced'));
                         }
                     },
                     (err) => {
