@@ -43,17 +43,16 @@ export class MosaicsValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const mosaics = value.split(',');
         let error = '';
-        mosaics.forEach((mosaic) => {
-            const validation = MosaicService.validate(mosaic);
-            if (typeof validation === 'string') {
-                error = validation;
-            }
-        });
-        if (!error) {
-            return true;
+        if (value) {
+            const mosaics = value.split(',');
+            mosaics.forEach((mosaic) => {
+                const validation = MosaicService.validate(mosaic);
+                if (typeof validation === 'string') {
+                    error = validation;
+                }
+            });
         }
-        return error;
+        return error ? error : true;
     }
 }
