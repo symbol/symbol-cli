@@ -16,7 +16,6 @@
  *
  */
 
-import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
@@ -24,7 +23,7 @@ import { NodeHealth } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class NodeHealthTable {
     private readonly table: HorizontalTable;
@@ -38,8 +37,8 @@ export class NodeHealthTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + chalk.green('Health Information') + '\n';
-        text += this.table.toString();
+        text += FormatterService.title('Health Information');
+        text += '\n' + this.table.toString();
         return text;
     }
 }
@@ -65,7 +64,7 @@ export default class extends ProfileCommand {
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

@@ -19,7 +19,7 @@ import { command, metadata } from 'clime';
 
 import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
@@ -45,12 +45,12 @@ export default class extends AccountTransactionsCommand {
                 });
 
                 if (!transactions.length) {
-                    console.log("There aren't outgoing transaction");
+                    console.log(FormatterService.error("There aren't outgoing transaction"));
                 }
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

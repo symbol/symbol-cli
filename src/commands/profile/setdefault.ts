@@ -15,12 +15,12 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata } from 'clime';
 
 import { CreateProfileCommand } from '../../interfaces/create.profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { ProfileNameResolver } from '../../resolvers/profile.resolver';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {}
 
@@ -37,7 +37,7 @@ export default class extends CreateProfileCommand {
         const profileName = await new ProfileNameResolver().resolve(options, undefined, 'New default profile:');
         if (profileName) {
             this.setDefaultProfile(profileName);
-            console.log(chalk.green('\nDefault profile changed to [' + profileName + ']'));
+            console.log(FormatterService.success('Default profile changed to [' + profileName + ']'));
         }
     }
 }

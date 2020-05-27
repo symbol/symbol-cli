@@ -15,12 +15,11 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk';
 import { command, metadata } from 'clime';
 
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 
 @command({
     description: 'Monitor transaction status error',
@@ -35,7 +34,7 @@ export default class extends MonitorAddressCommand {
         const profile = this.getProfile(options);
         const address = await new AddressResolver().resolve(options, profile);
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
         const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
@@ -55,14 +54,14 @@ export default class extends MonitorAddressCommand {
                         console.log(text);
                     },
                     (err) => {
-                        console.log(HttpErrorHandler.handleError(err));
+                        console.log(FormatterService.error(err));
                         listener.close();
                     },
                 );
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }

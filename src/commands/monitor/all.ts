@@ -1,4 +1,3 @@
-import chalk from 'chalk';
 import { command, metadata } from 'clime';
 import { merge } from 'rxjs';
 import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } from 'symbol-sdk';
@@ -22,7 +21,7 @@ import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } 
  */
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
-import { HttpErrorHandler } from '../../services/httpErrorHandler.service';
+import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
@@ -38,7 +37,7 @@ export default class extends MonitorAddressCommand {
         const profile = this.getProfile(options);
         const address = await new AddressResolver().resolve(options, profile);
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
         const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
@@ -54,27 +53,27 @@ export default class extends MonitorAddressCommand {
                             response.transactionInfo &&
                             response.transactionInfo.height.compact() === 0
                         ) {
-                            console.log(chalk.green('\nNew aggregate bonded transaction added:'));
+                            console.log(FormatterService.title('New aggregate bonded transaction added:'));
                             new TransactionView(response).print();
                         } else if (response instanceof Transaction) {
-                            console.log(chalk.green('\nNew transaction confirmed:'));
+                            console.log(FormatterService.title('New transaction confirmed:'));
                             new TransactionView(response).print();
                         } else if (response instanceof BlockInfo) {
-                            console.log(chalk.green('\nNew block:'), response.height.toString());
+                            console.log(FormatterService.title('New block:'), response.height.toString());
                         } else if (response instanceof TransactionStatusError) {
-                            console.log(chalk.green('\nTransaction error:'), response.hash);
+                            console.log(FormatterService.title('Transaction error:'), response.hash);
                             console.log('\n' + response.code);
                         }
                     },
                     (err) => {
-                        console.log(HttpErrorHandler.handleError(err));
+                        console.log(FormatterService.error(err));
                         listener.close();
                     },
                 );
             },
             (err) => {
                 this.spinner.stop(true);
-                console.log(HttpErrorHandler.handleError(err));
+                console.log(FormatterService.error(err));
             },
         );
     }
