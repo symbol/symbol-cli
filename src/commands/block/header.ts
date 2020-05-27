@@ -66,7 +66,7 @@ export class BlockHeaderTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Block Header');
+        text += FormatterService.title('Block Header');
         text += '\n' + this.table.toString();
         return text;
     }

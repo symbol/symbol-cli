@@ -49,7 +49,7 @@ export class MosaicGlobalRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Mosaic Global Restrictions');
+        text += FormatterService.title('Mosaic Global Restrictions');
         text += '\n' + this.table.toString();
         return text;
     }

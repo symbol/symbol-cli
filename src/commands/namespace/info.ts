@@ -67,7 +67,7 @@ export class NamespaceInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Namespace Information');
+        text += FormatterService.title('Namespace Information');
         text += '\n' + this.table.toString();
         return text;
     }

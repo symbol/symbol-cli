@@ -51,7 +51,7 @@ export class AccountRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Account Restrictions');
+        text += FormatterService.title('Account Restrictions');
         text += '\n' + this.table.toString();
         return text;
     }

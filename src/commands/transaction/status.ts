@@ -54,7 +54,7 @@ export class TransactionStatusTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Transaction Status');
+        text += FormatterService.title('Transaction Status');
         text += '\n' + this.table.toString();
         return text;
     }

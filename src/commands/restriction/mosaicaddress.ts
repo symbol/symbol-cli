@@ -55,7 +55,7 @@ export class MosaicAddressRestrictionsTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Mosaic Address Restrictions');
+        text += FormatterService.title('Mosaic Address Restrictions');
         text += '\n' + this.table.toString();
         return text;
     }

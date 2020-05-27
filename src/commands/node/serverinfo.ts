@@ -36,7 +36,7 @@ export class ServerInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Server Information');
+        text += FormatterService.title('Server Information');
         text += '\n' + this.table.toString();
         return text;
     }
