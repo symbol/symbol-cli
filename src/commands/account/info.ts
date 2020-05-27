@@ -21,16 +21,7 @@ import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
 import { forkJoin, of } from 'rxjs';
 import { catchError, mergeMap, toArray } from 'rxjs/operators';
-import {
-    AccountHttp,
-    AccountInfo,
-    MosaicAmountView,
-    MosaicHttp,
-    MosaicService,
-    MultisigAccountInfo,
-    MultisigHttp,
-    PublicAccount,
-} from 'symbol-sdk';
+import { AccountInfo, MosaicAmountView, MosaicService, MultisigAccountInfo, PublicAccount } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -167,9 +158,10 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const accountHttp = new AccountHttp(profile.url);
-        const multisigHttp = new MultisigHttp(profile.url);
-        const mosaicHttp = new MosaicHttp(profile.url);
+        const repositoryFactory = profile.repositoryFactory;
+        const accountHttp = repositoryFactory.createAccountRepository();
+        const multisigHttp = repositoryFactory.createMultisigRepository();
+        const mosaicHttp = repositoryFactory.createMosaicRepository();
         const mosaicService = new MosaicService(accountHttp, mosaicHttp);
 
         forkJoin(

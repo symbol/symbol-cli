@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-import { RepositoryFactoryHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -35,7 +34,7 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         console.log(`Using ${profile.url}`);
-        const listener = new RepositoryFactoryHttp(profile.url).createListener();
+        const listener = profile.repositoryFactory.createListener();
         listener.open().then(
             () => {
                 listener.newBlock().subscribe(

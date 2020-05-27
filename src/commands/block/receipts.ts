@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { ReceiptHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -46,7 +45,7 @@ export default class extends ProfileCommand {
         const height = await new HeightResolver().resolve(options);
 
         this.spinner.start();
-        const receiptHttp = new ReceiptHttp(profile.url);
+        const receiptHttp = profile.repositoryFactory.createReceiptRepository();
         receiptHttp.getBlockReceipts(height).subscribe(
             (statement: any) => {
                 this.spinner.stop();

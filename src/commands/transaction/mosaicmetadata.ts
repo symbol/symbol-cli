@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Deadline, MetadataHttp, MetadataTransactionService, MetadataType } from 'symbol-sdk';
+import { Deadline, MetadataTransactionService, MetadataType } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
@@ -79,7 +79,7 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
         const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataHttp);
         const metadataTransaction = await metadataTransactionService
             .createMetadataTransaction(

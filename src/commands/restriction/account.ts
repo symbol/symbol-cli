@@ -19,7 +19,7 @@ import chalk from 'chalk';
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { AccountRestriction, RestrictionAccountHttp } from 'symbol-sdk';
+import { AccountRestriction } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -72,7 +72,7 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const restrictionHttp = new RestrictionAccountHttp(profile.url);
+        const restrictionHttp = profile.repositoryFactory.createRestrictionAccountRepository();
         restrictionHttp.getAccountRestrictions(address).subscribe(
             (accountRestrictions: any) => {
                 this.spinner.stop();

@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Metadata, MetadataHttp } from 'symbol-sdk';
+import { Metadata } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -46,7 +46,7 @@ export default class extends ProfileCommand {
         const namespaceId = await new NamespaceNameResolver().resolve(options);
 
         this.spinner.start();
-        const metadataHttp = new MetadataHttp(profile.url);
+        const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         metadataHttp.getNamespaceMetadata(namespaceId).subscribe(
             (metadataEntries) => {
                 this.spinner.stop();

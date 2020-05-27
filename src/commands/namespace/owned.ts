@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { NamespaceHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -46,7 +45,7 @@ export default class extends ProfileCommand {
         const address = await new AddressResolver().resolve(options, profile);
 
         this.spinner.start();
-        const namespaceHttp = new NamespaceHttp(profile.url);
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
         namespaceHttp.getNamespacesFromAccount(address).subscribe(
             (namespaces) => {
                 this.spinner.stop();
