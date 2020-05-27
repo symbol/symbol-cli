@@ -54,7 +54,7 @@ export class AccountInfoTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Account Information');
+        text += FormatterService.title('Account Information');
         text += '\n' + this.table.toString();
         return text;
     }
@@ -85,7 +85,7 @@ export class BalanceInfoTable {
     toString(): string {
         let text = '';
         if (this.table) {
-            text += '\n' + FormatterService.title('Balance Information');
+            text += FormatterService.title('Balance Information');
             text += '\n' + this.table.toString();
         }
         return text;
