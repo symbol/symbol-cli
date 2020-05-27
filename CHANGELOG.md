@@ -4,12 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.20.1] - 27-May-2020
+
+**Milestone**: RC7 0.9.5.1
+
+### Added
+
+- ``transaction vrfkeylink`` command 
+- ``transaction nodekeylink`` command 
+- ``transaction votingkeylink`` command 
+
+### Changed
+
+- ``symbol-sdk`` dependency to 0.19.2
+- Spinner dependency #279
+- Standard console.log format #276
+
+### Fixed
+
+- Send transfer transactions without mosaics #278
+
 ## [0.19.2] - 28-Apr-2020
 
-:warning: 0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
-Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``.
+:warning: 0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software
+Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``
 
-**Milestone**: Fushicho.5(RC4 0.9.3.1)
+**Milestone**: RC5 0.9.4.1
 
 ### Added
 
@@ -28,7 +48,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 
 ## [0.18.4] - 25-Mar-2020
 
-**Milestone**: Fushicho.5(RC4 0.9.3.1)
+**Milestone**: RC4 0.9.3.1
 
 ### Added
 
@@ -44,7 +64,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 
 ## [0.18.3] - 18-Mar-2020
 
-**Milestone**: Fushicho.5(RC4 0.9.3.1)
+**Milestone**: RC4 0.9.3.1
 
 ### Added
 
@@ -64,7 +84,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 
 ## [0.18.2] - 06-Mar-2020
 
-**Milestone**: Fushicho.5(RC4 0.9.3.1)
+**Milestone**: RC4 0.9.3.1
 
 ### Changed
 
@@ -81,7 +101,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 Private keys have now a new public key and address associated.
 Before installing ``symbol-cli@0.18.1``, backup and delete the file  ``~ \.nem2rc.json``.
 
-**Milestone**: Fushicho.5(RC4 0.9.3.1)
+**Milestone**: RC4 0.9.3.1
 
 ## Added
 
@@ -96,7 +116,7 @@ Before installing ``symbol-cli@0.18.1``, backup and delete the file  ``~ \.nem2r
 
 ## [0.17.1] - 31-Jan-2020
 
-**Milestone**: Fushicho.4(RC3 v0.9.2.1)
+**Milestone**: RC3 0.9.2.1
 
 ### Changed
 
@@ -316,8 +336,11 @@ Before installing ``symbol-cli@0.16.0``, backup and delete the file  ``~ \.nem2r
 ## [0.9.3] - 3-Apr-2018
 
 ### Added
+
 - Initial code release.
 
+[0.20.1]: https://github.com/nemtech/symbol-cli/compare/v0.19.2...v0.20.1
+[0.19.2]: https://github.com/nemtech/symbol-cli/compare/v0.18.3...v0.19.2
 [0.18.4]: https://github.com/nemtech/symbol-cli/compare/v0.18.3...v0.18.4
 [0.18.3]: https://github.com/nemtech/symbol-cli/compare/v0.18.2...v0.18.3
 [0.18.2]: https://github.com/nemtech/symbol-cli/compare/v0.18.1...v0.18.2

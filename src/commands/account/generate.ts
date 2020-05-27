@@ -15,27 +15,27 @@
  * limitations under the License.
  *
  */
-import chalk from 'chalk'
-import {command, metadata, option} from 'clime'
-import {Account} from 'symbol-sdk'
+import { command, metadata, option } from 'clime';
+import { MnemonicPassPhrase } from 'symbol-hd-wallets';
+import { Account } from 'symbol-sdk';
 
-import {AccountCredentialsTable, CreateProfileCommand} from '../../interfaces/create.profile.command'
-import {CreateProfileOptions} from '../../interfaces/createProfile.options'
-import {DefaultResolver} from '../../resolvers/default.resolver'
-import {DerivationService} from '../../services/derivation.service'
-import {GenerationHashResolver} from '../../resolvers/generationHash.resolver'
-import {ImportType} from '../../models/importType.enum'
-import {ImportTypeResolver} from '../../resolvers/importType.resolver'
-import {MnemonicPassPhrase} from 'symbol-hd-wallets'
-import {NetworkCurrencyResolver} from '../../resolvers/networkCurrency.resolver'
-import {NetworkResolver} from '../../resolvers/network.resolver'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {PathNumberResolver} from '../../resolvers/pathNumber.resolver'
-import {Profile} from '../../models/profile.model'
-import {ProfileCreationBase} from '../../models/profileCreation.types'
-import {ProfileNameResolver} from '../../resolvers/profile.resolver'
-import {SaveResolver} from '../../resolvers/save.resolver'
-import {URLResolver} from '../../resolvers/url.resolver'
+import { AccountCredentialsTable, CreateProfileCommand } from '../../interfaces/create.profile.command';
+import { CreateProfileOptions } from '../../interfaces/createProfile.options';
+import { ImportType } from '../../models/importType.enum';
+import { Profile } from '../../models/profile.model';
+import { ProfileCreationBase } from '../../models/profileCreation.types';
+import { DefaultResolver } from '../../resolvers/default.resolver';
+import { GenerationHashResolver } from '../../resolvers/generationHash.resolver';
+import { ImportTypeResolver } from '../../resolvers/importType.resolver';
+import { NetworkResolver } from '../../resolvers/network.resolver';
+import { NetworkCurrencyResolver } from '../../resolvers/networkCurrency.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PathNumberResolver } from '../../resolvers/pathNumber.resolver';
+import { ProfileNameResolver } from '../../resolvers/profile.resolver';
+import { SaveResolver } from '../../resolvers/save.resolver';
+import { URLResolver } from '../../resolvers/url.resolver';
+import { DerivationService } from '../../services/derivation.service';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends CreateProfileOptions {
     @option({
@@ -43,52 +43,51 @@ export class CommandOptions extends CreateProfileOptions {
         description: '(Optional) Saves the profile.',
         toggle: true,
     })
-    save: any
+    save: any;
 }
 
 @command({
     description: 'Generate new accounts',
 })
 export default class extends CreateProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const networkType = await new NetworkResolver().resolve(options)
-        const save = await new SaveResolver().resolve(options)
-        const importType = await new ImportTypeResolver().resolve(options)
+        const networkType = await new NetworkResolver().resolve(options);
+        const save = await new SaveResolver().resolve(options);
+        const importType = await new ImportTypeResolver().resolve(options);
 
         if (!save) {
             if (importType === ImportType.PrivateKey) {
-                const account = Account.generateNewAccount(networkType)
-                console.log(AccountCredentialsTable.createFromAccount(account).toString())
+                const account = Account.generateNewAccount(networkType);
+                console.log(AccountCredentialsTable.createFromAccount(account).toString());
             } else {
-                const pathNumber = await new PathNumberResolver().resolve(options)
-                const mnemonic = MnemonicPassPhrase.createRandom().plain
-                const privateKey = DerivationService.getPrivateKeyFromMnemonic(
-                    mnemonic, pathNumber,
-                )
-                console.log(AccountCredentialsTable.createFromAccount(
-                    Account.createFromPrivateKey(privateKey, networkType),
-                    mnemonic,
-                    pathNumber,
-                ).toString())
+                const pathNumber = await new PathNumberResolver().resolve(options);
+                const mnemonic = MnemonicPassPhrase.createRandom().plain;
+                const privateKey = DerivationService.getPrivateKeyFromMnemonic(mnemonic, pathNumber);
+                console.log(
+                    AccountCredentialsTable.createFromAccount(
+                        Account.createFromPrivateKey(privateKey, networkType),
+                        mnemonic,
+                        pathNumber,
+                    ).toString(),
+                );
             }
-            return
+            return;
         }
 
-        options.url = await new URLResolver().resolve(options)
-        const name = await new ProfileNameResolver().resolve(options)
-        const password = await new PasswordResolver().resolve(options)
-        const isDefault = await new DefaultResolver().resolve(options)
+        options.url = await new URLResolver().resolve(options);
+        const name = await new ProfileNameResolver().resolve(options);
+        const password = await new PasswordResolver().resolve(options);
+        const isDefault = await new DefaultResolver().resolve(options);
 
-        this.spinner.start()
-        const generationHash = await new GenerationHashResolver().resolve(options)
-        const networkCurrency = await new NetworkCurrencyResolver().resolve(options)
-        this.spinner.stop(true)
+        this.spinner.start();
+        const generationHash = await new GenerationHashResolver().resolve(options);
+        const networkCurrency = await new NetworkCurrencyResolver().resolve(options);
+        this.spinner.stop();
 
         const baseArguments: ProfileCreationBase = {
             generationHash,
@@ -98,19 +97,19 @@ export default class extends CreateProfileCommand {
             networkType,
             password,
             url: options.url,
-        }
+        };
 
-        let profile: Profile
+        let profile: Profile;
 
         if (importType === ImportType.PrivateKey) {
-            const {privateKey} = Account.generateNewAccount(networkType)
-            profile = this.createProfile({...baseArguments, privateKey})
+            const { privateKey } = Account.generateNewAccount(networkType);
+            profile = this.createProfile({ ...baseArguments, privateKey });
         } else {
-            const mnemonic = MnemonicPassPhrase.createRandom().plain
-            profile = this.createProfile({...baseArguments, mnemonic, pathNumber: 1})
+            const mnemonic = MnemonicPassPhrase.createRandom().plain;
+            profile = this.createProfile({ ...baseArguments, mnemonic, pathNumber: 1 });
         }
 
-        console.log(AccountCredentialsTable.createFromProfile(profile, password).toString())
-        console.log(chalk.green('\nStored ' + name + ' profile'))
+        console.log(AccountCredentialsTable.createFromProfile(profile, password).toString());
+        console.log(FormatterService.success('Stored ' + name + ' profile'));
     }
 }

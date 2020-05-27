@@ -15,46 +15,47 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {HashResolver} from '../../resolvers/hash.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {TransactionHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import { command, metadata, option } from 'clime';
+import { TransactionHttp } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { HashResolver } from '../../resolvers/hash.resolver';
+import { FormatterService } from '../../services/formatter.service';
+import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Transaction hash.',
     })
-    hash: string
+    hash: string;
 }
 
 @command({
     description: 'Fetch transaction info',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const hash = await new HashResolver()
-            .resolve(options)
+        const profile = this.getProfile(options);
+        const hash = await new HashResolver().resolve(options);
 
-        this.spinner.start()
-        const transactionHttp = new TransactionHttp(profile.url)
-        transactionHttp.getTransaction(hash)
-            .subscribe((transaction) => {
-                this.spinner.stop(true)
-                new TransactionView(transaction).print()
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        this.spinner.start();
+        const transactionHttp = new TransactionHttp(profile.url);
+        transactionHttp.getTransaction(hash).subscribe(
+            (transaction) => {
+                this.spinner.stop();
+                new TransactionView(transaction).print();
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

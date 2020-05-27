@@ -16,22 +16,23 @@
  *
  */
 
-import {expect} from 'chai'
+import { expect } from 'chai';
 
-import {ProfileMigrations} from '../../src/migrations/profile.migrations'
-import {profileDTOv1, profileDTOv2, profileDTO2v2, profileDTO2v3} from '../mocks/profiles/profileDTO.mock'
-
+import { ProfileMigrations } from '../../src/migrations/profile.migrations';
+import { profileDTO2v2, profileDTO2v3, profileDTOv1, profileDTOv2 } from '../mocks/profiles/profileDTO.mock';
 
 describe('ProfileMigration', () => {
-  it('version2_networkCurrency should migrate a v1 profile to v2', () => {
-    // @ts-ignore: ignore warning since profileDTOv1 is missing version and network currency props
-    const migrated = ProfileMigrations.version2_networkCurrency(profileDTOv1)
-    expect(migrated).deep.equal(profileDTOv2)
-  })
+    it('version2_networkCurrency should migrate a v1 profile to v2', () => {
+        // @ts-ignore
+        // Ignore warning since profileDTOv1 is missing version and network currency props
+        const migrated = ProfileMigrations.version2_networkCurrency(profileDTOv1);
+        expect(migrated).deep.equal(profileDTOv2);
+    });
 
-  it('version3_profileType should migrate a v2 profile to v3', () => {
-    // @ts-ignore: ignore warning since profileDTOv1 is missing version and network currency props
-    const migrated = ProfileMigrations.version3_profileType(profileDTO2v2)
-    expect(migrated).deep.equal(profileDTO2v3)
-  })
-})
+    it('version3_profileType should migrate a v2 profile to v3', () => {
+        // @ts-ignore
+        // ignore warning since profileDTOv1 is missing version and network currency props
+        const migrated = ProfileMigrations.version3_profileType(profileDTO2v2);
+        expect(migrated).deep.equal(profileDTO2v3);
+    });
+});

@@ -15,54 +15,52 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {NamespaceInfoTable} from './info'
-import {NamespaceHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import { command, metadata, option } from 'clime';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { FormatterService } from '../../services/formatter.service';
+import { NamespaceInfoTable } from './info';
 
 export class CommandOptions extends ProfileOptions {
-
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string
+    address: string;
 }
 
 @command({
     description: 'Get owned namespaces',
 })
-
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
 
-        this.spinner.start()
-        const namespaceHttp = new NamespaceHttp(profile.url)
-        namespaceHttp.getNamespacesFromAccount(address)
-            .subscribe((namespaces) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
+        namespaceHttp.getNamespacesFromAccount(address).subscribe(
+            (namespaces) => {
+                this.spinner.stop();
 
                 if (namespaces.length === 0) {
-                    console.log('The address ' + address.pretty() + ' does not own any namespaces.')
+                    console.log(FormatterService.error('The address ' + address.pretty() + ' does not own any namespaces'));
                 }
                 namespaces.map((namespace) => {
-                    console.log(new NamespaceInfoTable(namespace).toString())
-                })
-
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+                    console.log(new NamespaceInfoTable(namespace).toString());
+                });
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

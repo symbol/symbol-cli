@@ -16,9 +16,10 @@
  *
  */
 
-import {account1} from '../accounts.mock'
-import {namespaceId1} from '../namespaces.mock'
-import {Deadline, MosaicAddressRestrictionTransaction, NetworkType, UInt64} from 'symbol-sdk'
+import { Deadline, MosaicAddressRestrictionTransaction, NetworkType, UInt64 } from 'symbol-sdk';
+
+import { account1 } from '../accounts.mock';
+import { namespaceId1 } from '../namespaces.mock';
 
 export const unsignedMosaicAddressRestriction1 = MosaicAddressRestrictionTransaction.create(
     Deadline.create(),
@@ -28,4 +29,4 @@ export const unsignedMosaicAddressRestriction1 = MosaicAddressRestrictionTransac
     UInt64.fromUint(8),
     NetworkType.MIJIN_TEST,
     UInt64.fromUint(9),
-)
+);

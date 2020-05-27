@@ -16,27 +16,28 @@
  *
  */
 
-import {statement} from '../../mocks/statements.mock'
-import {StatementsView} from '../../../src/views/statements/statements.view'
-import {assert} from 'chai'
+import { assert } from 'chai';
+
+import { StatementsView } from '../../../src/views/statements/statements.view';
+import { statement } from '../../mocks/statements.mock';
 
 describe('Statements view', () => {
- it('Renders statements', () => {
-  const statementsView = new StatementsView(statement).tableEntries
-  if (statementsView['Transaction statements'] === null
-   || statementsView['Address resolution statements'] === null
-   || statementsView['Mosaic resolution statements'] === null) {
-   throw new Error('Something went wrong when rendering the statements tables')
-  }
+    it('Renders statements', () => {
+        const statementsView = new StatementsView(statement).tableEntries;
+        if (
+            statementsView['Transaction statements'] === null ||
+            statementsView['Address resolution statements'] === null ||
+            statementsView['Mosaic resolution statements'] === null
+        ) {
+            throw new Error('Something went wrong when rendering the statements tables');
+        }
 
-  statementsView['Transaction statements'].forEach(
-   (element) => assert.typeOf(element, 'array', 'statementsView.render is an array')
-  )
-  statementsView['Address resolution statements'].forEach(
-   (element) => assert.typeOf(element, 'array', 'statementsView.render is an array')
-  )
-  statementsView['Mosaic resolution statements'].forEach(
-   (element) => assert.typeOf(element, 'array', 'statementsView.render is an array')
-  )
- })
-})
+        statementsView['Transaction statements'].forEach((element) => assert.typeOf(element, 'array', 'statementsView.render is an array'));
+        statementsView['Address resolution statements'].forEach((element) =>
+            assert.typeOf(element, 'array', 'statementsView.render is an array'),
+        );
+        statementsView['Mosaic resolution statements'].forEach((element) =>
+            assert.typeOf(element, 'array', 'statementsView.render is an array'),
+        );
+    });
+});

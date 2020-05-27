@@ -1,4 +1,5 @@
 /*
+ *
  * Copyright 2018-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,58 +15,60 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AddressAliasResolver} from '../../resolvers/address.resolver'
-import {AmountResolver} from '../../resolvers/amount.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {DurationResolver} from '../../resolvers/duration.resolver'
-import {HashAlgorithmResolver} from '../../resolvers/hashAlgorithm.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
-import {SecretResolver} from '../../resolvers/secret.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Deadline, Mosaic, SecretLockTransaction} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+
+import { command, metadata, option } from 'clime';
+import { Deadline, Mosaic, SecretLockTransaction } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { AmountResolver } from '../../resolvers/amount.resolver';
+import { DurationResolver } from '../../resolvers/duration.resolver';
+import { HashAlgorithmResolver } from '../../resolvers/hashAlgorithm.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { SecretResolver } from '../../resolvers/secret.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         description: 'Locked mosaic identifier or @alias.',
         flag: 'm',
     })
-    mosaicId: string
+    mosaicId: string;
 
     @option({
         description: 'Amount of mosaic units to lock.',
         flag: 'a',
     })
-    amount: string
+    amount: string;
 
     @option({
-        description: 'Number of blocks for which a lock should be valid. ' +
+        description:
+            'Number of blocks for which a lock should be valid. ' +
             'Duration is allowed to lie up to 30 days. If reached, the mosaics will be returned to the initiator.',
         flag: 'd',
     })
-    duration: string
+    duration: string;
 
     @option({
         description: 'Proof hashed in hexadecimal format.',
         flag: 's',
     })
-    secret: string
+    secret: string;
 
     @option({
         description: 'Algorithm used to hash the proof (Op_Sha3_256, Op_Hash_160, Op_Hash_256).',
         flag: 'H',
     })
-    hashAlgorithm: string
+    hashAlgorithm: string;
 
     @option({
         description: 'Address or @alias that receives the funds once unlocked.',
         flag: 'r',
     })
-    recipientAddress: string
+    recipientAddress: string;
 }
 
 @command({
@@ -73,25 +76,26 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const mosaicId = await new MosaicIdAliasResolver()
-            .resolve(options, 'Enter the locked mosaic identifier or alias:')
-        const amount = await new AmountResolver()
-            .resolve(options, 'Enter the absolute amount of mosaic units to lock:')
-        const recipientAddress = await new AddressAliasResolver()
-            .resolve(options, undefined, 'Enter the address (or @alias) that receives the funds once unlocked:', 'recipientAddress')
-        const duration = await new DurationResolver()
-            .resolve(options, 'Enter the number of blocks for which a lock should be valid:')
-        const secret = await new SecretResolver().resolve(options)
-        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const mosaicId = await new MosaicIdAliasResolver().resolve(options, 'Enter the locked mosaic identifier or alias:');
+        const amount = await new AmountResolver().resolve(options, 'Enter the absolute amount of mosaic units to lock:');
+        const recipientAddress = await new AddressAliasResolver().resolve(
+            options,
+            undefined,
+            'Enter the address (or @alias) that receives the funds once unlocked:',
+            'recipientAddress',
+        );
+        const duration = await new DurationResolver().resolve(options, 'Enter the number of blocks for which a lock should be valid:');
+        const secret = await new SecretResolver().resolve(options);
+        const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
 
         const transaction = SecretLockTransaction.create(
             Deadline.create(),
@@ -101,16 +105,19 @@ export default class extends AnnounceTransactionsCommand {
             secret,
             recipientAddress,
             profile.networkType,
-            maxFee)
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
+            maxFee,
+        );
 
-        new TransactionView(transaction, signedTransaction).print()
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
-        }
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
+        };
+
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

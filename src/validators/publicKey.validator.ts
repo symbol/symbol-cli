@@ -15,14 +15,15 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {NetworkType, PublicAccount} from 'symbol-sdk'
+
+import { NetworkType, PublicAccount } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Public key validator
  */
 export class PublicKeyValidator implements Validator<string> {
-
     /**
      * Validates a public key format.
      * @param {string} value - Public key.
@@ -30,11 +31,11 @@ export class PublicKeyValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            PublicAccount.createFromPublicKey(value, NetworkType.MIJIN_TEST)
+            PublicAccount.createFromPublicKey(value, NetworkType.MIJIN_TEST);
         } catch {
-            return 'Public key should be a 64 characters hexadecimal string'
+            return 'Public key should be a 64 characters hexadecimal string';
         }
-        return true
+        return true;
     }
 }
 
@@ -42,20 +43,23 @@ export class PublicKeyValidator implements Validator<string> {
  * Public keys validator
  */
 export class PublicKeysValidator implements Validator<string> {
-
     /**
      * Validates multiple public key format.
      * @param {string} value - Public keys, separated by a comma.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const publicKeys = value.split(',')
-        let error = ''
+        const publicKeys = value.split(',');
+        let error = '';
         publicKeys.forEach((publicKey: string) => {
-            const validation = new PublicKeyValidator().validate(publicKey)
-            if (typeof validation === 'string') {error = validation}
-        })
-        if (!error) {return true}
-        return error
+            const validation = new PublicKeyValidator().validate(publicKey);
+            if (typeof validation === 'string') {
+                error = validation;
+            }
+        });
+        if (!error) {
+            return true;
+        }
+        return error;
     }
 }

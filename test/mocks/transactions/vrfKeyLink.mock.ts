@@ -16,19 +16,6 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {AccountLinkTransaction, LinkAction} from 'symbol-sdk'
+import { Deadline, LinkAction, NetworkType, VrfKeyLinkTransaction } from 'symbol-sdk';
 
-export class AccountLinkView {
-  /**
-   * @static
-   * @param {AccountLinkTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AccountLinkTransaction): CellRecord {
-    return {
-      ['Action']: LinkAction[tx.linkAction],
-      ['Remote public key']: tx.remotePublicKey,
-    }
-  }
-}
+export const unsignedVrfKeyLink1 = VrfKeyLinkTransaction.create(Deadline.create(), '0'.repeat(64), LinkAction.Link, NetworkType.MIJIN_TEST);

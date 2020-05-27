@@ -15,40 +15,44 @@
  * limitations under the License.
  *
  */
-import {MonitorAddressCommand, MonitorAddressOptions} from '../../interfaces/monitor.transaction.command'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {Listener} from 'symbol-sdk'
-import {command, metadata} from 'clime'
-import chalk from 'chalk'
+import { command, metadata } from 'clime';
+
+import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { FormatterService } from '../../services/formatter.service';
+import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
     description: 'Monitor aggregate bonded transactions added',
 })
 export default class extends MonitorAddressCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: MonitorAddressOptions) {
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
 
-        console.log(chalk.green('Monitoring ') + `${address.pretty()} using ${profile.url}`)
-        const listener = new Listener(profile.url)
-        listener.open().then(() => {
-            listener.aggregateBondedAdded(address).subscribe((transaction) => {
-                new TransactionView(transaction).print()
-            }, (err) => {
-                console.log(HttpErrorHandler.handleError(err))
-                listener.close()
-            })
-        }, (err) => {
-            this.spinner.stop(true)
-            console.log(HttpErrorHandler.handleError(err))
-        })
+        console.log(FormatterService.title('Monitoring ') + `${address.pretty()} using ${profile.url}`);
+        const listener = profile.repositoryFactory.createListener();
+        listener.open().then(
+            () => {
+                listener.aggregateBondedAdded(address).subscribe(
+                    (transaction) => {
+                        new TransactionView(transaction).print();
+                    },
+                    (err) => {
+                        console.log(FormatterService.error(err));
+                        listener.close();
+                    },
+                );
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

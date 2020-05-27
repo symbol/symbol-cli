@@ -15,76 +15,88 @@
  * limitations under the License.
  *
  */
-import {Choices, ConfirmOptionType, InputOptionType, SelectOptionType} from './interfaces/options.interface'
-import {Validator} from './validators/validator'
-import chalk from 'chalk'
-import * as prompts from  'prompts'
+import * as prompts from 'prompts';
+
+import { Choices, ConfirmOptionType, InputOptionType, SelectOptionType } from './interfaces/options.interface';
+import { FormatterService } from './services/formatter.service';
+import { Validator } from './validators/validator';
 
 /**
  * Passed as option to Prompt,
  * it enables a clean behaviour when an user abords a prompt serie
  */
-const onCancel = () => process.exit()
+const onCancel = () => process.exit();
 
-export const OptionsChoiceResolver = async (options: any,
-                                            key: string,
-                                            promptText: string,
-                                            choices: Choices[],
-                                            type: SelectOptionType = 'select',
-                                            validation: Validator<any> | undefined) => {
+export const OptionsChoiceResolver = async (
+    options: any,
+    key: string,
+    promptText: string,
+    choices: Choices[],
+    type: SelectOptionType = 'select',
+    validation: Validator<any> | undefined,
+) => {
     if (options[key] !== undefined) {
-        const title = `${options[key]}`
-        if (validation !== undefined ) {
-            const test = validation.validate(title)
+        const title = `${options[key]}`;
+        if (validation !== undefined) {
+            const test = validation.validate(title);
             if (typeof test === 'string') {
-                console.log(chalk.red('ERR'), test)
-                return process.exit()
+                FormatterService.error(test);
+                return process.exit();
             }
         }
-        return choices.find((item) => item.title === title)?.value
+        return choices.find((item) => item.title === title)?.value;
     } else {
-        return (await prompts({
-            type,
-            name: key,
-            message: promptText,
-            choices,
-            validate: validation !== undefined ?
-                (result) => validation.validate(result) : () => true,
-        }, {onCancel}))[key]
+        return (
+            await prompts(
+                {
+                    type,
+                    name: key,
+                    message: promptText,
+                    choices,
+                    validate: validation !== undefined ? (result) => validation.validate(result) : () => true,
+                },
+                { onCancel },
+            )
+        )[key];
     }
-}
+};
 
-export const OptionsResolver = async (options: any,
-                                      key: string,
-                                      secondSource: () => string | undefined,
-                                      promptText: string,
-                                      type: InputOptionType = 'text',
-                                      validation: Validator<any> | undefined) => {
-
-    let value: string
+export const OptionsResolver = async (
+    options: any,
+    key: string,
+    secondSource: () => string | undefined,
+    promptText: string,
+    type: InputOptionType = 'text',
+    validation: Validator<any> | undefined,
+) => {
+    let value: string;
     if (options[key] !== undefined) {
-        value = typeof options[key] === 'string' ? options[key].trim() : options[key]
+        value = typeof options[key] === 'string' ? options[key].trim() : options[key];
         if (validation !== undefined) {
-            const test = validation.validate(value)
+            const test = validation.validate(value);
             if (typeof test === 'string') {
-                console.log(chalk.red('ERR'), test)
-                return process.exit()
+                FormatterService.error(test);
+                return process.exit();
             }
         }
     } else if (secondSource()) {
-        let resolvedSecondSource = secondSource()
-        value = resolvedSecondSource ? resolvedSecondSource  : ''
+        const resolvedSecondSource = secondSource();
+        value = resolvedSecondSource ? resolvedSecondSource : '';
     } else {
-        value = (await prompts({
-            type,
-            name: key,
-            message: promptText,
-            validate: validation !== undefined ?
-                (result: any) => validation.validate(result) : () => true,
-        }, {onCancel}))[key]
+        value = (
+            await prompts(
+                {
+                    type,
+                    name: key,
+                    message: promptText,
+                    validate: validation !== undefined ? (result: any) => validation.validate(result) : () => true,
+                },
+                { onCancel },
+            )
+        )[key];
     }
-    return value
-}
+    return value;
+};
 
 export const OptionsConfirmResolver = async (
     options: any,
@@ -92,10 +104,18 @@ export const OptionsConfirmResolver = async (
     promptText: string,
     type: ConfirmOptionType = 'confirm',
     initial = true,
-    name = 'value'): Promise<boolean> => options[key] ? options[key] : (await prompts({
-        type,
-        name,
-        message: promptText,
-        initial,
-    }, {onCancel}))[name]
-
+    name = 'value',
+): Promise<boolean> =>
+    options[key]
+        ? options[key]
+        : (
+              await prompts(
+                  {
+                      type,
+                      name,
+                      message: promptText,
+                      initial,
+                  },
+                  { onCancel },
+              )
+          )[name];

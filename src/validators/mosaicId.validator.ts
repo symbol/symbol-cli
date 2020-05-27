@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {MosaicId, NamespaceId} from 'symbol-sdk'
+import { MosaicId, NamespaceId } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Mosaic id validator
  */
 export class MosaicIdValidator implements Validator<string> {
-
     /**
      * Validates if a mosaic id object can be created from a string.
      * @param {string} value - MosaicId in hexadecimal.
@@ -30,11 +30,11 @@ export class MosaicIdValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            const ignored = new MosaicId(value)
+            const ignored = new MosaicId(value);
         } catch (err) {
-            return 'Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C'
+            return 'Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C';
         }
-        return true
+        return true;
     }
 }
 
@@ -42,28 +42,27 @@ export class MosaicIdValidator implements Validator<string> {
  * Mosaic id alias validator
  */
 export class MosaicIdAliasValidator implements Validator<string> {
-
     /**
      * Validates if a mosaic id object can be created from a string.
      * @param {string} value - MosaicId in hexadecimal or Namespace name. If starts with '@', it is a namespace name.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const aliasTag = '@'
+        const aliasTag = '@';
         if (value.charAt(0) !== aliasTag) {
             try {
-                const ignored = new MosaicId(value)
+                const ignored = new MosaicId(value);
             } catch (err) {
-                return 'Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C'
+                return 'Enter a mosaic id in hexadecimal format. Example: 941299B2B7E1291C';
             }
         } else {
-            const alias = value.substring(1)
+            const alias = value.substring(1);
             try {
-                const ignored = new NamespaceId(alias)
+                const ignored = new NamespaceId(alias);
             } catch (err) {
-                return 'Enter valid mosaic alias. Example: @nem.xem'
+                return 'Enter valid mosaic alias. Example: @nem.xem';
             }
         }
-        return true
+        return true;
     }
 }

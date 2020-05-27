@@ -11,7 +11,8 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
-- [0.19.x](CHANGELOG.md#0181-19-Feb-2020) - **Fushicho5 Network Compatibility (catapult-server@0.9.3.1)**
+- [0.20.x](CHANGELOG.md#0201-27-May-2020) - **RC7 0.9.5.1 Milestone**
+- [0.19.x](CHANGELOG.md#0181-19-Feb-2020)
 
 0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
 Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``.

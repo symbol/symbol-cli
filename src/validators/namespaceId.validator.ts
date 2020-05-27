@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {NamespaceId, UInt64} from 'symbol-sdk'
+import { NamespaceId, UInt64 } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Namespace id validator
  */
 export class NamespaceIdValidator implements Validator<string> {
-
     /**
      * Validates a namespace id.
      * @param {string} value - NamespaceId in hexadecimal.
@@ -30,11 +30,11 @@ export class NamespaceIdValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            const namespaceIdUInt64 = UInt64.fromHex(value)
-            const ignored = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher])
+            const namespaceIdUInt64 = UInt64.fromHex(value);
+            const ignored = new NamespaceId([namespaceIdUInt64.lower, namespaceIdUInt64.higher]);
         } catch (err) {
-            return 'Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244'
+            return 'Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244';
         }
-        return true
+        return true;
     }
 }

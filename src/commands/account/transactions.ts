@@ -15,43 +15,44 @@
  * limitations under the License.
  *
  */
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {AccountHttp} from 'symbol-sdk'
-import {command, metadata} from 'clime'
+import { command, metadata } from 'clime';
+
+import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { FormatterService } from '../../services/formatter.service';
+import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 @command({
     description: 'Fetch transactions from account',
 })
 export default class extends AccountTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: AccountTransactionsOptions) {
-        const profile = this.getProfile(options)
-        const address = await new AddressResolver().resolve(options, profile)
+        const profile = this.getProfile(options);
+        const address = await new AddressResolver().resolve(options, profile);
 
-        this.spinner.start()
-        const accountHttp = new AccountHttp(profile.url)
-        accountHttp.getAccountTransactions(address, options.getQueryParams())
-            .subscribe((transactions) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const accountHttp = profile.repositoryFactory.createAccountRepository();
+        accountHttp.getAccountTransactions(address, options.getQueryParams()).subscribe(
+            (transactions) => {
+                this.spinner.stop();
 
                 if (!transactions.length) {
-                    console.log('There aren\'t transactions')
+                    console.log(FormatterService.error("There aren't transactions"));
                 }
 
                 transactions.forEach((transaction) => {
-                    new TransactionView(transaction).print()
-                })
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+                    new TransactionView(transaction).print();
+                });
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

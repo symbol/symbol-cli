@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
-import {Account, NetworkType, Password, SimpleWallet} from 'symbol-sdk'
-import {expect} from 'chai'
 
-import {NetworkCurrency} from '../../src/models/networkCurrency.model'
-import {Profile} from '../../src/models/profile.model'
+import { expect } from 'chai';
+import { Account, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
 
-const networkCurrency = NetworkCurrency.createFromDTO({namespaceId: 'symbol.xym', divisibility: 6})
+import { NetworkCurrency } from '../../src/models/networkCurrency.model';
+import { Profile } from '../../src/models/profile.model';
+
+const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 
 describe('Profile', () => {
     it('toDTO should be implemented in child classes', () => {
@@ -40,9 +41,9 @@ describe('Profile', () => {
                     3,
                     'PrivateKey',
                     '1',
-                )
+                );
             }
         }
-        expect(() => DummyProfileImplementation.create().toDTO()).to.throw()
-    })
-})
+        expect(() => DummyProfileImplementation.create().toDTO()).to.throw();
+    });
+});

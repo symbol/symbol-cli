@@ -15,21 +15,22 @@
  * limitations under the License.
  *
  */
-import {NetworkCurrency} from './networkCurrency.model'
-import {NetworkType, Password} from 'symbol-sdk'
+import { NetworkType, Password } from 'symbol-sdk';
+
+import { NetworkCurrency } from './networkCurrency.model';
 
 /**
  * Base arguments new profile creation
  * @interface ProfileCreationBase
  */
 export interface ProfileCreationBase {
- generationHash: string;
- isDefault: boolean;
- name: string;
- networkCurrency: NetworkCurrency;
- networkType: NetworkType;
- password: Password;
- url: string;
+    generationHash: string;
+    isDefault: boolean;
+    name: string;
+    networkCurrency: NetworkCurrency;
+    networkType: NetworkType;
+    password: Password;
+    url: string;
 }
 
 /**
@@ -39,7 +40,7 @@ export interface ProfileCreationBase {
  * @extends {ProfileCreationBase}
  */
 export interface PrivateKeyProfileCreation extends ProfileCreationBase {
- privateKey: string;
+    privateKey: string;
 }
 
 /**
@@ -49,11 +50,11 @@ export interface PrivateKeyProfileCreation extends ProfileCreationBase {
  * @extends {ProfileCreationBase}
  */
 export interface HdProfileCreation extends ProfileCreationBase {
- mnemonic: string;
- pathNumber: number;
+    mnemonic: string;
+    pathNumber: number;
 }
 
 /**
  * Type for profile creation arguments
  */
-export type ProfileCreation = PrivateKeyProfileCreation | HdProfileCreation
+export type ProfileCreation = PrivateKeyProfileCreation | HdProfileCreation;

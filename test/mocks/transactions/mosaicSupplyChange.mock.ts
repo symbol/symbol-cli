@@ -16,14 +16,15 @@
  *
  */
 
-import {mosaicId1} from '../mosaics.mock'
-import {Deadline, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, NetworkType, UInt64} from 'symbol-sdk'
+import { Deadline, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, NetworkType, UInt64 } from 'symbol-sdk';
+
+import { mosaicId1 } from '../mosaics.mock';
 
 export const unsignedMosaicSupplyChange1 = MosaicSupplyChangeTransaction.create(
- Deadline.create(),
- mosaicId1,
- MosaicSupplyChangeAction.Increase,
- UInt64.fromUint(10),
- NetworkType.MIJIN_TEST,
- new UInt64([1, 0]),
-)
+    Deadline.create(),
+    mosaicId1,
+    MosaicSupplyChangeAction.Increase,
+    UInt64.fromUint(10),
+    NetworkType.MIJIN_TEST,
+    new UInt64([1, 0]),
+);

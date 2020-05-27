@@ -15,45 +15,43 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {MosaicGlobalRestrictionItem, MosaicRestrictionType, RestrictionMosaicHttp} from 'symbol-sdk'
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { MosaicGlobalRestrictionItem, MosaicRestrictionType } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string
+    mosaicId: string;
 }
 
 export class MosaicGlobalRestrictionsTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
 
-    constructor(public readonly mosaicGlobalRestrictions:  Map<string, MosaicGlobalRestrictionItem>) {
+    constructor(public readonly mosaicGlobalRestrictions: Map<string, MosaicGlobalRestrictionItem>) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Restriction Key', 'Reference MosaicId', 'Restriction Type', 'Restriction Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
 
         mosaicGlobalRestrictions.forEach((value: MosaicGlobalRestrictionItem, key: string) => {
-            this.table.push(
-                [key, value.referenceMosaicId.toHex(), MosaicRestrictionType[value.restrictionType], value.restrictionValue],
-            )
-        })
+            this.table.push([key, value.referenceMosaicId.toHex(), MosaicRestrictionType[value.restrictionType], value.restrictionValue]);
+        });
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Mosaic Global Restrictions') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += FormatterService.title('Mosaic Global Restrictions');
+        text += '\n' + this.table.toString();
+        return text;
     }
 }
 
@@ -61,29 +59,30 @@ export class MosaicGlobalRestrictionsTable {
     description: 'Fetch global restrictions assigned to a mosaic',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const mosaicId = await new MosaicIdResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
 
-        this.spinner.start()
-        const restrictionHttp = new RestrictionMosaicHttp(profile.url)
-        restrictionHttp.getMosaicGlobalRestriction(mosaicId)
-            .subscribe((mosaicRestrictions) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const restrictionHttp = profile.repositoryFactory.createRestrictionMosaicRepository();
+        restrictionHttp.getMosaicGlobalRestriction(mosaicId).subscribe(
+            (mosaicRestrictions) => {
+                this.spinner.stop();
                 if (mosaicRestrictions.restrictions.size > 0) {
-                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString())
+                    console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions.restrictions).toString());
                 } else {
-                    console.log('\n The mosaicId does not have mosaic global restrictions assigned.')
+                    console.log(FormatterService.error('The mosaicId does not have mosaic global restrictions assigned'));
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

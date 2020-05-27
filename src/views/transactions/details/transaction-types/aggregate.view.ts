@@ -16,78 +16,78 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {transactionDetailViewFactory} from '../transactionDetailViewFactory'
-import {transactionNameFromType} from '../transactionNameFromType'
-import {AggregateTransaction} from 'symbol-sdk'
-import {Cell} from 'cli-table3'
+import { Cell } from 'cli-table3';
+import { AggregateTransaction, TransactionType } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
+import { transactionDetailViewFactory } from '../transactionDetailView.factory';
 
 export abstract class AggregateView {
-  /**
-   * Number of inner transactions in the aggregate
-   * @private
-   * @type {number}
-   */
-  private numberOfInnerTx: number
+    /**
+     * Number of inner transactions in the aggregate
+     * @private
+     * @type {number}
+     */
+    private numberOfInnerTx: number;
 
-  /**
-   * Creates an instance of AggregateView.
-   * @param {AggregateTransaction} tx
-   */
-  protected constructor(protected readonly tx: AggregateTransaction) {}
+    /**
+     * Creates an instance of AggregateView.
+     * @param {AggregateTransaction} tx
+     */
+    protected constructor(protected readonly tx: AggregateTransaction) {}
 
-  /**
-   * Gets the view of an inner transaction
-   * @protected
-   * @returns {CellRecord}
-   */
-  protected getInnerTransactionViews(): CellRecord {
-    const innerTransactionsViews = this.tx.innerTransactions.map(
-      (transaction) => transactionDetailViewFactory(transaction),
-    )
+    /**
+     * Gets the view of an inner transaction
+     * @protected
+     * @returns {CellRecord}
+     */
+    protected getInnerTransactionViews(): CellRecord {
+        const innerTransactionsViews = this.tx.innerTransactions.map((transaction) => transactionDetailViewFactory(transaction));
 
-    this.numberOfInnerTx = innerTransactionsViews.length
+        this.numberOfInnerTx = innerTransactionsViews.length;
 
-    return {
-      ...innerTransactionsViews
-        .reduce((acc, view, index) => ({
-          ...acc,
-          [`title${index}`]: this.getInnerTransactionTitle(index),
-          ...this.getPrefixedInnerTransactionView(view, index),
-        }), {}),
+        return {
+            ...innerTransactionsViews.reduce(
+                (acc, view, index) => ({
+                    ...acc,
+                    [`title${index}`]: this.getInnerTransactionTitle(index),
+                    ...this.getPrefixedInnerTransactionView(view, index),
+                }),
+                {},
+            ),
+        };
     }
-  }
 
-  /**
-   * Returns a full-width horizontally centered cell
-   * With the inner transaction type and its position in the aggregate transaction
-   * @private
-   * @param {number} index
-   * @returns {Cell}
-   */
-  private getInnerTransactionTitle(index: number): Cell {
-    const txType = transactionNameFromType(this.tx.innerTransactions[index].type)
+    /**
+     * Returns a full-width horizontally centered cell
+     * With the inner transaction type and its position in the aggregate transaction
+     * @private
+     * @param {number} index
+     * @returns {Cell}
+     */
+    private getInnerTransactionTitle(index: number): Cell {
+        const txType = TransactionType[this.tx.innerTransactions[index].type];
 
-    return {
-      content: `Inner transaction ${index + 1} of ${this.numberOfInnerTx} - ${txType}`,
-      colSpan: 2,
-      hAlign: 'center',
+        return {
+            content: `Inner transaction ${index + 1} of ${this.numberOfInnerTx} - ${txType}`,
+            colSpan: 2,
+            hAlign: 'center',
+        };
     }
-  }
 
-  /**
-   * Prefixes each CellRecord key of the inner transaction view
-   * With its position in the aggregate transaction
-   * @private
-   * @param {CellRecord} view
-   * @param {number} index
-   * @returns {CellRecord}
-   */
-  private getPrefixedInnerTransactionView(view: CellRecord, index: number): CellRecord {
-    return Object.entries(view)
-      .map(([label, value]) => ({
-        [`[Inner tx. ${index + 1} of ${this.numberOfInnerTx}] ${label}`]: value,
-      }))
-      .reduce((acc, item) => ({...acc, ...item}))
-  }
+    /**
+     * Prefixes each CellRecord key of the inner transaction view
+     * With its position in the aggregate transaction
+     * @private
+     * @param {CellRecord} view
+     * @param {number} index
+     * @returns {CellRecord}
+     */
+    private getPrefixedInnerTransactionView(view: CellRecord, index: number): CellRecord {
+        return Object.entries(view)
+            .map(([label, value]) => ({
+                [`[Inner tx. ${index + 1} of ${this.numberOfInnerTx}] ${label}`]: value,
+            }))
+            .reduce((acc, item) => ({ ...acc, ...item }));
+    }
 }

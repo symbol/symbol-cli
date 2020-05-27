@@ -15,65 +15,53 @@
  * limitations under the License.
  *
  */
-import {NamespaceIdResolver, NamespaceNameResolver, NamespaceTypeResolver} from '../../src/resolvers/namespace.resolver'
-import {expect} from 'chai'
-import {NamespaceId, NamespaceRegistrationType} from 'symbol-sdk'
+
+import { expect } from 'chai';
+import { NamespaceId, NamespaceRegistrationType } from 'symbol-sdk';
+
+import { NamespaceIdResolver, NamespaceNameResolver, NamespaceTypeResolver } from '../../src/resolvers/namespace.resolver';
 
 describe('Namespace name resolver', () => {
-
     it('should return namespace id', async () => {
-        const namespaceName = 'test'
-        const options = {namespaceName} as any
-        expect((await new NamespaceNameResolver().resolve(options)).toHex())
-            .to.be.equal(new NamespaceId(namespaceName).toHex())
-    })
+        const namespaceName = 'test';
+        const options = { namespaceName } as any;
+        expect((await new NamespaceNameResolver().resolve(options)).toHex()).to.be.equal(new NamespaceId(namespaceName).toHex());
+    });
 
     it('should return namespaceId with alt key', async () => {
-        const name = 'test'
-        const options = {name} as any
-        expect((await new NamespaceNameResolver()
-            .resolve(options, '', 'name')).toHex())
-            .to.be.equal(new NamespaceId(name).toHex())
-    })
+        const name = 'test';
+        const options = { name } as any;
+        expect((await new NamespaceNameResolver().resolve(options, '', 'name')).toHex()).to.be.equal(new NamespaceId(name).toHex());
+    });
 
     it('should return namespace full name', async () => {
-        const namespaceName = 'test'
-        const options = {namespaceName} as any
-        expect((await new NamespaceNameResolver().resolve(options)).fullName)
-            .to.be.equal('test')
-    })
+        const namespaceName = 'test';
+        const options = { namespaceName } as any;
+        expect((await new NamespaceNameResolver().resolve(options)).fullName).to.be.equal('test');
+    });
 
     it('should change key', async () => {
-        const key = 'test'
-        const options = {key} as any
-        expect((await new NamespaceNameResolver()
-            .resolve(options, 'altText', 'key')).fullName)
-            .to.be.equal('test')
-    })
-
-
-})
+        const key = 'test';
+        const options = { key } as any;
+        expect((await new NamespaceNameResolver().resolve(options, 'altText', 'key')).fullName).to.be.equal('test');
+    });
+});
 
 describe('Namespace id resolver', () => {
+    it('should return namespaceId', async () => {
+        const namespaceId = '85BBEA6CC462B244';
+        const options = { namespaceId } as any;
+        expect((await new NamespaceIdResolver().resolve(options)).toHex()).to.be.equal(namespaceId);
+    });
 
     it('should return namespaceId', async () => {
-        const namespaceId = '85BBEA6CC462B244'
-        const options = {namespaceId} as any
-        expect((await new NamespaceIdResolver().resolve(options)).toHex())
-            .to.be.equal(namespaceId)
-    })
-
-    it('should return namespaceId', async () => {
-        const key = '85BBEA6CC462B244'
-        const options = {key} as any
-        expect((await new NamespaceIdResolver()
-            .resolve(options, 'altText', 'key')).toHex())
-            .to.be.equal(key)
-    })
-})
+        const key = '85BBEA6CC462B244';
+        const options = { key } as any;
+        expect((await new NamespaceIdResolver().resolve(options, 'altText', 'key')).toHex()).to.be.equal(key);
+    });
+});
 
 describe('Root namespace resolver', () => {
-
     it('should return RootNamespace', async () => {
         const options = {
             name: 'bar',
@@ -85,10 +73,14 @@ describe('Root namespace resolver', () => {
             profile: 'test',
             password: 'test',
             sync: false,
-            announce: false}
-        expect(await new NamespaceTypeResolver()
-            .resolve(options)).to.be.equal(NamespaceRegistrationType.RootNamespace)
-    })
+            announce: false,
+            maxFeeHashLock: '50000',
+            lockAmount: '10',
+            lockDuration: '',
+            signer: '',
+        };
+        expect(await new NamespaceTypeResolver().resolve(options)).to.be.equal(NamespaceRegistrationType.RootNamespace);
+    });
 
     it('should return SubNamespace', async () => {
         const options = {
@@ -101,10 +93,12 @@ describe('Root namespace resolver', () => {
             profile: 'test',
             password: 'test',
             sync: false,
-            announce: false}
-        expect(await new NamespaceTypeResolver()
-            .resolve(options, 'altText'))
-            .to.be.equal(NamespaceRegistrationType.SubNamespace)
-    })
-
-})
+            announce: false,
+            maxFeeHashLock: '50000',
+            lockAmount: '10',
+            lockDuration: '',
+            signer: '',
+        };
+        expect(await new NamespaceTypeResolver().resolve(options, 'altText')).to.be.equal(NamespaceRegistrationType.SubNamespace);
+    });
+});

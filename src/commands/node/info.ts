@@ -15,39 +15,39 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata} from 'clime'
-import {NodeHttp, NodeInfo} from 'symbol-sdk'
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata } from 'clime';
+import { NodeInfo } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { FormatterService } from '../../services/formatter.service';
 
 export class NodeInfoTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
     constructor(public readonly nodeInfo: NodeInfo) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
         this.table.push(
             ['Friendly Name', nodeInfo.friendlyName],
             ['Host', nodeInfo.host],
-            ['Network Generation Hash', nodeInfo.networkGenerationHash],
+            ['Network Generation Hash', nodeInfo.networkGenerationHashSeed],
             ['Network Identifier', nodeInfo.networkIdentifier],
             ['Port', nodeInfo.port],
             ['Public Key', nodeInfo.publicKey],
             ['Roles', nodeInfo.roles],
             ['Version', nodeInfo.version],
-        )
+        );
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Node Information') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += FormatterService.title('Node Information');
+        text += '\n' + this.table.toString();
+        return text;
     }
 }
 
@@ -55,24 +55,25 @@ export class NodeInfoTable {
     description: 'Get the REST server components versions',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     execute(options: ProfileOptions) {
-        const profile = this.getProfile(options)
+        const profile = this.getProfile(options);
 
-        this.spinner.start()
-        const nodeHttp = new NodeHttp(profile.url)
-        nodeHttp.getNodeInfo()
-            .subscribe((nodeInfo) => {
-                this.spinner.stop(true)
-                console.log(new NodeInfoTable(nodeInfo).toString())
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        this.spinner.start();
+        const nodeHttp = profile.repositoryFactory.createNodeRepository();
+        nodeHttp.getNodeInfo().subscribe(
+            (nodeInfo) => {
+                this.spinner.stop();
+                console.log(new NodeInfoTable(nodeInfo).toString());
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

@@ -16,23 +16,24 @@
  *
  */
 
-import {RecipientsView} from '../../../recipients.view'
-import {CellRecord} from '../transaction.view'
-import {MosaicAddressRestrictionTransaction} from 'symbol-sdk'
+import { MosaicAddressRestrictionTransaction } from 'symbol-sdk';
+
+import { RecipientsView } from '../../../recipients.view';
+import { CellRecord } from '../transaction.view';
 
 export class MosaicAddressRestrictionView {
-  /**
-   * @static
-   * @param {MosaicAddressRestrictionTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MosaicAddressRestrictionTransaction): CellRecord {
-    return {
-      'Mosaic id': tx.mosaicId.toHex(),
-      'Restriction key': tx.restrictionKey.toHex(),
-      'Target address': RecipientsView.get(tx.targetAddress),
-      'Previous restriction value': tx.previousRestrictionValue.toString(),
-      'New restriction value': tx.newRestrictionValue.toString(),
+    /**
+     * @static
+     * @param {MosaicAddressRestrictionTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MosaicAddressRestrictionTransaction): CellRecord {
+        return {
+            'Mosaic id': tx.mosaicId.toHex(),
+            'Restriction key': tx.restrictionKey.toHex(),
+            'Target address': RecipientsView.get(tx.targetAddress),
+            'Previous restriction value': tx.previousRestrictionValue.toString(),
+            'New restriction value': tx.newRestrictionValue.toString(),
+        };
     }
-  }
 }

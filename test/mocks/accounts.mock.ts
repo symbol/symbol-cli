@@ -16,19 +16,10 @@
  *
  */
 
-import {Account, NetworkType} from 'symbol-sdk'
+import { Account, NetworkType } from 'symbol-sdk';
 
-export const account1 = Account.createFromPrivateKey(
-    '1'.repeat(64),
- NetworkType.MAIN_NET,
-)
+export const account1 = Account.createFromPrivateKey('1'.repeat(64), NetworkType.MAIN_NET);
 
-export const account2 = Account.createFromPrivateKey(
-    '2'.repeat(64),
- NetworkType.MAIN_NET,
-)
+export const account2 = Account.createFromPrivateKey('2'.repeat(64), NetworkType.MAIN_NET);
 
-export const account3 = Account.createFromPrivateKey(
-    '3'.repeat(64),
- NetworkType.MAIN_NET,
-)
+export const account3 = Account.createFromPrivateKey('3'.repeat(64), NetworkType.MAIN_NET);

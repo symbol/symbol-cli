@@ -15,33 +15,30 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata} from 'clime'
-import {BlockchainScore, ChainHttp} from 'symbol-sdk'
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata } from 'clime';
+import { BlockchainScore } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { FormatterService } from '../../services/formatter.service';
 
 export class ChainScoreTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
     constructor(public readonly score: BlockchainScore) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
-        this.table.push(
-            ['Score Low', score.scoreLow.toString()],
-            ['Score High', score.scoreHigh.toString()],
-        )
+        }) as HorizontalTable;
+        this.table.push(['Score Low', score.scoreLow.toString()], ['Score High', score.scoreHigh.toString()]);
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Storage Information') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += FormatterService.title('Storage Information');
+        text += '\n' + this.table.toString();
+        return text;
     }
 }
 
@@ -49,23 +46,25 @@ export class ChainScoreTable {
     description: 'Gets the current score of the chain',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     execute(options: ProfileOptions) {
-        const profile = this.getProfile(options)
+        const profile = this.getProfile(options);
 
-        this.spinner.start()
-        const chainHttp = new ChainHttp(profile.url)
-        chainHttp.getChainScore().subscribe((score) => {
-            this.spinner.stop(true)
-            console.log(new ChainScoreTable(score).toString())
-        }, (err) => {
-            this.spinner.stop(true)
-            console.log(HttpErrorHandler.handleError(err))
-        })
+        this.spinner.start();
+        const chainHttp = profile.repositoryFactory.createChainRepository();
+        chainHttp.getChainScore().subscribe(
+            (score) => {
+                this.spinner.stop();
+                console.log(new ChainScoreTable(score).toString());
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

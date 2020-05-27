@@ -16,19 +16,13 @@
  *
  */
 
-import {Address, NamespaceId} from 'symbol-sdk'
+import { Address, NamespaceId } from 'symbol-sdk';
 
 /**
  * Account service
  */
 export class AccountService {
-
-    public static ALIAS_TAG = '@'
-
-    /**
-     * Constructor
-     */
-    constructor() {}
+    public static ALIAS_TAG = '@';
 
     /**
      * Gets the address given a raw address.
@@ -36,12 +30,12 @@ export class AccountService {
      * @returns {Address | NamespaceId}
      */
     static getRecipient(rawRecipient: string): Address | NamespaceId {
-        let recipient: Address | NamespaceId
+        let recipient: Address | NamespaceId;
         if (rawRecipient.charAt(0) === AccountService.ALIAS_TAG) {
-            recipient =  new NamespaceId(rawRecipient.substring(1))
-        } else  {
-            recipient = Address.createFromRawAddress(rawRecipient)
+            recipient = new NamespaceId(rawRecipient.substring(1));
+        } else {
+            recipient = Address.createFromRawAddress(rawRecipient);
         }
-        return recipient
+        return recipient;
     }
 }

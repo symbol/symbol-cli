@@ -16,22 +16,23 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {MosaicMetadataTransaction} from 'symbol-sdk'
+import { MosaicMetadataTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class MosaicMetadataView {
-  /**
-   * @static
-   * @param {MosaicMetadataTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MosaicMetadataTransaction): CellRecord {
-    return {
-      'Target public key': tx.targetPublicKey,
-      'Scoped metadata key': tx.scopedMetadataKey.toHex(),
-      'Target mosaic Id': tx.targetMosaicId.toHex(),
-      'Value size delta': tx.valueSizeDelta.toString(),
-      'Value': tx.value,
+    /**
+     * @static
+     * @param {MosaicMetadataTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MosaicMetadataTransaction): CellRecord {
+        return {
+            'Target public key': tx.targetPublicKey,
+            'Scoped metadata key': tx.scopedMetadataKey.toHex(),
+            'Target mosaic Id': tx.targetMosaicId.toHex(),
+            'Value size delta': tx.valueSizeDelta.toString(),
+            Value: tx.value,
+        };
     }
-  }
 }

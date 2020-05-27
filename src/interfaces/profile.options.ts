@@ -16,14 +16,14 @@
  *
  */
 
-import {Options, option} from 'clime'
+import { Options, option } from 'clime';
 
 /**
  * Profile options.
  */
 export class ProfileOptions extends Options {
- @option({
-     description: '(Optional) Select between your profiles, by providing a profile name.',
- })
- profile: string
+    @option({
+        description: '(Optional) Select between your profiles, by providing a profile name.',
+    })
+    profile: string;
 }

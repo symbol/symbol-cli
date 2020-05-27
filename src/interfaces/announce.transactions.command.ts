@@ -15,148 +15,84 @@
  * limitations under the License.
  *
  */
-import {HttpErrorHandler} from '../services/httpErrorHandler.service'
-import {ProfileCommand} from './profile.command'
-import {ProfileOptions} from './profile.options'
-import chalk from 'chalk'
-import {Address, Listener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionHttp } from 'symbol-sdk'
-import {merge} from 'rxjs'
-import {filter, mergeMap, tap} from 'rxjs/operators'
+
+import { ExpectedError } from 'clime';
+import { MultisigAccountInfo, SignedTransaction } from 'symbol-sdk';
+
+import { Profile } from '../models/profile.model';
+import { PublicKeyChoiceResolver } from '../resolvers/publicKey.resolver';
+import { TransactionAnnounceMode, TransactionAnnounceModeResolver } from '../resolvers/transactionAnnounceMode.resolver';
+import { MultisigService } from '../services/multisig.service';
+import { TransactionAnnounceService } from '../services/transaction.announce.service';
+import { TransactionSignatureOptions, TransactionSignatureService } from '../services/transaction.signature.service';
+import { AnnounceTransactionsOptions } from './announceTransactions.options';
+import { ProfileCommand } from './profile.command';
 
 /**
  * Base command class to announce transactions.
  */
 export abstract class AnnounceTransactionsCommand extends ProfileCommand {
-
     protected constructor() {
-        super()
+        super();
     }
 
     /**
-     * Announces a transaction.
-     * @param {SignedTransaction} signedTransaction
-     * @param {string} url - Node URL.
+     * Gets the signer multisig info if the transaction is multisig
+     * @protected
+     * @param {AnnounceTransactionsOptions} options
+     * @returns {(Promise<MultisigAccountInfo | null>)}
      */
-    protected announceTransaction(signedTransaction: SignedTransaction, url: string) {
-        this.spinner.start()
-        const transactionHttp = new TransactionHttp(url)
-        transactionHttp
-            .announce(signedTransaction)
-            .subscribe((ignored) => {
-                this.spinner.stop(true)
-                console.log(chalk.green('\nTransaction announced correctly.'))
-                console.log(chalk.blue('Info'), 'To check if the network confirms or rejects the transaction, ' +
-                    'run the command \'symbol-cli transaction status\'.')
+    protected async getSignerMultisigInfo(options: AnnounceTransactionsOptions): Promise<MultisigAccountInfo | null> {
+        const transactionAnnounceMode = await new TransactionAnnounceModeResolver().resolve(options);
 
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        if (transactionAnnounceMode === TransactionAnnounceMode.normal) {
+            return null;
+        }
+
+        // Get the profile's multisig accounts multisig account info
+        const profile: Profile = this.getProfile(options);
+        const childMultisigAccountsInfo = await new MultisigService(profile).getChildrenMultisigAccountInfo();
+
+        if (!childMultisigAccountsInfo) {
+            throw new ExpectedError('The selected profile does not have multisig accounts');
+        }
+
+        // A signer public key was provided as an option,
+        if (options.signer) {
+            const multisigInfo = childMultisigAccountsInfo.find(({ account }) => account.publicKey === options.signer);
+
+            if (!multisigInfo) {
+                throw new ExpectedError(`
+                    ${options.signer} is not a multisig account of the profile ${profile.name}
+                `);
+            }
+
+            return multisigInfo;
+        }
+
+        const availablePublicKeys = childMultisigAccountsInfo.map(({ account }) => account.publicKey);
+
+        const chosenSigner = await new PublicKeyChoiceResolver().resolve(availablePublicKeys);
+
+        const chosenSignerMultisigInfo = childMultisigAccountsInfo.find(({ account }) => account.publicKey === chosenSigner);
+
+        if (!chosenSignerMultisigInfo) {
+            throw new ExpectedError('Something went wrong when selecting a signer');
+        }
+
+        return chosenSignerMultisigInfo;
     }
 
-    /**
-     * Announces a transaction waiting for the response.
-     * @param {SignedTransaction} Signed transaction.
-     * @param {Address} senderAddress - Address of the account sending the transaction.
-     * @param {string} url - Node URL.
-     */
-    protected announceTransactionSync(signedTransaction: SignedTransaction, senderAddress: Address, url: string) {
-        this.spinner.start()
-        const transactionHttp = new TransactionHttp(url)
-        const listener = new Listener(url)
-        listener.open().then(() => {
-            merge(
-                transactionHttp.announce(signedTransaction),
-                listener
-                    .confirmed(senderAddress)
-                    .pipe(
-                        filter((transaction) => transaction.transactionInfo !== undefined
-                            && transaction.transactionInfo.hash === signedTransaction.hash),
-                    ),
-                listener
-                    .status(senderAddress)
-                    .pipe(
-                        filter((error) => error.hash === signedTransaction.hash),
-                        tap((error) => {
-                            throw new Error(error.code)
-                        })))
-                .subscribe((response) => {
-                    if (response instanceof TransactionAnnounceResponse) {
-                        this.spinner.stop(true)
-                        console.log(chalk.green('\nTransaction announced.'))
-                        this.spinner.start()
-                    }
-                    else if (response instanceof Transaction){
-                        listener.close()
-                        this.spinner.stop(true)
-                        console.log(chalk.green('\nTransaction confirmed.'))
-                    }
-                }, (err) => {
-                    listener.close()
-                    this.spinner.stop(true)
-                    console.log(HttpErrorHandler.handleError(err))
-                })
-        }, (err) => {
-            listener.close()
-            this.spinner.stop(true)
-            console.log(chalk.red('Error'), err.message)
-        })
+    protected async signTransactions(
+        signatureOptions: TransactionSignatureOptions,
+        options: AnnounceTransactionsOptions,
+    ): Promise<SignedTransaction[]> {
+        const profile = this.getProfile(options);
+        return TransactionSignatureService.create(profile, options).signTransactions(signatureOptions);
     }
 
-    /**
-     * Announces a hash lock transaction. Once this is confirmed, announces an aggregate transaction.
-     * @param {signedHashLockTransaction} Signed hash lock transaction.
-     * @param {signedAggregateTransaction} Signed aggregate transaction.
-     * @param {Address} senderAddress - Address of the account sending the transaction.
-     * @param {string} url - Node URL.
-     */
-    protected announceAggregateTransaction(signedHashLockTransaction: SignedTransaction,
-                                           signedAggregateTransaction: SignedTransaction,
-                                           senderAddress: Address,
-                                           url: string) {
-        this.spinner.start()
-        let confirmations = 0
-        const transactionHttp = new TransactionHttp(url)
-        const listener = new Listener(url)
-        listener.open().then(() => {
-            merge(
-                transactionHttp.announce(signedHashLockTransaction),
-                listener
-                    .status(senderAddress)
-                    .pipe(
-                        filter((error) => error.hash === signedHashLockTransaction.hash),
-                        tap((error) => {
-                            throw new Error(error.code)
-                        })),
-                listener
-                    .confirmed(senderAddress)
-                    .pipe(
-                        filter((transaction) => transaction.transactionInfo !== undefined
-                            && transaction.transactionInfo.hash === signedHashLockTransaction.hash),
-                        mergeMap((ignored) => transactionHttp.announceAggregateBonded(signedAggregateTransaction)),
-                    ),
-            )
-                .subscribe((ignored) => {
-                    confirmations = confirmations + 1
-                    if (confirmations === 1) {
-                        this.spinner.stop(true)
-                        console.log(chalk.green('\n Hash lock transaction announced.'))
-                        this.spinner.start()
-                    } else if (confirmations === 2) {
-                        listener.close()
-                        this.spinner.stop(true)
-                        console.log(chalk.green('\n Hash lock transaction confirmed.'))
-                        console.log(chalk.green('\n Aggregate transaction announced.'))
-                    }
-                }, (err) => {
-                    listener.close()
-                    this.spinner.stop(true)
-                    console.log(HttpErrorHandler.handleError(err))
-                })
-        }, (err) => {
-            listener.close()
-            this.spinner.stop(true)
-            console.log(HttpErrorHandler.handleError(err))
-        })
+    protected async announceTransactions(options: AnnounceTransactionsOptions, signedTransactions: SignedTransaction[]): Promise<void> {
+        const profile = this.getProfile(options);
+        TransactionAnnounceService.create(profile, options).announce(signedTransactions);
     }
 }

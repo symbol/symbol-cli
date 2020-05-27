@@ -15,30 +15,20 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {MnemonicValidator} from '../../src/validators/mnemonic.validator'
 
-// eslint-disable-next-line max-len
-const mnemonic = 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense'
+import { expect } from 'chai';
+
+import { MnemonicValidator } from '../../src/validators/mnemonic.validator';
+
+const mnemonic =
+    'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense';
 
 describe('Mnemonic validator', () => {
     it('default case ', () => {
-        expect(new MnemonicValidator().validate(mnemonic))
-            .to.be.equal(true)
-    })
+        expect(new MnemonicValidator().validate(mnemonic)).to.be.equal(true);
+    });
 
     it('should throw error if mnemonic is invalid', () => {
-        expect(new MnemonicValidator().validate('invalid mnemonic')
-        ).to.be.equal('The provided mnemonic passphrase is invalid')
-    })
-
-    it('should throw error if mnemonic is null or undefined', () => {
-        // @ts-ignore
-        expect(new MnemonicValidator().validate(null))
-            .to.be.equal('The provided mnemonic passphrase is invalid')
-
-        // @ts-ignore
-        expect(new MnemonicValidator().validate(undefined))
-            .to.be.equal('The provided mnemonic passphrase is invalid')
-    })
-})
+        expect(new MnemonicValidator().validate('invalid mnemonic')).to.be.equal('The provided mnemonic passphrase is invalid');
+    });
+});

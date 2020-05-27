@@ -15,13 +15,14 @@
  * limitations under the License.
  *
  */
-import {SimpleWallet, Crypto} from 'symbol-sdk'
 
-import {DerivationService} from '../services/derivation.service'
-import {HdProfileCreation} from './profileCreation.types'
-import {HdProfileDTO} from './profileDTO.types'
-import {NetworkCurrency} from './networkCurrency.model'
-import {Profile, ProfileType, CURRENT_PROFILE_VERSION} from './profile.model'
+import { Crypto, SimpleWallet } from 'symbol-sdk';
+
+import { DerivationService } from '../services/derivation.service';
+import { NetworkCurrency } from './networkCurrency.model';
+import { CURRENT_PROFILE_VERSION, Profile, ProfileType } from './profile.model';
+import { HdProfileCreation } from './profileCreation.types';
+import { HdProfileDTO } from './profileDTO.types';
 
 /**
  * Hd Profile model
@@ -30,115 +31,105 @@ import {Profile, ProfileType, CURRENT_PROFILE_VERSION} from './profile.model'
  * @extends {Profile}
  */
 export class HdProfile extends Profile {
-   /**
-    * Creates a new HD Profile from a DTO
-    * @static
-    * @param {HdProfileDTO} DTO
-    * @returns {HdProfile}
-    */
-   public static createFromDTO(DTO: HdProfileDTO): HdProfile {
-      return new HdProfile(
-         SimpleWallet.createFromDTO(DTO.simpleWallet),
-         DTO.url,
-         DTO.networkGenerationHash,
-         NetworkCurrency.createFromDTO(DTO.networkCurrency),
-         DTO.version,
-         DTO.type as ProfileType,
-         DTO.default as '0' | '1',
-         DTO.encryptedPassphrase,
-         DTO.path,
-     )
-   }
+    /**
+     * Creates a new HD Profile from a DTO
+     * @static
+     * @param {HdProfileDTO} DTO
+     * @returns {HdProfile}
+     */
+    public static createFromDTO(DTO: HdProfileDTO): HdProfile {
+        return new HdProfile(
+            SimpleWallet.createFromDTO(DTO.simpleWallet),
+            DTO.url,
+            DTO.networkGenerationHash,
+            NetworkCurrency.createFromDTO(DTO.networkCurrency),
+            DTO.version,
+            DTO.type as ProfileType,
+            DTO.default as '0' | '1',
+            DTO.encryptedPassphrase,
+            DTO.path,
+        );
+    }
 
-   /**
-    * Creates a new HD Profile
-    * @static
-    * @param {HdProfileCreation} args
-    * @returns
-    */
-   public static create(args: HdProfileCreation) {
-      const path = DerivationService.getPathFromPathNumber(args.pathNumber)
-      const privateKey = DerivationService.getPrivateKeyFromMnemonic(args.mnemonic, args.pathNumber)
+    /**
+     * Creates a new HD Profile
+     * @static
+     * @param {HdProfileCreation} args
+     * @returns
+     */
+    public static create(args: HdProfileCreation) {
+        const path = DerivationService.getPathFromPathNumber(args.pathNumber);
+        const privateKey = DerivationService.getPrivateKeyFromMnemonic(args.mnemonic, args.pathNumber);
 
-      // create Simple Wallet
-      const simpleWallet = SimpleWallet.createFromPrivateKey(
-          args.name, args.password, privateKey, args.networkType
-      )
+        // create Simple Wallet
+        const simpleWallet = SimpleWallet.createFromPrivateKey(args.name, args.password, privateKey, args.networkType);
 
-      // create profile
-      return new HdProfile(
-          simpleWallet,
-          args.url,
-          args.generationHash,
-          args.networkCurrency,
-          CURRENT_PROFILE_VERSION,
-          'HD',
-          args.isDefault ? '1' : '0',
-          Crypto.encrypt(args.mnemonic, args.password.value),
-          path,
-      )
-   }
+        // create profile
+        return new HdProfile(
+            simpleWallet,
+            args.url,
+            args.generationHash,
+            args.networkCurrency,
+            CURRENT_PROFILE_VERSION,
+            'HD',
+            args.isDefault ? '1' : '0',
+            Crypto.encrypt(args.mnemonic, args.password.value),
+            path,
+        );
+    }
 
-   /**
-    * Creates an instance of HdProfile.
-    * @param {SimpleWallet} simpleWallet
-    * @param {string} url
-    * @param {string} networkGenerationHash
-    * @param {NetworkCurrency} networkCurrency
-    * @param {number} version
-    * @param {ProfileType} type
-    * @param {('0' | '1')} isDefault
-    * @param {string} encryptedPassphrase
-    * @param {string} path
-    */
-   private constructor(
-      public readonly simpleWallet: SimpleWallet,
-      public readonly url: string,
-      public readonly networkGenerationHash: string,
-      public readonly networkCurrency: NetworkCurrency,
-      public readonly version: number,
-      public readonly type: ProfileType,
-      public readonly isDefault: '0' | '1',
-      public readonly encryptedPassphrase: string,
-      public readonly path: string,
-   ) {
-      super(
-         simpleWallet,
-         url,
-         networkGenerationHash,
-         networkCurrency,
-         version,
-         type,
-         isDefault,
-      )
+    /**
+     * Creates an instance of HdProfile.
+     * @param {SimpleWallet} simpleWallet
+     * @param {string} url
+     * @param {string} networkGenerationHash
+     * @param {NetworkCurrency} networkCurrency
+     * @param {number} version
+     * @param {ProfileType} type
+     * @param {('0' | '1')} isDefault
+     * @param {string} encryptedPassphrase
+     * @param {string} path
+     */
+    private constructor(
+        public readonly simpleWallet: SimpleWallet,
+        public readonly url: string,
+        public readonly networkGenerationHash: string,
+        public readonly networkCurrency: NetworkCurrency,
+        public readonly version: number,
+        public readonly type: ProfileType,
+        public readonly isDefault: '0' | '1',
+        public readonly encryptedPassphrase: string,
+        public readonly path: string,
+    ) {
+        super(simpleWallet, url, networkGenerationHash, networkCurrency, version, type, isDefault);
 
-      this.table = this.getBaseTable()
-      this.table.push(['Path', `Path n. ${this.pathNumber + 1} (${this.path})`])
-   }
+        this.table = this.getBaseTable();
+        this.table.push(['Path', `Path n. ${this.pathNumber + 1} (${this.path})`]);
+    }
 
-   /**
-    * Gets path number
-    * @returns {(number | null)}
-    */
-   public get pathNumber(): number {
-      return DerivationService.getPathIndexFromPath(this.path)
-   }
+    /**
+     * Gets path number
+     * @returns {(number | null)}
+     */
+    public get pathNumber(): number {
+        return DerivationService.getPathIndexFromPath(this.path);
+    }
 
-   /**
-    * Creates a DTO
-    * @returns {HdProfileDTO}
-    */
-   public toDTO(): HdProfileDTO {
-      return {
-       simpleWallet: this.simpleWallet.toDTO(),
-       url: this.url,
-       networkGenerationHash: this.networkGenerationHash,
-       networkCurrency: this.networkCurrency.toDTO(),
-       version: this.version,
-       default: this.isDefault,
-       type: this.type,
-       encryptedPassphrase: this.encryptedPassphrase,
-       path: this.path,
-   }
- }
+    /**
+     * Creates a DTO
+     * @returns {HdProfileDTO}
+     */
+    public toDTO(): HdProfileDTO {
+        return {
+            simpleWallet: this.simpleWallet.toDTO(),
+            url: this.url,
+            networkGenerationHash: this.networkGenerationHash,
+            networkCurrency: this.networkCurrency.toDTO(),
+            version: this.version,
+            default: this.isDefault,
+            type: this.type,
+            encryptedPassphrase: this.encryptedPassphrase,
+            path: this.path,
+        };
+    }
 }

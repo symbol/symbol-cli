@@ -16,48 +16,45 @@
  *
  */
 
-import chalk from 'chalk'
-import {Statement} from 'symbol-sdk'
+import { Statement } from 'symbol-sdk';
 
-import {TableBuilder} from '../../models/tableBuilder.model'
-import {CellRecord} from '../transactions/details/transaction.view'
-import {TransactionStatementViews} from './transactionStatements.view'
-import {ResolutionStatementViews} from './resolutionStatements.view'
-
+import { FormatterService } from '../../services/formatter.service';
+import { TableBuilder } from '../table.builder';
+import { CellRecord } from '../transactions/details/transaction.view';
+import { ResolutionStatementViews } from './resolutionStatements.view';
+import { TransactionStatementViews } from './transactionStatements.view';
 
 export class StatementsView {
-  public constructor(private statement: Statement) {}
+    public constructor(private statement: Statement) {}
 
-  /**
-   * Logs the table
-   */
-  public print(): void {
-    Object
-      .entries(this.tableEntries)
-      .forEach(([tableName, entries]) => {
-        if (!entries) {return}
-        console.log(chalk.bold(tableName))
-        entries.forEach(
-          (entry) => console.log(`${TableBuilder.renderTableFromArray(entry)} \n\n`),
-        )
-      })
-  }
-
-  /**
-   * The whole CellRecord to render in a table, without empty values
-   * @readonly
-   * @protected
-   * @type {CellRecord}
-   */
-  public get tableEntries(): {
-    'Transaction statements': CellRecord[][] | null;
-    'Address resolution statements': CellRecord[][] | null;
-    'Mosaic resolution statements': CellRecord[][] | null;
-  }  {
-    return {
-      'Transaction statements': new TransactionStatementViews(this.statement.transactionStatements).render(),
-      'Address resolution statements': new ResolutionStatementViews(this.statement.addressResolutionStatements).render(),
-      'Mosaic resolution statements': new ResolutionStatementViews(this.statement.mosaicResolutionStatements).render(),
+    /**
+     * Logs the table
+     */
+    public print(): void {
+        Object.entries(this.tableEntries).forEach(([tableName, entries]) => {
+            if (!entries) {
+                return;
+            }
+            console.log(FormatterService.title(tableName));
+            entries.forEach((entry) => console.log(`${TableBuilder.renderTableFromArray(entry)} \n\n`));
+        });
     }
-  }
+
+    /**
+     * The whole CellRecord to render in a table, without empty values
+     * @readonly
+     * @protected
+     * @type {CellRecord}
+     */
+    public get tableEntries(): {
+        'Transaction statements': CellRecord[][] | null;
+        'Address resolution statements': CellRecord[][] | null;
+        'Mosaic resolution statements': CellRecord[][] | null;
+    } {
+        return {
+            'Transaction statements': new TransactionStatementViews(this.statement.transactionStatements).render(),
+            'Address resolution statements': new ResolutionStatementViews(this.statement.addressResolutionStatements).render(),
+            'Mosaic resolution statements': new ResolutionStatementViews(this.statement.mosaicResolutionStatements).render(),
+        };
+    }
 }

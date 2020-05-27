@@ -16,33 +16,34 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {AggregateView} from './aggregate.view'
-import {AggregateTransaction} from 'symbol-sdk'
+import { AggregateTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
+import { AggregateView } from './aggregate.view';
 
 export class AggregateCompleteView extends AggregateView {
-  /**
-   * @static
-   * @param {AggregateTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: AggregateTransaction): CellRecord {
-    return new AggregateCompleteView(tx).render()
-  }
+    /**
+     * @static
+     * @param {AggregateTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: AggregateTransaction): CellRecord {
+        return new AggregateCompleteView(tx).render();
+    }
 
-  /**
-   * Creates an instance of AggregateCompleteView.
-   * @param {AggregateTransaction} tx
-   */
-  private constructor(tx: AggregateTransaction) {
-    super(tx)
-  }
+    /**
+     * Creates an instance of AggregateCompleteView.
+     * @param {AggregateTransaction} tx
+     */
+    private constructor(tx: AggregateTransaction) {
+        super(tx);
+    }
 
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private render(): CellRecord {
-    return this.getInnerTransactionViews()
-  }
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private render(): CellRecord {
+        return this.getInnerTransactionViews();
+    }
 }

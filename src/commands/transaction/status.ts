@@ -15,57 +15,48 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {HashResolver} from '../../resolvers/hash.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {TransactionHttp, TransactionStatus} from 'symbol-sdk'
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { TransactionStatus } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { HashResolver } from '../../resolvers/hash.resolver';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Transaction hash.',
     })
-    hash: string
+    hash: string;
 }
 
 export class TransactionStatusTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
     constructor(public readonly status: TransactionStatus) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
-        this.table.push(
-            ['Group', status.group],
-            ['Hash', status.hash],
-        )
+        }) as HorizontalTable;
+        this.table.push(['Group', status.group], ['Hash', status.hash]);
         if (status.code) {
-            this.table.push(
-                ['Status Code', status.code],
-            )
+            this.table.push(['Status Code', status.code]);
         }
         if (status.deadline) {
-            this.table.push(
-                ['Deadline', status.deadline.value.toString()],
-            )
+            this.table.push(['Deadline', status.deadline.value.toString()]);
         }
         if (status.height) {
-            this.table.push(
-                ['Height', status.height.toString()],
-            )
+            this.table.push(['Height', status.height.toString()]);
         }
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Transaction Status') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += FormatterService.title('Transaction Status');
+        text += '\n' + this.table.toString();
+        return text;
     }
 }
 
@@ -73,26 +64,26 @@ export class TransactionStatusTable {
     description: 'Fetch transaction status',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const hash = await new HashResolver()
-            .resolve(options)
+        const profile = this.getProfile(options);
+        const hash = await new HashResolver().resolve(options);
 
-        this.spinner.start()
-        const transactionHttp = new TransactionHttp(profile.url)
-        transactionHttp.getTransactionStatus(hash)
-            .subscribe((status) => {
-                this.spinner.stop(true)
-                console.log(new TransactionStatusTable(status).toString())
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        this.spinner.start();
+        const transactionHttp = profile.repositoryFactory.createTransactionRepository();
+        transactionHttp.getTransactionStatus(hash).subscribe(
+            (status) => {
+                this.spinner.stop();
+                console.log(new TransactionStatusTable(status).toString());
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

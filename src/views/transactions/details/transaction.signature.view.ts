@@ -16,68 +16,71 @@
  *
  */
 
-import {CellRecord} from './transaction.view'
-import {Cell} from 'cli-table3'
-import {SignedTransaction} from 'symbol-sdk'
+import { Cell } from 'cli-table3';
+import { SignedTransaction } from 'symbol-sdk';
+
+import { CellRecord } from './transaction.view';
 
 export interface ITransactionViewSignature extends CellRecord {
- SignatureDetailsTitle: Cell;
- Payload: string | undefined;
- Hash: string;
- Signer: string;
+    SignatureDetailsTitle: Cell;
+    Payload: string | undefined;
+    Hash: string;
+    Signer: string;
 }
 
 export class TransactionSignatureView {
- /**
-  * @static
-  * @param {Transaction} transaction
-  * @returns {ITransactionHeaderView}
-  */
- static get(signedTransaction: SignedTransaction): ITransactionViewSignature {
-  return new TransactionSignatureView(signedTransaction).render()
- }
+    /**
+     * @static
+     * @param {Transaction} transaction
+     * @returns {ITransactionHeaderView}
+     */
+    static get(signedTransaction: SignedTransaction): ITransactionViewSignature {
+        return new TransactionSignatureView(signedTransaction).render();
+    }
 
- /**
-  * Creates an instance of TransactionSignatureView.
-  * @param {SignedTransaction} tx
-  */
- private constructor(private readonly tx: SignedTransaction) {}
+    /**
+     * Creates an instance of TransactionSignatureView.
+     * @param {SignedTransaction} tx
+     */
+    private constructor(private readonly tx: SignedTransaction) {}
 
- /**
-  * @private
-  * @returns {ITransactionHeaderView}
-  */
- private render(): ITransactionViewSignature {
-  return {
-   SignatureDetailsTitle: this.title,
-   Payload: this.formattedPayload,
-   Hash: this.tx.hash,
-   Signer: this.tx.signerPublicKey,
-  }
- }
+    /**
+     * @private
+     * @returns {ITransactionHeaderView}
+     */
+    private render(): ITransactionViewSignature {
+        return {
+            SignatureDetailsTitle: this.title,
+            Payload: this.formattedPayload,
+            Hash: this.tx.hash,
+            Signer: this.tx.signerPublicKey,
+        };
+    }
 
- /**
-  * Creates a full-width and vertically centered cell
-  * @readonly
-  * @type {Cell} Table title
-  */
- get title(): Cell {
-  return {
-   content: 'Signature details',
-   colSpan: 2,
-   hAlign: 'center',
-  }
- }
+    /**
+     * Creates a full-width and vertically centered cell
+     * @readonly
+     * @type {Cell} Table title
+     */
+    get title(): Cell {
+        return {
+            content: 'Signature details',
+            colSpan: 2,
+            hAlign: 'center',
+        };
+    }
 
- /**
-  * Formatted payload that fits in the command line.
-  * @readonly
-  * @protected
-  * @type {(string | undefined)}
-  */
- protected get formattedPayload(): string | undefined {
-  const payload = this.tx.payload.match(/.{1,64}/g)?.join('\n')
-  if (!payload) { return 'N/A' }
-  return payload
- }
+    /**
+     * Formatted payload that fits in the command line.
+     * @readonly
+     * @protected
+     * @type {(string | undefined)}
+     */
+    protected get formattedPayload(): string | undefined {
+        const payload = this.tx.payload.match(/.{1,64}/g)?.join('\n');
+        if (!payload) {
+            return 'N/A';
+        }
+        return payload;
+    }
 }

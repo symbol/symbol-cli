@@ -14,74 +14,68 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {LinkActionResolver} from '../../resolvers/action.resolver'
-import {AddressResolver} from '../../resolvers/address.resolver'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {NamespaceNameResolver} from '../../resolvers/namespace.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {AddressAliasTransaction, Deadline} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+
+import { command, metadata, option } from 'clime';
+import { AddressAliasTransaction, Deadline } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { LinkActionResolver } from '../../resolvers/action.resolver';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { NamespaceNameResolver } from '../../resolvers/namespace.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'a',
         description: 'Alias action (Link, Unlink).',
     })
-    action: string
+    action: string;
 
     @option({
         flag: 'a',
         description: 'Account address.',
     })
-    address: string
+    address: string;
 
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    namespaceName: string
+    namespaceName: string;
 }
 
 @command({
     description: 'Set an alias to an address',
 })
-
 export default class extends AnnounceTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const namespaceId = await new NamespaceNameResolver().resolve(options)
-        const address = await new AddressResolver().resolve(options)
-        const action = await new LinkActionResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const namespaceId = await new NamespaceNameResolver().resolve(options);
+        const address = await new AddressResolver().resolve(options);
+        const action = await new LinkActionResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const transaction = AddressAliasTransaction.create(
-            Deadline.create(),
-            action,
-            namespaceId,
-            address,
-            profile.networkType,
-            maxFee)
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
+        const transaction = AddressAliasTransaction.create(Deadline.create(), action, namespaceId, address, profile.networkType, maxFee);
 
-        new TransactionView(transaction, signedTransaction).print()
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
+        };
 
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
-        }
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

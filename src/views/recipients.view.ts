@@ -16,18 +16,22 @@
  *
  */
 
-import {Address, NamespaceId} from 'symbol-sdk'
+import { Address, NamespaceId } from 'symbol-sdk';
 
 export class RecipientsView {
-  /**
-   * Renders a recipient or target address to a string to be used in views
-   * @static
-   * @param {(Address | NamespaceId)} recipient
-   * @returns {string}
-   */
-  static get(recipient: Address | NamespaceId): string {
-    if (recipient instanceof Address) {return recipient.pretty()}
-    if (recipient.fullName) {return `${recipient.fullName} (${recipient.toHex()})`}
-    return recipient.toHex()
-  }
+    /**
+     * Renders a recipient or target address to a string to be used in views
+     * @static
+     * @param {(Address | NamespaceId)} recipient
+     * @returns {string}
+     */
+    static get(recipient: Address | NamespaceId): string {
+        if (recipient instanceof Address) {
+            return recipient.pretty();
+        }
+        if (recipient.fullName) {
+            return `${recipient.fullName} (${recipient.toHex()})`;
+        }
+        return recipient.toHex();
+    }
 }

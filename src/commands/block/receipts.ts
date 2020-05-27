@@ -15,20 +15,20 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {HeightResolver} from '../../resolvers/height.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {ReceiptHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
-import {StatementsView} from '../../views/statements/statements.view'
+import { command, metadata, option } from 'clime';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { HeightResolver } from '../../resolvers/height.resolver';
+import { FormatterService } from '../../services/formatter.service';
+import { StatementsView } from '../../views/statements/statements.view';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
     })
-    height: string
+    height: string;
 }
 
 @command({
@@ -36,23 +36,25 @@ export class CommandOptions extends ProfileOptions {
 })
 export default class extends ProfileCommand {
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const height =  await new HeightResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const height = await new HeightResolver().resolve(options);
 
-        this.spinner.start()
-        const receiptHttp = new ReceiptHttp(profile.url)
-        receiptHttp.getBlockReceipts(height)
-            .subscribe((statement: any) => {
-                this.spinner.stop(true)
-                new StatementsView(statement).print()
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+        this.spinner.start();
+        const receiptHttp = profile.repositoryFactory.createReceiptRepository();
+        receiptHttp.getBlockReceipts(height).subscribe(
+            (statement: any) => {
+                this.spinner.stop();
+                new StatementsView(statement).print();
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

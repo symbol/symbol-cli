@@ -16,22 +16,21 @@
  *
  */
 
-import {namespaceId1} from '../namespaces.mock'
-import {Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64} from 'symbol-sdk'
+import { Deadline, NamespaceRegistrationTransaction, NetworkType, UInt64 } from 'symbol-sdk';
 
-export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction
- .createRootNamespace(
-  Deadline.create(),
-  'root-test-namespace',
-  UInt64.fromUint(1000),
-  NetworkType.MIJIN_TEST,
-  new UInt64([1, 0]),
- )
+import { namespaceId1 } from '../namespaces.mock';
 
-export const unsignedSubNamespaceRegistration1 = NamespaceRegistrationTransaction
- .createSubNamespace(
-  Deadline.create(),
-  'sub-test-namespace',
-  namespaceId1,
-  NetworkType.MIJIN_TEST,
- )
+export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction.createRootNamespace(
+    Deadline.create(),
+    'root-test-namespace',
+    UInt64.fromUint(1000),
+    NetworkType.MIJIN_TEST,
+    new UInt64([1, 0]),
+);
+
+export const unsignedSubNamespaceRegistration1 = NamespaceRegistrationTransaction.createSubNamespace(
+    Deadline.create(),
+    'sub-test-namespace',
+    namespaceId1,
+    NetworkType.MIJIN_TEST,
+);

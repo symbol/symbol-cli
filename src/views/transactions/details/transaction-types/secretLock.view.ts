@@ -16,24 +16,25 @@
  *
  */
 
-import {MosaicsView} from '../../../mosaics.view'
-import {RecipientsView} from '../../../recipients.view'
-import {CellRecord} from '../transaction.view'
-import {LockHashAlgorithm, SecretLockTransaction} from 'symbol-sdk'
+import { LockHashAlgorithm, SecretLockTransaction } from 'symbol-sdk';
+
+import { MosaicsView } from '../../../mosaics.view';
+import { RecipientsView } from '../../../recipients.view';
+import { CellRecord } from '../transaction.view';
 
 export class SecretLockView {
-  /**
-   * @static
-   * @param {SecretLockTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: SecretLockTransaction): CellRecord {
-    return {
-      'Recipient': RecipientsView.get(tx.recipientAddress),
-      ...MosaicsView.get([tx.mosaic]),
-      'Duration': tx.duration.toString(),
-      'Hash type': LockHashAlgorithm[tx.hashAlgorithm],
-      'Secret': tx.secret,
+    /**
+     * @static
+     * @param {SecretLockTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: SecretLockTransaction): CellRecord {
+        return {
+            Recipient: RecipientsView.get(tx.recipientAddress),
+            ...MosaicsView.get([tx.mosaic]),
+            Duration: tx.duration.toString(),
+            'Hash type': LockHashAlgorithm[tx.hashAlgorithm],
+            Secret: tx.secret,
+        };
     }
-  }
 }

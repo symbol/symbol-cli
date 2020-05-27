@@ -15,11 +15,12 @@
  * limitations under the License.
  *
  */
-import {AnnounceResolver} from '../../src/resolvers/announce.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { AnnounceResolver } from '../../src/resolvers/announce.resolver';
 
 describe('Announce resolver', () => {
-
     it('should return boolean', async () => {
         const options = {
             announce: true,
@@ -29,8 +30,12 @@ describe('Announce resolver', () => {
             password: '',
             generationHash: '1',
             maxFee: '1',
-            sync: false}
-        expect(await new AnnounceResolver().resolve(options)).to.be.equal(true)
-    })
-
-})
+            sync: false,
+            maxFeeHashLock: '0',
+            lockDuration: '0',
+            lockAmount: '0',
+            signer: '',
+        };
+        expect(await new AnnounceResolver().resolve(options)).to.be.equal(true);
+    });
+});

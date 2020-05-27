@@ -15,16 +15,18 @@
  * limitations under the License.
  *
  */
-import {expect} from 'chai'
-import {MnemonicResolver} from '../../src/resolvers/mnemonic.resolver'
+
+import { expect } from 'chai';
+
+import { MnemonicResolver } from '../../src/resolvers/mnemonic.resolver';
 
 describe('Mnemonic resolver', () => {
-   it('should return a mnemonic', async () => {
-      // eslint-disable-next-line max-len
-      const mnemonic = 'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense'
+    it('should return a mnemonic', async () => {
+        // eslint-disable-next-line max-len
+        const mnemonic =
+            'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense';
 
-      const options = {mnemonic} as any
-      expect(await new MnemonicResolver().resolve(options))
-         .to.be.equal(mnemonic)
-   })
-})
+        const options = { mnemonic } as any;
+        expect(await new MnemonicResolver().resolve(options)).to.be.equal(mnemonic);
+    });
+});

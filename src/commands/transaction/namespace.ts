@@ -15,90 +15,99 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {DurationResolver} from '../../resolvers/duration.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {NamespaceNameStringResolver, NamespaceTypeResolver} from '../../resolvers/namespace.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+
+import { command, metadata, option } from 'clime';
+import { Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { DurationResolver } from '../../resolvers/duration.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { NamespaceNameStringResolver, NamespaceTypeResolver } from '../../resolvers/namespace.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'n',
         description: 'Namespace name.',
     })
-    name: string
+    name: string;
 
     @option({
         flag: 'r',
         description: 'Root namespace.',
         toggle: true,
     })
-    rootnamespace: any
+    rootnamespace: any;
 
     @option({
         flag: 's',
         description: 'Sub namespace.',
         toggle: true,
     })
-    subnamespace: any
+    subnamespace: any;
 
     @option({
         flag: 'd',
         description: 'Duration (use it with --rootnamespace).',
     })
-    duration: string
+    duration: string;
 
     @option({
         flag: 'a',
         description: 'Parent namespace name (use it with --subnamespace).',
     })
-    parentName: string
+    parentName: string;
 }
 
 @command({
     description: 'Register a namespace',
 })
-
 export default class extends AnnounceTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name')
-        const namespaceType = await new NamespaceTypeResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name');
+        const namespaceType = await new NamespaceTypeResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        let transaction: NamespaceRegistrationTransaction
+        let transaction: NamespaceRegistrationTransaction;
         if (namespaceType === NamespaceRegistrationType.RootNamespace) {
-            const duration = await new DurationResolver().resolve(options)
+            const duration = await new DurationResolver().resolve(options);
             transaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(), name, duration, profile.networkType, maxFee)
+                Deadline.create(),
+                name,
+                duration,
+                profile.networkType,
+                maxFee,
+            );
         } else {
-            const parentName = await new NamespaceNameStringResolver()
-                .resolve(options, 'Enter the parent namespace name:', 'parentName')
+            const parentName = await new NamespaceNameStringResolver().resolve(options, 'Enter the parent namespace name:', 'parentName');
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
-                Deadline.create(), name, parentName, profile.networkType, maxFee)
+                Deadline.create(),
+                name,
+                parentName,
+                profile.networkType,
+                maxFee,
+            );
         }
-        const signedTransaction = account.sign(transaction, profile.networkGenerationHash)
 
-        new TransactionView(transaction, signedTransaction).print()
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
+        };
 
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
-        }
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

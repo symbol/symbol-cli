@@ -15,51 +15,59 @@
  * limitations under the License.
  *
  */
-import {ProfileCommand} from '../../interfaces/profile.command'
-import {ProfileOptions} from '../../interfaces/profile.options'
-import {MosaicIdResolver} from '../../resolvers/mosaic.resolver'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import chalk from 'chalk'
-import * as Table from 'cli-table3'
-import {HorizontalTable} from 'cli-table3'
-import {command, metadata, option} from 'clime'
-import {AccountHttp, MosaicHttp, MosaicService, MosaicView} from 'symbol-sdk'
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
+import { command, metadata, option } from 'clime';
+import { MosaicService, MosaicView } from 'symbol-sdk';
+
+import { ProfileCommand } from '../../interfaces/profile.command';
+import { ProfileOptions } from '../../interfaces/profile.options';
+import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
+import { FormatterService } from '../../services/formatter.service';
 
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
         description: 'Mosaic id in hexadecimal format.',
     })
-    mosaicId: string
+    mosaicId: string;
 }
 
 export class MosaicViewTable {
-    private readonly table: HorizontalTable
+    private readonly table: HorizontalTable;
     constructor(public readonly mosaicView: MosaicView) {
         this.table = new Table({
-            style: {head: ['cyan']},
+            style: { head: ['cyan'] },
             head: ['Property', 'Value'],
-        }) as HorizontalTable
+        }) as HorizontalTable;
         this.table.push(
             ['Id', mosaicView.mosaicInfo.id.toHex()],
             ['Divisibility', mosaicView.mosaicInfo.divisibility],
             ['Transferable', mosaicView.mosaicInfo.isTransferable()],
-            ['Supply Mutable',  mosaicView.mosaicInfo.isSupplyMutable()],
+            ['Supply Mutable', mosaicView.mosaicInfo.isSupplyMutable()],
             ['Height', mosaicView.mosaicInfo.height.toString()],
-            ['Expiration', mosaicView.mosaicInfo.duration.compact() === 0 ?
-                'Never' : (mosaicView.mosaicInfo.height.add(mosaicView.mosaicInfo.duration)).toString()],
+            [
+                'Expiration',
+                mosaicView.mosaicInfo.duration.compact() === 0
+                    ? 'Never'
+                    : mosaicView.mosaicInfo.height.add(mosaicView.mosaicInfo.duration).toString(),
+            ],
             ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
             ['Supply (Absolute)', mosaicView.mosaicInfo.supply.toString()],
-            ['Supply (Relative)', mosaicView.mosaicInfo.divisibility === 0 ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
-                : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString()],
-        )
+            [
+                'Supply (Relative)',
+                mosaicView.mosaicInfo.divisibility === 0
+                    ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
+                    : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString(),
+            ],
+        );
     }
 
     toString(): string {
-        let text = ''
-        text += '\n' + chalk.green('Mosaic Information') + '\n'
-        text += this.table.toString()
-        return text
+        let text = '';
+        text += FormatterService.title('Mosaic Information');
+        text += '\n' + this.table.toString();
+        return text;
     }
 }
 
@@ -67,33 +75,33 @@ export class MosaicViewTable {
     description: 'Fetch mosaic info',
 })
 export default class extends ProfileCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const mosaicId = await new MosaicIdResolver().resolve(options)
+        const profile = this.getProfile(options);
+        const mosaicId = await new MosaicIdResolver().resolve(options);
 
-        this.spinner.start()
-        const mosaicService = new MosaicService(
-            new AccountHttp(profile.url),
-            new MosaicHttp(profile.url),
-        )
-        mosaicService.mosaicsView([mosaicId])
-            .subscribe((mosaicViews) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const repositoryFactory = profile.repositoryFactory;
+        const accountHttp = repositoryFactory.createAccountRepository();
+        const mosaicHttp = repositoryFactory.createMosaicRepository();
+        const mosaicService = new MosaicService(accountHttp, mosaicHttp);
+        mosaicService.mosaicsView([mosaicId]).subscribe(
+            (mosaicViews) => {
+                this.spinner.stop();
                 if (mosaicViews.length === 0) {
-                    console.log('No mosaic exists with this id ' + mosaicId.toHex())
+                    console.log(FormatterService.error('No mosaic exists with this id ' + mosaicId.toHex()));
                 } else {
-                    console.log(new MosaicViewTable(mosaicViews[0]).toString())
+                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
                 }
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
-
 }

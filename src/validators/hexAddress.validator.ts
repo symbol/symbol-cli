@@ -15,14 +15,14 @@
  * limitations under the License.
  *
  */
-import {Validator} from './validator'
-import {Address} from 'symbol-sdk'
+import { Address } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Hex Address validator
  */
 export class HexAddressValidator implements Validator<string> {
-
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address.
@@ -30,10 +30,10 @@ export class HexAddressValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            Address.createFromEncoded(value)
+            Address.createFromEncoded(value);
         } catch (err) {
-            return 'Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF'
+            return 'Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF';
         }
-        return true
+        return true;
     }
 }

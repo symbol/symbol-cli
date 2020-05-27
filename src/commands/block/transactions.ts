@@ -15,53 +15,52 @@
  * limitations under the License.
  *
  */
-import {HeightResolver} from '../../resolvers/height.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {HttpErrorHandler} from '../../services/httpErrorHandler.service'
-import {AccountTransactionsCommand, AccountTransactionsOptions} from '../../interfaces/account.transactions.command'
-import {BlockHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+import { command, metadata, option } from 'clime';
+
+import { AccountTransactionsCommand, AccountTransactionsOptions } from '../../interfaces/account.transactions.command';
+import { HeightResolver } from '../../resolvers/height.resolver';
+import { FormatterService } from '../../services/formatter.service';
+import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AccountTransactionsOptions {
     @option({
         flag: 'h',
         description: 'Block height.',
     })
-    height: string
+    height: string;
 }
 
 @command({
     description: 'Get transactions for a given block height',
 })
-
 export default class extends AccountTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
+        const profile = this.getProfile(options);
+        const height = await new HeightResolver().resolve(options);
 
-        const profile = this.getProfile(options)
-        const height = await new HeightResolver().resolve(options)
-
-        this.spinner.start()
-        const blockHttp = new BlockHttp(profile.url)
-        blockHttp.getBlockTransactions(height, options.getQueryParams())
-            .subscribe((transactions) => {
-                this.spinner.stop(true)
+        this.spinner.start();
+        const blockHttp = profile.repositoryFactory.createBlockRepository();
+        blockHttp.getBlockTransactions(height, options.getQueryParams()).subscribe(
+            (transactions) => {
+                this.spinner.stop();
 
                 if (!transactions.length) {
-                    console.log('There aren\'t transactions')
+                    console.log(FormatterService.error('The block ' + height.toString() + ' does not have transactions'));
                 }
-
+                console.log(FormatterService.title('Transactions'));
                 transactions.forEach((transaction) => {
-                    new TransactionView(transaction).print()
-                })
-            }, (err) => {
-                this.spinner.stop(true)
-                console.log(HttpErrorHandler.handleError(err))
-            })
+                    new TransactionView(transaction).print();
+                });
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 }

@@ -15,55 +15,55 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {WebhookService} from '../../services/webhook.service'
-import {command, metadata, option} from 'clime'
-import {TransactionURIResolver} from '../../resolvers/transactionURI.resolver'
+import { command, metadata, option } from 'clime';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { TransactionURIResolver } from '../../resolvers/transactionURI.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
+import { WebhookService } from '../../services/webhook.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
         description: 'Transaction URI.',
     })
-    uri: string
+    uri: string;
 }
 
 @command({
     description: 'Announce transaction from URI',
 })
-
 export default class extends AnnounceTransactionsCommand {
-
     constructor() {
-        super()
+        super();
     }
 
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
 
-        const transactionURI = await new TransactionURIResolver().resolve(options)
-        const transaction = transactionURI.toTransaction()
-        const signedTransaction = account.sign(transaction, transactionURI.generationHash || profile.networkGenerationHash)
-        new TransactionView(transaction, signedTransaction).print()
+        const transactionURI = await new TransactionURIResolver().resolve(options);
+        const transaction = transactionURI.toTransaction();
 
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, transactionURI.nodeUrl || profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, transactionURI.nodeUrl || profile.url)
-        }
-        if (transactionURI.webhookUrl){
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee: transaction.maxFee,
+        };
+
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
+
+        if (transactionURI.webhookUrl) {
             await WebhookService.postAnnounceTransactionWebhook(
-                    transactionURI.webhookUrl,
-                    signedTransaction.hash,
-                    signedTransaction.signerPublicKey)
+                transactionURI.webhookUrl,
+                signedTransactions[0].hash,
+                signedTransactions[0].signerPublicKey,
+            );
         }
     }
 }

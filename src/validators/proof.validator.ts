@@ -15,14 +15,16 @@
  * limitations under the License.
  *
  */
-import {LockHashAlgorithm} from 'symbol-sdk'
-import {Validator} from './validator'
+
+import { LockHashAlgorithm } from 'symbol-sdk';
+
+import { Validator } from './validator';
 
 /**
  * Private key validator
  */
 export class ProofValidator implements Validator<string> {
-    public constructor(private readonly hashAlgorithm: LockHashAlgorithm | undefined) { }
+    public constructor(private readonly hashAlgorithm: LockHashAlgorithm | undefined) {}
 
     /**
      * Validates a hash length.
@@ -30,12 +32,11 @@ export class ProofValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-      // All hashes have a 64 char length exept Op_Hash_160 that can be 40
-      if (!this.hashAlgorithm || this.hashAlgorithm === LockHashAlgorithm.Op_Hash_160) {
-        return value.length === 40 || value.length === 64
-          ? true : 'A proof should be 64 or 40 chars long.'
-      }
+        // All hashes have a 64 char length exept Op_Hash_160 that can be 40
+        if (!this.hashAlgorithm || this.hashAlgorithm === LockHashAlgorithm.Op_Hash_160) {
+            return value.length === 40 || value.length === 64 ? true : 'A proof should be 64 or 40 chars long.';
+        }
 
-      return value.length === 64 ? true : 'A proof should be 64 chars long.'
+        return value.length === 64 ? true : 'A proof should be 64 chars long.';
     }
 }

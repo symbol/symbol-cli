@@ -15,39 +15,60 @@
  * limitations under the License.
  *
  */
+
+import { expect } from 'chai';
+
 import {
-    AccountRestrictionFlagsValidator,
-    MosaicRestrictionTypeValidator,
-} from '../../src/validators/restrictionType.validator'
-import {expect} from 'chai'
+    RestrictionAccountAddressFlagValidator,
+    RestrictionAccountMosaicFlagValidator,
+    RestrictionAccountOperationFlagValidator,
+    RestrictionMosaicTypeValidator,
+} from '../../src/validators/restrictionType.validator';
 
 describe('mosaic restriction type validator', () => {
     it('valid mosaic restriction type', () => {
-        const restriction = 'EQ'
-        expect(new MosaicRestrictionTypeValidator().validate(restriction))
-            .to.be.equal(true)
-    })
+        const restriction = 'EQ';
+        expect(new RestrictionMosaicTypeValidator().validate(restriction)).to.be.equal(true);
+    });
 
     it('invalid mosaic restriction type', () => {
-        const restriction = '99'
-        expect(
-            new MosaicRestrictionTypeValidator().validate(restriction)
-        ).to.include('MosaicRestrictionType must be one of')
-    })
-})
+        const restriction = '99';
+        expect(new RestrictionMosaicTypeValidator().validate(restriction)).to.include('MosaicRestrictionType must be one of');
+    });
+});
 
-describe('account restriction flags validator', () => {
-    it('valid account restriction flag', () => {
-        const restriction = 'AllowIncomingAddress'
-        expect(new AccountRestrictionFlagsValidator().validate(restriction))
-            .to.be.equal(true)
-    })
+describe('account restriction address flags validator', () => {
+    it('valid account restriction address flag', () => {
+        const restriction = 'AllowIncomingAddress';
+        expect(new RestrictionAccountAddressFlagValidator().validate(restriction)).to.be.equal(true);
+    });
 
-    it('invalid account restriction flag', () => {
-        const restriction = '99'
-        expect(
-            new AccountRestrictionFlagsValidator().validate(restriction)
-        ).to.include('AccountRestrictionFlags must be one of')
-    })
-})
+    it('invalid account restriction address flag', () => {
+        const restriction = '99';
+        expect(new RestrictionAccountAddressFlagValidator().validate(restriction)).to.include('AddressRestrictionFlag must be one of');
+    });
+});
 
+describe('account restriction mosaic flags validator', () => {
+    it('valid account restriction mosaic flag', () => {
+        const restriction = 'AllowMosaic';
+        expect(new RestrictionAccountMosaicFlagValidator().validate(restriction)).to.be.equal(true);
+    });
+
+    it('invalid account restriction mosaic flag', () => {
+        const restriction = '99';
+        expect(new RestrictionAccountMosaicFlagValidator().validate(restriction)).to.include('MosaicRestrictionFlag must be one of');
+    });
+});
+
+describe('account restriction operation flags validator', () => {
+    it('valid account restriction operation flag', () => {
+        const restriction = 'BlockOutgoingTransactionType';
+        expect(new RestrictionAccountOperationFlagValidator().validate(restriction)).to.be.equal(true);
+    });
+
+    it('invalid account restriction operation flag', () => {
+        const restriction = '99';
+        expect(new RestrictionAccountOperationFlagValidator().validate(restriction)).to.include('OperationRestrictionFlag must be one of');
+    });
+});

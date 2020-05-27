@@ -15,22 +15,19 @@
  * limitations under the License.
  *
  */
-import {TransactionTypeValidator} from '../../src/validators/transactionType.validator'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { TransactionTypeValidator } from '../../src/validators/transactionType.validator';
 
 describe('Transaction type validator', () => {
-
     it('default case', () => {
-        const value = 'TRANSFER'
-        expect(new TransactionTypeValidator().validate(value))
-            .to.be.equal(true)
-    })
+        const value = 'TRANSFER';
+        expect(new TransactionTypeValidator().validate(value)).to.be.equal(true);
+    });
 
     it('should throw error if transaction is unknown', () => {
-        const value = 'wrong_value'
-        expect(
-            new TransactionTypeValidator().validate(value)
-        ).to.be.equal('The provided transaction type is invalid')
-    })
-
-})
+        const value = 'wrong_value';
+        expect(new TransactionTypeValidator().validate(value)).to.be.equal('The provided transaction type is invalid');
+    });
+});

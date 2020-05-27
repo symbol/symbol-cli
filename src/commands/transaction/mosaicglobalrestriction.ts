@@ -15,57 +15,51 @@
  * limitations under the License.
  *
  */
-import {AnnounceTransactionsOptions} from '../../interfaces/announceTransactions.options'
-import {AnnounceTransactionsCommand} from '../../interfaces/announce.transactions.command'
-import {AnnounceResolver} from '../../resolvers/announce.resolver'
-import {KeyResolver} from '../../resolvers/key.resolver'
-import {MaxFeeResolver} from '../../resolvers/maxFee.resolver'
-import {MosaicIdAliasResolver} from '../../resolvers/mosaic.resolver'
-import {RestrictionTypeResolver} from '../../resolvers/restrictionType.resolver'
-import {RestrictionValueResolver} from '../../resolvers/restrictionValue.resolver'
-import {TransactionView} from '../../views/transactions/details/transaction.view'
-import {PasswordResolver} from '../../resolvers/password.resolver'
-import {Deadline, MosaicRestrictionTransactionService, NamespaceHttp, RestrictionMosaicHttp} from 'symbol-sdk'
-import {command, metadata, option} from 'clime'
+
+import { command, metadata, option } from 'clime';
+import { Deadline, MosaicRestrictionTransactionService } from 'symbol-sdk';
+
+import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
+import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { KeyResolver } from '../../resolvers/key.resolver';
+import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
+import { PasswordResolver } from '../../resolvers/password.resolver';
+import { RestrictionTypeResolver } from '../../resolvers/restrictionType.resolver';
+import { RestrictionValueResolver } from '../../resolvers/restrictionValue.resolver';
+import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'm',
         description: 'Mosaic identifier or @alias being restricted.',
     })
-    mosaicId: string
+    mosaicId: string;
 
     @option({
         flag: 'r',
         description: '(Optional) Identifier of the mosaic providing the restriction key.',
         default: '0000000000000000',
     })
-    referenceMosaicId: string
+    referenceMosaicId: string;
 
     @option({
         flag: 'k',
         description: 'Restriction key relative to the reference mosaic identifier.',
     })
-    restrictionKey: string
+    restrictionKey: string;
 
     @option({
         flag: 'V',
         description: 'New restriction value.',
     })
-    newRestrictionValue: string
+    newRestrictionValue: string;
 
     @option({
         flag: 'T',
-        description: 'New restriction type. (' +
-            'NONE, ' +
-            'EQ, ' +
-            'GE, ' +
-            'GT, ' +
-            'LE, ' +
-            'LT, ' +
-            'NE)',
+        description: 'New restriction type. (' + 'NONE, ' + 'EQ, ' + 'GE, ' + 'GT, ' + 'LE, ' + 'LT, ' + 'NE)',
     })
-    newRestrictionType: string
+    newRestrictionType: string;
 }
 
 @command({
@@ -73,24 +67,27 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
-        super()
+        super();
     }
+
     @metadata
     async execute(options: CommandOptions) {
-        const profile = this.getProfile(options)
-        const password = await new PasswordResolver().resolve(options)
-        const account = profile.decrypt(password)
-        const mosaicId = await new MosaicIdAliasResolver().resolve(options)
-        const newRestrictionType = await new RestrictionTypeResolver().resolve(options)
-        const restrictionKey = await new KeyResolver().resolve(options, undefined, 'restrictionKey')
-        const newRestrictionValue = await new RestrictionValueResolver().resolve(options)
-        const maxFee = await new MaxFeeResolver().resolve(options)
-        const referenceMosaicId = new MosaicIdAliasResolver().optionalResolve(options)
+        const profile = this.getProfile(options);
+        const password = await new PasswordResolver().resolve(options);
+        const account = profile.decrypt(password);
+        const mosaicId = await new MosaicIdAliasResolver().resolve(options);
+        const newRestrictionType = await new RestrictionTypeResolver().resolve(options);
+        const restrictionKey = await new KeyResolver().resolve(options, undefined, 'restrictionKey');
+        const newRestrictionValue = await new RestrictionValueResolver().resolve(options);
+        const maxFee = await new MaxFeeResolver().resolve(options);
+        const referenceMosaicId = new MosaicIdAliasResolver().optionalResolve(options);
 
-        const restrictionMosaicHttp = new RestrictionMosaicHttp(profile.url)
-        const namespaceHttp = new NamespaceHttp(profile.url)
-        const mosaicRestrictionTransactionService =
-            new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp)
+        const repositoryFactory = profile.repositoryFactory;
+        const restrictionMosaicHttp = repositoryFactory.createRestrictionMosaicRepository();
+        const namespaceHttp = repositoryFactory.createNamespaceRepository();
+        const mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp);
+
+        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
         const transaction = await mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
@@ -101,18 +98,18 @@ export default class extends AnnounceTransactionsCommand {
                 newRestrictionValue,
                 newRestrictionType,
                 referenceMosaicId,
-                maxFee).toPromise()
+                maxFee,
+            )
+            .toPromise();
 
-        const networkGenerationHash = profile.networkGenerationHash
-        const signedTransaction = account.sign(transaction, networkGenerationHash)
+        const signatureOptions: TransactionSignatureOptions = {
+            account,
+            transactions: [transaction],
+            maxFee,
+            signerMultisigInfo,
+        };
 
-        new TransactionView(transaction, signedTransaction).print()
-
-        const shouldAnnounce = await new AnnounceResolver().resolve(options)
-        if (shouldAnnounce && options.sync) {
-            this.announceTransactionSync(signedTransaction, profile.address, profile.url)
-        } else if (shouldAnnounce) {
-            this.announceTransaction(signedTransaction, profile.url)
-        }
+        const signedTransactions = await this.signTransactions(signatureOptions, options);
+        this.announceTransactions(options, signedTransactions);
     }
 }

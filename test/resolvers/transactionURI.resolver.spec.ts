@@ -15,16 +15,16 @@
  * limitations under the License.
  *
  */
-import {TransactionURIResolver} from '../../src/resolvers/transactionURI.resolver'
-import {expect} from 'chai'
+
+import { expect } from 'chai';
+
+import { TransactionURIResolver } from '../../src/resolvers/transactionURI.resolver';
 
 describe('TransactionURI resolver', () => {
-
     it('should return TransactionURI', async () => {
-        const uri = 'web+symbol://transaction?data=data'
-        const options = {uri} as any
-        const transactionURI = await new TransactionURIResolver().resolve(options)
-        expect(transactionURI.build())
-            .to.be.equal(uri)
-    })
-})
+        const uri = 'web+symbol://transaction?data=data';
+        const options = { uri } as any;
+        const transactionURI = await new TransactionURIResolver().resolve(options);
+        expect(transactionURI.build()).to.be.equal(uri);
+    });
+});

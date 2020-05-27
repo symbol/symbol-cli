@@ -16,70 +16,74 @@
  *
  */
 
-import {CellRecord} from '../transaction.view'
-import {CosignatoryModificationAction, MultisigAccountModificationTransaction} from 'symbol-sdk'
+import { CosignatoryModificationAction, MultisigAccountModificationTransaction } from 'symbol-sdk';
+
+import { CellRecord } from '../transaction.view';
 
 export class MultisigAccountModificationView {
-  /**
-   * @static
-   * @param {MultisigAccountModificationTransaction} tx
-   * @returns {CellRecord}
-   */
-  static get(tx: MultisigAccountModificationTransaction): CellRecord {
-    return new MultisigAccountModificationView(tx).render()
-  }
-
-  /**
-   * Creates an instance of MultisigAccountModificationView.
-   * @param {MultisigAccountModificationTransaction} tx
-   */
-  private constructor(private readonly tx: MultisigAccountModificationTransaction) {}
-
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private render(): CellRecord {
-    return {
-      'Min approval delta': `${this.tx.minApprovalDelta}`,
-      'Min removal delta': `${this.tx.minRemovalDelta}`,
-      ...this.getModifications(),
+    /**
+     * @static
+     * @param {MultisigAccountModificationTransaction} tx
+     * @returns {CellRecord}
+     */
+    static get(tx: MultisigAccountModificationTransaction): CellRecord {
+        return new MultisigAccountModificationView(tx).render();
     }
-  }
 
-  /**
-   * @private
-   * @returns {CellRecord}
-   */
-  private getModifications(): CellRecord {
-    return {
-      ...this.renderModifications(CosignatoryModificationAction.Add),
-      ...this.renderModifications(CosignatoryModificationAction.Remove),
+    /**
+     * Creates an instance of MultisigAccountModificationView.
+     * @param {MultisigAccountModificationTransaction} tx
+     */
+    private constructor(private readonly tx: MultisigAccountModificationTransaction) {}
+
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private render(): CellRecord {
+        return {
+            'Min approval delta': `${this.tx.minApprovalDelta}`,
+            'Min removal delta': `${this.tx.minRemovalDelta}`,
+            ...this.getModifications(),
+        };
     }
-  }
 
-  /**
-   * @private
-   * @param {CosignatoryModificationAction} type
-   * @returns {CellRecord}
-   */
-  private renderModifications(type: CosignatoryModificationAction): CellRecord {
-    const targetProperty = type === CosignatoryModificationAction.Add
-      ? 'publicKeyAdditions' : 'publicKeyDeletions'
+    /**
+     * @private
+     * @returns {CellRecord}
+     */
+    private getModifications(): CellRecord {
+        return {
+            ...this.renderModifications(CosignatoryModificationAction.Add),
+            ...this.renderModifications(CosignatoryModificationAction.Remove),
+        };
+    }
 
-    const targetPropertyName = type === CosignatoryModificationAction.Add
-      ? 'Public key addition' : 'Public key deletion'
+    /**
+     * @private
+     * @param {CosignatoryModificationAction} type
+     * @returns {CellRecord}
+     */
+    private renderModifications(type: CosignatoryModificationAction): CellRecord {
+        const targetProperty = type === CosignatoryModificationAction.Add ? 'publicKeyAdditions' : 'publicKeyDeletions';
 
-    const modifications = this.tx[targetProperty]
-    const modificationNumber = modifications.length
+        const targetPropertyName = type === CosignatoryModificationAction.Add ? 'Public key addition' : 'Public key deletion';
 
-    if (modificationNumber === 0) {return {} }
+        const modifications = this.tx[targetProperty];
+        const modificationNumber = modifications.length;
 
-    const getKey = (index: number) => `${targetPropertyName} (${index + 1} / ${modificationNumber})`
+        if (modificationNumber === 0) {
+            return {};
+        }
 
-    return modifications.reduce((acc, publicAccount, index) => ({
-      ...acc,
-      [getKey(index)]: publicAccount.address.pretty(),
-    }), {})
-  }
+        const getKey = (index: number) => `${targetPropertyName} (${index + 1} / ${modificationNumber})`;
+
+        return modifications.reduce(
+            (acc, publicAccount, index) => ({
+                ...acc,
+                [getKey(index)]: publicAccount.address.pretty(),
+            }),
+            {},
+        );
+    }
 }

@@ -16,18 +16,17 @@
  *
  */
 
-
+import * as updateNotifier from 'update-notifier';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const pkg = require('../../../package.json')
-import * as updateNotifier from 'update-notifier'
-export const description = `Symbol CLI v${pkg.version}`
+const pkg = require('../../../package.json');
+export const description = `Symbol CLI v${pkg.version}`;
 
 updateNotifier({
     pkg,
     // check every day
     updateCheckInterval: 1000 * 60 * 60 * 24,
     shouldNotifyInNpmScript: true,
-}).notify()
+}).notify();
 
 export const subcommands = [
     {
@@ -78,4 +77,4 @@ export const subcommands = [
         name: 'transaction',
         brief: 'Announce transactions',
     },
-]
+];
