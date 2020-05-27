@@ -50,7 +50,7 @@ export class MetadataEntryTable {
 
     toString(): string {
         let text = '';
-        text += '\n' + FormatterService.title('Key:' + this.entry.scopedMetadataKey.toHex());
+        text += FormatterService.title('Key:' + this.entry.scopedMetadataKey.toHex());
         text += '\n' + this.table.toString();
         return text;
     }
