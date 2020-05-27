@@ -34,9 +34,9 @@ export class ProofValidator implements Validator<string> {
     validate(value: string): boolean | string {
         // All hashes have a 64 char length exept Op_Hash_160 that can be 40
         if (!this.hashAlgorithm || this.hashAlgorithm === LockHashAlgorithm.Op_Hash_160) {
-            return value.length === 40 || value.length === 64 ? true : 'A proof should be 64 or 40 chars long.';
+            return value.length === 40 || value.length === 64 ? true : 'A proof should be 64 or 40 chars long';
         }
 
-        return value.length === 64 ? true : 'A proof should be 64 chars long.';
+        return value.length === 64 ? true : 'A proof should be 64 chars long';
     }
 }

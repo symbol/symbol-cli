@@ -135,7 +135,7 @@ export default class extends ProfileCommand {
                 .announceAggregateBondedCosignature(signedCosignature)
                 .toPromise();
             this.spinner.stop();
-            console.log(FormatterService.success('Transaction cosigned and announced correctly.'));
+            console.log(FormatterService.success('Transaction cosigned and announced correctly'));
         } catch (err) {
             this.spinner.stop();
             console.log(FormatterService.error(err));

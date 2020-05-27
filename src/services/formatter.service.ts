@@ -27,7 +27,7 @@ export class FormatterService {
      * @returns {string}
      */
     public static success(value: string): string {
-        return '\n' + chalk.bgGreen.bold('SUCESS') + ' ' + value;
+        return '\n' + chalk.bgGreen.bold('SUCCESS') + ' ' + value;
     }
 
     /**
