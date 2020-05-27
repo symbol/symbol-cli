@@ -28,6 +28,8 @@ import { HttpErrorHandler } from '../services/httpErrorHandler.service';
 
 export class TransactionAnnounceService {
     public spinner: any;
+    private transactionHttp: TransactionRepository;
+    private listener: IListener;
 
     /**
      * Creates an instance of TransactionAnnounceService.

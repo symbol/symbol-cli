@@ -18,7 +18,7 @@
 import chalk from 'chalk';
 import { command, metadata } from 'clime';
 import { merge } from 'rxjs';
-import { AggregateTransaction, BlockInfo, RepositoryFactoryHttp, Transaction, TransactionStatusError } from 'symbol-sdk';
+import { AggregateTransaction, BlockInfo, Transaction, TransactionStatusError } from 'symbol-sdk';
 
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
