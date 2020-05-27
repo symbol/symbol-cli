@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { AccountKeyLinkTransaction, Deadline } from 'symbol-sdk';
+import { Deadline, VrfKeyLinkTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
@@ -29,9 +29,9 @@ import { TransactionSignatureOptions } from '../../services/transaction.signatur
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
-        description: 'Remote account public key.',
+        description: 'Linked Public Key.',
     })
-    publicKey: string;
+    linkedPublicKey: string;
 
     @option({
         flag: 'a',
@@ -41,7 +41,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Delegate the account importance to a proxy account',
+    description: 'Link an account with a VRF public key. Required for all harvesting eligible accounts.',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -53,14 +53,14 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        const publicKey = (
-            await new PublicKeyResolver().resolve(options, profile.networkType, 'Enter the public key of the remote account: ')
+        const linkedPublicKey = (
+            await new PublicKeyResolver().resolve(options, profile.networkType, 'Enter the public key to link: ', 'linkedPublicKey')
         ).publicKey;
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
         const signerMultisigInfo = await this.getSignerMultisigInfo(options);
 
-        const transaction = AccountKeyLinkTransaction.create(Deadline.create(), publicKey, action, profile.networkType, maxFee);
+        const transaction = VrfKeyLinkTransaction.create(Deadline.create(), linkedPublicKey, action, profile.networkType, maxFee);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
