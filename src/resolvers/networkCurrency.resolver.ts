@@ -30,6 +30,7 @@ export class NetworkCurrencyResolver implements Resolver {
     /**
      * Resolves generationHash. If not provided by the user, this is asked to the node.
      * @param {CreateProfileOptions} options - Command options.
+     * @throws {ExpectedError}
      * @returns {Promise<string>}
      */
     async resolve(options: CreateProfileOptions): Promise<NetworkCurrency> {

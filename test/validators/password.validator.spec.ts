@@ -20,7 +20,7 @@ import { expect } from 'chai';
 
 import { PasswordValidator } from '../../src/validators/password.validator';
 
-describe('Public key validator', () => {
+describe('Password validator', () => {
     it('default case', () => {
         const password = '12345678';
         expect(new PasswordValidator().validate(password)).to.be.equal(true);

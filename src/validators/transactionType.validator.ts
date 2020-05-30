@@ -31,16 +31,7 @@ export class TransactionTypeValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        try {
-            if (typeof value !== 'string') {
-                throw new Error();
-            }
-            if (value.trim().toUpperCase() in TransactionType) {
-                return true;
-            }
-            throw new Error();
-        } catch (err) {
-            return 'The provided transaction type is invalid';
-        }
+        const keys = Object.keys(TransactionType).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'The provided transaction type is invalid';
     }
 }

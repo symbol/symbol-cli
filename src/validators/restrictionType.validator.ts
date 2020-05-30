@@ -74,6 +74,6 @@ export class RestrictionAccountOperationFlagValidator implements Validator<strin
      */
     validate(value: string): boolean | string {
         const keys = Object.keys(OperationRestrictionFlag).filter((key) => Number.isNaN(parseFloat(key)));
-        return keys.includes(value) ? true : 'OperationRestrictionFlag must be one of (' + keys + ').';
+        return keys.includes(value) ? true : 'OperationRestrictionFlag must be one of (' + keys + ')';
     }
 }

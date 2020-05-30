@@ -86,7 +86,7 @@ export abstract class ProfileCommand extends Command {
         try {
             return this.profileService.findAllProfiles();
         } catch (err) {
-            throw new ExpectedError("Can't retrieve the profile list.");
+            throw new ExpectedError("Can't retrieve the profile list");
         }
     }
 }

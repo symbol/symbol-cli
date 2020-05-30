@@ -18,6 +18,7 @@
 import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
 import { OptionsChoiceResolver } from '../options-resolver';
 import { PublicKeyValidator } from '../validators/publicKey.validator';
+import { TransactionAnnounceModeValidator } from '../validators/transactionAnnounceMode.validator';
 import { Resolver } from './resolver';
 
 export enum TransactionAnnounceMode {
@@ -45,6 +46,13 @@ export class TransactionAnnounceModeResolver implements Resolver {
             value: string,
         }));
 
-        return OptionsChoiceResolver(options, '', 'Select the transaction announce mode:', choices, 'select', undefined);
+        return OptionsChoiceResolver(
+            options,
+            'mode',
+            'Select the transaction announce mode:',
+            choices,
+            'select',
+            new TransactionAnnounceModeValidator(),
+        );
     }
 }

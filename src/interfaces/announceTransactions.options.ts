@@ -48,9 +48,14 @@ export class AnnounceTransactionsOptions extends ProfileOptions {
     announce: any;
 
     @option({
+        flag: 'M',
+        description: 'Transaction announcement mode (normal, multisig)',
+    })
+    mode: string;
+
+    @option({
         flag: 'S',
-        description: '(Multisig only) Transaction signer',
-        default: '',
+        description: '(Multisig only) Transaction signer public key',
     })
     signer: string;
 
