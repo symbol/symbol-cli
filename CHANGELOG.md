@@ -4,13 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.20.2] - 30-May-2020
+## [0.20.2] - 08-Jun-2020
 
 **Milestone**: RC7 0.9.5.1
 
 ### Fixed
 
 - ``transaction --mode`` property to announce transactions in batches
+- ``transaction mosaic`` command does not require hash lock transaction
 - Standard console.log format #276
 
 ## [0.20.1] - 27-May-2020

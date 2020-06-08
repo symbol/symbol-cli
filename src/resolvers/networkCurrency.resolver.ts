@@ -46,7 +46,11 @@ export class NetworkCurrencyResolver implements Resolver {
 
             return NetworkCurrency.createFromFirstBlockTransactions(firstBlockTransactions);
         } catch (ignored) {
-            throw new ExpectedError('Check if you can reach the Symbol url provided: ' + options.url + '/block/1');
+            throw new ExpectedError(
+                'The CLI cannot get the network currency description. Please, check if you can reach the Symbol url provided: ' +
+                    options.url +
+                    '/block/1',
+            );
         }
     }
 }
