@@ -17,15 +17,7 @@
  */
 
 import { command, metadata, option } from 'clime';
-import {
-    Deadline,
-    MosaicDefinitionTransaction,
-    MosaicId,
-    MosaicNonce,
-    MosaicSupplyChangeAction,
-    MosaicSupplyChangeTransaction,
-    UInt64,
-} from 'symbol-sdk';
+import { Deadline, MosaicDefinitionTransaction, MosaicId, MosaicNonce, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, UInt64 } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
