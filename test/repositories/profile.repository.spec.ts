@@ -94,7 +94,7 @@ describe('ProfileRepository', () => {
                 privateKey: Account.generateNewAccount(networkType).privateKey,
             });
         expect(() => createProfile()).not.to.throw();
-        expect(() => createProfile()).to.throws('A profile named default already exists.');
+        expect(() => createProfile()).to.throws('A profile named default already exists');
     });
 
     it('should find an account', () => {

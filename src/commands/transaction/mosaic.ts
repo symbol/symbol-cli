@@ -136,7 +136,8 @@ export default class extends AnnounceTransactionsCommand {
             transactions: [mosaicDefinition, mosaicSupplyChange],
             maxFee,
             signerMultisigInfo,
-            isAggregateBonded: true,
+            isAggregate: true,
+            isAggregateBonded: signerPublicAccount.publicKey !== account.publicKey,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

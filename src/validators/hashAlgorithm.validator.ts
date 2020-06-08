@@ -29,8 +29,7 @@ export class HashAlgorithmValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return value in LockHashAlgorithm
-            ? true
-            : 'Hash algorithm must be one of (' + Object.keys(LockHashAlgorithm).filter((key) => Number.isNaN(parseFloat(key))) + ').';
+        const keys = Object.keys(LockHashAlgorithm).filter((key) => Number.isNaN(parseFloat(key)));
+        return keys.includes(value) ? true : 'Hash algorithm must be one of (' + keys + ').';
     }
 }

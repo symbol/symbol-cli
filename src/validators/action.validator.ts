@@ -32,7 +32,7 @@ export class ActionValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         const keys = Object.keys(ActionType).filter((key) => Number.isNaN(parseFloat(key)));
-        return keys.includes(value) ? true : 'ActionType must be one of (' + keys + ').';
+        return keys.includes(value) ? true : 'ActionType must be one of (' + keys + ')';
     }
 }
 

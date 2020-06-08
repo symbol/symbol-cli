@@ -15,28 +15,21 @@
  * limitations under the License.
  *
  */
+import { Validator } from 'clime';
 
-import { LockHashAlgorithm } from 'symbol-sdk';
-
-import { Validator } from './validator';
+import { TransactionAnnounceMode } from '../resolvers/transactionAnnounceMode.resolver';
 
 /**
- * Private key validator
+ * Validator of transaction announce mode
  */
-export class ProofValidator implements Validator<string> {
-    public constructor(private readonly hashAlgorithm: LockHashAlgorithm | undefined) {}
-
+export class TransactionAnnounceModeValidator implements Validator<string> {
     /**
-     * Validates a hash length.
-     * @param {string} value - Hash.
+     * Validates if a transaction announce mode is valid.
+     * @param {string} value - TransactionAnnounceMode.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        // All hashes have a 64 char length exept Op_Hash_160 that can be 40
-        if (!this.hashAlgorithm || this.hashAlgorithm === LockHashAlgorithm.Op_Hash_160) {
-            return value.length === 40 || value.length === 64 ? true : 'A proof should be 64 or 40 chars long';
-        }
-
-        return value.length === 64 ? true : 'A proof should be 64 chars long';
+        const test = value in TransactionAnnounceMode;
+        return test ? true : 'TransactionAnnounceModeValidator must be one of (multisig, normal)';
     }
 }

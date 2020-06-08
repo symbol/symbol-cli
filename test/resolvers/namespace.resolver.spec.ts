@@ -78,6 +78,7 @@ describe('Root namespace resolver', () => {
             lockAmount: '10',
             lockDuration: '',
             signer: '',
+            mode: 'normal',
         };
         expect(await new NamespaceTypeResolver().resolve(options)).to.be.equal(NamespaceRegistrationType.RootNamespace);
     });
@@ -98,6 +99,7 @@ describe('Root namespace resolver', () => {
             lockAmount: '10',
             lockDuration: '',
             signer: '',
+            mode: 'normal',
         };
         expect(await new NamespaceTypeResolver().resolve(options, 'altText')).to.be.equal(NamespaceRegistrationType.SubNamespace);
     });

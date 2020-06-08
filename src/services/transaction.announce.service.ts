@@ -104,10 +104,10 @@ export class TransactionAnnounceService {
         this.transactionHttp.announce(signedTransaction).subscribe(
             (ignored) => {
                 this.spinner.stop();
-                console.log(FormatterService.success('Transaction announced correctly.'));
+                console.log(FormatterService.success('Transaction announced correctly'));
                 console.log(
                     FormatterService.info(
-                        "To check if the network confirms or rejects the transaction, run the command 'symbol-cli transaction status'.",
+                        "To check if the network confirms or rejects the transaction, run the command 'symbol-cli transaction status'",
                     ),
                 );
             },
@@ -215,7 +215,7 @@ export class TransactionAnnounceService {
                         confirmations = confirmations + 1;
                         if (confirmations === 1) {
                             this.spinner.stop();
-                            console.log(FormatterService.success('Hash lock transaction announced.'));
+                            console.log(FormatterService.success('Hash lock transaction announced'));
                             this.spinner.start();
                         } else if (confirmations === 2) {
                             this.listener.close();

@@ -36,7 +36,7 @@ describe('Create Profile Command', () => {
             super(repositoryFileUrl);
         }
         execute() {
-            throw new Error('Method not implemented.');
+            throw new Error('Method not implemented');
         }
     }
 

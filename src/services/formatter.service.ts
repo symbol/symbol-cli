@@ -27,7 +27,7 @@ export class FormatterService {
      * @returns {string}
      */
     public static success(value: string): string {
-        return '\n' + chalk.bgGreen.bold('SUCESS') + ' ' + value;
+        return '\n' + chalk.green.bold('SUCCESS') + ' ' + value;
     }
 
     /**
@@ -36,7 +36,7 @@ export class FormatterService {
      * @returns {string}
      */
     public static info(value: string): string {
-        return '\n' + chalk.bgBlue.bold('TIP') + ' ' + value;
+        return '\n' + chalk.blue.bold('TIP') + ' ' + value;
     }
 
     /**
@@ -54,7 +54,7 @@ export class FormatterService {
      * @returns {string}
      */
     public static error(value: any): string {
-        let result = '\n' + chalk.bgRed.bold('ERROR') + ' ';
+        let result = '\n' + chalk.red.bold('ERR') + ' ';
         if (value instanceof Object && 'message' in value) {
             try {
                 const message = JSON.parse(value.message);

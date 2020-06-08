@@ -30,6 +30,7 @@ export class NetworkCurrencyResolver implements Resolver {
     /**
      * Resolves generationHash. If not provided by the user, this is asked to the node.
      * @param {CreateProfileOptions} options - Command options.
+     * @throws {ExpectedError}
      * @returns {Promise<string>}
      */
     async resolve(options: CreateProfileOptions): Promise<NetworkCurrency> {
@@ -45,7 +46,11 @@ export class NetworkCurrencyResolver implements Resolver {
 
             return NetworkCurrency.createFromFirstBlockTransactions(firstBlockTransactions);
         } catch (ignored) {
-            throw new ExpectedError('Check if you can reach the Symbol url provided: ' + options.url + '/block/1');
+            throw new ExpectedError(
+                'The CLI cannot get the network currency description. Please, check if you can reach the Symbol url provided: ' +
+                    options.url +
+                    '/block/1',
+            );
         }
     }
 }
