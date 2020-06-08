@@ -53,7 +53,7 @@ export default class extends ProfileCommand {
         this.options = options;
         this.profile = this.getProfile(this.options);
 
-        const hash = await new HashResolver().resolve(options, "'Enter the aggregate bonded transaction hash to cosign: ");
+        const hash = await new HashResolver().resolve(options, 'Enter the aggregate bonded transaction hash to cosign: ');
 
         this.spinner.start();
         const sequentialFetcher = this.getSequentialFetcher();
