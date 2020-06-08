@@ -40,7 +40,7 @@ export const OptionsChoiceResolver = async (
         if (validation !== undefined) {
             const test = validation.validate(title);
             if (typeof test === 'string') {
-                FormatterService.error(test);
+                console.log(FormatterService.error(test));
                 return process.exit();
             }
         }
@@ -75,7 +75,7 @@ export const OptionsResolver = async (
         if (validation !== undefined) {
             const test = validation.validate(value);
             if (typeof test === 'string') {
-                FormatterService.error(test);
+                console.log(FormatterService.error(test));
                 return process.exit();
             }
         }

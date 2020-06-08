@@ -40,6 +40,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * Gets the signer multisig info if the transaction is multisig
      * @protected
      * @param {AnnounceTransactionsOptions} options
+     * @throws {ExpectedError}
      * @returns {(Promise<MultisigAccountInfo | null>)}
      */
     protected async getSignerMultisigInfo(options: AnnounceTransactionsOptions): Promise<MultisigAccountInfo | null> {

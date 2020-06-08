@@ -17,8 +17,6 @@
  */
 import * as fs from 'fs';
 
-import { ExpectedError } from 'clime';
-
 import { ProfileMigrations } from '../migrations/profile.migrations';
 import { HdProfile } from '../models/hdProfile.model';
 import { PrivateKeyProfile } from '../models/privateKeyProfile.model';
@@ -137,7 +135,7 @@ export class ProfileRepository {
                 return {};
             }
         } catch (error) {
-            throw new ExpectedError('Something went wrong when creating a file to store your profiles...', +JSON.stringify(error));
+            throw new Error('Something went wrong when creating a file to store your profiles...' + JSON.stringify(error));
         }
 
         try {
@@ -154,7 +152,7 @@ export class ProfileRepository {
 
             return profiles;
         } catch (error) {
-            throw new ExpectedError('Something went wrong when retrieving your profiles from the storage...' + JSON.stringify(error));
+            throw new Error('Something went wrong when retrieving your profiles from the storage...' + JSON.stringify(error));
         }
     }
 

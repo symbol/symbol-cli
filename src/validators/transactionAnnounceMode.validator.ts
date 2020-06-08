@@ -15,21 +15,21 @@
  * limitations under the License.
  *
  */
-import { LockHashAlgorithm } from 'symbol-sdk';
+import { Validator } from 'clime';
 
-import { Validator } from './validator';
+import { TransactionAnnounceMode } from '../resolvers/transactionAnnounceMode.resolver';
 
 /**
- * Hash algorithm validator
+ * Validator of transaction announce mode
  */
-export class HashAlgorithmValidator implements Validator<string> {
+export class TransactionAnnounceModeValidator implements Validator<string> {
     /**
-     * Validates if the hash algorithm is available.
-     * @param {string} value - Hash algorithm code.
+     * Validates if a transaction announce mode is valid.
+     * @param {string} value - TransactionAnnounceMode.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const keys = Object.keys(LockHashAlgorithm).filter((key) => Number.isNaN(parseFloat(key)));
-        return keys.includes(value) ? true : 'Hash algorithm must be one of (' + keys + ').';
+        const test = value in TransactionAnnounceMode;
+        return test ? true : 'TransactionAnnounceModeValidator must be one of (multisig, normal)';
     }
 }

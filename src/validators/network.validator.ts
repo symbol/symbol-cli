@@ -30,6 +30,6 @@ export class NetworkValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         const keys = Object.keys(NetworkType).filter((key) => Number.isNaN(parseFloat(key)));
-        return keys.includes(value) ? true : 'Network must be one of (' + keys + ').';
+        return keys.includes(value) ? true : 'Network must be one of (' + keys + ')';
     }
 }

@@ -65,6 +65,6 @@ describe('Proof validator', () => {
 
     it('should throw error if proof length is not 64 when a 64 char long hash is specified', () => {
         const privateKey = '40CHARS000000000000000000000000000000000';
-        expect(new ProofValidator(LockHashAlgorithm.Op_Hash_256).validate(privateKey)).to.be.equal('A proof should be 64 chars long.');
+        expect(new ProofValidator(LockHashAlgorithm.Op_Hash_256).validate(privateKey)).to.be.equal('A proof should be 64 chars long');
     });
 });

@@ -35,6 +35,7 @@ describe('Announce resolver', () => {
             lockDuration: '0',
             lockAmount: '0',
             signer: '',
+            mode: 'normal',
         };
         expect(await new AnnounceResolver().resolve(options)).to.be.equal(true);
     });
