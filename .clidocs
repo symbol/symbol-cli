@@ -105,7 +105,7 @@
          "title":"transaction",
          "commands":[
             "accountaddressrestriction",
-            "accountlink",
+            "accountkeylink",
             "accountmetadata",
             "accountmosaicrestriction",
             "accountoperationrestriction",
@@ -121,11 +121,15 @@
             "multisigmodification",
             "namespace",
             "namespacemetadata",
+            "nodekeylink",
             "persistentharvestdelegation",
             "secretlock",
             "secretproof",
             "status",
-            "transfer"
+            "transfer",
+            "uri",
+            "votingkeylink",
+            "vrfkeylink"
          ]
       }
    ]
