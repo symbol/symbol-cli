@@ -77,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
         const restrictionKey = await new KeyResolver().resolve(options, undefined, 'restrictionKey');
         const restrictionValue = await new RestrictionValueResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const repositoryFactory = profile.repositoryFactory;
         const restrictionMosaicHttp = repositoryFactory.createRestrictionMosaicRepository();
@@ -100,7 +100,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [mosaicAddressRestrictionTransaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

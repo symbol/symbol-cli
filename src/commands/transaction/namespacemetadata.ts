@@ -26,7 +26,6 @@ import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { NamespaceIdResolver } from '../../resolvers/namespace.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
-import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { StringResolver } from '../../resolvers/string.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
@@ -79,7 +78,7 @@ export default class extends AnnounceTransactionsCommand {
         const key = await new KeyResolver().resolve(options);
         const value = await new StringResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataHttp);
@@ -101,7 +100,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [metadataTransaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
             isAggregate: targetAddress.plain() === account.address.plain(),
             isAggregateBonded: targetAddress.plain() !== account.address.plain(),
         };

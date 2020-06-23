@@ -108,13 +108,13 @@ export default class extends AnnounceTransactionsCommand {
             maxFee,
         );
 
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

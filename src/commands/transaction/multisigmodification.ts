@@ -93,7 +93,7 @@ export default class extends AnnounceTransactionsCommand {
             'minRemovalDelta',
         );
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
@@ -108,7 +108,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [multisigAccountModificationTransaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
             isAggregateBonded: true,
         };
 

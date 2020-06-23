@@ -58,7 +58,6 @@ export class UnresolvedAddressValidator implements Validator<string> {
     }
 }
 
-
 /**
  * Public keys validator
  */

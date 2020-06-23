@@ -17,7 +17,7 @@
  */
 
 import { ExpectedError } from 'clime';
-import { AccountHttp, MultisigAccountInfo, PublicAccount, SignedTransaction } from 'symbol-sdk';
+import { AccountHttp, PublicAccount, SignedTransaction } from 'symbol-sdk';
 
 import { MultisigAccount } from '../models/multisig.types';
 import { AddressChoiceResolver } from '../resolvers/address.resolver';
@@ -43,10 +43,10 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @throws {ExpectedError}
      * @returns {(Promise<MultisigAccountInfo | null>)}
      */
-    protected async getsignerMultisig(options: AnnounceTransactionsOptions): Promise<MultisigAccount | null> {
-        const transactionAnnounceMode = await new TransactionAnnounceModeResolver().resolve(options);
+    protected async getMultisigSigner(options: AnnounceTransactionsOptions): Promise<MultisigAccount | null> {
+        const announceMode = await new TransactionAnnounceModeResolver().resolve(options);
 
-        if (transactionAnnounceMode === TransactionAnnounceMode.normal) {
+        if (announceMode === TransactionAnnounceMode.normal) {
             return null;
         }
 
@@ -76,16 +76,23 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
         const chosenSigner = await new AddressChoiceResolver().resolve(availableAddresses);
 
-        const chosensignerMultisig = childMultisigAccountsInfo.find(({ accountAddress }) => accountAddress.equals(chosenSigner));
-        const chosenSignerPublicAccount = await (await new AccountHttp(profile.url).getAccountInfo(chosenSigner).toPromise()).publicAccount;
+        const chosenmultisigSigner = childMultisigAccountsInfo.find(({ accountAddress }) => accountAddress.equals(chosenSigner));
+        const chosenSignerPublicAccount = (await new AccountHttp(profile.url).getAccountInfo(chosenSigner).toPromise()).publicAccount;
 
-        if (!chosensignerMultisig || !chosenSignerPublicAccount) {
+        if (!chosenmultisigSigner || !chosenSignerPublicAccount) {
             throw new ExpectedError('Could not retrieve the multisig account information from the node.');
         }
 
-        return { info: chosensignerMultisig, publicAccount: chosenSignerPublicAccount };
+        return { info: chosenmultisigSigner, publicAccount: chosenSignerPublicAccount };
     }
 
+    /**
+     * Signs a set of regular transactions.
+     * @protected
+     * @param {TransactionSignatureOptions} signatureOptions
+     * @param {AnnounceTransactionsOptions} options
+     * @returns { Promise<SignedTransaction[]> }
+     */
     protected async signTransactions(
         signatureOptions: TransactionSignatureOptions,
         options: AnnounceTransactionsOptions,
@@ -94,6 +101,12 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
         return TransactionSignatureService.create(profile, options).signTransactions(signatureOptions);
     }
 
+    /**
+     * Announces a set of transactions.
+     * @protected
+     * @param {AnnounceTransactionsOptions} options
+     * @param {SignedTransaction[]} signedTransactions
+     */
     protected async announceTransactions(options: AnnounceTransactionsOptions, signedTransactions: SignedTransaction[]): Promise<void> {
         const profile = this.getProfile(options);
         TransactionAnnounceService.create(profile, options).announce(signedTransactions);

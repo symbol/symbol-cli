@@ -77,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
         const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name');
         const namespaceType = await new NamespaceTypeResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         let transaction: NamespaceRegistrationTransaction;
         if (namespaceType === NamespaceRegistrationType.RootNamespace) {
@@ -104,7 +104,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

@@ -29,6 +29,7 @@ export class TransactionAnnounceService {
     public spinner: any;
     private transactionHttp: TransactionRepository;
     private listener: IListener;
+    to: any;
 
     /**
      * Creates an instance of TransactionAnnounceService.
@@ -42,7 +43,7 @@ export class TransactionAnnounceService {
     }
 
     /**
-     * Creates an instance of TransactionAnnounceService.
+     * Constructor.
      * @param {Profile} profile
      * @param {AnnounceTransactionsOptions} options
      */

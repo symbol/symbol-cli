@@ -77,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
         const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
         const proof = await new ProofResolver().resolve(options, hashAlgorithm);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = SecretProofTransaction.create(
             Deadline.create(),
@@ -92,7 +92,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

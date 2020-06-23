@@ -64,7 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         const address = await new AddressResolver().resolve(options);
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = AddressAliasTransaction.create(Deadline.create(), action, namespaceId, address, profile.networkType, maxFee);
 
@@ -72,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisig,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

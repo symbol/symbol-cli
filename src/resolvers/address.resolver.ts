@@ -23,7 +23,7 @@ import { ProfileOptions } from '../interfaces/profile.options';
 import { Profile } from '../models/profile.model';
 import { OptionsChoiceResolver, OptionsResolver } from '../options-resolver';
 import { AccountService } from '../services/account.service';
-import { AddressValidator, UnresolvedAddressesValidator, UnresolvedAddressValidator } from '../validators/address.validator';
+import { AddressValidator, UnresolvedAddressValidator, UnresolvedAddressesValidator } from '../validators/address.validator';
 import { Resolver } from './resolver';
 
 new BlockInfoDTO();

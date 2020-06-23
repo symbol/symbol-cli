@@ -101,9 +101,9 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicFlags = await new MosaicFlagsResolver().resolve(options);
         const amount = await new AmountResolver().resolve(options, 'Amount of mosaics units to create: ');
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisig = await this.getsignerMultisig(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
-        const signerAddress = signerMultisig ? signerMultisig.info.accountAddress : account.address;
+        const signerAddress = multisigSigner ? multisigSigner.info.accountAddress : account.address;
 
         const mosaicDefinition = MosaicDefinitionTransaction.create(
             Deadline.create(),
@@ -127,7 +127,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [mosaicDefinition, mosaicSupplyChange],
             maxFee,
-            signerMultisig,
+            multisigSigner,
             isAggregate: true,
             isAggregateBonded: signerAddress.plain() !== account.address.plain(),
         };
