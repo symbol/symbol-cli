@@ -19,7 +19,7 @@
 import { Options } from 'clime';
 import { NetworkType, PublicAccount } from 'symbol-sdk';
 
-import { OptionsChoiceResolver, OptionsResolver } from '../options-resolver';
+import { OptionsResolver } from '../options-resolver';
 import { PublicKeyValidator } from '../validators/publicKey.validator';
 import { Resolver } from './resolver';
 

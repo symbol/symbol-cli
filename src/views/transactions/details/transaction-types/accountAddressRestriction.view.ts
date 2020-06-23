@@ -16,7 +16,7 @@
  *
  */
 
-import { AccountAddressRestrictionTransaction, Address, AddressRestrictionFlag, NamespaceId, UnresolvedAddress } from 'symbol-sdk';
+import { AccountAddressRestrictionTransaction, Address, AddressRestrictionFlag, UnresolvedAddress } from 'symbol-sdk';
 
 import { CellRecord } from '../transaction.view';
 
