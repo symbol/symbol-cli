@@ -16,22 +16,14 @@
  *
  */
 
-import { Address, UnresolvedAddress } from 'symbol-sdk';
+import { MultisigAccountInfo, PublicAccount } from 'symbol-sdk';
 
-export class RecipientsView {
-    /**
-     * Renders a recipient or target address to a string to be used in views
-     * @static
-     * @param {(UnresolvedAddress)} recipient
-     * @returns {string}
-     */
-    static get(recipient: UnresolvedAddress): string {
-        if (recipient instanceof Address) {
-            return recipient.pretty();
-        }
-        if (recipient.fullName) {
-            return `${recipient.fullName} (${recipient.toHex()})`;
-        }
-        return recipient.toHex();
-    }
+/**
+ * Multisig account with public key
+ * @export
+ * @interface MultisigAccount
+ */
+export interface MultisigAccount {
+    info: MultisigAccountInfo;
+    publicAccount: PublicAccount;
 }

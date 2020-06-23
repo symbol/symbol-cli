@@ -16,7 +16,7 @@
  *
  */
 
-import { AccountAddressRestrictionTransaction, Address, AddressRestrictionFlag, NamespaceId } from 'symbol-sdk';
+import { AccountAddressRestrictionTransaction, Address, AddressRestrictionFlag, NamespaceId, UnresolvedAddress } from 'symbol-sdk';
 
 import { CellRecord } from '../transaction.view';
 
@@ -74,14 +74,14 @@ export class AccountAddressRestrictionView {
 
     /**
      * @private
-     * @param {(Address | NamespaceId)} account
+     * @param {(UnresolvedAddress)} account
      * @param {number} index
      * @param {number} numberOfRestrictions
      * @param {('Addition' | 'Deletion')} additionOrDeletion
      * @returns {CellRecord}
      */
     private renderRestriction(
-        account: Address | NamespaceId,
+        account: UnresolvedAddress,
         index: number,
         numberOfRestrictions: number,
         additionOrDeletion: 'Addition' | 'Deletion',

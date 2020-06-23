@@ -25,7 +25,7 @@ import { unsignedNamespaceMetadata1 } from '../../../../mocks/transactions/names
 describe('NamespaceMetadataView', () => {
     it('should return a view', () => {
         const view = NamespaceMetadataView.get(unsignedNamespaceMetadata1);
-        expect(view['Target public key']).equal(account1.publicKey);
+        expect(view['Target address']).equal(account1.address.pretty());
         expect(view['Scoped metadata key']).equal('00000000000003E8');
         expect(view['Target namespace Id']).equal('symbol.xym (E74B99BA41F4AFEE)');
         expect(view['Value size delta']).equal('1');

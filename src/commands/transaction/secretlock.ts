@@ -21,7 +21,7 @@ import { Deadline, Mosaic, SecretLockTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
-import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
 import { AmountResolver } from '../../resolvers/amount.resolver';
 import { DurationResolver } from '../../resolvers/duration.resolver';
 import { HashAlgorithmResolver } from '../../resolvers/hashAlgorithm.resolver';
@@ -86,7 +86,7 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(password);
         const mosaicId = await new MosaicIdAliasResolver().resolve(options, 'Enter the locked mosaic identifier or alias:');
         const amount = await new AmountResolver().resolve(options, 'Enter the absolute amount of mosaic units to lock:');
-        const recipientAddress = await new AddressAliasResolver().resolve(
+        const recipientAddress = await new UnresolvedAddressResolver().resolve(
             options,
             undefined,
             'Enter the address (or @alias) that receives the funds once unlocked:',
@@ -108,13 +108,13 @@ export default class extends AnnounceTransactionsCommand {
             maxFee,
         );
 
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

@@ -17,53 +17,74 @@
  */
 
 import { expect } from 'chai';
+import { Account, NetworkType } from 'symbol-sdk';
 
-import { AddressAliasValidator, AddressValidator } from '../../src/validators/address.validator';
+import { AddressValidator, UnresolvedAddressesValidator, UnresolvedAddressValidator } from '../../src/validators/address.validator';
 
 describe('Address validator', () => {
     it('default case', () => {
-        const uppercaseAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
-        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
+        const uppercaseAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf';
+        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF';
         expect(new AddressValidator().validate(uppercaseAddress)).to.be.equal(true);
         expect(new AddressValidator().validate(lowercaseAddress)).to.be.equal(true);
         expect(new AddressValidator().validate(dashedAddress)).to.be.equal(true);
     });
 
     it('should throw an error if the address is invalid', () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const address = 'TEST';
         expect(new AddressValidator().validate(address)).to.be.equal(
-            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP',
+            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB',
         );
     });
 });
 
 describe('Address alias validator', () => {
     it('default case', () => {
-        const uppercaseAddres = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF3';
-        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf3';
-        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF3';
-        expect(new AddressAliasValidator().validate(uppercaseAddres)).to.be.equal(true);
-        expect(new AddressAliasValidator().validate(lowercaseAddress)).to.be.equal(true);
-        expect(new AddressAliasValidator().validate(dashedAddress)).to.be.equal(true);
+        const uppercaseAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf';
+        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF';
+        expect(new UnresolvedAddressValidator().validate(uppercaseAddress)).to.be.equal(true);
+        expect(new UnresolvedAddressValidator().validate(lowercaseAddress)).to.be.equal(true);
+        expect(new UnresolvedAddressValidator().validate(dashedAddress)).to.be.equal(true);
     });
 
     it('default case alias', () => {
         const alias = '@nem';
-        expect(new AddressAliasValidator().validate(alias)).to.be.equal(true);
+        expect(new UnresolvedAddressValidator().validate(alias)).to.be.equal(true);
     });
 
     it('should throw an error if the address is invalid', () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        expect(new AddressAliasValidator().validate(address)).to.be.equal(
-            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP',
+        const address = 'TEST';
+        expect(new UnresolvedAddressValidator().validate(address)).to.be.equal(
+            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB',
         );
     });
 
     it('should throw an error if the alias is invalid', () => {
         const alias = '@myOwnAlias';
-        expect(new AddressAliasValidator().validate(alias)).to.be.equal(
-            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP',
+        expect(new UnresolvedAddressValidator().validate(alias)).to.be.equal(
+            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB',
+        );
+    });
+});
+
+describe('Unresolved addresses validator', () => {
+    it('should be possible to validate multiple addresses at the same time', () => {
+        const address1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain();
+        const address2 = '@symbol';
+        const cosignatoryAddresses = address1 + ',' + address2;
+
+        expect(new UnresolvedAddressesValidator().validate(cosignatoryAddresses)).to.be.equal(true);
+    });
+
+    it('should throw error if one address is invalid', () => {
+        const address1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain();
+        const address2 = 'test';
+        const cosignatoryAddresses = address1 + ',' + address2;
+
+        expect(new UnresolvedAddressesValidator().validate(cosignatoryAddresses)).to.be.equal(
+            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB',
         );
     });
 });

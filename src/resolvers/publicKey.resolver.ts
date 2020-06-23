@@ -19,9 +19,8 @@
 import { Options } from 'clime';
 import { NetworkType, PublicAccount } from 'symbol-sdk';
 
-import { Profile } from '../models/profile.model';
 import { OptionsChoiceResolver, OptionsResolver } from '../options-resolver';
-import { PublicKeyValidator, PublicKeysValidator } from '../validators/publicKey.validator';
+import { PublicKeyValidator } from '../validators/publicKey.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -46,51 +45,5 @@ export class PublicKeyResolver implements Resolver {
             new PublicKeyValidator(),
         );
         return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST);
-    }
-}
-
-/**
- * Cosignatory public key resolver
- */
-
-export class CosignatoryPublicKeyResolver implements Resolver {
-    /**
-     * Resolves a set of cosignatory public keys provided by the user.
-     * @param {Options} options - Command options.
-     * @param {Profile} secondSource - Secondary data source.
-     * @param {string} altText - Alternative text.
-     * @param {string} altKey - Alternative key.
-     * @returns {Promise<PublicAccount[]>}
-     */
-    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<PublicAccount[]> {
-        const resolution = await OptionsResolver(
-            options,
-            altKey ? altKey : 'cosignatoryPublicKey',
-            () => undefined,
-            altText ? altText : 'Enter the cosignatory accounts public keys (separated by a comma):',
-            'text',
-            new PublicKeysValidator(),
-        );
-        const cosignatoryPublicKeys = resolution.split(',');
-        const cosignatories: PublicAccount[] = [];
-        cosignatoryPublicKeys.map((cosignatory: string) => {
-            cosignatories.push(
-                PublicAccount.createFromPublicKey(cosignatory, secondSource ? secondSource.networkType : NetworkType.MIJIN_TEST),
-            );
-        });
-        return cosignatories;
-    }
-}
-
-export class PublicKeyChoiceResolver implements Resolver {
-    /**
-     * Resolves a public key from a list of public keys
-     * @param {string[]} publicKeys
-     * @returns {Promise<number>}
-     */
-    async resolve(publicKeys: string[]): Promise<string> {
-        const choices = publicKeys.map((string) => ({ title: string, value: string }));
-
-        return OptionsChoiceResolver({}, 'signer', 'Chose signer:', choices, 'select', undefined);
     }
 }

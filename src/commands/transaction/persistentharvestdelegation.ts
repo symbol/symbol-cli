@@ -70,7 +70,7 @@ export default class extends AnnounceTransactionsCommand {
             profile.networkType,
         );
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = TransferTransaction.create(
             Deadline.create(),
@@ -85,7 +85,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

@@ -20,7 +20,7 @@ import { Deadline, SecretProofTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
-import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
 import { HashAlgorithmResolver } from '../../resolvers/hashAlgorithm.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
@@ -67,7 +67,7 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        const recipientAddress = await new AddressAliasResolver().resolve(
+        const recipientAddress = await new UnresolvedAddressResolver().resolve(
             options,
             undefined,
             'Enter the address (or @alias) that receives the funds once unlocked:',
@@ -77,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
         const hashAlgorithm = await new HashAlgorithmResolver().resolve(options);
         const proof = await new ProofResolver().resolve(options, hashAlgorithm);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = SecretProofTransaction.create(
             Deadline.create(),
@@ -92,7 +92,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

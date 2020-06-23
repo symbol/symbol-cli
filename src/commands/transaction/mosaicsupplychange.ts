@@ -64,7 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         const action = await new SupplyActionResolver().resolve(options);
         const amount = await new AmountResolver().resolve(options, 'Enter absolute amount of supply change: ');
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = MosaicSupplyChangeTransaction.create(Deadline.create(), mosaicId, action, amount, profile.networkType, maxFee);
 
@@ -72,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

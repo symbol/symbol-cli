@@ -45,14 +45,14 @@ export class MosaicViewTable {
             ['Divisibility', mosaicView.mosaicInfo.divisibility],
             ['Transferable', mosaicView.mosaicInfo.isTransferable()],
             ['Supply Mutable', mosaicView.mosaicInfo.isSupplyMutable()],
-            ['Height', mosaicView.mosaicInfo.height.toString()],
+            ['Height', mosaicView.mosaicInfo.startHeight.toString()],
             [
                 'Expiration',
                 mosaicView.mosaicInfo.duration.compact() === 0
                     ? 'Never'
-                    : mosaicView.mosaicInfo.height.add(mosaicView.mosaicInfo.duration).toString(),
+                    : mosaicView.mosaicInfo.startHeight.add(mosaicView.mosaicInfo.duration).toString(),
             ],
-            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
+            ['Owner', mosaicView.mosaicInfo.ownerAddress.pretty()],
             ['Supply (Absolute)', mosaicView.mosaicInfo.supply.toString()],
             [
                 'Supply (Relative)',

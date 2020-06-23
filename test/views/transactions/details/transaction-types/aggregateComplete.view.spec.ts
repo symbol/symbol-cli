@@ -16,9 +16,11 @@
  *
  */
 import { expect } from 'chai';
+import { Address } from 'symbol-sdk';
 
 import { AggregateCompleteView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedAggregateComplete1 } from '../../../../mocks/transactions/aggregateComplete.mock';
+import { unsignedTransfer1 } from '../../../../mocks/transactions/transfer.mock';
 
 describe('AggregateCompleteView', () => {
     it('should return a view', () => {
@@ -30,7 +32,7 @@ describe('AggregateCompleteView', () => {
             hAlign: 'center',
         });
 
-        expect(view['[Inner tx. 1 of 2] Recipient']).equal('TALRJL-Z2FDOI-B7JCZJ-ANUJCM-GCJA6R-BRIYK4-NTDM');
+        expect(view['[Inner tx. 1 of 2] Recipient']).equal((unsignedTransfer1.recipientAddress as Address).pretty());
         expect(view['[Inner tx. 1 of 2] Message']).equal('This is a mock message!');
         expect(view['[Inner tx. 1 of 2] Mosaic (1/1)']).equal('1 D525AD41D95FCF29');
 

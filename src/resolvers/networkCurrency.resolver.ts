@@ -17,7 +17,7 @@
  */
 
 import { ExpectedError } from 'clime';
-import { BlockHttp, QueryParams, UInt64 } from 'symbol-sdk';
+import { TransactionGroup, TransactionHttp, UInt64 } from 'symbol-sdk';
 
 import { CreateProfileOptions } from '../interfaces/createProfile.options';
 import { NetworkCurrency } from '../models/networkCurrency.model';
@@ -40,16 +40,16 @@ export class NetworkCurrencyResolver implements Resolver {
                 return NetworkCurrency.createFromDTO({ namespaceId, divisibility });
             }
 
-            const firstBlockTransactions = await new BlockHttp(options.url)
-                .getBlockTransactions(UInt64.fromUint(1), new QueryParams({ pageSize: 100 }))
+            const firstBlockTransactions = await new TransactionHttp(options.url)
+                .search({ height: UInt64.fromUint(1), pageSize: 100, group: TransactionGroup.Confirmed })
                 .toPromise();
 
-            return NetworkCurrency.createFromFirstBlockTransactions(firstBlockTransactions);
+            return NetworkCurrency.createFromFirstBlockTransactions(firstBlockTransactions.data);
         } catch (ignored) {
             throw new ExpectedError(
                 'The CLI cannot get the network currency description. Please, check if you can reach the Symbol url provided: ' +
                     options.url +
-                    '/block/1',
+                    '/blocks/1',
             );
         }
     }

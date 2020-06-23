@@ -16,7 +16,7 @@
  *
  */
 
-import { MosaicMetadataTransaction } from 'symbol-sdk';
+import { Address, MosaicMetadataTransaction } from 'symbol-sdk';
 
 import { CellRecord } from '../transaction.view';
 
@@ -28,7 +28,7 @@ export class MosaicMetadataView {
      */
     static get(tx: MosaicMetadataTransaction): CellRecord {
         return {
-            'Target public key': tx.targetPublicKey,
+            'Target address': tx.targetAddress instanceof Address ? tx.targetAddress.pretty() : tx.targetAddress.toHex(),
             'Scoped metadata key': tx.scopedMetadataKey.toHex(),
             'Target mosaic Id': tx.targetMosaicId.toHex(),
             'Value size delta': tx.valueSizeDelta.toString(),

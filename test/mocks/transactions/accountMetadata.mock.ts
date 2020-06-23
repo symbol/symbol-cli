@@ -22,7 +22,7 @@ import { account1 } from '../accounts.mock';
 
 export const unsignedAccountMetadata1 = AccountMetadataTransaction.create(
     Deadline.create(),
-    account1.publicKey,
+    account1.address,
     UInt64.fromUint(1000),
     1,
     Convert.uint8ToUtf8(new Uint8Array(10)),

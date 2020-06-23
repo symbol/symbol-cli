@@ -17,15 +17,7 @@
  */
 
 import { command, metadata, option } from 'clime';
-import {
-    Deadline,
-    MosaicDefinitionTransaction,
-    MosaicId,
-    MosaicNonce,
-    MosaicSupplyChangeAction,
-    MosaicSupplyChangeTransaction,
-    UInt64,
-} from 'symbol-sdk';
+import { Deadline, MosaicDefinitionTransaction, MosaicId, MosaicNonce, MosaicSupplyChangeAction, MosaicSupplyChangeTransaction, UInt64 } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
@@ -109,14 +101,14 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicFlags = await new MosaicFlagsResolver().resolve(options);
         const amount = await new AmountResolver().resolve(options, 'Amount of mosaics units to create: ');
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
-        const signerPublicAccount = signerMultisigInfo ? signerMultisigInfo.account : account.publicAccount;
+        const signerAddress = signerMultisig ? signerMultisig.info.accountAddress : account.address;
 
         const mosaicDefinition = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, signerPublicAccount),
+            MosaicId.createFromNonce(nonce, signerAddress),
             mosaicFlags,
             divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
@@ -135,9 +127,9 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [mosaicDefinition, mosaicSupplyChange],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
             isAggregate: true,
-            isAggregateBonded: signerPublicAccount.publicKey !== account.publicKey,
+            isAggregateBonded: signerAddress.plain() !== account.address.plain(),
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

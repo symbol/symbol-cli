@@ -17,11 +17,11 @@
  */
 
 import { command, metadata, option } from 'clime';
-import { Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction } from 'symbol-sdk';
+import { Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction, UnresolvedAddress } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
-import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MessageResolver } from '../../resolvers/message.resolver';
 import { MosaicsResolver } from '../../resolvers/mosaic.resolver';
@@ -77,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
         const mosaics = await new MosaicsResolver().resolve(options);
-        let recipientAddress: Address | NamespaceId;
+        let recipientAddress: UnresolvedAddress;
         let message = EmptyMessage;
         if (options.encrypted) {
             const recipientPublicAccount = await new PublicKeyResolver().resolve(
@@ -90,7 +90,7 @@ export default class extends AnnounceTransactionsCommand {
             const rawMessage = await new MessageResolver().resolve(options);
             message = account.encryptMessage(rawMessage, recipientPublicAccount);
         } else {
-            recipientAddress = await new AddressAliasResolver().resolve(
+            recipientAddress = await new UnresolvedAddressResolver().resolve(
                 options,
                 undefined,
                 'Enter the recipient address or @alias:',
@@ -103,7 +103,7 @@ export default class extends AnnounceTransactionsCommand {
         }
 
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = TransferTransaction.create(Deadline.create(), recipientAddress, mosaics, message, profile.networkType, maxFee);
 
@@ -111,7 +111,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

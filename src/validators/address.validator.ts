@@ -33,16 +33,16 @@ export class AddressValidator implements Validator<string> {
         try {
             Address.createFromRawAddress(value);
         } catch (err) {
-            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP';
+            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB';
         }
         return true;
     }
 }
 
 /**
- * Address alias validator
+ * Unresolved address validator
  */
-export class AddressAliasValidator implements Validator<string> {
+export class UnresolvedAddressValidator implements Validator<string> {
     /**
      * Validates if an address object can be created from a string.
      * @param {string} value - Raw address. If starts with '@', then it is an alias.
@@ -50,10 +50,36 @@ export class AddressAliasValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            AccountService.getRecipient(value);
+            AccountService.getUnresolvedAddress(value);
         } catch {
-            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP';
+            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB';
         }
         return true;
+    }
+}
+
+
+/**
+ * Public keys validator
+ */
+export class UnresolvedAddressesValidator implements Validator<string> {
+    /**
+     * Validates multiple addresses format.
+     * @param {string} value - Public keys, separated by a comma.
+     * @returns {true | string}
+     */
+    validate(value: string): boolean | string {
+        const publicKeys = value.split(',');
+        let error = '';
+        publicKeys.forEach((publicKey: string) => {
+            const validation = new UnresolvedAddressValidator().validate(publicKey);
+            if (typeof validation === 'string') {
+                error = validation;
+            }
+        });
+        if (!error) {
+            return true;
+        }
+        return error;
     }
 }

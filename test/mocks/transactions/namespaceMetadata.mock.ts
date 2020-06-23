@@ -23,7 +23,7 @@ import { namespaceId1 } from '../namespaces.mock';
 
 export const unsignedNamespaceMetadata1 = NamespaceMetadataTransaction.create(
     Deadline.create(),
-    account1.publicKey,
+    account1.address,
     UInt64.fromUint(1000),
     namespaceId1,
     1,

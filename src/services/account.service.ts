@@ -16,7 +16,7 @@
  *
  */
 
-import { Address, NamespaceId } from 'symbol-sdk';
+import { Address, NamespaceId, UnresolvedAddress } from 'symbol-sdk';
 
 /**
  * Account service
@@ -27,10 +27,10 @@ export class AccountService {
     /**
      * Gets the address given a raw address.
      * @param {string} rawRecipient -  Address or namespace name. If starts with "@", it is a namespace name.
-     * @returns {Address | NamespaceId}
+     * @returns {UnresolvedAddress}
      */
-    static getRecipient(rawRecipient: string): Address | NamespaceId {
-        let recipient: Address | NamespaceId;
+    static getUnresolvedAddress(rawRecipient: string): UnresolvedAddress {
+        let recipient: UnresolvedAddress;
         if (rawRecipient.charAt(0) === AccountService.ALIAS_TAG) {
             recipient = new NamespaceId(rawRecipient.substring(1));
         } else {

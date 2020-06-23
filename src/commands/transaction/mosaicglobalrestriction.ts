@@ -87,7 +87,7 @@ export default class extends AnnounceTransactionsCommand {
         const namespaceHttp = repositoryFactory.createNamespaceRepository();
         const mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp);
 
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = await mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
@@ -106,7 +106,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

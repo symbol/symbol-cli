@@ -1,3 +1,12 @@
+import { Profile } from '../models/profile.model';
+import { Account, AggregateTransaction, Deadline, HashLockTransaction, MultisigAccountInfo, NetworkType, PublicAccount, SignedTransaction, Transaction, UInt64 } from 'symbol-sdk';
+
+import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
+import { MultisigAccount } from '../models/multisig.types';
+import { NetworkCurrency } from '../models/networkCurrency.model';
+import { MaxFeeResolver } from '../resolvers/maxFee.resolver';
+import { TransactionView } from '../views/transactions/details/transaction.view';
+
 /*
  *
  * Copyright 2018-present NEM
@@ -15,25 +24,6 @@
  * limitations under the License.
  *
  */
-
-import {
-    Account,
-    AggregateTransaction,
-    Deadline,
-    LockFundsTransaction,
-    MultisigAccountInfo,
-    NetworkType,
-    PublicAccount,
-    SignedTransaction,
-    Transaction,
-    UInt64,
-} from 'symbol-sdk';
-
-import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
-import { NetworkCurrency } from '../models/networkCurrency.model';
-import { Profile } from '../models/profile.model';
-import { MaxFeeResolver } from '../resolvers/maxFee.resolver';
-import { TransactionView } from '../views/transactions/details/transaction.view';
 
 export enum AnnounceMode {
     'standard' = 'standard',
@@ -62,7 +52,7 @@ export interface TransactionSignatureOptions {
      * (if sending a multisig transaction)
      * @type {string}
      */
-    signerMultisigInfo?: MultisigAccountInfo | null;
+    signerMultisig?: MultisigAccount | null;
 
     /**
      * Whether to force wrapping transactions in an aggregate
@@ -83,7 +73,7 @@ export class TransactionSignatureService {
     txToSign: Transaction[];
     signerPublicAccount?: PublicAccount;
     signedLockTransaction: SignedTransaction;
-    signerMultisigInfo?: MultisigAccountInfo | null;
+    signerMultisig?: MultisigAccount | null;
     isAggregate? = false;
     isAggregateBonded? = false;
 
@@ -102,19 +92,15 @@ export class TransactionSignatureService {
 
     get announceMode(): AnnounceMode {
         if (this.isAggregate) {
-            if (this.signerMultisigInfo && this.signerMultisigInfo.minApproval > 1) {
+            if (this.signerMultisig && this.signerMultisig.info.minApproval > 1) {
                 return AnnounceMode.partial;
             }
-            return AnnounceMode.complete;
         }
         if (this.isAggregateBonded) {
             return AnnounceMode.partial;
         }
-        if (!this.signerMultisigInfo) {
+        if (!this.signerMultisig) {
             return AnnounceMode.standard;
-        }
-        if (this.signerMultisigInfo.minApproval > 1) {
-            return AnnounceMode.partial;
         }
         return AnnounceMode.complete;
     }
@@ -126,16 +112,16 @@ export class TransactionSignatureService {
     private constructor(private readonly profile: Profile, private readonly options: AnnounceTransactionsOptions) {}
 
     public async signTransactions(args: TransactionSignatureOptions): Promise<SignedTransaction[]> {
-        const { account, transactions, signerMultisigInfo, maxFee, isAggregate, isAggregateBonded } = args;
+        const { account, transactions, signerMultisig, maxFee, isAggregate, isAggregateBonded } = args;
 
         // set class variables
         this.maxFee = maxFee;
         this.txToSign = transactions;
-        this.signerMultisigInfo = signerMultisigInfo;
+        this.signerMultisig = signerMultisig;
         this.isAggregate = isAggregate;
         this.isAggregateBonded = isAggregateBonded;
-        if (signerMultisigInfo) {
-            this.signerPublicAccount = signerMultisigInfo.account;
+        if (signerMultisig) {
+            this.signerPublicAccount = signerMultisig.publicAccount;
         }
 
         // return signed transactions
@@ -207,14 +193,14 @@ export class TransactionSignatureService {
         return account.sign(transaction, this.generationHash);
     }
 
-    private async createHashLockTransaction(aggregateTx: SignedTransaction): Promise<LockFundsTransaction> {
+    private async createHashLockTransaction(aggregateTx: SignedTransaction): Promise<HashLockTransaction> {
         const maxFeeHashLock = await new MaxFeeResolver().resolve(
             this.options,
             'Enter the maximum fee to announce the hashlock transaction (absolute amount):',
             'maxFeeHashLock',
         );
 
-        return LockFundsTransaction.create(
+        return HashLockTransaction.create(
             Deadline.create(),
             this.networkCurrency.createRelative(this.options.lockAmount),
             UInt64.fromNumericString(this.options.lockDuration),

@@ -64,7 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = MosaicAliasTransaction.create(Deadline.create(), action, namespaceId, mosaicId, profile.networkType, maxFee);
 
@@ -72,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

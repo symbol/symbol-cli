@@ -20,7 +20,7 @@ import { Deadline, MosaicRestrictionTransactionService } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
-import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
 import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
@@ -68,16 +68,16 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
         const mosaicId = await new MosaicIdAliasResolver().resolve(options);
-        const targetAddress = await new AddressAliasResolver().resolve(
+        const targetAddress = await new UnresolvedAddressResolver().resolve(
             options,
             undefined,
-            'Enter the restricted target address or alias:',
+            'Enter the restricted target address or @alias:',
             'targetAddress',
         );
         const restrictionKey = await new KeyResolver().resolve(options, undefined, 'restrictionKey');
         const restrictionValue = await new RestrictionValueResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const repositoryFactory = profile.repositoryFactory;
         const restrictionMosaicHttp = repositoryFactory.createRestrictionMosaicRepository();
@@ -100,7 +100,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [mosaicAddressRestrictionTransaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

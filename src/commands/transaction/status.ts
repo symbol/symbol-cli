@@ -74,8 +74,8 @@ export default class extends ProfileCommand {
         const hash = await new HashResolver().resolve(options);
 
         this.spinner.start();
-        const transactionHttp = profile.repositoryFactory.createTransactionRepository();
-        transactionHttp.getTransactionStatus(hash).subscribe(
+        const transactionStatusHttp = profile.repositoryFactory.createTransactionStatusRepository();
+        transactionStatusHttp.getTransactionStatus(hash).subscribe(
             (status) => {
                 this.spinner.stop();
                 console.log(new TransactionStatusTable(status).toString());

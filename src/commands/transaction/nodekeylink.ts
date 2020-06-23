@@ -58,7 +58,7 @@ export default class extends AnnounceTransactionsCommand {
         ).publicKey;
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = NodeKeyLinkTransaction.create(Deadline.create(), linkedPublicKey, action, profile.networkType, maxFee);
 
@@ -66,7 +66,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

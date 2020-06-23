@@ -19,7 +19,7 @@
 import { expect } from 'chai';
 
 import { MultisigService } from '../../src/services/multisig.service';
-import { multisigGraphInfo1, multisigGraphInfoPublicAccount1, multisigGraphInfoPublicAccount5 } from '../mocks/multisigGraphInfo.mock';
+import { multisigGraphInfo1, multisigGraphInfoAccount1, multisigGraphInfoAccount5 } from '../mocks/multisigGraphInfo.mock';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
 
 describe('Multisig service', () => {
@@ -30,7 +30,7 @@ describe('Multisig service', () => {
 
     it('should return all addresses from a MultisigGraphInfo', async () => {
         const multisigService = new MultisigService(mockPrivateKeyProfile1);
-        const expectedAddresses = [multisigGraphInfoPublicAccount1.address, multisigGraphInfoPublicAccount5.address];
+        const expectedAddresses = [multisigGraphInfoAccount1, multisigGraphInfoAccount5];
 
         multisigService
             // @ts-ignore

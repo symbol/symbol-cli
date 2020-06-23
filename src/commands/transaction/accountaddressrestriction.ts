@@ -23,7 +23,7 @@ import { AnnounceTransactionsCommand } from '../../interfaces/announce.transacti
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
 import { ActionType } from '../../models/action.enum';
 import { ActionResolver } from '../../resolvers/action.resolver';
-import { AddressAliasResolver } from '../../resolvers/address.resolver';
+import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { RestrictionAccountAddressFlagsResolver } from '../../resolvers/restrictionAccount.resolver';
@@ -69,14 +69,14 @@ export default class extends AnnounceTransactionsCommand {
         const account = profile.decrypt(password);
         const action = await new ActionResolver().resolve(options);
         const flags = await new RestrictionAccountAddressFlagsResolver().resolve(options);
-        const address = await new AddressAliasResolver().resolve(
+        const address = await new UnresolvedAddressResolver().resolve(
             options,
             undefined,
             'Enter the recipient address (or @alias):',
             'recipientAddress',
         );
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const signerMultisig = await this.getsignerMultisig(options);
 
         const transaction = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
             Deadline.create(),
@@ -91,7 +91,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            signerMultisig,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);
