@@ -21,7 +21,6 @@ import { MultisigAccountInfo, TransactionType, UInt64 } from 'symbol-sdk';
 
 import { AnnounceMode, TransactionSignatureService } from '../../src/services/transaction.signature.service';
 import { account1, account2 } from '../mocks/accounts.mock';
-import { multisigGraphInfoAccount1 } from '../mocks/multisigGraphInfo.mock';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
 import { unsignedAggregateBonded1, unsignedTransfer1, unsignedTransfer2 } from '../mocks/transactions';
 

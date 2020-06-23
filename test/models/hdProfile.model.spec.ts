@@ -17,7 +17,7 @@
  */
 
 import { expect } from 'chai';
-import { Address, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
+import { NetworkType, Password, SimpleWallet } from 'symbol-sdk';
 
 import { HdProfile } from '../../src/models/hdProfile.model';
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';

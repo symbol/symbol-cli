@@ -1,4 +1,13 @@
-import { Account, AggregateTransaction, Deadline, HashLockTransaction, MultisigAccountInfo, NetworkType, PublicAccount, SignedTransaction, Transaction, UInt64 } from 'symbol-sdk';
+import {
+    Account,
+    AggregateTransaction,
+    Deadline,
+    HashLockTransaction,
+    PublicAccount,
+    SignedTransaction,
+    Transaction,
+    UInt64,
+} from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
 import { MultisigAccount } from '../models/multisig.types';

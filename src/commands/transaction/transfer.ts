@@ -17,7 +17,7 @@
  */
 
 import { command, metadata, option } from 'clime';
-import { Address, Deadline, EmptyMessage, NamespaceId, PlainMessage, TransferTransaction, UnresolvedAddress } from 'symbol-sdk';
+import { Deadline, EmptyMessage, PlainMessage, TransferTransaction, UnresolvedAddress } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
