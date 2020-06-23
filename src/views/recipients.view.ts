@@ -22,7 +22,7 @@ export class RecipientsView {
     /**
      * Renders a recipient or target address to a string to be used in views
      * @static
-     * @param {(UnresolvedAddress)} recipient
+     * @param {UnresolvedAddress} recipient
      * @returns {string}
      */
     static get(recipient: UnresolvedAddress): string {

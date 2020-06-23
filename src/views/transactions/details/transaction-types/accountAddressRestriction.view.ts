@@ -74,7 +74,7 @@ export class AccountAddressRestrictionView {
 
     /**
      * @private
-     * @param {(UnresolvedAddress)} account
+     * @param {UnresolvedAddress} account
      * @param {number} index
      * @param {number} numberOfRestrictions
      * @param {('Addition' | 'Deletion')} additionOrDeletion
