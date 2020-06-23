@@ -4,14 +4,14 @@
          "title":"account",
          "commands":[
             "info",
-            "generate",
+            "generate"
          ]
       },
       {
          "title":"block",
          "commands":[
             "header",
-            "receipts",
+            "receipts"
          ]
       },
       {
