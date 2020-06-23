@@ -5,11 +5,6 @@
          "commands":[
             "info",
             "generate",
-            "transactions",
-            "unconfirmed",
-            "aggregatebonded",
-            "incoming",
-            "outgoing"
          ]
       },
       {
@@ -17,7 +12,6 @@
          "commands":[
             "header",
             "receipts",
-            "transactions"
          ]
       },
       {
