@@ -4,7 +4,7 @@
          "title":"account",
          "commands":[
             "info",
-            "generate",
+            "generate"
          ]
       },
       {
@@ -12,7 +12,7 @@
          "commands":[
             "search",
             "info",
-            "receipts",
+            "receipts"
          ]
       },
       {
