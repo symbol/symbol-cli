@@ -28,7 +28,7 @@ import {
 } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { OptionsConfirmResolver } from '../../options-resolver';
 import { AmountResolver } from '../../resolvers/amount.resolver';
 import { DivisibilityResolver } from '../../resolvers/divisibility.resolver';

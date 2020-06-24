@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 
-import { Profile } from '../models/profile.model';
 import { OptionsResolver } from '../options-resolver';
 import { HexAddressValidator } from '../validators/hexAddress.validator';
 import { Resolver } from './resolver';
@@ -34,11 +33,11 @@ export class HexAddressResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Promise<string>}
      */
-    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<string> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<string> {
         const resolution = await OptionsResolver(
             options,
             altKey ? altKey : 'address',
-            () => (secondSource ? secondSource.address.pretty() : undefined),
+            () => undefined,
             altText ? altText : 'Enter an hex address:',
             'text',
             new HexAddressValidator(),

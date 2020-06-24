@@ -17,6 +17,7 @@
  */
 
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 import { MultisigAccountInfo, TransactionType, UInt64 } from 'symbol-sdk';
 
 import { AnnounceMode, TransactionSignatureService } from '../../src/services/transaction.signature.service';
@@ -73,6 +74,10 @@ describe('Transaction signature service', () => {
         transactions: [unsignedTransfer1],
         account: account1,
     };
+
+    before(() => {
+        sinon.stub(console, 'log');
+    });
 
     it('should create transaction signature service', () => {
         expect(TransactionSignatureService.create(mockPrivateKeyProfile1, default_options)).to.not.be.equal(undefined);

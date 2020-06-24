@@ -16,9 +16,15 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { TransactionGroup } from 'symbol-sdk';
+import { TransactionSearchCriteria } from 'symbol-sdk';
 
-import { SearchCommand, SearchOptions } from '../../interfaces/search.command';
+import { SearchCommand } from '../../interfaces/search.command';
+import { SearchOptions } from '../../interfaces/search.options';
+import { AddressResolver } from '../../resolvers/address.resolver';
+import { HeightResolver } from '../../resolvers/height.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
+import { TransactionGroupResolver } from '../../resolvers/transactionGroup.resolver';
+import { TransactionTypeResolver } from '../../resolvers/transactionType.resolver';
 import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
@@ -27,8 +33,8 @@ import { TransactionView } from '../../views/transactions/details/transaction.vi
  */
 export class TransactionSearchOptions extends SearchOptions {
     @option({
-        description: '(Optional) The group of transaction.',
-        default: 'confirmed',
+        description: '(Optional) Filter by transaction group. (Confirmed, Unconfirmed, Partial)',
+        default: 'Confirmed',
     })
     group: string;
 
@@ -53,14 +59,36 @@ export class TransactionSearchOptions extends SearchOptions {
     height: string;
 
     @option({
-        description:
-            '(Optional) Filter by transaction type. To filter by multiple transaction type, separate the transaction types with commas.',
+        description: '(Optional) Filter by transaction type. (E.g. TRANSFER)',
     })
     type: string;
+
+    async buildSearchCriteria(): Promise<TransactionSearchCriteria> {
+        const criteria: TransactionSearchCriteria = {
+            ...this.buildBaseSearchCriteria(),
+            group: await new TransactionGroupResolver().resolve(this),
+        };
+        if (this.address) {
+            criteria.address = await new AddressResolver().resolve(this);
+        }
+        if (this.recipientAddress) {
+            criteria.recipientAddress = await new AddressResolver().resolve(this, undefined, undefined, 'recipientAddress');
+        }
+        if (this.signerPublicKey) {
+            criteria.signerPublicKey = (await new PublicKeyResolver().resolve(this, undefined, undefined, 'signerPublicKey')).publicKey;
+        }
+        if (this.height) {
+            criteria.height = await new HeightResolver().resolve(this);
+        }
+        if (this.type) {
+            criteria.type = [await new TransactionTypeResolver().resolve(this, undefined, 'type')];
+        }
+        return criteria;
+    }
 }
 
 @command({
-    description: 'Fetch transactions from account',
+    description: 'Search transactions',
 })
 export default class extends SearchCommand {
     constructor() {
@@ -73,7 +101,7 @@ export default class extends SearchCommand {
 
         this.spinner.start();
         const transactionHttp = profile.repositoryFactory.createTransactionRepository();
-        transactionHttp.search({ group: TransactionGroup.Confirmed }).subscribe(
+        transactionHttp.search(await options.buildSearchCriteria()).subscribe(
             (page) => {
                 this.spinner.stop();
 

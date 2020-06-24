@@ -19,7 +19,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, PersistentHarvestingDelegationMessage, TransferTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { PrivateKeyResolver } from '../../resolvers/privateKey.resolver';

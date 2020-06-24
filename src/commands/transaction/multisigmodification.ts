@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, MultisigAccountModificationTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ActionType } from '../../models/action.enum';
 import { ActionResolver } from '../../resolvers/action.resolver';
 import { CosignatoryUnresolvedAddressesResolver } from '../../resolvers/address.resolver';

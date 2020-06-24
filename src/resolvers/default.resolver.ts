@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { CreateProfileOptions } from '../interfaces/createProfile.options';
+import { CreateProfileOptions } from '../interfaces/create.profile.options';
 import { OptionsConfirmResolver } from '../options-resolver';
 import { Resolver } from './resolver';
 

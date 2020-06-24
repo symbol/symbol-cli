@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-import { option } from 'clime';
 
 import { ProfileCommand } from './profile.command';
-import { ProfileOptions } from './profile.options';
 
 /**
  * Base command class to search collections.
@@ -30,36 +28,4 @@ export abstract class SearchCommand extends ProfileCommand {
     protected constructor() {
         super();
     }
-}
-
-/**
- * Search options
- */
-export class SearchOptions extends ProfileOptions {
-    @option({
-        flag: 'o',
-        description: '(Optional): Order of transactions. DESC. Newer to older. ASC. Older to newer.',
-        default: 'DESC',
-    })
-    order: string;
-
-    @option({
-        flag: 'n',
-        description: '(Optional) Filter by page number.',
-        default: 1,
-    })
-    pageSize: number;
-
-    @option({
-        flag: 'n',
-        description: '(Optional) Number of transactions per page.',
-        default: 10,
-    })
-    pageNumber: number;
-
-    @option({
-        flag: 'i',
-        description: '(Optional) Database entry id at which to start pagination.',
-    })
-    offset: string;
 }

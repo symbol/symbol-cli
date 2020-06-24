@@ -20,7 +20,7 @@ import { merge } from 'rxjs';
 import { filter, mergeMap, tap } from 'rxjs/operators';
 import { IListener, SignedTransaction, Transaction, TransactionAnnounceResponse, TransactionRepository, TransactionType } from 'symbol-sdk';
 
-import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { Profile } from '../models/profile.model';
 import { AnnounceResolver } from '../resolvers/announce.resolver';
 import { FormatterService } from './formatter.service';

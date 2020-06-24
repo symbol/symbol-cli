@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { DurationResolver } from '../../resolvers/duration.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { NamespaceNameStringResolver, NamespaceTypeResolver } from '../../resolvers/namespace.resolver';

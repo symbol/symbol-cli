@@ -10,7 +10,8 @@
       {
          "title":"block",
          "commands":[
-            "header",
+            "search",
+            "info",
             "receipts",
          ]
       },
@@ -57,6 +58,7 @@
       {
          "title":"mosaic",
          "commands":[
+            "search",
             "info"
          ]
       },
@@ -98,6 +100,10 @@
       {
          "title":"transaction",
          "commands":[
+            "search",
+            "info",
+            "status",
+            "uri",
             "accountaddressrestriction",
             "accountkeylink",
             "accountmetadata",
@@ -105,7 +111,6 @@
             "accountoperationrestriction",
             "addressalias",
             "cosign",
-            "info",
             "mosaic",
             "mosaicaddressrestriction",
             "mosaicalias",
@@ -119,9 +124,7 @@
             "persistentharvestdelegation",
             "secretlock",
             "secretproof",
-            "status",
             "transfer",
-            "uri",
             "votingkeylink",
             "vrfkeylink"
          ]

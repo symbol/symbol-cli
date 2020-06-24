@@ -9,7 +9,7 @@ import {
     UInt64,
 } from 'symbol-sdk';
 
-import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { MultisigAccount } from '../models/multisig.types';
 import { Profile } from '../models/profile.model';
 import { MaxFeeResolver } from '../resolvers/maxFee.resolver';
