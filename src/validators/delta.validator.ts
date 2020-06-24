@@ -27,6 +27,6 @@ export class DeltaValidator implements Validator<number> {
      * @returns {true | string}
      */
     validate(value: number): boolean | string {
-        return Number.isInteger(+value) ? true : 'Delta value should be an integer';
+        return Number.isInteger(+value) ? true : 'Delta value must be an integer';
     }
 }

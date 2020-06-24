@@ -29,6 +29,6 @@ describe('Mnemonic validator', () => {
     });
 
     it('should throw error if mnemonic is invalid', () => {
-        expect(new MnemonicValidator().validate('invalid mnemonic')).to.be.equal('The provided mnemonic passphrase is invalid');
+        expect(typeof new MnemonicValidator().validate('invalid mnemonic')).to.be.equal('string');
     });
 });

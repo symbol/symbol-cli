@@ -32,9 +32,7 @@ describe('Address validator', () => {
 
     it('should throw an error if the address is invalid', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        expect(new AddressValidator().validate(address)).to.be.equal(
-            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP',
-        );
+        expect(typeof new AddressValidator().validate(address)).to.be.equal('string');
     });
 });
 
@@ -55,15 +53,11 @@ describe('Address alias validator', () => {
 
     it('should throw an error if the address is invalid', () => {
         const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        expect(new AddressAliasValidator().validate(address)).to.be.equal(
-            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP',
-        );
+        expect(typeof new AddressAliasValidator().validate(address)).to.be.equal('string');
     });
 
     it('should throw an error if the alias is invalid', () => {
         const alias = '@myOwnAlias';
-        expect(new AddressAliasValidator().validate(alias)).to.be.equal(
-            'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HBP',
-        );
+        expect(typeof new AddressAliasValidator().validate(alias)).to.be.equal('string');
     });
 });

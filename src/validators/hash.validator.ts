@@ -27,6 +27,6 @@ export class HashValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         const hashLength = 64;
-        return typeof value !== 'string' || value.length !== hashLength ? 'The transaction hash is invalid' : true;
+        return typeof value !== 'string' || value.length !== hashLength ? 'Hash must be a 64 characters string' : true;
     }
 }

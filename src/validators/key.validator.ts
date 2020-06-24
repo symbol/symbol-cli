@@ -31,7 +31,7 @@ export class KeyValidator implements Validator<string> {
         try {
             UInt64.fromHex(value);
         } catch (err) {
-            return 'Invalid key';
+            return 'Key must be an hexadecimal value with size UInt64';
         }
         return true;
     }

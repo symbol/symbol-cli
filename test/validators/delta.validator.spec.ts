@@ -32,6 +32,6 @@ describe('Delta validator', () => {
 
     it('should throw error if delta is decimal', () => {
         const value = 1.1;
-        expect(new DeltaValidator().validate(value)).to.be.equal('Delta value should be an integer');
+        expect(typeof new DeltaValidator().validate(value)).to.be.equal('string');
     });
 });

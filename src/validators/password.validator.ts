@@ -32,7 +32,7 @@ export class PasswordValidator implements Validator<string> {
         try {
             const ignored = new Password(value);
         } catch (error) {
-            return 'Password should have a minimum of 8 characters';
+            return 'Password must have a minimum of 8 characters';
         }
         return true;
     }

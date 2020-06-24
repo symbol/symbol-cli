@@ -28,6 +28,6 @@ export class BinaryValidator implements Validator<number> {
      * @returns {true | string}
      */
     validate(value: number): boolean | string {
-        return value !== 0 && value !== 1 ? 'The value must be 0 or 1' : true;
+        return value !== 0 && value !== 1 ? 'Binary value must be 0 or 1' : true;
     }
 }
