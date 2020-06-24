@@ -33,8 +33,6 @@ describe('Transaction announce mode validator', () => {
 
     it('should throw error if announce mode is unknown', () => {
         const value = 'wrong_value';
-        expect(typeof new TransactionAnnounceModeValidator().validate(value)).to.be.equal(
-            'string',
-        );
+        expect(typeof new TransactionAnnounceModeValidator().validate(value)).to.be.equal('string');
     });
 });
