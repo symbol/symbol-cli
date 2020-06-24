@@ -19,7 +19,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, VotingKeyLinkTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
 import { BLSPublicKeyResolver } from '../../resolvers/bls.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';

@@ -18,7 +18,7 @@
 import { Options } from 'clime';
 
 import { OptionsResolver } from '../options-resolver';
-import { DeltaValidator } from '../validators/delta.validator';
+import { IntegerValidator } from '../validators/integer.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -39,7 +39,7 @@ export class DeltaResolver implements Resolver {
             () => undefined,
             altText,
             'number',
-            new DeltaValidator(),
+            new IntegerValidator(),
         );
         return +resolution;
     }

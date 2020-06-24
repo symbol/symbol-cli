@@ -27,7 +27,7 @@ import { Validator } from './validator';
 export class ActionValidator implements Validator<string> {
     /**
      * Validates if an action is valid.
-     * @param {number} value - Action type.
+     * @param {string} value - Action type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
@@ -42,7 +42,7 @@ export class ActionValidator implements Validator<string> {
 export class LinkActionValidator implements Validator<string> {
     /**
      * Validates if a link action is valid.
-     * @param {number} value - LinkAction type.
+     * @param {string} value - LinkAction type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
@@ -54,7 +54,7 @@ export class LinkActionValidator implements Validator<string> {
 export class MosaicSupplyChangeActionValidator implements Validator<string> {
     /**
      * Validates if a mosaic supply change action is valid.
-     * @param {number} value - MosaicSupplyChangeAction type.
+     * @param {string} value - MosaicSupplyChangeAction type.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {

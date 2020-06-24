@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, Mosaic, SecretLockTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
 import { AmountResolver } from '../../resolvers/amount.resolver';
 import { DurationResolver } from '../../resolvers/duration.resolver';

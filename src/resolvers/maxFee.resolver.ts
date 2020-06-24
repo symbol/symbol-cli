@@ -19,7 +19,7 @@ import { Options } from 'clime';
 import { UInt64 } from 'symbol-sdk';
 
 import { OptionsResolver } from '../options-resolver';
-import { NumericStringValidator } from '../validators/numericString.validator';
+import { IntegerStringValidator } from '../validators/integer.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -40,7 +40,7 @@ export class MaxFeeResolver implements Resolver {
             () => undefined,
             altText ? altText : 'Enter the maximum fee (absolute amount):',
             'text',
-            new NumericStringValidator(),
+            new IntegerStringValidator(),
         );
         return UInt64.fromNumericString(resolution);
     }

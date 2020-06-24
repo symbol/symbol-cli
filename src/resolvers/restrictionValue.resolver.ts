@@ -18,7 +18,7 @@
 import { Options } from 'clime';
 
 import { OptionsResolver } from '../options-resolver';
-import { NumericStringValidator } from '../validators/numericString.validator';
+import { IntegerStringValidator } from '../validators/integer.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -39,7 +39,7 @@ export class RestrictionValueResolver implements Resolver {
             () => undefined,
             altText ? altText : 'Enter new restriction value:',
             'text',
-            new NumericStringValidator(),
+            new IntegerStringValidator(),
         );
         return value;
     }

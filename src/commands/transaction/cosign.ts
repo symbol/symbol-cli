@@ -25,7 +25,7 @@ import {
     TransactionRepository,
 } from 'symbol-sdk';
 
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { Profile } from '../../models/profile.model';
 import { HashResolver } from '../../resolvers/hash.resolver';

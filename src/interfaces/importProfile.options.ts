@@ -17,7 +17,7 @@
  */
 import { option } from 'clime';
 
-import { CreateProfileOptions } from './createProfile.options';
+import { CreateProfileOptions } from './create.profile.options';
 
 /**
  * Create profile options.

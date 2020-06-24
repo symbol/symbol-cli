@@ -25,7 +25,7 @@ import { TransactionAnnounceMode, TransactionAnnounceModeResolver } from '../res
 import { MultisigService } from '../services/multisig.service';
 import { TransactionAnnounceService } from '../services/transaction.announce.service';
 import { TransactionSignatureOptions, TransactionSignatureService } from '../services/transaction.signature.service';
-import { AnnounceTransactionsOptions } from './announceTransactions.options';
+import { AnnounceTransactionsOptions } from './announce.transactions.options';
 import { ProfileCommand } from './profile.command';
 
 /**
