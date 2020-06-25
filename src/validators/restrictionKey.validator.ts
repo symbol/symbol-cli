@@ -31,7 +31,7 @@ export class MosaicRestrictionKeyValidator implements Validator<string> {
         try {
             UInt64.fromNumericString(value);
         } catch (err) {
-            return 'Restriction key is an invalid UInt64 string';
+            return 'Restriction key must be a valid UInt64 string';
         }
         return true;
     }

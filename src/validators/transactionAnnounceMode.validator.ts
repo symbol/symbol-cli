@@ -30,6 +30,6 @@ export class TransactionAnnounceModeValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         const test = value in TransactionAnnounceMode;
-        return test ? true : 'TransactionAnnounceModeValidator must be one of (multisig, normal)';
+        return test ? true : 'TransactionAnnounceMode must be one of (multisig, normal)';
     }
 }

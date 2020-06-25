@@ -30,11 +30,11 @@ describe('Numeric string validator', () => {
 
     it('should throw error if not a numeric string', () => {
         const value = 'test';
-        expect(new NumericStringValidator().validate(value)).to.be.equal('Enter an integer number');
+        expect(typeof new NumericStringValidator().validate(value)).to.be.equal('string');
     });
 
     it('should throw error if numeric string is negative', () => {
         const value = '-1';
-        expect(new NumericStringValidator().validate(value)).to.be.equal('Enter an integer number');
+        expect(typeof new NumericStringValidator().validate(value)).to.be.equal('string');
     });
 });
