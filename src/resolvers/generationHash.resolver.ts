@@ -40,7 +40,9 @@ export class GenerationHashResolver implements Resolver {
                 : (await nodeHttp.getNodeInfo().toPromise()).networkGenerationHashSeed;
         } catch (ignored) {
             throw new ExpectedError(
-                'The CLI cannot reach the node. Please, check if you can reach the Symbol url provided: ' + options.url + '/node/info',
+                'The CLI cannot reach the node. Please, pass the generation hash seed from ' +
+                    options.url +
+                    '/node/info with the option `--generation-hash`',
             );
         }
         return generationHash;

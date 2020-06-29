@@ -47,9 +47,7 @@ export class NetworkCurrencyResolver implements Resolver {
             return NetworkCurrency.createFromFirstBlockTransactions(firstBlockTransactions.data);
         } catch (ignored) {
             throw new ExpectedError(
-                'The CLI cannot get the network currency description. Please, check if you can reach the Symbol url provided: ' +
-                    options.url +
-                    '/blocks/1',
+                'The CLI cannot get the network currency mosaic description. Pass the network currency mosaic options with the options `namespace-id` and `divisibility`. E.g.: --namespace-id symbol.xym --divisibility 6',
             );
         }
     }

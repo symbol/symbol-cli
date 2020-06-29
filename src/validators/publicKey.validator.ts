@@ -33,7 +33,7 @@ export class PublicKeyValidator implements Validator<string> {
         try {
             PublicAccount.createFromPublicKey(value, NetworkType.MIJIN_TEST);
         } catch {
-            return 'Public key should be a 64 characters hexadecimal string';
+            return 'Public key must be a 64 characters hexadecimal string';
         }
         return true;
     }

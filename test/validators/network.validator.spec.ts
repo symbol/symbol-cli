@@ -28,6 +28,6 @@ describe('Network type validator', () => {
 
     it('should throw error if network type is unknown', () => {
         const networkType = 'TEST';
-        expect(new NetworkValidator().validate(networkType)).to.include('Network must be one of');
+        expect(typeof new NetworkValidator().validate(networkType)).to.be.equal('string');
     });
 });

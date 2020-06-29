@@ -37,6 +37,6 @@ export class ProofValidator implements Validator<string> {
             return value.length === 40 || value.length === 64 ? true : 'A proof should be 64 or 40 chars long';
         }
 
-        return value.length === 64 ? true : 'A proof should be 64 chars long';
+        return value.length === 64 ? true : 'Proof must be a 64 characters string';
     }
 }

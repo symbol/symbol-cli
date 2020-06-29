@@ -30,11 +30,11 @@ describe('Private key validator', () => {
 
     it('should throw error if private key length is not 64', () => {
         const privateKey = '0'.repeat(63);
-        expect(new PrivateKeyValidator().validate(privateKey)).to.be.equal('Private key should be a 64 characters hexadecimal string');
+        expect(typeof new PrivateKeyValidator().validate(privateKey)).to.be.equal('string');
     });
 
     it('should throw error if private key has special chars', () => {
         const privateKey = '0'.repeat(63) + '!';
-        expect(new PrivateKeyValidator().validate(privateKey)).to.be.equal('Private key should be a 64 characters hexadecimal string');
+        expect(typeof new PrivateKeyValidator().validate(privateKey)).to.be.equal('string');
     });
 });

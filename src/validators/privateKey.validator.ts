@@ -27,6 +27,6 @@ export class PrivateKeyValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value) ? 'Private key should be a 64 characters hexadecimal string' : true;
+        return value.length !== 64 || !/^[0-9a-fA-F]+$/.test(value) ? 'Private key must be a 64 characters hexadecimal string' : true;
     }
 }

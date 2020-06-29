@@ -28,8 +28,6 @@ describe('Mosaic id validator', () => {
 
     it('should throw error if namespaceId is not a valid UInt64 value', () => {
         const value = 'test';
-        expect(new NamespaceIdValidator().validate(value)).to.be.equal(
-            'Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244',
-        );
+        expect(typeof new NamespaceIdValidator().validate(value)).to.be.equal('string');
     });
 });
