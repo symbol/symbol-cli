@@ -20,7 +20,7 @@ import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { Account } from 'symbol-sdk';
 
 import { AccountCredentialsTable, CreateProfileCommand } from '../../interfaces/create.profile.command';
-import { CreateProfileOptions } from '../../interfaces/createProfile.options';
+import { CreateProfileOptions } from '../../interfaces/create.profile.options';
 import { ImportType } from '../../models/importType.enum';
 import { Profile } from '../../models/profile.model';
 import { ProfileCreationBase } from '../../models/profileCreation.types';

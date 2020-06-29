@@ -19,7 +19,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, NodeKeyLinkTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
@@ -58,7 +58,7 @@ export default class extends AnnounceTransactionsCommand {
         ).publicKey;
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = NodeKeyLinkTransaction.create(Deadline.create(), linkedPublicKey, action, profile.networkType, maxFee);
 
@@ -66,7 +66,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

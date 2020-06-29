@@ -20,20 +20,20 @@ import { command, metadata, option } from 'clime';
 import { Deadline, MetadataTransactionService, MetadataType } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
+import { AddressResolver } from '../../resolvers/address.resolver';
 import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
-import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { StringResolver } from '../../resolvers/string.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 't',
-        description: 'Metadata target public key.',
+        description: 'Metadata target address.',
     })
-    targetPublicKey: string;
+    targetAddress: string;
 
     @option({
         flag: 'k',
@@ -61,16 +61,11 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        const targetAccount = await new PublicKeyResolver().resolve(
-            options,
-            profile.networkType,
-            'Enter the target account public key:',
-            'targetPublicKey',
-        );
+        const targetAddress = await new AddressResolver().resolve(options, undefined, 'Enter the target address:', 'targetAddress');
         const key = await new KeyResolver().resolve(options);
         const value = await new StringResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataHttp);
@@ -79,10 +74,10 @@ export default class extends AnnounceTransactionsCommand {
                 Deadline.create(),
                 account.networkType,
                 MetadataType.Account,
-                targetAccount,
+                targetAddress,
                 key,
                 value,
-                account.publicAccount,
+                account.address,
                 undefined,
                 maxFee,
             )
@@ -92,9 +87,9 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [metadataTransaction],
             maxFee,
-            signerMultisigInfo,
-            isAggregate: targetAccount.publicKey === account.publicKey,
-            isAggregateBonded: targetAccount.publicKey !== account.publicKey,
+            multisigSigner,
+            isAggregate: targetAddress.plain() === account.address.plain(),
+            isAggregateBonded: targetAddress.plain() !== account.address.plain(),
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

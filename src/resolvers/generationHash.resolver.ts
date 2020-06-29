@@ -1,4 +1,3 @@
-import { ExpectedError } from 'clime';
 /*
  *
  * Copyright 2018-present NEM
@@ -16,9 +15,10 @@ import { ExpectedError } from 'clime';
  * limitations under the License.
  *
  */
+import { ExpectedError } from 'clime';
 import { NodeHttp } from 'symbol-sdk';
 
-import { CreateProfileOptions } from '../interfaces/createProfile.options';
+import { CreateProfileOptions } from '../interfaces/create.profile.options';
 import { Resolver } from './resolver';
 
 /**

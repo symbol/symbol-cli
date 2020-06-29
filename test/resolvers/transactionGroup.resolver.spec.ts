@@ -15,18 +15,15 @@
  * limitations under the License.
  *
  */
-import { Validator } from './validator';
 
-/**
- * Delta validator
- */
-export class DeltaValidator implements Validator<number> {
-    /**
-     * Validates if an delta value is an integer.
-     * @param {number} value - Action type.
-     * @returns {true | string}
-     */
-    validate(value: number): boolean | string {
-        return Number.isInteger(+value) ? true : 'Delta value must be an integer';
-    }
-}
+import { expect } from 'chai';
+
+import { TransactionGroupResolver } from '../../src/resolvers/transactionGroup.resolver';
+
+describe('Transaction group resolver', () => {
+    it('should return Transaction group', async () => {
+        const group = 'Confirmed';
+        const options = { group } as any;
+        expect(await new TransactionGroupResolver().resolve(options)).to.be.equal('confirmed');
+    });
+});

@@ -20,9 +20,23 @@ import { UInt64 } from 'symbol-sdk';
 import { Validator } from './validator';
 
 /**
- * Numeric string
+ * Integer validator
  */
-export class NumericStringValidator implements Validator<string> {
+export class IntegerValidator implements Validator<number> {
+    /**
+     * Validates if a number is an integer.
+     * @param {number} value - Number.
+     * @returns {true | string}
+     */
+    validate(value: number): boolean | string {
+        return Number.isInteger(+value) ? true : 'Number should be an integer';
+    }
+}
+
+/**
+ * Integer string validator
+ */
+export class IntegerStringValidator implements Validator<string> {
     /**
      * Validates if a string is composed by numbers.
      * @param {string} value - Numeric string.
@@ -32,7 +46,7 @@ export class NumericStringValidator implements Validator<string> {
         try {
             UInt64.fromNumericString(value);
         } catch (err) {
-            return 'Enter an integer number';
+            return 'Number should be an integer';
         }
         return true;
     }

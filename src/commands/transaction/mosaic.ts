@@ -28,7 +28,7 @@ import {
 } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { OptionsConfirmResolver } from '../../options-resolver';
 import { AmountResolver } from '../../resolvers/amount.resolver';
 import { DivisibilityResolver } from '../../resolvers/divisibility.resolver';
@@ -109,14 +109,14 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicFlags = await new MosaicFlagsResolver().resolve(options);
         const amount = await new AmountResolver().resolve(options, 'Amount of mosaics units to create: ');
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
-        const signerPublicAccount = signerMultisigInfo ? signerMultisigInfo.account : account.publicAccount;
+        const signerAddress = multisigSigner ? multisigSigner.info.accountAddress : account.address;
 
         const mosaicDefinition = MosaicDefinitionTransaction.create(
             Deadline.create(),
             nonce,
-            MosaicId.createFromNonce(nonce, signerPublicAccount),
+            MosaicId.createFromNonce(nonce, signerAddress),
             mosaicFlags,
             divisibility,
             blocksDuration ? blocksDuration : UInt64.fromUint(0),
@@ -135,9 +135,9 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [mosaicDefinition, mosaicSupplyChange],
             maxFee,
-            signerMultisigInfo,
+            multisigSigner,
             isAggregate: true,
-            isAggregateBonded: signerPublicAccount.publicKey !== account.publicKey,
+            isAggregateBonded: signerAddress.plain() !== account.address.plain(),
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

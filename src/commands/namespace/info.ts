@@ -49,7 +49,7 @@ export class NamespaceInfoTable {
         this.table.push(
             ['Id', namespaceInfo.id.toHex()],
             ['Registration Type', namespaceInfo.isRoot() ? 'Root Namespace' : 'Sub Namespace'],
-            ['Owner', namespaceInfo.owner.address.pretty()],
+            ['Owner', namespaceInfo.ownerAddress.pretty()],
             ['Start Height', namespaceInfo.startHeight.toString()],
             ['End Height', namespaceInfo.endHeight.toString()],
         );

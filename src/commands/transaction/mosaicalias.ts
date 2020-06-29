@@ -19,7 +19,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, MosaicAliasTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
@@ -64,7 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         const mosaicId = await new MosaicIdResolver().resolve(options);
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = MosaicAliasTransaction.create(Deadline.create(), action, namespaceId, mosaicId, profile.networkType, maxFee);
 
@@ -72,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

@@ -23,7 +23,7 @@ import { mosaicId1 } from '../mosaics.mock';
 
 export const unsignedMosaicMetadata1 = MosaicMetadataTransaction.create(
     Deadline.create(),
-    account1.publicKey,
+    account1.address,
     UInt64.fromUint(1000),
     mosaicId1,
     1,

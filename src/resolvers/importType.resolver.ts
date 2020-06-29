@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { CreateProfileOptions } from '../interfaces/createProfile.options';
+import { CreateProfileOptions } from '../interfaces/create.profile.options';
 import { ImportProfileOptions } from '../interfaces/importProfile.options';
 import { ImportType } from '../models/importType.enum';
 import { OptionsChoiceResolver } from '../options-resolver';
@@ -34,7 +34,7 @@ export class ImportTypeResolver implements Resolver {
      */
     async resolve(options: ImportProfileOptions | CreateProfileOptions, altText?: string, altKey?: string): Promise<number> {
         // interpret other options, default to private key profile in case of conflict
-        if (options instanceof ImportProfileOptions) {
+        if ('privateKey' in options || 'mnemonic' in options) {
             if (options.privateKey) {
                 return ImportType.PrivateKey;
             }

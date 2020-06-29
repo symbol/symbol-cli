@@ -28,11 +28,11 @@ describe('Account service', () => {
 
     it('should return an alias', () => {
         const rawRecipient = '@foo';
-        expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(NamespaceId);
+        expect(AccountService.getUnresolvedAddress(rawRecipient)).to.be.instanceOf(NamespaceId);
     });
 
     it('should return an address', () => {
-        const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRAM';
-        expect(AccountService.getRecipient(rawRecipient)).to.be.instanceOf(Address);
+        const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRA';
+        expect(AccountService.getUnresolvedAddress(rawRecipient)).to.be.instanceOf(Address);
     });
 });

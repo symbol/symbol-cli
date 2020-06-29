@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, MosaicRestrictionTransactionService } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { KeyResolver } from '../../resolvers/key.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicIdAliasResolver } from '../../resolvers/mosaic.resolver';
@@ -87,7 +87,7 @@ export default class extends AnnounceTransactionsCommand {
         const namespaceHttp = repositoryFactory.createNamespaceRepository();
         const mosaicRestrictionTransactionService = new MosaicRestrictionTransactionService(restrictionMosaicHttp, namespaceHttp);
 
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = await mosaicRestrictionTransactionService
             .createMosaicGlobalRestrictionTransaction(
@@ -106,7 +106,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

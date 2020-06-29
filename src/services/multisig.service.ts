@@ -67,17 +67,17 @@ export class MultisigService {
      */
     private getAddressesFromGraphInfo(graphInfo: MultisigAccountGraphInfo): Observable<Address[]> {
         return this.multisigInfoFromGraphInfo(graphInfo).pipe(
-            map(({ account }) => account.address),
+            map(({ accountAddress }) => accountAddress),
             toArray(),
         );
     }
 
     private multisigInfoFromGraphInfo(graphInfo: MultisigAccountGraphInfo): Observable<MultisigAccountInfo> {
-        const { multisigAccounts } = graphInfo;
+        const { multisigEntries } = graphInfo;
         return from(
-            [...multisigAccounts.keys()].sort((a, b) => b - a), // Get addresses from top to bottom
+            [...multisigEntries.keys()].sort((a, b) => b - a), // Get addresses from top to bottom
         ).pipe(
-            map((key) => multisigAccounts.get(key) || []),
+            map((key) => multisigEntries.get(key) || []),
             filter((x) => x.length > 0),
             flatMap((multisigAccountInfo) => multisigAccountInfo),
         );

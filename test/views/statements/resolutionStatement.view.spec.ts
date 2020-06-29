@@ -19,6 +19,7 @@
 import { assert, expect } from 'chai';
 
 import { ResolutionStatementViews } from '../../../src/views/statements/resolutionStatements.view';
+import { account1 } from '../../mocks/accounts.mock';
 import { statement } from '../../mocks/statements.mock';
 
 describe('Resolution Statement Views', () => {
@@ -50,7 +51,7 @@ describe('Resolution Statement Views', () => {
 
         expect(statementsView[0][0].title.content).equal('Address statement 1 of 1');
         expect(statementsView[0][1]).deep.equal({ Height: 2 });
-        expect(statementsView[0][2]).deep.equal({ Unresolved: 'NCWYXK-VYBMO4-NBCUF3-AXKJMX-CGVSYQ-OS72UN-KD3F' });
+        expect(statementsView[0][2]).deep.equal({ Unresolved: account1.address.pretty() });
         expect(statementsView[0][3].title.content).equal('Resolution 1 of 1');
         expect(statementsView[0][4]).deep.equal({ Resolved: 'CAF5DD1286D7CC4C' });
         expect(statementsView[0][5]).deep.equal({ Source: 'Primary Id: 5, Secondary Id: 0' });

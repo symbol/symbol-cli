@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { TransactionHttp } from 'symbol-sdk';
+import { TransactionGroup, TransactionHttp } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -47,7 +47,7 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const transactionHttp = new TransactionHttp(profile.url);
-        transactionHttp.getTransaction(hash).subscribe(
+        transactionHttp.getTransaction(hash, TransactionGroup.Confirmed).subscribe(
             (transaction) => {
                 this.spinner.stop();
                 new TransactionView(transaction).print();

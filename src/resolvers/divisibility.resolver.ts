@@ -18,6 +18,7 @@
 import { Options } from 'clime';
 
 import { OptionsResolver } from '../options-resolver';
+import { IntegerValidator } from '../validators/integer.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -37,8 +38,8 @@ export class DivisibilityResolver implements Resolver {
             altKey ? altKey : 'divisibility',
             () => undefined,
             altText ? altText : 'Enter the mosaic divisibility:',
-            'text',
-            undefined,
+            'number',
+            new IntegerValidator(),
         ));
         return resolution;
     }

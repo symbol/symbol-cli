@@ -16,17 +16,21 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { filter, flatMap, switchMap, tap } from 'rxjs/operators';
-import { Address, AggregateTransaction, CosignatureSignedTransaction, CosignatureTransaction, QueryParams } from 'symbol-sdk';
+import {
+    AggregateTransaction,
+    CosignatureSignedTransaction,
+    CosignatureTransaction,
+    Transaction,
+    TransactionGroup,
+    TransactionRepository,
+} from 'symbol-sdk';
 
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { Profile } from '../../models/profile.model';
 import { HashResolver } from '../../resolvers/hash.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { FormatterService } from '../../services/formatter.service';
-import { MultisigService } from '../../services/multisig.service';
-import { SequentialFetcher } from '../../services/sequentialFetcher.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -43,9 +47,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends ProfileCommand {
     private profile: Profile;
     private options: CommandOptions;
+    private transactionHttp: TransactionRepository;
 
     constructor() {
         super();
+        this.transactionHttp = this.profile.repositoryFactory.createTransactionRepository();
     }
 
     @metadata
@@ -56,45 +62,21 @@ export default class extends ProfileCommand {
         const hash = await new HashResolver().resolve(options, 'Enter the aggregate bonded transaction hash to cosign: ');
 
         this.spinner.start();
-        const sequentialFetcher = this.getSequentialFetcher();
 
-        new MultisigService(this.profile)
-            .getSelfAndChildrenAddresses()
-            .pipe(
-                switchMap((addresses) => sequentialFetcher.getResults(addresses)),
-                flatMap((transaction: AggregateTransaction[]) => transaction),
-                filter((_) => _.transactionInfo !== undefined && _.transactionInfo.hash !== undefined && _.transactionInfo.hash === hash),
-                tap((transaction) => {
-                    console.log(FormatterService.title('Transaction to cosign:'));
-                    new TransactionView(transaction).print();
-                }),
-            )
-            .subscribe(
-                async (transaction: AggregateTransaction) => {
-                    sequentialFetcher.kill();
-                    const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction, hash);
-                    if (signedCosignature) {
-                        this.announceAggregateBondedCosignature(signedCosignature);
-                    }
-                },
-                (err) => {
-                    this.spinner.stop();
-                    console.log(FormatterService.error(err));
-                },
-            );
-    }
-
-    /**
-     * Creates a sequential fetcher instance loaded with a getAccountPartialTransactions function
-     * @private
-     * @returns {SequentialFetcher}
-     */
-    private getSequentialFetcher(): SequentialFetcher {
-        const queryParams = new QueryParams({ pageSize: 100 });
-        const networkCall = (address: Address) =>
-            this.profile.repositoryFactory.createAccountRepository().getAccountPartialTransactions(address, queryParams).toPromise();
-
-        return SequentialFetcher.create(networkCall);
+        this.transactionHttp.getTransaction(hash, TransactionGroup.Partial).subscribe(
+            async (transaction: Transaction) => {
+                console.log(FormatterService.title('Transaction to cosign:'));
+                new TransactionView(transaction).print();
+                const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction as AggregateTransaction, hash);
+                if (signedCosignature) {
+                    this.announceAggregateBondedCosignature(signedCosignature);
+                }
+            },
+            (err) => {
+                this.spinner.stop();
+                console.log(FormatterService.error(err));
+            },
+        );
     }
 
     /**

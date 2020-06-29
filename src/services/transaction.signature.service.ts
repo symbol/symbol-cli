@@ -1,3 +1,20 @@
+import {
+    Account,
+    AggregateTransaction,
+    Deadline,
+    HashLockTransaction,
+    PublicAccount,
+    SignedTransaction,
+    Transaction,
+    UInt64,
+} from 'symbol-sdk';
+
+import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
+import { MultisigAccount } from '../models/multisig.types';
+import { Profile } from '../models/profile.model';
+import { MaxFeeResolver } from '../resolvers/maxFee.resolver';
+import { TransactionView } from '../views/transactions/details/transaction.view';
+
 /*
  *
  * Copyright 2018-present NEM
@@ -15,25 +32,6 @@
  * limitations under the License.
  *
  */
-
-import {
-    Account,
-    AggregateTransaction,
-    Deadline,
-    LockFundsTransaction,
-    MultisigAccountInfo,
-    NetworkType,
-    PublicAccount,
-    SignedTransaction,
-    Transaction,
-    UInt64,
-} from 'symbol-sdk';
-
-import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
-import { NetworkCurrency } from '../models/networkCurrency.model';
-import { Profile } from '../models/profile.model';
-import { MaxFeeResolver } from '../resolvers/maxFee.resolver';
-import { TransactionView } from '../views/transactions/details/transaction.view';
 
 export enum AnnounceMode {
     'standard' = 'standard',
@@ -62,7 +60,7 @@ export interface TransactionSignatureOptions {
      * (if sending a multisig transaction)
      * @type {string}
      */
-    signerMultisigInfo?: MultisigAccountInfo | null;
+    multisigSigner?: MultisigAccount | null;
 
     /**
      * Whether to force wrapping transactions in an aggregate
@@ -80,146 +78,130 @@ export interface TransactionSignatureOptions {
 
 export class TransactionSignatureService {
     maxFee: UInt64;
-    txToSign: Transaction[];
-    signerPublicAccount?: PublicAccount;
+    transactions: Transaction[];
+    signerPublicAccount: PublicAccount;
     signedLockTransaction: SignedTransaction;
-    signerMultisigInfo?: MultisigAccountInfo | null;
+    multisigSigner?: MultisigAccount | null;
     isAggregate? = false;
     isAggregateBonded? = false;
 
-    get generationHash(): string {
-        return this.profile.networkGenerationHash;
-    }
-    get networkType(): NetworkType {
-        return this.profile.address.networkType;
-    }
-    get networkCurrency(): NetworkCurrency {
-        return this.profile.networkCurrency;
-    }
-    get url(): string {
-        return this.profile.url;
-    }
-
+    /**
+     * Gets announcement mode
+     * @returns {AnnounceMode}
+     */
     get announceMode(): AnnounceMode {
-        if (this.isAggregate) {
-            if (this.signerMultisigInfo && this.signerMultisigInfo.minApproval > 1) {
-                return AnnounceMode.partial;
-            }
+        if (this.isAggregateBonded || (this.isAggregate && this.multisigSigner && this.multisigSigner.info.minApproval > 1)) {
+            return AnnounceMode.partial;
+        } else if (this.isAggregate || this.multisigSigner) {
             return AnnounceMode.complete;
         }
-        if (this.isAggregateBonded) {
-            return AnnounceMode.partial;
-        }
-        if (!this.signerMultisigInfo) {
-            return AnnounceMode.standard;
-        }
-        if (this.signerMultisigInfo.minApproval > 1) {
-            return AnnounceMode.partial;
-        }
-        return AnnounceMode.complete;
+        return AnnounceMode.standard;
     }
 
+    /**
+     * Creates an instance of TransactionSignatureService.
+     * @static
+     * @param {Profile} profile
+     * @param {AnnounceTransactionsOptions} options
+     * @returns {TransactionSignatureService}
+     */
     public static create(profile: Profile, options: AnnounceTransactionsOptions): TransactionSignatureService {
         return new TransactionSignatureService(profile, options);
     }
 
+    /**
+     * Constructor
+     * @private
+     * @param {Profile} profile
+     * @param {AnnounceTransactionsOptions} options
+     */
     private constructor(private readonly profile: Profile, private readonly options: AnnounceTransactionsOptions) {}
 
+    /**
+     * Signs a set of transactions.
+     * @public
+     * @param {TransactionSignatureOptions} args
+     * @returns {Promise<SignedTransaction[]>}
+     */
     public async signTransactions(args: TransactionSignatureOptions): Promise<SignedTransaction[]> {
-        const { account, transactions, signerMultisigInfo, maxFee, isAggregate, isAggregateBonded } = args;
+        const { account, transactions, multisigSigner, maxFee, isAggregate, isAggregateBonded } = args;
 
-        // set class variables
         this.maxFee = maxFee;
-        this.txToSign = transactions;
-        this.signerMultisigInfo = signerMultisigInfo;
+        this.transactions = transactions;
+        this.multisigSigner = multisigSigner;
         this.isAggregate = isAggregate;
         this.isAggregateBonded = isAggregateBonded;
-        if (signerMultisigInfo) {
-            this.signerPublicAccount = signerMultisigInfo.account;
-        }
+        this.signerPublicAccount = multisigSigner ? multisigSigner.publicAccount : account.publicAccount;
 
-        // return signed transactions
         if (this.announceMode === AnnounceMode.complete) {
             return this.signCompleteTransactions(account);
-        }
-
-        if (this.announceMode === AnnounceMode.partial) {
+        } else if (this.announceMode === AnnounceMode.partial) {
             return this.signPartialTransactions(account);
         }
-
-        return transactions.map((tx) => {
-            // sign transaction
-            const signedTransaction = this.signTransaction(tx, account);
-
-            // print transactions
-            new TransactionView(tx, signedTransaction).print();
-
+        return transactions.map((transaction) => {
+            const signedTransaction = account.sign(transaction, this.profile.networkGenerationHash);
+            new TransactionView(transaction, signedTransaction).print();
             return signedTransaction;
         });
     }
 
+    /**
+     * Creates an aggregate bonded transaction and hash lock transaction and returns them signed.
+     * @private
+     * @param {Account} account - Signer account.
+     * @returns {Promise<SignedTransaction[]>}
+     */
     private async signPartialTransactions(account: Account): Promise<SignedTransaction[]> {
-        // create an aggregate bonded transaction
-        const signerPublicAccount = this.signerPublicAccount || account.publicAccount;
-        const aggregateTx = AggregateTransaction.createBonded(
+        const aggregateTransaction = AggregateTransaction.createBonded(
             Deadline.create(),
-            this.txToSign.map((t) => t.toAggregate(signerPublicAccount)),
-            this.networkType,
+            this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
+            this.profile.networkType,
             [],
             this.maxFee,
         );
 
-        // sign aggregate transaction
-        const signedAggregate = account.sign(aggregateTx, this.generationHash);
+        const signedAggregateTransaction = account.sign(aggregateTransaction, this.profile.networkGenerationHash);
+        const hashLockTransaction = await this.createHashLockTransaction(signedAggregateTransaction);
+        const signedHashLockTransaction = account.sign(hashLockTransaction, this.profile.networkGenerationHash);
+        new TransactionView(aggregateTransaction, signedAggregateTransaction).print();
+        new TransactionView(hashLockTransaction, signedHashLockTransaction).print();
 
-        // create and sign lock transaction
-        const hashLock = await this.createHashLockTransaction(signedAggregate);
-        const signedLock = this.signTransaction(hashLock, account);
-
-        // print the transactions
-        new TransactionView(aggregateTx, signedAggregate).print();
-        new TransactionView(hashLock, signedLock).print();
-
-        return [signedLock, signedAggregate];
+        return [signedHashLockTransaction, signedAggregateTransaction];
     }
 
+    /**
+     * Creates an aggregate complete transaction and returns it signed.
+     * @private
+     * @param {Account} account - Signer account.
+     * @returns {SignedTransaction[]}
+     */
     private signCompleteTransactions(account: Account): SignedTransaction[] {
-        // create an aggreate complete transaction
-        const signerPublicAccount = this.signerPublicAccount || account.publicAccount;
         const aggregateTransaction = AggregateTransaction.createComplete(
             Deadline.create(),
-            this.txToSign.map((t) => t.toAggregate(signerPublicAccount)),
-            this.networkType,
+            this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
+            this.profile.networkType,
             [],
             this.maxFee,
         );
 
-        // sign
-        const signedTransaction = this.signTransaction(aggregateTransaction, account);
-
-        // print
+        const signedTransaction = account.sign(aggregateTransaction, this.profile.networkGenerationHash);
         new TransactionView(aggregateTransaction, signedTransaction).print();
-
         return [signedTransaction];
     }
 
-    private signTransaction(transaction: Transaction, account: Account): SignedTransaction {
-        return account.sign(transaction, this.generationHash);
-    }
-
-    private async createHashLockTransaction(aggregateTx: SignedTransaction): Promise<LockFundsTransaction> {
+    private async createHashLockTransaction(aggregateTx: SignedTransaction): Promise<HashLockTransaction> {
         const maxFeeHashLock = await new MaxFeeResolver().resolve(
             this.options,
             'Enter the maximum fee to announce the hashlock transaction (absolute amount):',
             'maxFeeHashLock',
         );
 
-        return LockFundsTransaction.create(
+        return HashLockTransaction.create(
             Deadline.create(),
-            this.networkCurrency.createRelative(this.options.lockAmount),
+            this.profile.networkCurrency.createRelative(this.options.lockAmount),
             UInt64.fromNumericString(this.options.lockDuration),
             aggregateTx,
-            this.networkType,
+            this.profile.networkType,
             maxFeeHashLock,
         );
     }

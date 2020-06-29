@@ -27,7 +27,7 @@ import { MetadataEntryTable } from './account';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'm',
-        description: 'Mosaic id in hexadecimal format.',
+        description: 'Target mosaic id in hexadecimal format.',
     })
     mosaicId: string;
 }

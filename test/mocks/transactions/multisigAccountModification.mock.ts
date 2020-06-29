@@ -24,7 +24,7 @@ export const unsignedMultisigAccountModification1 = MultisigAccountModificationT
     Deadline.create(),
     2,
     1,
-    [account1.publicAccount, account2.publicAccount],
-    [account3.publicAccount],
+    [account1.address, account2.address],
+    [account3.address],
     NetworkType.MIJIN_TEST,
 );

@@ -18,20 +18,18 @@
 
 import { expect } from 'chai';
 
-import { DeltaValidator } from '../../src/validators/delta.validator';
+import { BlockOrderByResolver } from '../../src/resolvers/blockOrderBy.resolver';
 
-describe('Delta validator', () => {
-    it('default case', () => {
-        const zeroValue = 0;
-        const positiveValue = 1;
-        const negativeValue = -1;
-        expect(new DeltaValidator().validate(zeroValue)).to.be.equal(true);
-        expect(new DeltaValidator().validate(positiveValue)).to.be.equal(true);
-        expect(new DeltaValidator().validate(negativeValue));
+describe('BlockOrderBy resolver', () => {
+    it('should return block order by', async () => {
+        const orderBy = 'Id';
+        const options = { orderBy } as any;
+        expect(await new BlockOrderByResolver().resolve(options)).to.be.equal('id');
     });
 
-    it('should throw error if delta is decimal', () => {
-        const value = 1.1;
-        expect(typeof new DeltaValidator().validate(value)).to.be.equal('string');
+    it('should change key', async () => {
+        const key = 'Height';
+        const options = { key } as any;
+        expect(await new BlockOrderByResolver().resolve(options, 'altText', 'key')).to.be.equal('height');
     });
 });

@@ -44,7 +44,7 @@ export class TransferView {
      */
     private render(): CellRecord {
         return {
-            Recipient: this.getRecipient(),
+            Recipient: this.getUnresolvedAddress(),
             Message: this.tx.message.payload || 'N/A',
             ...MosaicsView.get(this.tx.mosaics),
         };
@@ -54,7 +54,7 @@ export class TransferView {
      * @private
      * @returns {string}
      */
-    private getRecipient(): string {
+    private getUnresolvedAddress(): string {
         if (!this.tx.recipientAddress) {
             return '';
         }

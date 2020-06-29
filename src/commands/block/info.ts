@@ -59,8 +59,8 @@ export class BlockHeaderTable {
             ['Block Receipts Hash:', blockInfo.blockReceiptsHash],
             ['State Hash:', blockInfo.stateHash],
         );
-        if (blockInfo.beneficiaryPublicKey) {
-            this.table.push(['Beneficiary Public Key', blockInfo.beneficiaryPublicKey.publicKey]);
+        if (blockInfo.beneficiaryAddress) {
+            this.table.push(['Beneficiary Address', blockInfo.beneficiaryAddress.pretty()]);
         }
     }
 

@@ -27,7 +27,7 @@ export class WebhookService {
      * @param {string} webhookUrl - URL to post AnnounceTransactionWebhookDTO.
      * @param {string} hash - Transaction hash.
      * @param {string} signerPublicKey - Transaction signer public key.
-     * @returns {Address | NamespaceId}
+     * @returns {UnresolvedAddress}
      */
     static postAnnounceTransactionWebhook<T, R = AxiosResponse<T>>(
         webhookUrl: string,

@@ -114,7 +114,7 @@ export class TransactionStatementViews extends AbstractStatementView {
      */
     private renderBalanceTransferReceipt(receipt: BalanceTransferReceipt): CellRecord[] {
         return [
-            { Sender: receipt.sender.address.pretty() },
+            { Sender: receipt.senderAddress.pretty() },
             { Recipient: RecipientsView.get(receipt.recipientAddress) },
             { 'Mosaic Id': receipt.mosaicId.toHex() },
             { Amount: receipt.amount.compact() },
@@ -129,7 +129,7 @@ export class TransactionStatementViews extends AbstractStatementView {
      */
     private renderBalanceChangeReceipt(receipt: BalanceChangeReceipt): CellRecord[] {
         return [
-            { 'Target account': receipt.targetPublicAccount.address.pretty() },
+            { 'Target address': receipt.targetAddress.pretty() },
             { MosaicId: receipt.mosaicId.toHex() },
             { Amount: receipt.amount.compact() },
         ];
