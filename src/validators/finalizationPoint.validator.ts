@@ -15,22 +15,24 @@
  * limitations under the License.
  *
  */
-
-import { Order } from 'symbol-sdk';
-
-import { Validator } from './validator';
+import { Validator } from 'clime';
+import { UInt64 } from 'symbol-sdk';
 
 /**
- * Order validator
+ * Finalization point validator
  */
-export class OrderValidator implements Validator<string> {
+export class FinalizationPointValidator implements Validator<string> {
     /**
-     * Validates if order is valid.
-     * @param {string} value - Order type.
+     * validates if a point is valid.
+     * @param {string} value.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const test = value in Order;
-        return test ? true : 'Order must be one of (Asc, Desc)';
+        try {
+            UInt64.fromNumericString(value);
+        } catch (err) {
+            return 'Finalization point must be an integer';
+        }
+        return true;
     }
 }

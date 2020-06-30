@@ -15,18 +15,21 @@
  * limitations under the License.
  *
  */
+
 import { expect } from 'chai';
-import { LinkAction } from 'symbol-sdk';
 
-import { VotingKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
-import { unsignedVotingKeyLink1 } from '../../../../mocks/transactions/votingKeyLink.mock';
+import { FinalizationPointResolver } from '../../src/resolvers/finalizationPoint.resolver';
 
-describe('VotingKeyLinkView', () => {
-    it('should return a view', () => {
-        const view = VotingKeyLinkView.get(unsignedVotingKeyLink1);
-        expect(view['Action']).equal(LinkAction[LinkAction.Link]);
-        expect(view['Linked key']).equal('0'.repeat(96));
-        expect(view['Start point']).equal('1');
-        expect(view['End point']).equal('2');
+describe('Finalization point resolver', () => {
+    it('should return point', async () => {
+        const point = '15';
+        const options = { point } as any;
+        expect((await new FinalizationPointResolver().resolve(options)).toString()).to.be.equal(point);
+    });
+
+    it('should change key', async () => {
+        const key = '16';
+        const options = { key } as any;
+        expect((await new FinalizationPointResolver().resolve(options, 'altText', 'key')).toString()).to.be.equal(key);
     });
 });

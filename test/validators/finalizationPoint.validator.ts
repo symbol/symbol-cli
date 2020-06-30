@@ -15,18 +15,19 @@
  * limitations under the License.
  *
  */
+
 import { expect } from 'chai';
-import { LinkAction } from 'symbol-sdk';
 
-import { VotingKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
-import { unsignedVotingKeyLink1 } from '../../../../mocks/transactions/votingKeyLink.mock';
+import { FinalizationPointValidator } from '../../src/validators/finalizationPoint.validator';
 
-describe('VotingKeyLinkView', () => {
-    it('should return a view', () => {
-        const view = VotingKeyLinkView.get(unsignedVotingKeyLink1);
-        expect(view['Action']).equal(LinkAction[LinkAction.Link]);
-        expect(view['Linked key']).equal('0'.repeat(96));
-        expect(view['Start point']).equal('1');
-        expect(view['End point']).equal('2');
+describe('Finalization point validator', () => {
+    it('default case', () => {
+        const value = '123';
+        expect(new FinalizationPointValidator().validate(value)).to.be.equal(true);
+    });
+
+    it('should throw error if point is unknown', () => {
+        const value = 'wrong_key';
+        expect(typeof new FinalizationPointValidator().validate(value)).to.be.equal('string');
     });
 });
