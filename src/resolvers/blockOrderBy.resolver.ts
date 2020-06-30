@@ -16,7 +16,7 @@
  *
  */
 import { Options } from 'clime';
-import { BlockOrderByEnum } from 'symbol-openapi-typescript-node-client';
+import { BlockOrderBy } from 'symbol-sdk';
 
 import { OptionsChoiceResolver } from '../options-resolver';
 import { BlockOrderByValidator } from '../validators/blockOrderBy.validator';
@@ -31,17 +31,17 @@ export class BlockOrderByResolver implements Resolver {
      * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Promise<BlockOrderByEnum>}
+     * @returns {Promise<BlockOrderBy>}
      */
-    async resolve(options: Options, altText?: string, altKey?: string): Promise<BlockOrderByEnum> {
+    async resolve(options: Options, altText?: string, altKey?: string): Promise<BlockOrderBy> {
         const choices = [
             {
                 title: 'Height',
-                value: BlockOrderByEnum.Height,
+                value: BlockOrderBy.Height,
             },
             {
                 title: 'Id',
-                value: BlockOrderByEnum.Id,
+                value: BlockOrderBy.Id,
             },
         ];
         const value = await OptionsChoiceResolver(

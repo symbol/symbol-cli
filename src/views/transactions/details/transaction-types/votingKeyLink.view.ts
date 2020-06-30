@@ -30,6 +30,8 @@ export class VotingKeyLinkView {
         return {
             ['Action']: LinkAction[tx.linkAction],
             ['Linked key']: tx.linkedPublicKey,
+            ['Start point']: tx.startPoint.toString(),
+            ['End point']: tx.endPoint.toString(),
         };
     }
 }

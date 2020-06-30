@@ -16,7 +16,7 @@
  *
  */
 import { Validator } from 'clime';
-import { BlockOrderByEnum } from 'symbol-openapi-typescript-node-client';
+import { BlockOrderBy } from 'symbol-sdk';
 
 /**
  * Validator of block order by
@@ -24,11 +24,11 @@ import { BlockOrderByEnum } from 'symbol-openapi-typescript-node-client';
 export class BlockOrderByValidator implements Validator<string> {
     /**
      * Validates if a block order by value is valid.
-     * @param {string} value - Transaction group.
+     * @param {string} value
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        const test = value in BlockOrderByEnum;
+        const test = value in BlockOrderBy;
         return test ? true : 'BlockOrderBy must be one of (Id, Height)';
     }
 }
