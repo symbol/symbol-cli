@@ -4,19 +4,32 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.20.2] - 08-Jun-2020
+## [0.21.1] - 01-Jul-2020
 
-**Milestone**: RC7 0.9.5.1
+**Milestone**: 0.9.6.2
 
-### Fixed
+### Added
 
-- ``transaction --mode`` property to announce transactions in batches
-- ``transaction mosaic`` command does not require hash lock transaction
-- Standard console.log format #276
+- ``transaction search`` command.
+- ``block search`` command.
+- ``mosaic search`` command.
+
+### Changed
+
+- ``symbol-sdk`` dependency to 0.20.6
+- ``block header`` command renamed to ``block info``.
+
+### Removed
+
+- ``account transactions`` command.
+- ``account unconfirmed`` command.
+- ``account aggregatebonded`` command.
+- ``account incoming`` command.
+- ``account outgoing`` command.
 
 ## [0.20.1] - 27-May-2020
 
-**Milestone**: RC7 0.9.5.1
+**Milestone**: 0.9.5.1
 
 ### Added
 
@@ -40,7 +53,7 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 :warning: 0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software
 Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``
 
-**Milestone**: RC5 0.9.4.1
+**Milestone**: 0.9.4.1
 
 ### Added
 
@@ -59,7 +72,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 
 ## [0.18.4] - 25-Mar-2020
 
-**Milestone**: RC4 0.9.3.1
+**Milestone**: 0.9.3.1
 
 ### Added
 
@@ -75,7 +88,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 
 ## [0.18.3] - 18-Mar-2020
 
-**Milestone**: RC4 0.9.3.1
+**Milestone**: 0.9.3.1
 
 ### Added
 
@@ -95,7 +108,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 
 ## [0.18.2] - 06-Mar-2020
 
-**Milestone**: RC4 0.9.3.1
+**Milestone**: 0.9.3.1
 
 ### Changed
 
@@ -112,7 +125,7 @@ Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbol
 Private keys have now a new public key and address associated.
 Before installing ``symbol-cli@0.18.1``, backup and delete the file  ``~ \.nem2rc.json``.
 
-**Milestone**: RC4 0.9.3.1
+**Milestone**: 0.9.3.1
 
 ## Added
 
@@ -127,7 +140,7 @@ Before installing ``symbol-cli@0.18.1``, backup and delete the file  ``~ \.nem2r
 
 ## [0.17.1] - 31-Jan-2020
 
-**Milestone**: RC3 0.9.2.1
+**Milestone**: 0.9.2.1
 
 ### Changed
 

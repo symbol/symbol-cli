@@ -11,11 +11,11 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
-- [0.20.x](CHANGELOG.md#0201-27-May-2020) - **RC7 0.9.5.1 Milestone**
-- [0.19.x](CHANGELOG.md#0181-19-Feb-2020)
+- [0.21.x](CHANGELOG.md#0211-01-Jul-2020) - **0.9.6.1 Milestone**
+- [0.20.x](CHANGELOG.md#0201-27-May-2020) - **0.9.5.1 Milestone**
 
-0.19.x breaks compatibility with the ``profiles`` (public key derivation) saved using previous versions of the software.
-Before installing ``symbol-cli@0.19.x``, backup and delete the file ``~ \.symbolrc.json``.
+0.21.x breaks compatibility with the ``profiles`` (address format) saved using previous versions of the software.
+Before installing ``symbol-cli@0.21.x``, backup and delete the file ``~ \.symbolrc.json``.
 
 Find the complete release notes [here](CHANGELOG.md).
 
