@@ -41,7 +41,8 @@ export class MosaicViewTable {
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Id', mosaicInfo.id.toHex()],
+            ['Record Id', mosaicInfo.recordId],
+            ['Mosaic Id', mosaicInfo.id.toHex()],
             ['Divisibility', mosaicInfo.divisibility],
             ['Transferable', mosaicInfo.isTransferable()],
             ['Supply Mutable', mosaicInfo.isSupplyMutable()],

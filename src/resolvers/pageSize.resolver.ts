@@ -26,7 +26,7 @@ import { Resolver } from './resolver';
  */
 export class PageSizeResolver implements Resolver {
     /**
-     * Resolves an page size provided by the user.
+     * Resolves a page size provided by the user.
      * @param {Options} options - Command options.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
