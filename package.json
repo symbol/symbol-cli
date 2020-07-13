@@ -42,9 +42,9 @@
         "path": "^0.12.7",
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
-        "symbol-hd-wallets": "^0.11.0",
-        "symbol-sdk": "^0.20.6-alpha-202007011407",
-        "symbol-uri-scheme": "^0.4.6",
+        "symbol-hd-wallets": "^0.12.0",
+        "symbol-sdk": "^0.20.6",
+        "symbol-uri-scheme": "^0.4.7",
         "update-notifier": "^4.1.0"
     },
     "devDependencies": {

@@ -4,15 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.21.1] - 01-Jul-2020
+## [0.21.1] - 13-Jul-2020
 
-**Milestone**: 0.9.6.2
+**Milestone**: 0.9.6.3
 
 ### Added
 
 - ``transaction search`` command.
 - ``block search`` command.
 - ``mosaic search`` command.
+- ``block info`` returns block hash.
 
 ### Changed
 
