@@ -1,13 +1,4 @@
-import {
-    Account,
-    AggregateTransaction,
-    Deadline,
-    HashLockTransaction,
-    PublicAccount,
-    SignedTransaction,
-    Transaction,
-    UInt64,
-} from 'symbol-sdk';
+import { Account, AggregateTransaction, Deadline, HashLockTransaction, PublicAccount, SignedTransaction, Transaction, UInt64 } from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { MultisigAccount } from '../models/multisig.types';
@@ -90,7 +81,7 @@ export class TransactionSignatureService {
      * @returns {AnnounceMode}
      */
     get announceMode(): AnnounceMode {
-        if (this.isAggregateBonded || (this.isAggregate && this.multisigSigner && this.multisigSigner.info.minApproval > 1)) {
+        if (this.isAggregateBonded || (this.multisigSigner && this.multisigSigner.info.minApproval > 1)) {
             return AnnounceMode.partial;
         } else if (this.isAggregate || this.multisigSigner) {
             return AnnounceMode.complete;

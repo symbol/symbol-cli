@@ -131,7 +131,7 @@ export class MultisigInfoTable {
         let text = '';
         if (this.multisigTable) {
             text += FormatterService.title('Multisig Account Information');
-            text += this.multisigTable.toString();
+            text += '\n' + this.multisigTable.toString();
             text += FormatterService.title('Cosignatories');
             text += '\n' + this.cosignatoriesTable.toString();
         }
