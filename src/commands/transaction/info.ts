@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { TransactionGroup, TransactionHttp } from 'symbol-sdk';
+import { TransactionGroup } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
