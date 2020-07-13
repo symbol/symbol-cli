@@ -16,14 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import {
-    AggregateTransaction,
-    CosignatureSignedTransaction,
-    CosignatureTransaction,
-    Transaction,
-    TransactionGroup,
-    TransactionRepository,
-} from 'symbol-sdk';
+import { AggregateTransaction, CosignatureSignedTransaction, CosignatureTransaction, Transaction, TransactionGroup } from 'symbol-sdk';
 
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';
