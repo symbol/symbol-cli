@@ -47,23 +47,22 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 export default class extends ProfileCommand {
     private profile: Profile;
     private options: CommandOptions;
-    private transactionHttp: TransactionRepository;
 
     constructor() {
         super();
-        this.transactionHttp = this.profile.repositoryFactory.createTransactionRepository();
     }
 
     @metadata
     async execute(options: CommandOptions) {
         this.options = options;
         this.profile = this.getProfile(this.options);
-
+        const repositoryFactory = this.profile.repositoryFactory;
+        const transactionHttp = repositoryFactory.createTransactionRepository();
         const hash = await new HashResolver().resolve(options, 'Enter the aggregate bonded transaction hash to cosign: ');
 
         this.spinner.start();
 
-        this.transactionHttp.getTransaction(hash, TransactionGroup.Partial).subscribe(
+        transactionHttp.getTransaction(hash, TransactionGroup.Partial).subscribe(
             async (transaction: Transaction) => {
                 console.log(FormatterService.title('Transaction to cosign:'));
                 new TransactionView(transaction).print();
