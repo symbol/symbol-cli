@@ -364,6 +364,7 @@ Before installing ``symbol-cli@0.16.0``, backup and delete the file  ``~ \.nem2r
 
 - Initial code release.
 
+[0.21.1]: https://github.com/nemtech/symbol-cli/compare/v0.20.1...v0.21.1
 [0.20.1]: https://github.com/nemtech/symbol-cli/compare/v0.19.2...v0.20.1
 [0.19.2]: https://github.com/nemtech/symbol-cli/compare/v0.18.3...v0.19.2
 [0.18.4]: https://github.com/nemtech/symbol-cli/compare/v0.18.3...v0.18.4
