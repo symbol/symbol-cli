@@ -16,7 +16,6 @@
  *
  */
 import { Options } from 'clime';
-import { BlockInfoDTO } from 'symbol-openapi-typescript-node-client';
 import { Address, UnresolvedAddress } from 'symbol-sdk';
 
 import { ProfileOptions } from '../interfaces/profile.options';
@@ -26,7 +25,6 @@ import { AccountService } from '../services/account.service';
 import { AddressValidator, UnresolvedAddressValidator, UnresolvedAddressesValidator } from '../validators/address.validator';
 import { Resolver } from './resolver';
 
-new BlockInfoDTO();
 /**
  * Address resolver
  */
