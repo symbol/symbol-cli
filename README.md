@@ -11,7 +11,7 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
-- [0.21.x](CHANGELOG.md#0211-01-Jul-2020) - **0.9.6.1 Milestone**
+- [0.21.x](CHANGELOG.md#0211-31-Jul-2020) - **0.9.6.3 Milestone**
 - [0.20.x](CHANGELOG.md#0201-27-May-2020) - **0.9.5.1 Milestone**
 
 0.21.x breaks compatibility with the ``profiles`` (address format) saved using previous versions of the software.
