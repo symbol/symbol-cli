@@ -42,6 +42,8 @@ export class BlockHeaderTable {
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
+            ['Record Id:', blockInfo.recordId],
+            ['Hash:', blockInfo.hash],
             ['Generation Hash:', blockInfo.generationHash],
             ['Total Fee:', blockInfo.totalFee.toString()],
             ['Number of Transactions:', blockInfo.numTransactions],

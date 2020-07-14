@@ -30,22 +30,22 @@ import { ProfileOptions } from './profile.options';
 export class SearchOptions extends ProfileOptions {
     @option({
         flag: 'o',
-        description: '(Optional): Order of transactions. (Desc: Newer to older, Asc: Older to newer)',
+        description: '(Optional): Sort entries. (Desc: Newer to older, Asc: Older to newer)',
         default: 'Desc',
     })
     order: string;
 
     @option({
         flag: 'n',
-        description: '(Optional) Filter by page number.',
-        default: 1,
+        description: '(Optional) Number of entries per page.',
+        default: 10,
     })
     pageSize: number;
 
     @option({
         flag: 'n',
-        description: '(Optional) Number of transactions per page.',
-        default: 10,
+        description: '(Optional) Filter by page number.',
+        default: 1,
     })
     pageNumber: number;
 

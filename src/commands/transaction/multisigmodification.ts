@@ -34,7 +34,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'R',
         description:
             'Number of signatures needed to remove a cosignatory. ' +
-            'If the account already exists, enter the number of cosignatories to add or remove.',
+            'If the account is already multisig, enter the number of cosignatories to add or remove.',
     })
     minRemovalDelta: number;
 
@@ -42,7 +42,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'A',
         description:
             'Number of signatures needed to approve a transaction. ' +
-            'If the account already exists, enter the number of cosignatories to add or remove.',
+            'If the account is already multisig, enter the number of cosignatories to add or remove.',
     })
     minApprovalDelta: number;
 
@@ -83,13 +83,13 @@ export default class extends AnnounceTransactionsCommand {
         const minApprovalDelta = await new DeltaResolver().resolve(
             options,
             'Enter the number of signatures needed to approve a transaction. ' +
-                'If the account already exists, enter the number of cosignatories to add or remove:',
+                'If the account is already multisig, enter the number of cosignatories to add or remove:',
             'minApprovalDelta',
         );
         const minRemovalDelta = await new DeltaResolver().resolve(
             options,
             'Enter the number of signatures needed to remove a cosignatory. ' +
-                'If the account already exists, enter the number of cosignatories to add or remove:',
+                'If the account is already multisig, enter the number of cosignatories to add or remove:',
             'minRemovalDelta',
         );
         const maxFee = await new MaxFeeResolver().resolve(options);

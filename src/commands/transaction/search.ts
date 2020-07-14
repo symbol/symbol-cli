@@ -65,7 +65,7 @@ export class TransactionSearchOptions extends SearchOptions {
 
     async buildSearchCriteria(): Promise<TransactionSearchCriteria> {
         const criteria: TransactionSearchCriteria = {
-            ...this.buildBaseSearchCriteria(),
+            ...(await this.buildBaseSearchCriteria()),
             group: await new TransactionGroupResolver().resolve(this),
         };
         if (this.address) {

@@ -76,14 +76,14 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
 
         const chosenSigner = await new AddressChoiceResolver().resolve(availableAddresses);
 
-        const chosenmultisigSigner = childMultisigAccountsInfo.find(({ accountAddress }) => accountAddress.equals(chosenSigner));
+        const chosenMultisigSigner = childMultisigAccountsInfo.find(({ accountAddress }) => accountAddress.equals(chosenSigner));
         const chosenSignerPublicAccount = (await new AccountHttp(profile.url).getAccountInfo(chosenSigner).toPromise()).publicAccount;
 
-        if (!chosenmultisigSigner || !chosenSignerPublicAccount) {
+        if (!chosenMultisigSigner || !chosenSignerPublicAccount) {
             throw new ExpectedError('Could not retrieve the multisig account information from the node.');
         }
 
-        return { info: chosenmultisigSigner, publicAccount: chosenSignerPublicAccount };
+        return { info: chosenMultisigSigner, publicAccount: chosenSignerPublicAccount };
     }
 
     /**

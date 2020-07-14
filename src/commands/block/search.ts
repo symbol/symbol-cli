@@ -42,13 +42,13 @@ export class BlockSearchOptions extends SearchOptions {
 
     @option({
         description: '(Optional) Order by (Id, Height).',
-        default: 'id',
+        default: 'Id',
     })
     orderBy: string;
 
     async buildSearchCriteria(): Promise<BlockSearchCriteria> {
         const criteria: BlockSearchCriteria = {
-            ...this.buildBaseSearchCriteria(),
+            ...(await this.buildBaseSearchCriteria()),
             orderBy: await new BlockOrderByResolver().resolve(this),
         };
         if (this.signerPublicKey) {
