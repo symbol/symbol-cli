@@ -45,7 +45,7 @@ export const addressResolutionStatement = new ResolutionStatement(ResolutionType
 ]);
 
 export const balanceChangeReceipt = new BalanceChangeReceipt(
-    account1.publicAccount,
+    account1.address,
     mosaicId1,
     UInt64.fromNumericString('10'),
     1,
@@ -53,7 +53,7 @@ export const balanceChangeReceipt = new BalanceChangeReceipt(
 );
 
 export const balanceTransferReceipt = new BalanceTransferReceipt(
-    account1.publicAccount,
+    account1.address,
     account2.address,
     mosaicId1,
     UInt64.fromNumericString('2'),

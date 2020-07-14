@@ -30,11 +30,11 @@ describe('binary validator', () => {
 
     it('should throw error if value is negative', () => {
         const value = -1;
-        expect(new BinaryValidator().validate(value)).to.be.equal('The value must be 0 or 1');
+        expect(typeof new BinaryValidator().validate(value)).to.be.equal('string');
     });
 
     it('should throw error if value is decimal', () => {
         const value = 1.1;
-        expect(new BinaryValidator().validate(value)).to.be.equal('The value must be 0 or 1');
+        expect(typeof new BinaryValidator().validate(value)).to.be.equal('string');
     });
 });

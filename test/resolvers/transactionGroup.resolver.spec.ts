@@ -15,25 +15,15 @@
  * limitations under the License.
  *
  */
-import { UInt64 } from 'symbol-sdk';
 
-import { Validator } from './validator';
+import { expect } from 'chai';
 
-/**
- * Numeric string
- */
-export class NumericStringValidator implements Validator<string> {
-    /**
-     * Validates if a string is composed by numbers.
-     * @param {string} value - Numeric string.
-     * @returns {true | string}
-     */
-    validate(value: string): boolean | string {
-        try {
-            UInt64.fromNumericString(value);
-        } catch (err) {
-            return 'Enter an integer number';
-        }
-        return true;
-    }
-}
+import { TransactionGroupResolver } from '../../src/resolvers/transactionGroup.resolver';
+
+describe('Transaction group resolver', () => {
+    it('should return Transaction group', async () => {
+        const group = 'Confirmed';
+        const options = { group } as any;
+        expect(await new TransactionGroupResolver().resolve(options)).to.be.equal('confirmed');
+    });
+});

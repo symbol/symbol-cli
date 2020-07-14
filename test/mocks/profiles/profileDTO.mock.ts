@@ -23,7 +23,7 @@ export const profileDTOv1 = {
             name: 'dummy',
             network: 152,
             address: {
-                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3K',
+                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3',
                 networkType: 152,
             },
             creationDate: '2020-03-25T14:15:34.126',
@@ -46,7 +46,7 @@ export const profileDTOv2 = {
             name: 'dummy',
             network: 152,
             address: {
-                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3K',
+                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3',
                 networkType: 152,
             },
             creationDate: '2020-03-25T14:15:34.126',
@@ -74,7 +74,7 @@ export const profileDTO2v2 = {
             name: 'dummy',
             network: 152,
             address: {
-                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3K',
+                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3',
                 networkType: 152,
             },
             creationDate: '2020-03-25T14:15:34.126',
@@ -102,7 +102,7 @@ export const profileDTO2v3 = {
             name: 'dummy',
             network: 152,
             address: {
-                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3K',
+                address: 'TCUAG2N5XWOADHCAJ22IJQILVGON37UIZGUDIG3',
                 networkType: 152,
             },
             creationDate: '2020-03-25T14:15:34.126',

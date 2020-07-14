@@ -16,11 +16,13 @@
  *
  */
 
-import { Deadline, LinkAction, NetworkType, VotingKeyLinkTransaction } from 'symbol-sdk';
+import { Deadline, LinkAction, NetworkType, UInt64, VotingKeyLinkTransaction } from 'symbol-sdk';
 
 export const unsignedVotingKeyLink1 = VotingKeyLinkTransaction.create(
     Deadline.create(),
     '0'.repeat(96),
+    UInt64.fromUint(1),
+    UInt64.fromUint(2),
     LinkAction.Link,
     NetworkType.MIJIN_TEST,
 );

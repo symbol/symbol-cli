@@ -20,13 +20,13 @@ import { command, metadata, option } from 'clime';
 import { Deadline, MultisigAccountModificationTransaction } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ActionType } from '../../models/action.enum';
 import { ActionResolver } from '../../resolvers/action.resolver';
+import { CosignatoryUnresolvedAddressesResolver } from '../../resolvers/address.resolver';
 import { DeltaResolver } from '../../resolvers/delta.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
-import { CosignatoryPublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -34,7 +34,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'R',
         description:
             'Number of signatures needed to remove a cosignatory. ' +
-            'If the account already exists, enter the number of cosignatories to add or remove.',
+            'If the account is already multisig, enter the number of cosignatories to add or remove.',
     })
     minRemovalDelta: number;
 
@@ -42,7 +42,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'A',
         description:
             'Number of signatures needed to approve a transaction. ' +
-            'If the account already exists, enter the number of cosignatories to add or remove.',
+            'If the account is already multisig, enter the number of cosignatories to add or remove.',
     })
     minApprovalDelta: number;
 
@@ -54,9 +54,9 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'p',
-        description: 'Cosignatory accounts public keys (separated by a comma).',
+        description: 'Cosignatory accounts addresses (separated by a comma).',
     })
-    cosignatoryPublicKey: string;
+    cosignatoryAddresses: string;
 
     @option({
         flag: 'u',
@@ -79,21 +79,21 @@ export default class extends AnnounceTransactionsCommand {
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
         const action = await new ActionResolver().resolve(options);
-        const cosignatories = await new CosignatoryPublicKeyResolver().resolve(options, profile);
+        const cosignatories = await new CosignatoryUnresolvedAddressesResolver().resolve(options, profile);
         const minApprovalDelta = await new DeltaResolver().resolve(
             options,
             'Enter the number of signatures needed to approve a transaction. ' +
-                'If the account already exists, enter the number of cosignatories to add or remove:',
+                'If the account is already multisig, enter the number of cosignatories to add or remove:',
             'minApprovalDelta',
         );
         const minRemovalDelta = await new DeltaResolver().resolve(
             options,
             'Enter the number of signatures needed to remove a cosignatory. ' +
-                'If the account already exists, enter the number of cosignatories to add or remove:',
+                'If the account is already multisig, enter the number of cosignatories to add or remove:',
             'minRemovalDelta',
         );
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(),
@@ -108,7 +108,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [multisigAccountModificationTransaction],
             maxFee,
-            signerMultisigInfo,
+            multisigSigner,
             isAggregateBonded: true,
         };
 

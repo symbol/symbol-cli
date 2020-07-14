@@ -16,7 +16,7 @@
  *
  */
 
-import { NamespaceMetadataTransaction } from 'symbol-sdk';
+import { Address, NamespaceMetadataTransaction } from 'symbol-sdk';
 
 import { NamespacesView } from '../../../namespaces.view';
 import { CellRecord } from '../transaction.view';
@@ -29,7 +29,7 @@ export class NamespaceMetadataView {
      */
     static get(tx: NamespaceMetadataTransaction): CellRecord {
         return {
-            'Target public key': tx.targetPublicKey,
+            'Target address': tx.targetAddress instanceof Address ? tx.targetAddress.pretty() : tx.targetAddress.toHex(),
             'Scoped metadata key': tx.scopedMetadataKey.toHex(),
             'Target namespace Id': NamespacesView.getNamespaceLabel(tx.targetNamespaceId),
             'Value size delta': tx.valueSizeDelta.toString(),

@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { OptionsChoiceResolver } from '../options-resolver';
 import { PublicKeyValidator } from '../validators/publicKey.validator';
 import { TransactionAnnounceModeValidator } from '../validators/transactionAnnounceMode.validator';
@@ -33,7 +33,7 @@ export class TransactionAnnounceModeResolver implements Resolver {
     /**
      * Resolves an import type provided by the user.
      * @param {CreateProfileOptions} options - Command options.
-     * @returns {Promise<number>}
+     * @returns {Promise<TransactionAnnounceMode>}
      */
     async resolve(options: AnnounceTransactionsOptions): Promise<TransactionAnnounceMode> {
         // Enter multisig mode if a valid signer public key was provided as an option

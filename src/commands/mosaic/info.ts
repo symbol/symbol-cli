@@ -18,7 +18,7 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { MosaicService, MosaicView } from 'symbol-sdk';
+import { MosaicInfo, MosaicService } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -35,30 +35,26 @@ export class CommandOptions extends ProfileOptions {
 
 export class MosaicViewTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly mosaicView: MosaicView) {
+    constructor(public readonly mosaicInfo: MosaicInfo) {
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Id', mosaicView.mosaicInfo.id.toHex()],
-            ['Divisibility', mosaicView.mosaicInfo.divisibility],
-            ['Transferable', mosaicView.mosaicInfo.isTransferable()],
-            ['Supply Mutable', mosaicView.mosaicInfo.isSupplyMutable()],
-            ['Height', mosaicView.mosaicInfo.height.toString()],
-            [
-                'Expiration',
-                mosaicView.mosaicInfo.duration.compact() === 0
-                    ? 'Never'
-                    : mosaicView.mosaicInfo.height.add(mosaicView.mosaicInfo.duration).toString(),
-            ],
-            ['Owner', mosaicView.mosaicInfo.owner.address.pretty()],
-            ['Supply (Absolute)', mosaicView.mosaicInfo.supply.toString()],
+            ['Record Id', mosaicInfo.recordId],
+            ['Mosaic Id', mosaicInfo.id.toHex()],
+            ['Divisibility', mosaicInfo.divisibility],
+            ['Transferable', mosaicInfo.isTransferable()],
+            ['Supply Mutable', mosaicInfo.isSupplyMutable()],
+            ['Height', mosaicInfo.startHeight.toString()],
+            ['Expiration', mosaicInfo.duration.compact() === 0 ? 'Never' : mosaicInfo.startHeight.add(mosaicInfo.duration).toString()],
+            ['Owner', mosaicInfo.ownerAddress.pretty()],
+            ['Supply (Absolute)', mosaicInfo.supply.toString()],
             [
                 'Supply (Relative)',
-                mosaicView.mosaicInfo.divisibility === 0
-                    ? mosaicView.mosaicInfo.supply.compact().toLocaleString()
-                    : (mosaicView.mosaicInfo.supply.compact() / Math.pow(10, mosaicView.mosaicInfo.divisibility)).toLocaleString(),
+                mosaicInfo.divisibility === 0
+                    ? mosaicInfo.supply.compact().toLocaleString()
+                    : (mosaicInfo.supply.compact() / Math.pow(10, mosaicInfo.divisibility)).toLocaleString(),
             ],
         );
     }
@@ -95,7 +91,7 @@ export default class extends ProfileCommand {
                 if (mosaicViews.length === 0) {
                     console.log(FormatterService.error('No mosaic exists with this id ' + mosaicId.toHex()));
                 } else {
-                    console.log(new MosaicViewTable(mosaicViews[0]).toString());
+                    console.log(new MosaicViewTable(mosaicViews[0].mosaicInfo).toString());
                 }
             },
             (err) => {

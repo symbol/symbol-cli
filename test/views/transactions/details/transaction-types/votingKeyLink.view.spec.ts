@@ -26,5 +26,7 @@ describe('VotingKeyLinkView', () => {
         const view = VotingKeyLinkView.get(unsignedVotingKeyLink1);
         expect(view['Action']).equal(LinkAction[LinkAction.Link]);
         expect(view['Linked key']).equal('0'.repeat(96));
+        expect(view['Start point']).equal('1');
+        expect(view['End point']).equal('2');
     });
 });

@@ -33,7 +33,7 @@ describe('mosaic restriction type validator', () => {
 
     it('invalid mosaic restriction type', () => {
         const restriction = '99';
-        expect(new RestrictionMosaicTypeValidator().validate(restriction)).to.include('MosaicRestrictionType must be one of');
+        expect(typeof new RestrictionMosaicTypeValidator().validate(restriction)).to.be.equal('string');
     });
 });
 
@@ -45,7 +45,7 @@ describe('account restriction address flags validator', () => {
 
     it('invalid account restriction address flag', () => {
         const restriction = '99';
-        expect(new RestrictionAccountAddressFlagValidator().validate(restriction)).to.include('AddressRestrictionFlag must be one of');
+        expect(typeof new RestrictionAccountAddressFlagValidator().validate(restriction)).to.be.equal('string');
     });
 });
 
@@ -57,7 +57,7 @@ describe('account restriction mosaic flags validator', () => {
 
     it('invalid account restriction mosaic flag', () => {
         const restriction = '99';
-        expect(new RestrictionAccountMosaicFlagValidator().validate(restriction)).to.include('MosaicRestrictionFlag must be one of');
+        expect(typeof new RestrictionAccountMosaicFlagValidator().validate(restriction)).to.be.equal('string');
     });
 });
 
@@ -69,6 +69,6 @@ describe('account restriction operation flags validator', () => {
 
     it('invalid account restriction operation flag', () => {
         const restriction = '99';
-        expect(new RestrictionAccountOperationFlagValidator().validate(restriction)).to.include('OperationRestrictionFlag must be one of');
+        expect(typeof new RestrictionAccountOperationFlagValidator().validate(restriction)).to.be.equal('string');
     });
 });

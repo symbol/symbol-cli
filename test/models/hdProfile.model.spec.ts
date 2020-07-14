@@ -17,7 +17,7 @@
  */
 
 import { expect } from 'chai';
-import { Address, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
+import { NetworkType, Password, SimpleWallet } from 'symbol-sdk';
 
 import { HdProfile } from '../../src/models/hdProfile.model';
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
@@ -32,12 +32,9 @@ describe('HdProfile', () => {
         const networkType = NetworkType.TEST_NET;
         const password = new Password('password');
         const url = 'http://localhost:3000';
-        // eslint-disable-next-line max-len
-        const mnemonic =
-            'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense';
+        const mnemonic = 'test';
         const expectedPath = "m/44'/4343'/0'/0'/0'";
         const pathNumber = 0;
-        const expectedAddress = Address.createFromRawAddress('TA4E47-MGAO57-ZJFORK-CFSPAD-BMWHLX-7UKMZJ-KAOD');
 
         const profile = HdProfile.create({
             generationHash,
@@ -51,7 +48,6 @@ describe('HdProfile', () => {
             pathNumber,
         });
 
-        expect(profile.simpleWallet.address).to.deep.equal(expectedAddress);
         expect(profile.networkGenerationHash).to.equal(generationHash);
         expect(profile.type).to.equal('HD');
         expect(profile.isDefault).to.equal('1');
@@ -68,12 +64,7 @@ describe('HdProfile', () => {
         const networkType = NetworkType.TEST_NET;
         const name = 'profile name';
         const password = new Password('password');
-        const simpleWallet = SimpleWallet.createFromPrivateKey(
-            name,
-            password,
-            'A58BD9618B47F5E6B6BACB9B37CC242EDE1A0461AAE8FF2084BC825209D90E18',
-            networkType,
-        );
+        const simpleWallet = SimpleWallet.createFromPrivateKey(name, password, '0'.repeat(64), networkType);
         const encryptedPassphrase = 'encryptedPassphrase';
         const path = "m/44'/4343'/0'/0'/0'";
         const url = 'http://localhost:3000';
@@ -113,7 +104,7 @@ describe('HdProfile', () => {
                 name: 'profile name',
                 network: 152,
                 address: {
-                    address: 'TA4E47MGAO57ZJFORKCFSPADBMWHLX7UKMZJKAOD',
+                    address: 'TA4E47MGAO57ZJFORKCFSPADBMWHLX7UKMZJKAO',
                     networkType: 152,
                 },
                 creationDate: '2020-04-09T17:54:30.421',

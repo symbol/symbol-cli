@@ -19,6 +19,7 @@
 import { assert, expect } from 'chai';
 
 import { TransactionStatementViews } from '../../../src/views/statements/transactionStatements.view';
+import { account1, account2 } from '../../mocks/accounts.mock';
 import { statement } from '../../mocks/statements.mock';
 
 describe('Transaction Statement Views', () => {
@@ -36,14 +37,14 @@ describe('Transaction Statement Views', () => {
         expect(statementsView[0][4].title.content).equal('Receipt 1 of 2');
         expect(statementsView[0][5]).deep.equal({ Type: 'Harvest_Fee' });
         expect(statementsView[0][6]).deep.equal({ Size: 'N/A' });
-        expect(statementsView[0][7]).deep.equal({ 'Target account': 'NCWYXK-VYBMO4-NBCUF3-AXKJMX-CGVSYQ-OS72UN-KD3F' });
+        expect(statementsView[0][7]).deep.equal({ 'Target address': account1.address.pretty() });
         expect(statementsView[0][8]).deep.equal({ MosaicId: 'D525AD41D95FCF29' });
         expect(statementsView[0][9]).deep.equal({ Amount: 10 });
         expect(statementsView[0][10].title.content).equal('Receipt 2 of 2');
         expect(statementsView[0][11]).deep.equal({ Type: 'Transaction_Group' });
         expect(statementsView[0][12]).deep.equal({ Size: 'N/A' });
-        expect(statementsView[0][13]).deep.equal({ Sender: 'NCWYXK-VYBMO4-NBCUF3-AXKJMX-CGVSYQ-OS72UN-KD3F' });
-        expect(statementsView[0][14]).deep.equal({ Recipient: 'NCD4NC-5VIE2E-EB3BCV-5JRLBN-JXYDW5-Q5JLOG-VTB6' });
+        expect(statementsView[0][13]).deep.equal({ Sender: account1.address.pretty() });
+        expect(statementsView[0][14]).deep.equal({ Recipient: account2.address.pretty() });
         expect(statementsView[0][15]).deep.equal({ 'Mosaic Id': 'D525AD41D95FCF29' });
         expect(statementsView[0][16]).deep.equal({ Amount: 2 });
 

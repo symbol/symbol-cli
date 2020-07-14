@@ -25,7 +25,7 @@ import { unsignedAccountMetadata1 } from '../../../../mocks/transactions/account
 describe('AccountMetadataView', () => {
     it('should return a view', () => {
         const view = AccountMetadataView.get(unsignedAccountMetadata1);
-        expect(view['Target public key']).equal(account1.publicKey);
+        expect(view['Target address']).equal(account1.address.pretty());
         expect(view['Scoped metadata key']).equal('00000000000003E8');
         expect(view['Value size delta']).equal('1');
         expect(view['Value']).equal(Convert.uint8ToUtf8(new Uint8Array(10)));

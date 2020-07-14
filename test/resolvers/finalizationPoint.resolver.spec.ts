@@ -18,18 +18,18 @@
 
 import { expect } from 'chai';
 
-import { NamespaceIdValidator } from '../../src/validators/namespaceId.validator';
+import { FinalizationPointResolver } from '../../src/resolvers/finalizationPoint.resolver';
 
-describe('Mosaic id validator', () => {
-    it('default case ', () => {
-        const value = '85BBEA6CC462B244';
-        expect(new NamespaceIdValidator().validate(value)).to.be.equal(true);
+describe('Finalization point resolver', () => {
+    it('should return point', async () => {
+        const point = '15';
+        const options = { point } as any;
+        expect((await new FinalizationPointResolver().resolve(options)).toString()).to.be.equal(point);
     });
 
-    it('should throw error if namespaceId is not a valid UInt64 value', () => {
-        const value = 'test';
-        expect(new NamespaceIdValidator().validate(value)).to.be.equal(
-            'Enter a namespace id in hexadecimal format. Example: 85BBEA6CC462B244',
-        );
+    it('should change key', async () => {
+        const key = '16';
+        const options = { key } as any;
+        expect((await new FinalizationPointResolver().resolve(options, 'altText', 'key')).toString()).to.be.equal(key);
     });
 });

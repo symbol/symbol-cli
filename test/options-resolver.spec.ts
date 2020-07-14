@@ -23,7 +23,7 @@ import * as sinon from 'sinon';
 import { ActionType } from '../src/models/action.enum';
 import { OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver } from '../src/options-resolver';
 import { ActionValidator } from '../src/validators/action.validator';
-import { NumericStringValidator } from '../src/validators/numericString.validator';
+import { IntegerStringValidator } from '../src/validators/integer.validator';
 
 describe('OptionsResolver', () => {
     before(() => {
@@ -60,7 +60,7 @@ describe('OptionsResolver', () => {
             () => undefined,
             'Insert your name',
             'text',
-            new NumericStringValidator(),
+            new IntegerStringValidator(),
         );
         expect(value).to.be.equal('1');
     });
@@ -72,7 +72,7 @@ describe('OptionsResolver', () => {
             () => undefined,
             'Insert your name',
             'text',
-            new NumericStringValidator(),
+            new IntegerStringValidator(),
         );
         expect(value).to.be.undefined;
         sinon.assert.called(process.exit as any);

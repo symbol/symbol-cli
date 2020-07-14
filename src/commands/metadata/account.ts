@@ -28,7 +28,7 @@ import { FormatterService } from '../../services/formatter.service';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'a',
-        description: 'Account address.',
+        description: 'Target Address.',
     })
     address: string;
 }
@@ -42,7 +42,11 @@ export class MetadataEntryTable {
             head: ['Type', 'Value'],
         }) as HorizontalTable;
 
-        this.table.push(['Sender Public Key', entry.senderPublicKey], ['Target Public Key', entry.targetPublicKey], ['Value', entry.value]);
+        this.table.push(
+            ['Source Address', entry.sourceAddress.pretty()],
+            ['Target Address', entry.targetAddress.pretty()],
+            ['Value', entry.value],
+        );
         if (entry.targetId) {
             this.table.push(['Target Id', entry.targetId.toHex()]);
         }

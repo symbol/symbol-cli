@@ -4,20 +4,15 @@
          "title":"account",
          "commands":[
             "info",
-            "generate",
-            "transactions",
-            "unconfirmed",
-            "aggregatebonded",
-            "incoming",
-            "outgoing"
+            "generate"
          ]
       },
       {
          "title":"block",
          "commands":[
-            "header",
-            "receipts",
-            "transactions"
+            "search",
+            "info",
+            "receipts"
          ]
       },
       {
@@ -63,6 +58,7 @@
       {
          "title":"mosaic",
          "commands":[
+            "search",
             "info"
          ]
       },
@@ -104,14 +100,17 @@
       {
          "title":"transaction",
          "commands":[
+            "search",
+            "info",
+            "status",
+            "uri",
             "accountaddressrestriction",
-            "accountlink",
+            "accountkeylink",
             "accountmetadata",
             "accountmosaicrestriction",
             "accountoperationrestriction",
             "addressalias",
             "cosign",
-            "info",
             "mosaic",
             "mosaicaddressrestriction",
             "mosaicalias",
@@ -121,11 +120,13 @@
             "multisigmodification",
             "namespace",
             "namespacemetadata",
+            "nodekeylink",
             "persistentharvestdelegation",
             "secretlock",
             "secretproof",
-            "status",
-            "transfer"
+            "transfer",
+            "votingkeylink",
+            "vrfkeylink"
          ]
       }
    ]

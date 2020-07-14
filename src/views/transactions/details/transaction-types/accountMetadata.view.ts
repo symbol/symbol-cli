@@ -16,7 +16,7 @@
  *
  */
 
-import { AccountMetadataTransaction } from 'symbol-sdk';
+import { AccountMetadataTransaction, Address } from 'symbol-sdk';
 
 import { CellRecord } from '../transaction.view';
 
@@ -28,7 +28,7 @@ export class AccountMetadataView {
      */
     static get(tx: AccountMetadataTransaction): CellRecord {
         return {
-            'Target public key': tx.targetPublicKey,
+            'Target address': tx.targetAddress instanceof Address ? tx.targetAddress.pretty() : tx.targetAddress.toHex(),
             'Scoped metadata key': tx.scopedMetadataKey.toHex(),
             'Value size delta': tx.valueSizeDelta.toString(),
             Value: tx.value,

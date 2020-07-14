@@ -18,7 +18,7 @@
 import { command, metadata, option } from 'clime';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { TransactionURIResolver } from '../../resolvers/transactionURI.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';

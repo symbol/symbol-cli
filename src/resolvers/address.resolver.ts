@@ -16,13 +16,13 @@
  *
  */
 import { Options } from 'clime';
-import { Address, NamespaceId } from 'symbol-sdk';
+import { Address, UnresolvedAddress } from 'symbol-sdk';
 
 import { ProfileOptions } from '../interfaces/profile.options';
 import { Profile } from '../models/profile.model';
-import { OptionsResolver } from '../options-resolver';
+import { OptionsChoiceResolver, OptionsResolver } from '../options-resolver';
 import { AccountService } from '../services/account.service';
-import { AddressAliasValidator, AddressValidator } from '../validators/address.validator';
+import { AddressValidator, UnresolvedAddressValidator, UnresolvedAddressesValidator } from '../validators/address.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -50,24 +50,70 @@ export class AddressResolver implements Resolver {
     }
 }
 
-export class AddressAliasResolver implements Resolver {
+export class UnresolvedAddressResolver implements Resolver {
     /**
-     * Resolves an address provided by the user.
+     * Resolves an unresolved address provided by the user.
      * @param {ProfileOptions} options - Command options.
      * @param {Profile} secondSource - Secondary data source.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
-     * @returns {Promise<Address | NamespaceId>}
+     * @returns {Promise<UnresolvedAddress>}
      */
-    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<Address | NamespaceId> {
+    async resolve(options: ProfileOptions, secondSource?: Profile, altText?: string, altKey?: string): Promise<UnresolvedAddress> {
         const resolution = await OptionsResolver(
             options,
             altKey ? altKey : 'address',
             () => (secondSource ? secondSource.address.pretty() : undefined),
             altText ? altText : 'Enter an address (or @alias):',
             'text',
-            new AddressAliasValidator(),
+            new UnresolvedAddressValidator(),
         );
-        return AccountService.getRecipient(resolution);
+        return AccountService.getUnresolvedAddress(resolution);
+    }
+}
+
+/**
+ * Cosignatory public key resolver
+ */
+
+export class CosignatoryUnresolvedAddressesResolver implements Resolver {
+    /**
+     * Resolves a set of cosignatory addresses provided by the user.
+     * @param {Options} options - Command options.
+     * @param {Profile} secondSource - Secondary data source.
+     * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<PublicAccount[]>}
+     */
+    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<UnresolvedAddress[]> {
+        const resolution = await OptionsResolver(
+            options,
+            altKey ? altKey : 'cosignatoryAddresses',
+            () => undefined,
+            altText ? altText : 'Enter the cosignatoriesaddresses (separated by a comma):',
+            'text',
+            new UnresolvedAddressesValidator(),
+        );
+        const cosignatoryAddresses = resolution.split(',');
+        const cosignatories: UnresolvedAddress[] = [];
+        cosignatoryAddresses.map((cosignatory: string) => {
+            cosignatories.push(AccountService.getUnresolvedAddress(cosignatory));
+        });
+        return cosignatories;
+    }
+}
+
+/**
+ * Address choice resolver
+ */
+export class AddressChoiceResolver implements Resolver {
+    /**
+     * Resolves an address from a list of addresses
+     * @param {string[]} addresses
+     * @returns {Promise<Address>}
+     */
+    async resolve(addresses: string[]): Promise<Address> {
+        const choices = addresses.map((string) => ({ title: string, value: string }));
+        return Address.createFromRawAddress(await OptionsChoiceResolver({}, 'signer', 'Choose a signer:', choices, 'select', undefined));
     }
 }

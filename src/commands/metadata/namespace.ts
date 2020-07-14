@@ -27,7 +27,7 @@ import { MetadataEntryTable } from './account';
 export class CommandOptions extends ProfileOptions {
     @option({
         flag: 'n',
-        description: 'Namespace name.',
+        description: 'Target namespace name.',
     })
     namespaceName: string;
 }

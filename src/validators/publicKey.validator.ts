@@ -33,33 +33,8 @@ export class PublicKeyValidator implements Validator<string> {
         try {
             PublicAccount.createFromPublicKey(value, NetworkType.MIJIN_TEST);
         } catch {
-            return 'Public key should be a 64 characters hexadecimal string';
+            return 'Public key must be a 64 characters hexadecimal string';
         }
         return true;
-    }
-}
-
-/**
- * Public keys validator
- */
-export class PublicKeysValidator implements Validator<string> {
-    /**
-     * Validates multiple public key format.
-     * @param {string} value - Public keys, separated by a comma.
-     * @returns {true | string}
-     */
-    validate(value: string): boolean | string {
-        const publicKeys = value.split(',');
-        let error = '';
-        publicKeys.forEach((publicKey: string) => {
-            const validation = new PublicKeyValidator().validate(publicKey);
-            if (typeof validation === 'string') {
-                error = validation;
-            }
-        });
-        if (!error) {
-            return true;
-        }
-        return error;
     }
 }

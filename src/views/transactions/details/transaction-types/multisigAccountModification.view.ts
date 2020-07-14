@@ -16,7 +16,7 @@
  *
  */
 
-import { CosignatoryModificationAction, MultisigAccountModificationTransaction } from 'symbol-sdk';
+import { Address, CosignatoryModificationAction, MultisigAccountModificationTransaction } from 'symbol-sdk';
 
 import { CellRecord } from '../transaction.view';
 
@@ -65,9 +65,9 @@ export class MultisigAccountModificationView {
      * @returns {CellRecord}
      */
     private renderModifications(type: CosignatoryModificationAction): CellRecord {
-        const targetProperty = type === CosignatoryModificationAction.Add ? 'publicKeyAdditions' : 'publicKeyDeletions';
+        const targetProperty = type === CosignatoryModificationAction.Add ? 'addressAdditions' : 'addressDeletions';
 
-        const targetPropertyName = type === CosignatoryModificationAction.Add ? 'Public key addition' : 'Public key deletion';
+        const targetPropertyName = type === CosignatoryModificationAction.Add ? 'Address addition' : 'Address deletion';
 
         const modifications = this.tx[targetProperty];
         const modificationNumber = modifications.length;
@@ -79,9 +79,9 @@ export class MultisigAccountModificationView {
         const getKey = (index: number) => `${targetPropertyName} (${index + 1} / ${modificationNumber})`;
 
         return modifications.reduce(
-            (acc, publicAccount, index) => ({
+            (acc, address, index) => ({
                 ...acc,
-                [getKey(index)]: publicAccount.address.pretty(),
+                [getKey(index)]: address instanceof Address ? address.pretty() : address.toHex(),
             }),
             {},
         );

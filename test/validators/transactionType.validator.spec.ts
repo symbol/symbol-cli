@@ -28,6 +28,6 @@ describe('Transaction type validator', () => {
 
     it('should throw error if transaction is unknown', () => {
         const value = 'wrong_value';
-        expect(new TransactionTypeValidator().validate(value)).to.be.equal('The provided transaction type is invalid');
+        expect(typeof new TransactionTypeValidator().validate(value)).to.be.equal('string');
     });
 });

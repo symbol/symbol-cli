@@ -32,7 +32,7 @@ export class HexAddressValidator implements Validator<string> {
         try {
             Address.createFromEncoded(value);
         } catch (err) {
-            return 'Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09EF';
+            return 'Enter a valid hex address. Example: 903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09';
         }
         return true;
     }

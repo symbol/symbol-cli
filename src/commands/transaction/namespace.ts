@@ -20,7 +20,7 @@ import { command, metadata, option } from 'clime';
 import { Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
-import { AnnounceTransactionsOptions } from '../../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { DurationResolver } from '../../resolvers/duration.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { NamespaceNameStringResolver, NamespaceTypeResolver } from '../../resolvers/namespace.resolver';
@@ -77,7 +77,7 @@ export default class extends AnnounceTransactionsCommand {
         const name = await new NamespaceNameStringResolver().resolve(options, undefined, 'name');
         const namespaceType = await new NamespaceTypeResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-        const signerMultisigInfo = await this.getSignerMultisigInfo(options);
+        const multisigSigner = await this.getMultisigSigner(options);
 
         let transaction: NamespaceRegistrationTransaction;
         if (namespaceType === NamespaceRegistrationType.RootNamespace) {
@@ -104,7 +104,7 @@ export default class extends AnnounceTransactionsCommand {
             account,
             transactions: [transaction],
             maxFee,
-            signerMultisigInfo,
+            multisigSigner,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);

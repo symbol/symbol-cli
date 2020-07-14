@@ -33,8 +33,6 @@ describe('Transaction announce mode validator', () => {
 
     it('should throw error if announce mode is unknown', () => {
         const value = 'wrong_value';
-        expect(new TransactionAnnounceModeValidator().validate(value)).to.be.equal(
-            'TransactionAnnounceModeValidator must be one of (multisig, normal)',
-        );
+        expect(typeof new TransactionAnnounceModeValidator().validate(value)).to.be.equal('string');
     });
 });

@@ -32,6 +32,6 @@ export class TransactionTypeValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         const keys = Object.keys(TransactionType).filter((key) => Number.isNaN(parseFloat(key)));
-        return keys.includes(value) ? true : 'The provided transaction type is invalid';
+        return keys.includes(value) ? true : 'Transaction type is unknown. (E.g. TRANSFER)';
     }
 }

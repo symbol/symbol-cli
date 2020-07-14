@@ -20,7 +20,7 @@ import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
 import { forkJoin, of } from 'rxjs';
 import { catchError, mergeMap, toArray } from 'rxjs/operators';
-import { AccountInfo, MosaicAmountView, MosaicService, MultisigAccountInfo, PublicAccount } from 'symbol-sdk';
+import { AccountInfo, Address, MosaicAmountView, MosaicService, MultisigAccountInfo } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -76,7 +76,7 @@ export class BalanceInfoTable {
                     mosaic.amount.toString(),
                     mosaic.mosaicInfo.duration.compact() === 0
                         ? 'Never'
-                        : mosaic.mosaicInfo.height.add(mosaic.mosaicInfo.duration).toString(),
+                        : mosaic.mosaicInfo.startHeight.add(mosaic.mosaicInfo.duration).toString(),
                 ]);
             });
         }
@@ -98,7 +98,7 @@ export class MultisigInfoTable {
     private readonly cosignatoryOfTable: HorizontalTable;
 
     constructor(public readonly multisigAccountInfo: MultisigAccountInfo | null) {
-        if (multisigAccountInfo && multisigAccountInfo.cosignatories.length > 0) {
+        if (multisigAccountInfo && multisigAccountInfo.cosignatoryAddresses.length > 0) {
             this.multisigTable = new Table({
                 style: { head: ['cyan'] },
                 head: ['Property', 'Value'],
@@ -109,20 +109,20 @@ export class MultisigInfoTable {
             );
             this.cosignatoriesTable = new Table({
                 style: { head: ['cyan'] },
-                head: ['Public Key', 'Address'],
+                head: ['Address'],
             }) as HorizontalTable;
-            multisigAccountInfo.cosignatories.map((publicAccount: PublicAccount) => {
-                this.cosignatoriesTable.push([publicAccount.publicKey, publicAccount.address.pretty()]);
+            multisigAccountInfo.cosignatoryAddresses.map((address: Address) => {
+                this.cosignatoriesTable.push([address.pretty()]);
             });
         }
-        if (multisigAccountInfo && multisigAccountInfo.multisigAccounts.length > 0) {
+        if (multisigAccountInfo && multisigAccountInfo.multisigAddresses.length > 0) {
             this.cosignatoryOfTable = new Table({
                 style: { head: ['cyan'] },
-                head: ['Public Key', 'Address'],
+                head: ['Address'],
             }) as HorizontalTable;
 
-            multisigAccountInfo.multisigAccounts.map((publicAccount: PublicAccount) => {
-                this.cosignatoryOfTable.push([publicAccount.publicKey, publicAccount.address.pretty()]);
+            multisigAccountInfo.multisigAddresses.map((address: Address) => {
+                this.cosignatoryOfTable.push([address.pretty()]);
             });
         }
     }
@@ -131,7 +131,7 @@ export class MultisigInfoTable {
         let text = '';
         if (this.multisigTable) {
             text += FormatterService.title('Multisig Account Information');
-            text += this.multisigTable.toString();
+            text += '\n' + this.multisigTable.toString();
             text += FormatterService.title('Cosignatories');
             text += '\n' + this.cosignatoriesTable.toString();
         }

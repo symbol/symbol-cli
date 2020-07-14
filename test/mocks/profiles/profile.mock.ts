@@ -25,7 +25,7 @@ import { PrivateKeyProfile } from '../../../src/models/privateKeyProfile.model';
 const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 
 export const mockPrivateKeyProfile1 = PrivateKeyProfile.create({
-    generationHash: 'test',
+    generationHash: '0'.repeat(64),
     isDefault: false,
     name: 'default',
     networkCurrency,
@@ -36,7 +36,7 @@ export const mockPrivateKeyProfile1 = PrivateKeyProfile.create({
 });
 
 export const mockHdProfile1 = HdProfile.create({
-    generationHash: 'test',
+    generationHash: '0'.repeat(64),
     isDefault: false,
     name: 'default',
     networkCurrency,

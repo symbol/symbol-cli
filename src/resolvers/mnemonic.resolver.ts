@@ -31,6 +31,13 @@ export class MnemonicResolver implements Resolver {
      * @returns {Promise<string>}
      */
     async resolve(options: Options): Promise<string> {
-        return OptionsResolver(options, 'mnemonic', () => undefined, 'Enter a mnemonic:', 'password', new MnemonicValidator());
+        return OptionsResolver(
+            options,
+            'mnemonic',
+            () => undefined,
+            'Enter a mnemonic passphrase. Words must be separated by spaces:',
+            'password',
+            new MnemonicValidator(),
+        );
     }
 }

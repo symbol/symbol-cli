@@ -27,6 +27,6 @@ export class BLSPublicKeyValidator implements Validator<string> {
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
-        return value.length !== 96 || !/^[0-9a-fA-F]+$/.test(value) ? 'BLS public key should be a 96 characters hexadecimal string' : true;
+        return value.length !== 96 || !/^[0-9a-fA-F]+$/.test(value) ? 'BLS public key must be a 96 characters hexadecimal string' : true;
     }
 }

@@ -51,6 +51,6 @@ describe('Transaction header view', () => {
         expect(headerView['Index']).equal(0);
         expect(headerView['Network type']).equal('TEST_NET');
         expect(headerView['Deadline'].length > 0).to.be.ok;
-        expect(headerView['Signer']).equal('TAL4UF-RKGFXZ-WMLH73-KEC54T-TUD3N5-XSNR2J-4VRG');
+        expect(headerView['Signer']).equal('TAL4UF-RKGFXZ-WMLH73-KEC54T-TUD3N5-XSNR2J-4VQ');
     });
 });

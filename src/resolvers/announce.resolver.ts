@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { AnnounceTransactionsOptions } from '../interfaces/announceTransactions.options';
+import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { OptionsConfirmResolver } from '../options-resolver';
 import { Resolver } from './resolver';
 

@@ -16,16 +16,16 @@
  *
  */
 
-import { Address, NamespaceId } from 'symbol-sdk';
+import { Address, UnresolvedAddress } from 'symbol-sdk';
 
 export class RecipientsView {
     /**
      * Renders a recipient or target address to a string to be used in views
      * @static
-     * @param {(Address | NamespaceId)} recipient
+     * @param {UnresolvedAddress} recipient
      * @returns {string}
      */
-    static get(recipient: Address | NamespaceId): string {
+    static get(recipient: UnresolvedAddress): string {
         if (recipient instanceof Address) {
             return recipient.pretty();
         }
