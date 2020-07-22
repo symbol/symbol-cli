@@ -48,8 +48,6 @@ To get the full list of available commands, check the [CLI reference][ref].
 
 ## Contributing
 
-This project is developed and maintained by NEM Foundation.
-
 Contributions are welcome and appreciated. 
 Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
