@@ -56,19 +56,19 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'g',
-        description: '(Optional) Generation hash of the network. Necessary to create the profile offline.',
+        description: '(Optional) Generation hash of the network. Required to create the profile offline.',
     })
     generationHash: string;
 
     @option({
         flag: 'i',
-        description: '(Optional) Namespace Name of the network mosaic. (eg.: symbol.xym) Necessary to create the profile offline.',
+        description: '(Optional) Namespace Name of the network mosaic. (eg.: symbol.xym) Required to create the profile offline.',
     })
     namespaceId: string;
 
     @option({
         flag: 'v',
-        description: '(Optional) Divisibility of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
+        description: '(Optional) Divisibility of the network mosaic. (eg.: 6) Required to create the profile offline.',
     })
     divisibility: number;
 }
