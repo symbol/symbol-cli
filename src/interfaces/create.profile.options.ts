@@ -68,7 +68,7 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'v',
-        description: '(Optional) Divisiblity of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
+        description: '(Optional) Divisibility of the network mosaic. (eg.: 6) Necessary to create the profile offline.',
     })
     divisibility: number;
 }
