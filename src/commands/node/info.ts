@@ -38,7 +38,7 @@ export class NodeInfoTable {
             ['Network Identifier', nodeInfo.networkIdentifier],
             ['Port', nodeInfo.port],
             ['Public Key', nodeInfo.publicKey],
-            ['Roles', nodeInfo.roles],
+            ['Roles', nodeInfo.roles.join(', ')],
             ['Version', nodeInfo.version],
         );
     }

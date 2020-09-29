@@ -16,6 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
+import { NamespaceInfo, Page } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -46,18 +47,18 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const namespaceHttp = profile.repositoryFactory.createNamespaceRepository();
-        namespaceHttp.getNamespacesFromAccount(address).subscribe(
-            (namespaces) => {
+        namespaceHttp.search({ ownerAddress: address }).subscribe(
+            (namespaces: Page<NamespaceInfo>) => {
                 this.spinner.stop();
 
-                if (namespaces.length === 0) {
+                if (namespaces.pageSize === 0) {
                     console.log(FormatterService.error('The address ' + address.pretty() + ' does not own any namespaces'));
                 }
-                namespaces.map((namespace) => {
+                namespaces.data.map((namespace) => {
                     console.log(new NamespaceInfoTable(namespace).toString());
                 });
             },
-            (err) => {
+            (err: any) => {
                 this.spinner.stop();
                 console.log(FormatterService.error(err));
             },

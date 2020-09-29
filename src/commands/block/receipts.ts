@@ -46,12 +46,12 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const receiptHttp = profile.repositoryFactory.createReceiptRepository();
-        receiptHttp.getBlockReceipts(height).subscribe(
+        receiptHttp.searchReceipts({ height }).subscribe(
             (statement: any) => {
                 this.spinner.stop();
                 new StatementsView(statement).print();
             },
-            (err) => {
+            (err: any) => {
                 this.spinner.stop();
                 console.log(FormatterService.error(err));
             },

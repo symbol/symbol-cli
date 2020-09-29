@@ -18,7 +18,7 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { Metadata, MetadataEntry } from 'symbol-sdk';
+import { Metadata, MetadataEntry, Page } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -75,18 +75,18 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const metadataHttp = profile.repositoryFactory.createMetadataRepository();
-        metadataHttp.getAccountMetadata(address).subscribe(
-            (metadataEntries) => {
+        metadataHttp.search({ targetAddress: address }).subscribe(
+            (metadataEntries: Page<Metadata>) => {
                 this.spinner.stop();
-                if (metadataEntries.length > 0) {
-                    metadataEntries.map((entry: Metadata) => {
+                if (metadataEntries.pageSize > 0) {
+                    metadataEntries.data.map((entry: Metadata) => {
                         console.log(new MetadataEntryTable(entry.metadataEntry).toString());
                     });
                 } else {
                     console.log(FormatterService.error('The address does not have metadata entries assigned'));
                 }
             },
-            (err) => {
+            (err: any) => {
                 this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
