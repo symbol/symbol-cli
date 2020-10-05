@@ -35,14 +35,35 @@ export class ChainInfoTable {
           ['Height', chainInfo.height.toString()],
           ['Score Low', chainInfo.scoreLow.toString()],
           ['Score High', chainInfo.scoreHigh.toString()],
-          ['Latest Finalized Block Height', chainInfo.latestFinalizedBlock.height.toString()],
-          ['Latest Finalized Block Hash', chainInfo.latestFinalizedBlock.hash],
       );
   }
 
   toString(): string {
       let text = '';
       text += FormatterService.title('Chain Information');
+      text += '\n' + this.table.toString();
+      return text;
+  }
+}
+
+export class FinalizationInfoTable {
+  private readonly table: HorizontalTable;
+  constructor(public readonly chainInfo: ChainInfo) {
+      this.table = new Table({
+          style: { head: ['cyan'] },
+          head: ['Property', 'Value'],
+      }) as HorizontalTable;
+      this.table.push(
+          ['Finalized Height', chainInfo.latestFinalizedBlock.height.toString()],
+          ['Finalized Hash', chainInfo.latestFinalizedBlock.hash],
+          ['Finalization Point', chainInfo.latestFinalizedBlock.finalizationPoint.toString()],
+          ['Finalization Epoch', chainInfo.latestFinalizedBlock.finalizationEpoch.toString()],
+      );
+  }
+
+  toString(): string {
+      let text = '';
+      text += FormatterService.title('Latest Finalized Block');
       text += '\n' + this.table.toString();
       return text;
   }
@@ -66,7 +87,8 @@ export default class extends ProfileCommand {
             (info: ChainInfo) => {
                 this.spinner.stop();
                 console.log(
-                  new ChainInfoTable(info).toString()
+                  new ChainInfoTable(info).toString(),
+                  new FinalizationInfoTable(info).toString(),
                 );
             },
             (err: any) => {
