@@ -47,6 +47,7 @@ export class BlockHeaderTable {
             ['Generation Hash:', blockInfo.generationHash],
             ['Total Fee:', blockInfo.totalFee.toString()],
             ['Number of Transactions:', blockInfo.transactionsCount],
+            ['Number of Transactions (with embedded):', blockInfo.totalTransactionsCount],
             ['Signature:', blockInfo.signature.slice(0, 64) + '\n' + blockInfo.signature.slice(64, 128)],
             ['Signer:', blockInfo.signer.publicKey],
             ['Network Type:', NetworkType[blockInfo.networkType]],
