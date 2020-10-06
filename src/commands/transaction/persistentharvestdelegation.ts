@@ -38,6 +38,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Public key of the node to request persistent harvesting delegation.',
     })
     recipientPublicKey: string;
+
+    @option({
+        flag: 'v',
+        description: 'VRF Private key linked to the main account.',
+    })
+    vrfPrivateKey: string;
 }
 
 @command({
@@ -64,8 +70,14 @@ export default class extends AnnounceTransactionsCommand {
             'Enter the public key of the node:',
             'recipientPublicKey',
         );
+        const vrfPrivateKey = await new PrivateKeyResolver().resolve(
+            options,
+            'Enter the VRF private key linked to the main account:',
+            'vrfPrivateKey',
+        );
         const message = PersistentHarvestingDelegationMessage.create(
             remotePrivateKey,
+            vrfPrivateKey,
             recipientPublicAccount.publicKey,
             profile.networkType,
         );

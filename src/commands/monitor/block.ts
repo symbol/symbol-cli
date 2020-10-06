@@ -15,11 +15,42 @@
  * limitations under the License.
  *
  */
+import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
+import { NetworkType, NewBlock } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { FormatterService } from '../../services/formatter.service';
+
+export class NewBlockTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly blockInfo: NewBlock) {
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Hash:', blockInfo.hash],
+            ['Signature:', blockInfo.signature.slice(0, 64) + '\n' + blockInfo.signature.slice(64, 128)],
+            ['Signer:', blockInfo.signer.publicKey],
+            ['Network Type:', NetworkType[blockInfo.networkType]],
+            ['Version:', blockInfo.version],
+            ['Height:', blockInfo.height.toString()],
+        );
+        if (blockInfo.beneficiaryAddress) {
+            this.table.push(['Beneficiary Address', blockInfo.beneficiaryAddress.pretty()]);
+        }
+    }
+
+    toString(): string {
+        let text = '';
+        text += FormatterService.title('New Block');
+        text += '\n' + this.table.toString();
+        return text;
+    }
+}
 
 @command({
     description: 'Monitor new blocks',
@@ -39,7 +70,7 @@ export default class extends ProfileCommand {
             () => {
                 listener.newBlock().subscribe(
                     (block) => {
-                        console.log('\n' + block);
+                        console.log(new NewBlockTable(block).toString());
                     },
                     (err) => {
                         console.log(FormatterService.error(err));

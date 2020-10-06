@@ -205,7 +205,12 @@ export class ProfileRepository {
      * @param {JSON} profiles
      */
     private saveProfiles(profiles: ProfileRecord) {
-        fs.writeFileSync(this.filePath, JSON.stringify(profiles), 'utf-8');
+        try {
+            fs.writeFileSync(this.filePath, JSON.stringify(profiles), 'utf-8');
+            fs.chmodSync(this.filePath, 0o600);
+        } catch (e) {
+            throw new Error('Something went wrong when saving your profiles...' + JSON.stringify(e));
+        }
     }
 
     /**

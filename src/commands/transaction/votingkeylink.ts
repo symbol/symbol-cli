@@ -75,8 +75,8 @@ export default class extends AnnounceTransactionsCommand {
         const transaction = VotingKeyLinkTransaction.create(
             Deadline.create(),
             linkedPublicKey,
-            startPoint,
-            endPoint,
+            startPoint.compact(),
+            endPoint.compact(),
             action,
             profile.networkType,
             maxFee,

@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018-present NEM
+ * Copyright 2020-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,41 +18,37 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
-import { NodeInfo } from 'symbol-sdk';
+import { FinalizedBlock } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { FormatterService } from '../../services/formatter.service';
 
-export class NodeInfoTable {
+export class FinalizedBlockTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly nodeInfo: NodeInfo) {
+    constructor(public readonly finalizedBlock: FinalizedBlock) {
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Friendly Name', nodeInfo.friendlyName],
-            ['Host', nodeInfo.host],
-            ['Network Generation Hash', nodeInfo.networkGenerationHashSeed],
-            ['Network Identifier', nodeInfo.networkIdentifier],
-            ['Port', nodeInfo.port],
-            ['Public Key', nodeInfo.publicKey],
-            ['Roles', nodeInfo.roles.join(', ')],
-            ['Version', nodeInfo.version],
+            ['Height:', finalizedBlock.height.toString()],
+            ['Hash:', finalizedBlock.hash],
+            ['Finalization Point:', finalizedBlock.finalizationPoint.toString()],
+            ['Finalization Epoch:', finalizedBlock.finalizationEpoch.toString()],
         );
     }
 
     toString(): string {
         let text = '';
-        text += FormatterService.title('Node Information');
+        text += FormatterService.title('Finalized Block');
         text += '\n' + this.table.toString();
         return text;
     }
 }
 
 @command({
-    description: 'Get the REST server components versions',
+    description: 'Monitor finalized blocks',
 })
 export default class extends ProfileCommand {
     constructor() {
@@ -63,12 +59,19 @@ export default class extends ProfileCommand {
     execute(options: ProfileOptions) {
         const profile = this.getProfile(options);
 
-        this.spinner.start();
-        const nodeHttp = profile.repositoryFactory.createNodeRepository();
-        nodeHttp.getNodeInfo().subscribe(
-            (nodeInfo) => {
-                this.spinner.stop();
-                console.log(new NodeInfoTable(nodeInfo).toString());
+        console.log(`Using ${profile.url}`);
+        const listener = profile.repositoryFactory.createListener();
+        listener.open().then(
+            () => {
+                listener.finalizedBlock().subscribe(
+                    (finalizedBlock) => {
+                        console.log(new FinalizedBlockTable(finalizedBlock).toString());
+                    },
+                    (err) => {
+                        console.log(FormatterService.error(err));
+                        listener.close();
+                    },
+                );
             },
             (err) => {
                 this.spinner.stop();

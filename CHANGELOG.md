@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.0] - 06-Oct-2020
+
+**Milestone**: 0.10.x
+
+### Added
+
+- Added ``fromHeight`` and ``toHeight`` criteria to ``transaction search`` command.
+- Added totalTransactionsCount in ``block info`` which contains embedded transactions.
+- Added ``finalizedBlock`` WebSockets endpoint listener with ``monitor finalizedblock``.
+- Added ``chain info`` command to cope with lately added /chain/info endpoint.
+
+### Changed
+
+- ``metadata account|mosaic|namespace`` now use latest REST search endpoints.
+- ``monitor block`` command now uses a Table to display information.
+
 ## [0.21.1] - 13-Jul-2020
 
 **Milestone**: 0.9.6.3

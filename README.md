@@ -1,8 +1,8 @@
 # Symbol CLI
 
 [![npm version](https://badge.fury.io/js/symbol-cli.svg)](https://badge.fury.io/js/symbol-cli)
-[![Build Status](https://api.travis-ci.com/nemtech/symbol-cli.svg?branch=master)](https://travis-ci.com/nemtech/symbol-cli)
-[![Coverage Status](https://coveralls.io/repos/github/nemtech/symbol-cli/badge.svg?branch=master)](https://coveralls.io/github/nemtech/symbol-cli?branch=master)
+[![Build Status](https://api.travis-ci.com/nemtech/symbol-cli.svg?branch=main)](https://travis-ci.com/nemtech/symbol-cli)
+[![Coverage Status](https://coveralls.io/repos/github/nemtech/symbol-cli/badge.svg?branch=main)](https://coveralls.io/github/nemtech/symbol-cli?branch=main)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 Command Line Interface (CLI) to interact with Symbol.
@@ -11,6 +11,7 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
+- [0.22.x](CHANGELOG.md#0220-06-Oct-2020) - **0.10.0.x Milestone**
 - [0.21.x](CHANGELOG.md#0211-31-Jul-2020) - **0.9.6.3 Milestone**
 - [0.20.x](CHANGELOG.md#0201-27-May-2020) - **0.9.5.1 Milestone**
 
@@ -48,8 +49,6 @@ To get the full list of available commands, check the [CLI reference][ref].
 
 ## Contributing
 
-This project is developed and maintained by NEM Foundation.
-
 Contributions are welcome and appreciated. 
 Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
@@ -63,4 +62,4 @@ Licensed under the [Apache License 2.0](LICENSE)
 [docs]: http://nemtech.github.io/getting-started/setup-workstation.html
 [ref]: https://nemtech.github.io/cli.html
 [issues]: https://github.com/nemtech/symbol-cli/issues
-[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
+[slack]: https://join.slack.com/t/nem2/shared_invite/zt-hwsoo1s5-G8XO50LaY0m7ZKTRXAczcA 
