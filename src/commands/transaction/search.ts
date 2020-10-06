@@ -63,6 +63,16 @@ export class TransactionSearchOptions extends SearchOptions {
     })
     type: string;
 
+    @option({
+        description: '(Optional) Filter by block height range ("from").',
+    })
+    fromHeight: string;
+
+    @option({
+        description: '(Optional) Filter by block height range ("to").',
+    })
+    toHeight: string;
+
     async buildSearchCriteria(): Promise<TransactionSearchCriteria> {
         const criteria: TransactionSearchCriteria = {
             ...(await this.buildBaseSearchCriteria()),
@@ -83,6 +93,13 @@ export class TransactionSearchOptions extends SearchOptions {
         if (this.type) {
             criteria.type = [await new TransactionTypeResolver().resolve(this, undefined, 'type')];
         }
+        if (this.fromHeight) {
+            criteria.fromHeight = await new HeightResolver().resolve(this);
+        }
+        if (this.toHeight) {
+            criteria.toHeight = await new HeightResolver().resolve(this);
+        }
+
         return criteria;
     }
 }
