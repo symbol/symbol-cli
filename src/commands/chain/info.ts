@@ -1,6 +1,6 @@
 /*
  *
- * Copyright 2018-present NEM
+ * Copyright 2020-present NEM
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,41 +18,59 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
-import { NodeInfo } from 'symbol-sdk';
+import { ChainInfo } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { FormatterService } from '../../services/formatter.service';
 
-export class NodeInfoTable {
+export class ChainInfoTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly nodeInfo: NodeInfo) {
+    constructor(public readonly chainInfo: ChainInfo) {
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
         }) as HorizontalTable;
         this.table.push(
-            ['Friendly Name', nodeInfo.friendlyName],
-            ['Host', nodeInfo.host],
-            ['Network Generation Hash', nodeInfo.networkGenerationHashSeed],
-            ['Network Identifier', nodeInfo.networkIdentifier],
-            ['Port', nodeInfo.port],
-            ['Public Key', nodeInfo.publicKey],
-            ['Roles', nodeInfo.roles.join(', ')],
-            ['Version', nodeInfo.version],
+            ['Height', chainInfo.height.toString()],
+            ['Score Low', chainInfo.scoreLow.toString()],
+            ['Score High', chainInfo.scoreHigh.toString()],
         );
     }
 
     toString(): string {
         let text = '';
-        text += FormatterService.title('Node Information');
+        text += FormatterService.title('Chain Information');
+        text += '\n' + this.table.toString();
+        return text;
+    }
+}
+
+export class FinalizationInfoTable {
+    private readonly table: HorizontalTable;
+    constructor(public readonly chainInfo: ChainInfo) {
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Finalized Height', chainInfo.latestFinalizedBlock.height.toString()],
+            ['Finalized Hash', chainInfo.latestFinalizedBlock.hash],
+            ['Finalization Point', chainInfo.latestFinalizedBlock.finalizationPoint.toString()],
+            ['Finalization Epoch', chainInfo.latestFinalizedBlock.finalizationEpoch.toString()],
+        );
+    }
+
+    toString(): string {
+        let text = '';
+        text += FormatterService.title('Latest Finalized Block');
         text += '\n' + this.table.toString();
         return text;
     }
 }
 
 @command({
-    description: 'Get the REST server components versions',
+    description: 'Get the current information of the chain',
 })
 export default class extends ProfileCommand {
     constructor() {
@@ -64,13 +82,13 @@ export default class extends ProfileCommand {
         const profile = this.getProfile(options);
 
         this.spinner.start();
-        const nodeHttp = profile.repositoryFactory.createNodeRepository();
-        nodeHttp.getNodeInfo().subscribe(
-            (nodeInfo) => {
+        const chainHttp = profile.repositoryFactory.createChainRepository();
+        chainHttp.getChainInfo().subscribe(
+            (info: ChainInfo) => {
                 this.spinner.stop();
-                console.log(new NodeInfoTable(nodeInfo).toString());
+                console.log(new ChainInfoTable(info).toString(), new FinalizationInfoTable(info).toString());
             },
-            (err) => {
+            (err: any) => {
                 this.spinner.stop();
                 console.log(FormatterService.error(err));
             },

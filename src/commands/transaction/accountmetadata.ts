@@ -17,7 +17,7 @@
  */
 
 import { command, metadata, option } from 'clime';
-import { Deadline, MetadataTransactionService, MetadataType } from 'symbol-sdk';
+import { Deadline, MetadataTransactionService } from 'symbol-sdk';
 
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
@@ -70,17 +70,7 @@ export default class extends AnnounceTransactionsCommand {
         const metadataHttp = profile.repositoryFactory.createMetadataRepository();
         const metadataTransactionService = new MetadataTransactionService(metadataHttp);
         const metadataTransaction = await metadataTransactionService
-            .createMetadataTransaction(
-                Deadline.create(),
-                account.networkType,
-                MetadataType.Account,
-                targetAddress,
-                key,
-                value,
-                account.address,
-                undefined,
-                maxFee,
-            )
+            .createAccountMetadataTransaction(Deadline.create(), account.networkType, targetAddress, key, value, account.address, maxFee)
             .toPromise();
 
         const signatureOptions: TransactionSignatureOptions = {

@@ -17,6 +17,8 @@
  */
 
 import {
+    Address,
+    AddressResolutionStatement,
     ArtifactExpiryReceipt,
     BalanceChangeReceipt,
     BalanceTransferReceipt,
@@ -29,6 +31,7 @@ import {
     Statement,
     TransactionStatement,
     UInt64,
+    UnresolvedAddress,
 } from 'symbol-sdk';
 
 import { account1, account2 } from './accounts.mock';
@@ -40,9 +43,12 @@ export const mosaicResolutionStatement = new ResolutionStatement(ResolutionType.
     new ResolutionEntry(mosaicId3, new ReceiptSource(3, 5)),
 ]);
 
-export const addressResolutionStatement = new ResolutionStatement(ResolutionType.Address, UInt64.fromNumericString('2'), account1.address, [
-    new ResolutionEntry(mosaicId2, new ReceiptSource(5, 0)),
-]);
+export const addressResolutionStatement = new ResolutionStatement<UnresolvedAddress, Address>(
+    ResolutionType.Address,
+    UInt64.fromNumericString('2'),
+    account1.address,
+    [new ResolutionEntry<Address>(account1.address, new ReceiptSource(5, 0))],
+) as AddressResolutionStatement;
 
 export const balanceChangeReceipt = new BalanceChangeReceipt(
     account1.address,

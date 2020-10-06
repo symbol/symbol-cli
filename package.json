@@ -1,6 +1,6 @@
 {
     "name": "symbol-cli",
-    "version": "0.21.2",
+    "version": "0.22.0",
     "description": "Command Line Interface (CLI) to interact with Symbol",
     "main": "index.js",
     "scripts": {
@@ -42,9 +42,9 @@
         "path": "^0.12.7",
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
-        "symbol-hd-wallets": "^0.12.0",
-        "symbol-sdk": "^0.20.6",
-        "symbol-uri-scheme": "^0.4.7",
+        "symbol-hd-wallets": "^0.13.0",
+        "symbol-sdk": "^0.21.0",
+        "symbol-uri-scheme": "^0.5.1",
         "update-notifier": "^4.1.0"
     },
     "devDependencies": {

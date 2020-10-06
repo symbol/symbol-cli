@@ -16,14 +16,23 @@
  *
  */
 
-import { Address, MosaicId, NamespaceId, ResolutionEntry, ResolutionStatement, ResolutionType } from 'symbol-sdk';
+import {
+    Address,
+    MosaicId,
+    NamespaceId,
+    ResolutionEntry,
+    ResolutionStatement,
+    ResolutionType,
+    UnresolvedAddress,
+    UnresolvedMosaicId,
+} from 'symbol-sdk';
 
 import { RecipientsView } from '../recipients.view';
 import { CellRecord } from '../transactions/details/transaction.view';
 import { AbstractStatementView } from './abstractStatementView.view';
 
 export class ResolutionStatementViews extends AbstractStatementView {
-    constructor(private readonly statements: ResolutionStatement[]) {
+    constructor(private readonly statements: ResolutionStatement<UnresolvedAddress | UnresolvedMosaicId, Address | MosaicId>[]) {
         super();
     }
 
@@ -52,7 +61,7 @@ export class ResolutionStatementViews extends AbstractStatementView {
      * @param {ResolutionEntry[]} entries
      * @returns {CellRecord[]}
      */
-    private renderResolutionEntries(entries: ResolutionEntry[]): CellRecord[] {
+    private renderResolutionEntries(entries: ResolutionEntry<Address | MosaicId>[]): CellRecord[] {
         return entries
             .map((entry, index, self) => this.renderResolutionEntry(entry, index, self.length))
             .reduce((acc, entry) => [...acc, ...entry], []);
@@ -66,7 +75,7 @@ export class ResolutionStatementViews extends AbstractStatementView {
      * @param {number} numberOfReceipts
      * @returns {CellRecord[]}
      */
-    private renderResolutionEntry(entry: ResolutionEntry, index: number, numberOfReceipts: number): CellRecord[] {
+    private renderResolutionEntry(entry: ResolutionEntry<Address | MosaicId>, index: number, numberOfReceipts: number): CellRecord[] {
         return [
             this.getSectionTitle(`Resolution ${index + 1} of ${numberOfReceipts}`),
             { Resolved: this.getUnresolved(entry.resolved) },

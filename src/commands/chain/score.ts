@@ -18,7 +18,7 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
-import { BlockchainScore } from 'symbol-sdk';
+import { ChainInfo } from 'symbol-sdk';
 
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
@@ -26,7 +26,7 @@ import { FormatterService } from '../../services/formatter.service';
 
 export class ChainScoreTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly score: BlockchainScore) {
+    constructor(public readonly score: ChainInfo) {
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
@@ -56,12 +56,12 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const chainHttp = profile.repositoryFactory.createChainRepository();
-        chainHttp.getChainScore().subscribe(
-            (score) => {
+        chainHttp.getChainInfo().subscribe(
+            (info: ChainInfo) => {
                 this.spinner.stop();
-                console.log(new ChainScoreTable(score).toString());
+                console.log(new ChainScoreTable(info).toString());
             },
-            (err) => {
+            (err: any) => {
                 this.spinner.stop();
                 console.log(FormatterService.error(err));
             },
