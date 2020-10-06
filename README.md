@@ -11,6 +11,7 @@ Command Line Interface (CLI) to interact with Symbol.
 
 ## Important Notes
 
+- [0.22.x](CHANGELOG.md#0220-06-Oct-2020) - **0.10.0.x Milestone**
 - [0.21.x](CHANGELOG.md#0211-31-Jul-2020) - **0.9.6.3 Milestone**
 - [0.20.x](CHANGELOG.md#0201-27-May-2020) - **0.9.5.1 Milestone**
 
