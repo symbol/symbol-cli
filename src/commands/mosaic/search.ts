@@ -43,7 +43,7 @@ export class MosaicSearchOptions extends SearchOptions {
 }
 
 @command({
-    description: 'Search transactions',
+    description: 'Search mosaics',
 })
 export default class extends SearchCommand {
     constructor() {
