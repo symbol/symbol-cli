@@ -62,4 +62,4 @@ Licensed under the [Apache License 2.0](LICENSE)
 [docs]: http://nemtech.github.io/getting-started/setup-workstation.html
 [ref]: https://nemtech.github.io/cli.html
 [issues]: https://github.com/nemtech/symbol-cli/issues
-[slack]: https://join.slack.com/t/nem2/shared_invite/enQtMzY4MDc2NTg0ODgyLWZmZWRiMjViYTVhZjEzOTA0MzUyMTA1NTA5OWQ0MWUzNTA4NjM5OTJhOGViOTBhNjkxYWVhMWRiZDRkOTE0YmU
+[slack]: https://join.slack.com/t/nem2/shared_invite/zt-hwsoo1s5-G8XO50LaY0m7ZKTRXAczcA 
