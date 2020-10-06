@@ -25,48 +25,48 @@ import { ProfileOptions } from '../../interfaces/profile.options';
 import { FormatterService } from '../../services/formatter.service';
 
 export class ChainInfoTable {
-  private readonly table: HorizontalTable;
-  constructor(public readonly chainInfo: ChainInfo) {
-      this.table = new Table({
-          style: { head: ['cyan'] },
-          head: ['Property', 'Value'],
-      }) as HorizontalTable;
-      this.table.push(
-          ['Height', chainInfo.height.toString()],
-          ['Score Low', chainInfo.scoreLow.toString()],
-          ['Score High', chainInfo.scoreHigh.toString()],
-      );
-  }
+    private readonly table: HorizontalTable;
+    constructor(public readonly chainInfo: ChainInfo) {
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Height', chainInfo.height.toString()],
+            ['Score Low', chainInfo.scoreLow.toString()],
+            ['Score High', chainInfo.scoreHigh.toString()],
+        );
+    }
 
-  toString(): string {
-      let text = '';
-      text += FormatterService.title('Chain Information');
-      text += '\n' + this.table.toString();
-      return text;
-  }
+    toString(): string {
+        let text = '';
+        text += FormatterService.title('Chain Information');
+        text += '\n' + this.table.toString();
+        return text;
+    }
 }
 
 export class FinalizationInfoTable {
-  private readonly table: HorizontalTable;
-  constructor(public readonly chainInfo: ChainInfo) {
-      this.table = new Table({
-          style: { head: ['cyan'] },
-          head: ['Property', 'Value'],
-      }) as HorizontalTable;
-      this.table.push(
-          ['Finalized Height', chainInfo.latestFinalizedBlock.height.toString()],
-          ['Finalized Hash', chainInfo.latestFinalizedBlock.hash],
-          ['Finalization Point', chainInfo.latestFinalizedBlock.finalizationPoint.toString()],
-          ['Finalization Epoch', chainInfo.latestFinalizedBlock.finalizationEpoch.toString()],
-      );
-  }
+    private readonly table: HorizontalTable;
+    constructor(public readonly chainInfo: ChainInfo) {
+        this.table = new Table({
+            style: { head: ['cyan'] },
+            head: ['Property', 'Value'],
+        }) as HorizontalTable;
+        this.table.push(
+            ['Finalized Height', chainInfo.latestFinalizedBlock.height.toString()],
+            ['Finalized Hash', chainInfo.latestFinalizedBlock.hash],
+            ['Finalization Point', chainInfo.latestFinalizedBlock.finalizationPoint.toString()],
+            ['Finalization Epoch', chainInfo.latestFinalizedBlock.finalizationEpoch.toString()],
+        );
+    }
 
-  toString(): string {
-      let text = '';
-      text += FormatterService.title('Latest Finalized Block');
-      text += '\n' + this.table.toString();
-      return text;
-  }
+    toString(): string {
+        let text = '';
+        text += FormatterService.title('Latest Finalized Block');
+        text += '\n' + this.table.toString();
+        return text;
+    }
 }
 
 @command({
@@ -86,10 +86,7 @@ export default class extends ProfileCommand {
         chainHttp.getChainInfo().subscribe(
             (info: ChainInfo) => {
                 this.spinner.stop();
-                console.log(
-                  new ChainInfoTable(info).toString(),
-                  new FinalizationInfoTable(info).toString(),
-                );
+                console.log(new ChainInfoTable(info).toString(), new FinalizationInfoTable(info).toString());
             },
             (err: any) => {
                 this.spinner.stop();
