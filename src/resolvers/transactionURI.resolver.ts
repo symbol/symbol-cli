@@ -16,6 +16,7 @@
  *
  */
 import { Options } from 'clime';
+import { Transaction, TransactionMapping } from 'symbol-sdk';
 import { TransactionURI } from 'symbol-uri-scheme';
 
 import { Profile } from '../models/profile.model';
@@ -35,7 +36,7 @@ export class TransactionURIResolver implements Resolver {
      * @param {string} altKey - Alternative key.
      * @returns {Promise<string>}
      */
-    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<TransactionURI> {
+    async resolve(options: Options, secondSource?: Profile, altText?: string, altKey?: string): Promise<TransactionURI<Transaction>> {
         const resolution = await OptionsResolver(
             options,
             altKey ? altKey : 'uri',
@@ -44,6 +45,6 @@ export class TransactionURIResolver implements Resolver {
             'text',
             new TransactionURIValidator(),
         );
-        return TransactionURI.fromURI(resolution);
+        return TransactionURI.fromURI(resolution, TransactionMapping.createFromPayload);
     }
 }

@@ -56,15 +56,15 @@ describe('DerivationService', () => {
         const mnemonic =
             'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense';
 
-        expect(DerivationService.getPrivateKeyFromMnemonic(mnemonic, 0)).to.equal(
+        expect(DerivationService.getPrivateKeyFromMnemonic(mnemonic, 0).toUpperCase()).to.equal(
             'A58BD9618B47F5E6B6BACB9B37CC242EDE1A0461AAE8FF2084BC825209D90E18',
         );
 
-        expect(DerivationService.getPrivateKeyFromMnemonic(mnemonic, 5)).to.equal(
+        expect(DerivationService.getPrivateKeyFromMnemonic(mnemonic, 5).toUpperCase()).to.equal(
             '549A3D5C0BA2453357728CDC46ECF65F472098814E41E12E2DE3F272B92BFEE7',
         );
 
-        expect(DerivationService.getPrivateKeyFromMnemonic(mnemonic, 9)).to.equal(
+        expect(DerivationService.getPrivateKeyFromMnemonic(mnemonic, 9).toUpperCase()).to.equal(
             '5D050D2B34000873A710EBF345BEFABAF4148BA4E13841AA8714A7C5EB4AF2DB',
         );
     });

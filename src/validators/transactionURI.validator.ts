@@ -16,6 +16,7 @@
  *
  */
 
+import { TransactionMapping } from 'symbol-sdk';
 import { TransactionURI } from 'symbol-uri-scheme';
 
 import { Validator } from './validator';
@@ -31,7 +32,7 @@ export class TransactionURIValidator implements Validator<string> {
      */
     validate(value: string): boolean | string {
         try {
-            TransactionURI.fromURI(value);
+            TransactionURI.fromURI(value, TransactionMapping.createFromPayload);
         } catch {
             return (
                 'Transaction URI format is not valid. ' +

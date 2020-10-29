@@ -63,6 +63,6 @@ export class DerivationService {
         const path = this.getPathFromPathNumber(pathNumber);
         const seed = new MnemonicPassPhrase(mnemonic).toSeed().toString('hex');
         const extendedKey = ExtendedKey.createFromSeed(seed);
-        return new Wallet(extendedKey).getChildAccount(path).privateKey;
+        return new Wallet(extendedKey).getChildAccountPrivateKey(path);
     }
 }
