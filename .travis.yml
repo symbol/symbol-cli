@@ -18,10 +18,10 @@ before_script:
   - sudo apt-get update
   - sudo apt-get install python3 python3-pip python3-setuptools
   - pip3 install catapultdocscli --user
+  - npm run build
   - npm link
   - catapult-docs-cli cli-usage --config .clidocs > docs/$VERSION.md
 script:
-  - npm run build
   - npm run test:cov
   - npm run coveralls-report
 jobs:
