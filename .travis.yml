@@ -5,31 +5,46 @@ cache:
   directories:
     - "node_modules"
     - .eslintcache
+env:
+  global:
+    - DEV_BRANCH=dev
+    - RELEASE_BRANCH=main
+    - POST_RELEASE_BRANCH=main
+    - RELEASE_MESSAGE=release
 before_script:
+  - . ./travis/node-functions.sh
+  - VERSION="$(node_load_version)"
+  - log_env_variables
   - sudo apt-get update
   - sudo apt-get install python3 python3-pip python3-setuptools
   - pip3 install catapultdocscli --user
-  - npm run build
   - npm link
+  - catapult-docs-cli cli-usage --config .clidocs > docs/$VERSION.md
 script:
+  - npm run build
   - npm run test:cov
-  - npm run lint
   - npm run coveralls-report
-  - CURRENT_VERSION=$(npm run version --silent)
-  - catapult-docs-cli cli-usage --config .clidocs > docs/$CURRENT_VERSION.md
-deploy:
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/githubPages.sh
-    on:
-      branch: main
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/uploadArchives.sh
-    on:
-      branch: main
-  - provider: script
-    skip_cleanup: true
-    script: /bin/sh travis/release.sh
-    on:
-      branch: $RELEASE_BRANCH
+jobs:
+  include:
+    - stage: test
+      name: lint
+      script: npm run lint
+    - stage: publish
+      name: github alpha pages
+      script: push_github_pages $VERSION 'docs/'
+      if: branch = env(DEV_BRANCH) AND type = push
+    - name: alpha npm
+      script: npm run build && node_publish_alpha
+      if: branch = env(DEV_BRANCH) AND type = push
+    - stage: release
+      name: release npm
+      script: npm run build && node_publish_release
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+    - stage: release
+      name: github release pages
+      script: push_github_pages $VERSION 'docs/'
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
+    - stage: post release
+      name: tag and version upgrade
+      script: node_post_release
+      if: branch = env(RELEASE_BRANCH) AND type = api AND commit_message = env(RELEASE_MESSAGE)
