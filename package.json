@@ -44,7 +44,7 @@
         "prompts": "^2.1.0",
         "rxjs": "^6.5.3",
         "symbol-hd-wallets": "0.14.0-alpha-202010231206",
-        "symbol-sdk": "^0.21.1-alpha-202011111411",
+        "symbol-sdk": "0.21.1-alpha-202011111411",
         "symbol-uri-scheme": "0.5.2-alpha-202010291746",
         "update-notifier": "^4.1.0"
     },

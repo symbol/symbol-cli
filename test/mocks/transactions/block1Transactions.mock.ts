@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  */
-import { CreateTransactionFromDTO, Transaction } from 'symbol-sdk';
+import { Transaction, TransactionMapping } from 'symbol-sdk';
 
 const DTO = [
     {
@@ -90,4 +90,4 @@ const DTO = [
     },
 ];
 
-export const block1Transactions: Transaction[] = DTO.map((dto) => CreateTransactionFromDTO(dto));
+export const block1Transactions: Transaction[] = DTO.map((dto) => TransactionMapping.createFromDTO(dto));
