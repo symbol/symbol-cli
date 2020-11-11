@@ -15,10 +15,8 @@
  * limitations under the License.
  *
  */
-import * as fs from 'fs';
-
 import { expect } from 'chai';
-
+import * as fs from 'fs';
 import { ProfileCommand } from '../../src/interfaces/profile.command';
 import { ProfileRepository } from '../../src/respositories/profile.repository';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';

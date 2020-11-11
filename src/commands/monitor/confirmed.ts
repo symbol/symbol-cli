@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { FormatterService } from '../../services/formatter.service';
@@ -41,7 +40,7 @@ export default class extends MonitorAddressCommand {
             () => {
                 listener.confirmed(address).subscribe(
                     (transaction) => {
-                        new TransactionView(transaction).print();
+                        new TransactionView(transaction, undefined, profile).print();
                     },
                     (err) => {
                         console.log(FormatterService.error(err));

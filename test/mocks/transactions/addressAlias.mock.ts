@@ -16,13 +16,13 @@
  *
  */
 
-import { AddressAliasTransaction, AliasAction, Deadline, NetworkType, UInt64 } from 'symbol-sdk';
-
+import { AddressAliasTransaction, AliasAction, NetworkType, UInt64 } from 'symbol-sdk';
 import { account1 } from '../accounts.mock';
 import { namespaceId1 } from '../namespaces.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedAddressAlias1 = AddressAliasTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     AliasAction.Link,
     namespaceId1,
     account1.address,

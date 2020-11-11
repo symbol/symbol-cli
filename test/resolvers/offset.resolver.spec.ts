@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { OffsetResolver } from '../../src/resolvers/offset.resolver';
 
 describe('Offset resolver', () => {

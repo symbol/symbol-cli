@@ -16,7 +16,6 @@
  *
  */
 import * as prompts from 'prompts';
-
 import { Choices, ConfirmOptionType, InputOptionType, SelectOptionType } from './interfaces/options.interface';
 import { FormatterService } from './services/formatter.service';
 import { Validator } from './validators/validator';

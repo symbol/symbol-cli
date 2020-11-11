@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionURIResolver } from '../../src/resolvers/transactionURI.resolver';
 
 describe('TransactionURI resolver', () => {

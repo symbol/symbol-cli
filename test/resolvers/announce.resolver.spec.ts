@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { AnnounceResolver } from '../../src/resolvers/announce.resolver';
 
 describe('Announce resolver', () => {

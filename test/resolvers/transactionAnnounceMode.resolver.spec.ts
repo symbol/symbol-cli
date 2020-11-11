@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionAnnounceModeResolver } from '../../src/resolvers/transactionAnnounceMode.resolver';
 
 describe('Transaction announce mode resolver', () => {

@@ -18,7 +18,6 @@
 
 import { command, metadata, option } from 'clime';
 import { Deadline, NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { DurationResolver } from '../../resolvers/duration.resolver';
@@ -83,7 +82,7 @@ export default class extends AnnounceTransactionsCommand {
         if (namespaceType === NamespaceRegistrationType.RootNamespace) {
             const duration = await new DurationResolver().resolve(options);
             transaction = NamespaceRegistrationTransaction.createRootNamespace(
-                Deadline.create(),
+                Deadline.create(profile.epochAdjustment),
                 name,
                 duration,
                 profile.networkType,
@@ -92,7 +91,7 @@ export default class extends AnnounceTransactionsCommand {
         } else {
             const parentName = await new NamespaceNameStringResolver().resolve(options, 'Enter the parent namespace name:', 'parentName');
             transaction = NamespaceRegistrationTransaction.createSubNamespace(
-                Deadline.create(),
+                Deadline.create(profile.epochAdjustment),
                 name,
                 parentName,
                 profile.networkType,

@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { TransactionGroup } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { HashResolver } from '../../resolvers/hash.resolver';
@@ -50,7 +49,7 @@ export default class extends ProfileCommand {
         transactionHttp.getTransaction(hash, TransactionGroup.Confirmed).subscribe(
             (transaction) => {
                 this.spinner.stop();
-                new TransactionView(transaction).print();
+                new TransactionView(transaction, undefined, profile).print();
             },
             (err) => {
                 this.spinner.stop();

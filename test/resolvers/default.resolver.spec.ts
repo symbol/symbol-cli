@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { DefaultResolver } from '../../src/resolvers/default.resolver';
 
 describe('Default resolver', () => {
@@ -29,6 +28,7 @@ describe('Default resolver', () => {
             profile: '',
             password: '',
             default: true,
+            epochAdjustment: 123,
             generationHash: '1',
             namespaceId: '',
             divisibility: 0,

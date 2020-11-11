@@ -19,7 +19,6 @@ import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
 import { MosaicAddressRestriction, MosaicGlobalRestriction, MosaicGlobalRestrictionItem, Page } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';

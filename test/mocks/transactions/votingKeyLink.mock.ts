@@ -16,10 +16,11 @@
  *
  */
 
-import { Deadline, LinkAction, NetworkType, VotingKeyLinkTransaction } from 'symbol-sdk';
+import { LinkAction, NetworkType, VotingKeyLinkTransaction } from 'symbol-sdk';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedVotingKeyLink1 = VotingKeyLinkTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     '0'.repeat(96),
     1,
     2,

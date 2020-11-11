@@ -16,13 +16,13 @@
  *
  */
 
-import { Convert, Deadline, NamespaceMetadataTransaction, NetworkType, UInt64 } from 'symbol-sdk';
-
+import { Convert, NamespaceMetadataTransaction, NetworkType, UInt64 } from 'symbol-sdk';
 import { account1 } from '../accounts.mock';
 import { namespaceId1 } from '../namespaces.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedNamespaceMetadata1 = NamespaceMetadataTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     account1.address,
     UInt64.fromUint(1000),
     namespaceId1,

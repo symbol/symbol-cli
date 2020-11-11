@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata, option } from 'clime';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { PasswordResolver } from '../../resolvers/password.resolver';

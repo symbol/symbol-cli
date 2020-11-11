@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { AccountAddressRestrictionView } from '../../../../../src/views/transactions/details/transaction-types';
 import { account1, account2, account3 } from '../../../../mocks/accounts.mock';
 import { unsignedAccountAddressRestriction1 } from '../../../../mocks/transactions/accountAddressRestriction.mock';

@@ -16,16 +16,14 @@
  *
  */
 
-import * as fs from 'fs';
-
 import { expect } from 'chai';
+import * as fs from 'fs';
 import { Account, NetworkType, Password } from 'symbol-sdk';
 import { spy, when } from 'ts-mockito';
-
 import { HdProfile } from '../../src/models/hdProfile.model';
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
 import { PrivateKeyProfile } from '../../src/models/privateKeyProfile.model';
-import { Profile } from '../../src/models/profile.model';
+import { epochAdjustment, Profile } from '../../src/models/profile.model';
 import { ProfileRepository } from '../../src/respositories/profile.repository';
 import { ProfileService } from '../../src/services/profile.service';
 import { profileDTO2v2, profileDTOv1 } from '../mocks/profiles/profileDTO.mock';
@@ -66,6 +64,7 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         const profile = new ProfileService(profileRepository).createNewProfile({
             generationHash: 'default',
+            epochAdjustment: epochAdjustment,
             isDefault: false,
             name: 'default',
             networkCurrency,
@@ -85,6 +84,7 @@ describe('ProfileRepository', () => {
         const createProfile = () =>
             new ProfileService(profileRepository).createNewProfile({
                 generationHash: 'default',
+                epochAdjustment: epochAdjustment,
                 isDefault: false,
                 name: 'default',
                 networkCurrency,
@@ -104,6 +104,7 @@ describe('ProfileRepository', () => {
 
         const profile = new ProfileService(profileRepository).createNewProfile({
             generationHash: 'test',
+            epochAdjustment: epochAdjustment,
             isDefault: false,
             name: 'default',
             networkCurrency,
@@ -120,6 +121,7 @@ describe('ProfileRepository', () => {
         expect(savedProfile.simpleWallet.address.plain()).to.be.equal(account.address.plain());
         expect(savedProfile.simpleWallet.address.networkType).to.be.equal(account.address.networkType);
         expect(savedProfile.url).to.be.equal(profile.url);
+        expect(savedProfile.epochAdjustment).to.be.equal(profile.epochAdjustment);
         expect(savedProfile.name).to.be.equal(profile.name);
         expect(savedProfile.networkType).to.be.equal(networkType);
         expect(savedProfile.networkGenerationHash).to.be.equal(profile.networkGenerationHash);
@@ -132,6 +134,7 @@ describe('ProfileRepository', () => {
         const profile = new ProfileService(profileRepository).createNewProfile({
             generationHash: 'test',
             isDefault: false,
+            epochAdjustment: epochAdjustment,
             name: 'default',
             networkCurrency,
             networkType,
@@ -157,6 +160,7 @@ describe('ProfileRepository', () => {
         new ProfileService(profileRepository).createNewProfile({
             generationHash: 'default',
             isDefault: false,
+            epochAdjustment: epochAdjustment,
             name: 'default',
             networkCurrency,
             networkType,
@@ -168,6 +172,7 @@ describe('ProfileRepository', () => {
         new ProfileService(profileRepository).createNewProfile({
             generationHash: 'default',
             isDefault: false,
+            epochAdjustment: epochAdjustment,
             name: 'dummy profile',
             networkCurrency,
             networkType,
@@ -195,6 +200,7 @@ describe('ProfileRepository', () => {
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         new ProfileService(profileRepository).createNewProfile({
             generationHash: 'generationHash',
+            epochAdjustment: epochAdjustment,
             isDefault: false,
             name: 'not default',
             networkCurrency,
@@ -206,6 +212,7 @@ describe('ProfileRepository', () => {
 
         const profile2 = new ProfileService(profileRepository).createNewProfile({
             generationHash: 'generationHash',
+            epochAdjustment: epochAdjustment,
             isDefault: false,
             name: 'default',
             networkCurrency,

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { FinalizationPointResolver } from '../../src/resolvers/finalizationPoint.resolver';
 
 describe('Finalization point resolver', () => {

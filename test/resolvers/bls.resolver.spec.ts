@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-
 /*
  *
  * Copyright 2018-present NEM

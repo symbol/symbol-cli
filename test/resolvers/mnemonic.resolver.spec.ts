@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MnemonicResolver } from '../../src/resolvers/mnemonic.resolver';
 
 describe('Mnemonic resolver', () => {

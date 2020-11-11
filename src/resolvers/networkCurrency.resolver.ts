@@ -18,7 +18,6 @@
 
 import { ExpectedError } from 'clime';
 import { TransactionGroup, TransactionHttp, UInt64 } from 'symbol-sdk';
-
 import { CreateProfileOptions } from '../interfaces/create.profile.options';
 import { NetworkCurrency } from '../models/networkCurrency.model';
 import { Resolver } from './resolver';

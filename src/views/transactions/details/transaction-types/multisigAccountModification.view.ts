@@ -17,7 +17,6 @@
  */
 
 import { Address, CosignatoryModificationAction, MultisigAccountModificationTransaction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class MultisigAccountModificationView {

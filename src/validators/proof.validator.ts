@@ -17,7 +17,6 @@
  */
 
 import { LockHashAlgorithm } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

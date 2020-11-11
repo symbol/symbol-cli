@@ -18,9 +18,9 @@
 
 import { expect } from 'chai';
 import { NetworkType, Password, SimpleWallet } from 'symbol-sdk';
-
 import { HdProfile } from '../../src/models/hdProfile.model';
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
+import { epochAdjustment } from '../../src/models/profile.model';
 
 const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 
@@ -41,6 +41,7 @@ describe('HdProfile', () => {
             isDefault,
             name,
             networkCurrency,
+            epochAdjustment,
             networkType,
             password,
             url,
@@ -77,6 +78,7 @@ describe('HdProfile', () => {
             simpleWallet: simpleWallet.toDTO(),
             url,
             networkGenerationHash,
+            epochAdjustment: epochAdjustment,
             networkCurrency: networkCurrency.toDTO(),
             version,
             default: isDefault,
@@ -112,6 +114,7 @@ describe('HdProfile', () => {
                 encryptedPrivateKey: 'd47e526995324428257af732684420dbe718047cc8ae2fdfa7ae49f820a300c691ac558b8669d45105acc438b04df83e',
             },
             url: 'http://localhost:3000',
+            epochAdjustment: epochAdjustment,
             networkGenerationHash: 'generationHash',
             networkCurrency: { namespaceId: 'symbol.xym', divisibility: 6 },
             version: 3,

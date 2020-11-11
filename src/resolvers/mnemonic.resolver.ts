@@ -17,7 +17,6 @@
  */
 
 import { Options } from 'clime';
-
 import { OptionsResolver } from '../options-resolver';
 import { MnemonicValidator } from '../validators/mnemonic.validator';
 import { Resolver } from './resolver';

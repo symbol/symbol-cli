@@ -17,7 +17,6 @@
  */
 
 import { NetworkType, PublicAccount } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

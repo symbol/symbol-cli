@@ -17,7 +17,6 @@
  */
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
-
 import { CellRecord } from './transactions/details/transaction.view';
 
 export class TableBuilder {

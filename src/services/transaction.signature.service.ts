@@ -8,7 +8,6 @@ import {
     Transaction,
     UInt64,
 } from 'symbol-sdk';
-
 import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { MultisigAccount } from '../models/multisig.types';
 import { Profile } from '../models/profile.model';
@@ -140,7 +139,7 @@ export class TransactionSignatureService {
         }
         return transactions.map((transaction) => {
             const signedTransaction = account.sign(transaction, this.profile.networkGenerationHash);
-            new TransactionView(transaction, signedTransaction).print();
+            new TransactionView(transaction, signedTransaction, this.profile).print();
             return signedTransaction;
         });
     }
@@ -153,7 +152,7 @@ export class TransactionSignatureService {
      */
     private async signPartialTransactions(account: Account): Promise<SignedTransaction[]> {
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(),
+            Deadline.create(this.profile.epochAdjustment),
             this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
             this.profile.networkType,
             [],
@@ -163,8 +162,8 @@ export class TransactionSignatureService {
         const signedAggregateTransaction = account.sign(aggregateTransaction, this.profile.networkGenerationHash);
         const hashLockTransaction = await this.createHashLockTransaction(signedAggregateTransaction);
         const signedHashLockTransaction = account.sign(hashLockTransaction, this.profile.networkGenerationHash);
-        new TransactionView(aggregateTransaction, signedAggregateTransaction).print();
-        new TransactionView(hashLockTransaction, signedHashLockTransaction).print();
+        new TransactionView(aggregateTransaction, signedAggregateTransaction, this.profile).print();
+        new TransactionView(hashLockTransaction, signedHashLockTransaction, this.profile).print();
 
         return [signedHashLockTransaction, signedAggregateTransaction];
     }
@@ -177,7 +176,7 @@ export class TransactionSignatureService {
      */
     private signCompleteTransactions(account: Account): SignedTransaction[] {
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(),
+            Deadline.create(this.profile.epochAdjustment),
             this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
             this.profile.networkType,
             [],
@@ -185,7 +184,7 @@ export class TransactionSignatureService {
         );
 
         const signedTransaction = account.sign(aggregateTransaction, this.profile.networkGenerationHash);
-        new TransactionView(aggregateTransaction, signedTransaction).print();
+        new TransactionView(aggregateTransaction, signedTransaction, this.profile).print();
         return [signedTransaction];
     }
 
@@ -197,7 +196,7 @@ export class TransactionSignatureService {
         );
 
         return HashLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(this.profile.epochAdjustment),
             this.profile.networkCurrency.createRelative(this.options.lockAmount),
             UInt64.fromNumericString(this.options.lockDuration),
             aggregateTx,

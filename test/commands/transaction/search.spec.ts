@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { TransactionGroup, TransactionType, UInt64 } from 'symbol-sdk';
-
 import { TransactionSearchOptions } from '../../../src/commands/transaction/search';
 import { account1 } from '../../mocks/accounts.mock';
 

@@ -18,7 +18,6 @@
 
 import { Options } from 'clime';
 import { NetworkType, PublicAccount } from 'symbol-sdk';
-
 import { OptionsResolver } from '../options-resolver';
 import { PublicKeyValidator } from '../validators/publicKey.validator';
 import { Resolver } from './resolver';

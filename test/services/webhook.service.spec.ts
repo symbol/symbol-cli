@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { WebhookService } from '../../src/services/webhook.service';
 
 describe('Webhook service', () => {

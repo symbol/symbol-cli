@@ -18,7 +18,6 @@
 
 import { command, metadata, option } from 'clime';
 import { Deadline, Mosaic, SecretLockTransaction } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
@@ -98,7 +97,7 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
 
         const transaction = SecretLockTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             new Mosaic(mosaicId, amount),
             duration,
             hashAlgorithm,

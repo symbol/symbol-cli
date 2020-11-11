@@ -16,22 +16,22 @@
  *
  */
 
-export { AccountMetadataView } from './accountMetadata.view';
 export { AccountAddressRestrictionView } from './accountAddressRestriction.view';
+export { AccountKeyLinkView } from './accountKeyLink.view';
+export { AccountMetadataView } from './accountMetadata.view';
 export { AccountMosaicRestrictionView } from './accountMosaicRestriction.view';
 export { AccountOperationRestrictionView } from './accountOperationRestriction.view';
 export { AddressAliasView } from './addressAlias.view';
 export { AggregateBondedView } from './aggregateBonded.view';
 export { AggregateCompleteView } from './aggregateComplete.view';
-export { AccountKeyLinkView } from './accountKeyLink.view';
 export { HashLockView } from './hashLock.view';
-export { MultisigAccountModificationView } from './multisigAccountModification.view';
 export { MosaicAddressRestrictionView } from './mosaicAddressRestriction.view';
 export { MosaicAliasView } from './mosaicAlias.view';
 export { MosaicDefinitionView } from './mosaicDefinition.view';
 export { MosaicGlobalRestrictionView } from './mosaicGlobalRestriction.view';
 export { MosaicMetadataView } from './mosaicMetadata.view';
 export { MosaicSupplyChangeView } from './mosaicSupplyChange.view';
+export { MultisigAccountModificationView } from './multisigAccountModification.view';
 export { NamespaceMetadataView } from './namespaceMetadata.view';
 export { NamespaceRegistrationView } from './namespaceRegistration.view';
 export { NodeKeyLinkView } from './nodeKeyLink.view';

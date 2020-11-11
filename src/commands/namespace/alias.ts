@@ -18,7 +18,6 @@
 import { command, metadata, option } from 'clime';
 import { forkJoin, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { NamespaceNameResolver } from '../../resolvers/namespace.resolver';

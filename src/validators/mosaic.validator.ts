@@ -16,7 +16,6 @@
  *
  */
 import { Validator } from 'clime';
-
 import { MosaicService } from '../services/mosaic.service';
 
 /**

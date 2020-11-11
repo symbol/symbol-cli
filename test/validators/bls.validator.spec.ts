@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { BLSPublicKeyValidator } from '../../src/validators/bls.validator';
 
 describe('BLSPublicKeyValidator validator', () => {

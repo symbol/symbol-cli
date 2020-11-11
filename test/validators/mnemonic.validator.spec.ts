@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MnemonicValidator } from '../../src/validators/mnemonic.validator';
 
 const mnemonic =

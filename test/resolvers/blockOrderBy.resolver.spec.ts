@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { BlockOrderByResolver } from '../../src/resolvers/blockOrderBy.resolver';
 
 describe('BlockOrderBy resolver', () => {

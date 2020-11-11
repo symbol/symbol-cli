@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { NamespaceIdValidator } from '../../src/validators/namespaceId.validator';
 
 describe('Mosaic id validator', () => {

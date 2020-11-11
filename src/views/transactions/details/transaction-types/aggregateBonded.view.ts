@@ -17,7 +17,6 @@
  */
 
 import { AggregateTransaction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 import { AggregateView } from './aggregate.view';
 

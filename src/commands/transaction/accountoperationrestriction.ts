@@ -18,7 +18,6 @@
 
 import { command, metadata, option } from 'clime';
 import { AccountRestrictionTransaction, Deadline } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ActionType } from '../../models/action.enum';
@@ -69,7 +68,7 @@ export default class extends AnnounceTransactionsCommand {
         const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = AccountRestrictionTransaction.createOperationRestrictionModificationTransaction(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             flags,
             action === ActionType.Add ? [transactionType] : [],
             action === ActionType.Remove ? [transactionType] : [],

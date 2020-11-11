@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { BlockSearchOptions } from '../../../src/commands/block/search';
 import { account1 } from '../../mocks/accounts.mock';
 

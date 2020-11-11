@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { Address } from 'symbol-sdk';
-
 import { AggregateCompleteView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedAggregateComplete1 } from '../../../../mocks/transactions/aggregateComplete.mock';
 import { unsignedTransfer1 } from '../../../../mocks/transactions/transfer.mock';

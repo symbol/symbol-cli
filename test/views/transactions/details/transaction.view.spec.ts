@@ -16,13 +16,13 @@
  *
  */
 import { assert, expect } from 'chai';
-
 import { TransactionView } from '../../../../src/views/transactions/details/transaction.view';
+import { mockPrivateKeyProfile1 } from '../../../mocks/profiles/profile.mock';
 import { unsignedTransfer2 } from '../../../mocks/transactions/index';
 
 describe('Transaction view', () => {
     it('TransactionView render should return a non-empty array', () => {
-        const transactionView = new TransactionView(unsignedTransfer2).render();
+        const transactionView = new TransactionView(unsignedTransfer2, undefined, mockPrivateKeyProfile1).render();
         assert.typeOf(transactionView, 'array', 'transactionView.render is an array');
         expect(transactionView.length).equal(8);
     });

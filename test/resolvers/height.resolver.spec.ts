@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { HeightResolver } from '../../src/resolvers/height.resolver';
 
 describe('Height resolver', () => {

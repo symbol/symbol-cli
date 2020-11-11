@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { Order } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { OrderValidator } from '../validators/order.validator';
 import { Resolver } from './resolver';

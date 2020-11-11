@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { LinkAction } from 'symbol-sdk';
-
 import { VotingKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedVotingKeyLink1 } from '../../../../mocks/transactions/votingKeyLink.mock';
 

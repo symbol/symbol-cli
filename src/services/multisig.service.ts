@@ -16,10 +16,9 @@
  *
  */
 
-import { Observable, from, of } from 'rxjs';
+import { from, Observable, of } from 'rxjs';
 import { catchError, filter, flatMap, map, switchMap, toArray } from 'rxjs/operators';
 import { Address, MultisigAccountGraphInfo, MultisigAccountInfo, MultisigRepository } from 'symbol-sdk';
-
 import { Profile } from '../models/profile.model';
 
 export class MultisigService {

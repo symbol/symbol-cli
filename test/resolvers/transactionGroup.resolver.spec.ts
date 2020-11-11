@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionGroupResolver } from '../../src/resolvers/transactionGroup.resolver';
 
 describe('Transaction group resolver', () => {

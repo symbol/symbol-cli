@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { MosaicSearchCriteria } from 'symbol-sdk/dist/src/infrastructure/searchCriteria/MosaicSearchCriteria';
-
 import { SearchCommand } from '../../interfaces/search.command';
 import { SearchOptions } from '../../interfaces/search.options';
 import { AddressResolver } from '../../resolvers/address.resolver';

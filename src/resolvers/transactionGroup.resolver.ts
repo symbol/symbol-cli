@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { TransactionGroup } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { TransactionGroupValidator } from '../validators/transactionGroup.validator';
 import { Resolver } from './resolver';

@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { InnerTransaction, Transaction, TransactionMapping } from 'symbol-sdk';
-
 import { OptionsResolver } from '../options-resolver';
 import { Resolver } from './resolver';
 

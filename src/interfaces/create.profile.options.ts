@@ -16,7 +16,6 @@
  *
  */
 import { option } from 'clime';
-
 import { ProfileOptions } from './profile.options';
 
 /**
@@ -71,4 +70,10 @@ export class CreateProfileOptions extends ProfileOptions {
         description: '(Optional) Divisibility of the network mosaic. (eg.: 6) Required to create the profile offline.',
     })
     divisibility: number;
+
+    @option({
+        flag: 'e',
+        description: '(Optional) The epoch adjustment network configuration used to created the transaction`s deadline',
+    })
+    epochAdjustment: number;
 }

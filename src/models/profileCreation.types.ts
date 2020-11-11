@@ -16,7 +16,6 @@
  *
  */
 import { NetworkType, Password } from 'symbol-sdk';
-
 import { NetworkCurrency } from './networkCurrency.model';
 
 /**
@@ -28,6 +27,7 @@ export interface ProfileCreationBase {
     isDefault: boolean;
     name: string;
     networkCurrency: NetworkCurrency;
+    epochAdjustment: number;
     networkType: NetworkType;
     password: Password;
     url: string;

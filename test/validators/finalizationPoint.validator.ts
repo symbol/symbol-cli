@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { FinalizationPointValidator } from '../../src/validators/finalizationPoint.validator';
 
 describe('Finalization point validator', () => {

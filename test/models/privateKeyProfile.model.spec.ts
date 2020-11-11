@@ -18,9 +18,9 @@
 
 import { expect } from 'chai';
 import { Account, NetworkType, Password } from 'symbol-sdk';
-
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
 import { PrivateKeyProfile } from '../../src/models/privateKeyProfile.model';
+import { epochAdjustment } from '../../src/models/profile.model';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
 
 const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
@@ -31,6 +31,7 @@ describe('PrivateKeyProfile', () => {
             generationHash: 'generationHash',
             isDefault: false,
             name: 'default',
+            epochAdjustment: epochAdjustment,
             networkCurrency,
             networkType: NetworkType.MIJIN_TEST,
             password: new Password('password'),
@@ -59,6 +60,7 @@ describe('PrivateKeyProfile', () => {
                 schema: 'test',
                 encryptedPrivateKey: 'test',
             },
+            epochAdjustment: epochAdjustment,
             networkGenerationHash: 'generationHash',
             url: 'url',
             networkCurrency: {
@@ -83,6 +85,7 @@ describe('PrivateKeyProfile', () => {
             generationHash: 'default',
             isDefault: false,
             name: 'default',
+            epochAdjustment: epochAdjustment,
             networkCurrency,
             networkType,
             password,
@@ -104,6 +107,7 @@ describe('PrivateKeyProfile', () => {
             generationHash: 'default',
             isDefault: false,
             name: 'default',
+            epochAdjustment: epochAdjustment,
             networkCurrency,
             networkType,
             password,
@@ -121,6 +125,7 @@ describe('PrivateKeyProfile', () => {
         const profile = PrivateKeyProfile.create({
             generationHash: 'default',
             isDefault: false,
+            epochAdjustment: epochAdjustment,
             name: 'default',
             networkCurrency,
             networkType,

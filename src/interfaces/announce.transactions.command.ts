@@ -18,7 +18,6 @@
 
 import { ExpectedError } from 'clime';
 import { AccountHttp, PublicAccount, SignedTransaction } from 'symbol-sdk';
-
 import { MultisigAccount } from '../models/multisig.types';
 import { AddressChoiceResolver } from '../resolvers/address.resolver';
 import { TransactionAnnounceMode, TransactionAnnounceModeResolver } from '../resolvers/transactionAnnounceMode.resolver';

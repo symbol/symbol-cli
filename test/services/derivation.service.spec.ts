@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { DerivationService } from '../../src/services/derivation.service';
 
 const paths = [

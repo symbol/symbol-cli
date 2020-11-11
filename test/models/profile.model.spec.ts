@@ -18,9 +18,8 @@
 
 import { expect } from 'chai';
 import { Account, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
-
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
-import { Profile } from '../../src/models/profile.model';
+import { epochAdjustment, Profile } from '../../src/models/profile.model';
 
 const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 
@@ -37,6 +36,7 @@ describe('Profile', () => {
                     ),
                     'url',
                     'generation_hash',
+                    epochAdjustment,
                     networkCurrency,
                     3,
                     'PrivateKey',

@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { MosaicAddressRestrictionView } from '../../../../../src/views/transactions/details/transaction-types';
 import { account1 } from '../../../../mocks/accounts.mock';
 import { namespaceId1 } from '../../../../mocks/namespaces.mock';

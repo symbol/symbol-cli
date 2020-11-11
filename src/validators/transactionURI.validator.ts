@@ -18,7 +18,6 @@
 
 import { TransactionMapping } from 'symbol-sdk';
 import { TransactionURI } from 'symbol-uri-scheme';
-
 import { Validator } from './validator';
 
 /**

@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { Deadline, VotingKeyLinkTransaction } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
@@ -73,7 +72,7 @@ export default class extends AnnounceTransactionsCommand {
         const endPoint = await new FinalizationPointResolver().resolve(options, 'Enter the end point:', 'endPoint');
 
         const transaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             linkedPublicKey,
             startPoint.compact(),
             endPoint.compact(),

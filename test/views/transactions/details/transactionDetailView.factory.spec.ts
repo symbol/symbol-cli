@@ -16,7 +16,6 @@
  *
  */
 import { assert } from 'chai';
-
 import { transactionDetailViewFactory } from '../../../../src/views/transactions/details/transactionDetailView.factory';
 import {
     unsignedAccountAddressRestriction1,

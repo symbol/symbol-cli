@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { PasswordValidator } from '../../src/validators/password.validator';
 
 describe('Password validator', () => {

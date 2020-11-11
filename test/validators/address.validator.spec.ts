@@ -18,8 +18,7 @@
 
 import { expect } from 'chai';
 import { Account, NetworkType } from 'symbol-sdk';
-
-import { AddressValidator, UnresolvedAddressValidator, UnresolvedAddressesValidator } from '../../src/validators/address.validator';
+import { AddressValidator, UnresolvedAddressesValidator, UnresolvedAddressValidator } from '../../src/validators/address.validator';
 
 describe('Address validator', () => {
     it('default case', () => {

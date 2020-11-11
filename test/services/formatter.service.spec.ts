@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { FormatterService } from '../../src/services/formatter.service';
 
 describe('Formatter service', () => {

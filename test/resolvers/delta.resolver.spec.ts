@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { DeltaResolver } from '../../src/resolvers/delta.resolver';
 
 describe('Delta resolver', () => {

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { HashAlgorithmValidator } from '../../src/validators/hashAlgorithm.validator';
 
 describe('hashAlgorithm validator', () => {

@@ -26,7 +26,6 @@ import {
     MosaicSupplyChangeTransaction,
     UInt64,
 } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { OptionsConfirmResolver } from '../../options-resolver';
@@ -114,7 +113,7 @@ export default class extends AnnounceTransactionsCommand {
         const signerAddress = multisigSigner ? multisigSigner.info.accountAddress : account.address;
 
         const mosaicDefinition = MosaicDefinitionTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             nonce,
             MosaicId.createFromNonce(nonce, signerAddress),
             mosaicFlags,
@@ -124,7 +123,7 @@ export default class extends AnnounceTransactionsCommand {
         );
 
         const mosaicSupplyChange = MosaicSupplyChangeTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             mosaicDefinition.mosaicId,
             MosaicSupplyChangeAction.Increase,
             amount,

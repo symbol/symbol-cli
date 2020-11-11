@@ -17,7 +17,6 @@
  */
 
 import { AccountAddressRestrictionTransaction, Address, AddressRestrictionFlag, UnresolvedAddress } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class AccountAddressRestrictionView {

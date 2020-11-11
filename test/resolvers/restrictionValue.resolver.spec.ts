@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { RestrictionValueResolver } from '../../src/resolvers/restrictionValue.resolver';
 
 describe('Restriction value resolver', () => {

@@ -16,10 +16,11 @@
  *
  */
 
-import { Deadline, LinkAction, NetworkType, NodeKeyLinkTransaction } from 'symbol-sdk';
+import { LinkAction, NetworkType, NodeKeyLinkTransaction } from 'symbol-sdk';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedNodeKeyLink1 = NodeKeyLinkTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     '0'.repeat(64),
     LinkAction.Link,
     NetworkType.MIJIN_TEST,

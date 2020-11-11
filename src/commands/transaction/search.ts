@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { TransactionSearchCriteria } from 'symbol-sdk';
-
 import { SearchCommand } from '../../interfaces/search.command';
 import { SearchOptions } from '../../interfaces/search.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -127,7 +126,7 @@ export default class extends SearchCommand {
                 }
 
                 page.data.forEach((transaction) => {
-                    new TransactionView(transaction).print();
+                    new TransactionView(transaction, undefined, profile).print();
                 });
             },
             (err) => {

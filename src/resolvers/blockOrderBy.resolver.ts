@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { BlockOrderBy } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { BlockOrderByValidator } from '../validators/blockOrderBy.validator';
 import { Resolver } from './resolver';

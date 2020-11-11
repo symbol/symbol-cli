@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { AccountKeyLinkTransaction, Deadline } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
@@ -65,7 +64,13 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
         const multisigSigner = await this.getMultisigSigner(options);
 
-        const transaction = AccountKeyLinkTransaction.create(Deadline.create(), linkedPublicKey, action, profile.networkType, maxFee);
+        const transaction = AccountKeyLinkTransaction.create(
+            Deadline.create(profile.epochAdjustment),
+            linkedPublicKey,
+            action,
+            profile.networkType,
+            maxFee,
+        );
 
         const signatureOptions: TransactionSignatureOptions = {
             account,

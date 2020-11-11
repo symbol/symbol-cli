@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { HeightValidator } from '../../src/validators/block.validator';
 
 describe('block height validator', () => {

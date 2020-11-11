@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { PathNumberResolver } from '../../src/resolvers/pathNumber.resolver';
 
 describe('Path number resolver', () => {

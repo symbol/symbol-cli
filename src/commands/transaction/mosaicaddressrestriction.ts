@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { Deadline, MosaicRestrictionTransactionService } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
@@ -86,7 +85,7 @@ export default class extends AnnounceTransactionsCommand {
 
         const mosaicAddressRestrictionTransaction = await mosaicRestrictionTransactionService
             .createMosaicAddressRestrictionTransaction(
-                Deadline.create(),
+                Deadline.create(profile.epochAdjustment),
                 profile.networkType,
                 mosaicId,
                 restrictionKey,

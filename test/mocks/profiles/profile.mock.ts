@@ -17,10 +17,10 @@
  */
 
 import { Account, NetworkType, Password } from 'symbol-sdk';
-
 import { HdProfile } from '../../../src/models/hdProfile.model';
 import { NetworkCurrency } from '../../../src/models/networkCurrency.model';
 import { PrivateKeyProfile } from '../../../src/models/privateKeyProfile.model';
+import { epochAdjustment } from '../../../src/models/profile.model';
 
 const networkCurrency = NetworkCurrency.createFromDTO({ namespaceId: 'symbol.xym', divisibility: 6 });
 
@@ -28,6 +28,7 @@ export const mockPrivateKeyProfile1 = PrivateKeyProfile.create({
     generationHash: '0'.repeat(64),
     isDefault: false,
     name: 'default',
+    epochAdjustment,
     networkCurrency,
     networkType: NetworkType.MIJIN_TEST,
     password: new Password('password'),
@@ -39,6 +40,7 @@ export const mockHdProfile1 = HdProfile.create({
     generationHash: '0'.repeat(64),
     isDefault: false,
     name: 'default',
+    epochAdjustment,
     networkCurrency,
     networkType: NetworkType.MIJIN_TEST,
     password: new Password('password'),

@@ -17,12 +17,11 @@
  */
 import { Options } from 'clime';
 import { Address, UnresolvedAddress } from 'symbol-sdk';
-
 import { ProfileOptions } from '../interfaces/profile.options';
 import { Profile } from '../models/profile.model';
 import { OptionsChoiceResolver, OptionsResolver } from '../options-resolver';
 import { AccountService } from '../services/account.service';
-import { AddressValidator, UnresolvedAddressValidator, UnresolvedAddressesValidator } from '../validators/address.validator';
+import { AddressValidator, UnresolvedAddressesValidator, UnresolvedAddressValidator } from '../validators/address.validator';
 import { Resolver } from './resolver';
 
 /**

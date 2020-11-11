@@ -17,7 +17,6 @@
  */
 
 import { assert, expect } from 'chai';
-
 import { ResolutionStatementViews } from '../../../src/views/statements/resolutionStatements.view';
 import { account1 } from '../../mocks/accounts.mock';
 import { statement } from '../../mocks/statements.mock';

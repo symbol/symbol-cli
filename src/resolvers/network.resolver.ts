@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { NetworkType } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { NetworkValidator } from '../validators/network.validator';
 import { Resolver } from './resolver';

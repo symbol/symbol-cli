@@ -17,7 +17,6 @@
  */
 
 import { HashLockTransaction } from 'symbol-sdk';
-
 import { MosaicsView } from '../../../mosaics.view';
 import { CellRecord } from '../transaction.view';
 

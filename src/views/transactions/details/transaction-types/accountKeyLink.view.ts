@@ -17,7 +17,6 @@
  */
 
 import { AccountKeyLinkTransaction, LinkAction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class AccountKeyLinkView {

@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { Deadline, MetadataTransactionService } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -83,7 +82,7 @@ export default class extends AnnounceTransactionsCommand {
         const metadataTransactionService = new MetadataTransactionService(metadataHttp);
         const metadataTransaction = await metadataTransactionService
             .createMosaicMetadataTransaction(
-                Deadline.create(),
+                Deadline.create(profile.epochAdjustment),
                 account.networkType,
                 targetAddress,
                 mosaic,

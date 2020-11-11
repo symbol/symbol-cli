@@ -17,7 +17,6 @@
  */
 import { Command, command, metadata, option } from 'clime';
 import { Account } from 'symbol-sdk';
-
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { NetworkResolver } from '../../resolvers/network.resolver';
 import { PrivateKeyResolver } from '../../resolvers/privateKey.resolver';

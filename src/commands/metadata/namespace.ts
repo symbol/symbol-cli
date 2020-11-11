@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { Metadata, Page } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { NamespaceNameResolver } from '../../resolvers/namespace.resolver';
