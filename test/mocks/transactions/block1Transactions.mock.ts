@@ -15,9 +15,7 @@
  * limitations under the License.
  *
  */
-import { Transaction } from 'symbol-sdk';
-// @ts-ignore
-import { CreateTransactionFromDTO } from 'symbol-sdk/dist/src/infrastructure/transaction/CreateTransactionFromDTO';
+import { CreateTransactionFromDTO, Transaction } from 'symbol-sdk';
 
 const DTO = [
     {

@@ -18,7 +18,13 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { MosaicAddressRestriction, MosaicGlobalRestriction, MosaicGlobalRestrictionItem, MosaicRestrictionType, Page } from 'symbol-sdk';
+import { filter, map, take, toArray } from 'rxjs/operators';
+import {
+    MosaicGlobalRestriction,
+    MosaicGlobalRestrictionItem,
+    MosaicRestrictionType,
+    RestrictionMosaicPaginationStreamer,
+} from 'symbol-sdk';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
@@ -35,20 +41,20 @@ export class CommandOptions extends ProfileOptions {
 export class MosaicGlobalRestrictionsTable {
     private readonly table: HorizontalTable;
 
-    constructor(public readonly mosaicGlobalRestrictions: Page<MosaicAddressRestriction | MosaicGlobalRestriction>) {
+    constructor(public readonly mosaicGlobalRestrictions: MosaicGlobalRestriction[]) {
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Restriction Key', 'Reference MosaicId', 'Restriction Type', 'Restriction Value'],
         }) as HorizontalTable;
 
-        mosaicGlobalRestrictions.data.forEach((mosaicRestriction) => {
-            mosaicRestriction.restrictions.forEach((value: string | MosaicGlobalRestrictionItem, key: string) => {
+        mosaicGlobalRestrictions.forEach((mosaicRestriction) => {
+            mosaicRestriction.restrictions.forEach((value: MosaicGlobalRestrictionItem) => {
                 value = value as MosaicGlobalRestrictionItem;
                 this.table.push([
-                    key,
+                    value.key.toString(),
                     value.referenceMosaicId.toHex(),
                     MosaicRestrictionType[value.restrictionType],
-                    value.restrictionValue,
+                    value.restrictionValue.toString(),
                 ]);
             });
         });
@@ -77,10 +83,20 @@ export default class extends ProfileCommand {
 
         this.spinner.start();
         const restrictionHttp = profile.repositoryFactory.createRestrictionMosaicRepository();
-        restrictionHttp.searchMosaicRestrictions({ mosaicId }).subscribe(
-            (mosaicRestrictions: Page<MosaicAddressRestriction | MosaicGlobalRestriction>) => {
+
+        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(restrictionHttp);
+        // Should we load all?
+        const observable = streamer.search({ mosaicId }).pipe(
+            take(20),
+            filter((m) => m instanceof MosaicGlobalRestriction),
+            map((m) => m as MosaicGlobalRestriction),
+            toArray(),
+        );
+
+        observable.subscribe(
+            (mosaicRestrictions: MosaicGlobalRestriction[]) => {
                 this.spinner.stop();
-                if (mosaicRestrictions.pageSize > 0) {
+                if (mosaicRestrictions.length > 0) {
                     console.log(new MosaicGlobalRestrictionsTable(mosaicRestrictions).toString());
                 } else {
                     console.log(FormatterService.error('The mosaicId does not have mosaic global restrictions assigned'));
