@@ -45,7 +45,8 @@ export class TransactionStatusTable {
             this.table.push(['Status Code', status.code]);
         }
         if (status.deadline) {
-            this.table.push(['Deadline', status.deadline.toLocalDateTime(profile.epochAdjustment).toString()]);
+            const localDateTime = status.deadline.toLocalDateTime(profile.epochAdjustment);
+            this.table.push(['Deadline', `${localDateTime.toLocalDate()} ${localDateTime.toLocalTime()}`]);
         }
         if (status.height) {
             this.table.push(['Height', status.height.toString()]);

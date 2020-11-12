@@ -89,7 +89,11 @@ export class TransactionHeaderView {
      */
     protected get formattedDeadline(): string {
         const { deadline } = this.tx;
-        const localDate = this.profile ? deadline.toLocalDateTime(this.profile.epochAdjustment).toLocalDate() : deadline.adjustedValue;
-        return `${localDate} ${localDate}`;
+        if (this.profile) {
+            const localDateTime = deadline.toLocalDateTime(this.profile.epochAdjustment);
+            return `${localDateTime.toLocalDate()} ${localDateTime.toLocalTime()}`;
+        } else {
+            return deadline.adjustedValue + '';
+        }
     }
 }

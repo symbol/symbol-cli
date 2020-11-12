@@ -39,6 +39,7 @@ export default class extends MonitorAddressCommand {
             () => {
                 listener.status(address).subscribe(
                     (transactionStatusError) => {
+                        const deadlineLocalDateTime = transactionStatusError.deadline.toLocalDateTime(profile.epochAdjustment);
                         const text =
                             '\nHash: ' +
                             transactionStatusError.hash +
@@ -47,9 +48,9 @@ export default class extends MonitorAddressCommand {
                             transactionStatusError.code +
                             '\n' +
                             'Deadline: ' +
-                            transactionStatusError.deadline.toLocalDateTime(profile.epochAdjustment).toLocalDate().toString() +
+                            deadlineLocalDateTime.toLocalDate().toString() +
                             ' ' +
-                            transactionStatusError.deadline.toLocalDateTime(profile.epochAdjustment).toLocalTime().toString();
+                            deadlineLocalDateTime.toLocalTime().toString();
                         console.log(text);
                     },
                     (err) => {
