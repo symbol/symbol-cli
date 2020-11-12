@@ -73,7 +73,8 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'e',
-        description: '(Optional) The epoch adjustment network configuration used to created the transaction`s deadline',
+        description:
+            '(Optional) The epoch adjustment network configuration in seconds used to created the transaction`s deadline. (eg.: 1573430400) Required to create the profile offline.',
     })
     epochAdjustment: number;
 }
