@@ -17,24 +17,25 @@
  */
 
 import { expect } from 'chai';
+import { NetworkType } from 'symbol-sdk';
 import { TransactionAnnounceModeResolver } from '../../src/resolvers/transactionAnnounceMode.resolver';
 
 describe('Transaction announce mode resolver', () => {
     it('should return TransactionAnnounceMode', async () => {
         const mode = 'normal';
         const options = { mode } as any;
-        expect(await new TransactionAnnounceModeResolver().resolve(options)).to.be.equal('normal');
+        expect(await new TransactionAnnounceModeResolver(NetworkType.MIJIN_TEST).resolve(options)).to.be.equal('normal');
     });
 
     it('should return TransactionAnnounceMode', async () => {
         const mode = 'multisig';
         const options = { mode } as any;
-        expect(await new TransactionAnnounceModeResolver().resolve(options)).to.be.equal('multisig');
+        expect(await new TransactionAnnounceModeResolver(NetworkType.MIJIN_TEST).resolve(options)).to.be.equal('multisig');
     });
 
     it('should work with public key', async () => {
         const signer = '0'.repeat(64);
         const options = { signer } as any;
-        expect(await new TransactionAnnounceModeResolver().resolve(options)).to.be.equal('multisig');
+        expect(await new TransactionAnnounceModeResolver(NetworkType.MIJIN_TEST).resolve(options)).to.be.equal('multisig');
     });
 });

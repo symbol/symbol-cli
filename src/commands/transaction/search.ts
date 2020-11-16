@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { TransactionSearchCriteria } from 'symbol-sdk';
+import { NetworkType, TransactionSearchCriteria } from 'symbol-sdk';
 import { SearchCommand } from '../../interfaces/search.command';
 import { SearchOptions } from '../../interfaces/search.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -72,7 +72,7 @@ export class TransactionSearchOptions extends SearchOptions {
     })
     toHeight: string;
 
-    async buildSearchCriteria(): Promise<TransactionSearchCriteria> {
+    async buildSearchCriteria(networkType: NetworkType): Promise<TransactionSearchCriteria> {
         const criteria: TransactionSearchCriteria = {
             ...(await this.buildBaseSearchCriteria()),
             group: await new TransactionGroupResolver().resolve(this),
@@ -84,7 +84,7 @@ export class TransactionSearchOptions extends SearchOptions {
             criteria.recipientAddress = await new AddressResolver().resolve(this, undefined, undefined, 'recipientAddress');
         }
         if (this.signerPublicKey) {
-            criteria.signerPublicKey = (await new PublicKeyResolver().resolve(this, undefined, undefined, 'signerPublicKey')).publicKey;
+            criteria.signerPublicKey = (await new PublicKeyResolver().resolve(this, networkType, undefined, 'signerPublicKey')).publicKey;
         }
         if (this.height) {
             criteria.height = await new HeightResolver().resolve(this);
@@ -114,10 +114,9 @@ export default class extends SearchCommand {
     @metadata
     async execute(options: TransactionSearchOptions) {
         const profile = this.getProfile(options);
-
         this.spinner.start();
         const transactionHttp = profile.repositoryFactory.createTransactionRepository();
-        transactionHttp.search(await options.buildSearchCriteria()).subscribe(
+        transactionHttp.search(await options.buildSearchCriteria(profile.networkType)).subscribe(
             (page) => {
                 this.spinner.stop();
 

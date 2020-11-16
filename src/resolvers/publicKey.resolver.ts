@@ -29,20 +29,20 @@ export class PublicKeyResolver implements Resolver {
     /**
      * Resolves a public key provided by the user.
      * @param {Options} options - Command options.
-     * @param {NetworkType} secondSource - Secondary data source.
+     * @param {NetworkType} networkType - The network type.
      * @param {string} altText - Alternative text.
      * @param {string} altKey - Alternative key.
      * @returns {Promise<PublicAccount>}
      */
-    async resolve(options: Options, secondSource?: NetworkType, altText?: string, altKey?: string): Promise<PublicAccount> {
+    async resolve(options: Options, networkType: NetworkType, altText?: string, altKey?: string): Promise<PublicAccount> {
         const resolution = await OptionsResolver(
             options,
             altKey ? altKey : 'publicKey',
             () => undefined,
             altText ? altText : 'Enter the account public key:',
             'text',
-            new PublicKeyValidator(),
+            new PublicKeyValidator(networkType),
         );
-        return PublicAccount.createFromPublicKey(resolution, secondSource ? secondSource : NetworkType.MIJIN_TEST);
+        return PublicAccount.createFromPublicKey(resolution, networkType);
     }
 }

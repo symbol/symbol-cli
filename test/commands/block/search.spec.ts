@@ -17,6 +17,7 @@
  */
 
 import { expect } from 'chai';
+import { NetworkType } from 'symbol-sdk';
 import { BlockSearchOptions } from '../../../src/commands/block/search';
 import { account1 } from '../../mocks/accounts.mock';
 
@@ -29,7 +30,7 @@ describe('search options', () => {
         searchOptions.beneficiaryAddress = account1.address.plain();
         searchOptions.signerPublicKey = account1.publicKey;
         searchOptions.orderBy = 'Id';
-        const searchCriteria = await searchOptions.buildSearchCriteria();
+        const searchCriteria = await searchOptions.buildSearchCriteria(NetworkType.MIJIN_TEST);
         expect(searchCriteria.beneficiaryAddress).to.be.equal(account1.address.plain());
         expect(searchCriteria.signerPublicKey).to.be.equal(account1.publicKey);
         expect(searchCriteria.orderBy).to.be.equal('id');

@@ -36,7 +36,7 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'n',
-        description: '(Optional) Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
+        description: '(Optional) Network Type. (MAIN_NET, TEST_NET, PRIVATE, PRIVATE_TEST, MIJIN, MIJIN_TEST)',
     })
     network: string;
 

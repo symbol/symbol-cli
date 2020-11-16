@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { NetworkType } from 'symbol-sdk';
 /*
  *
  * Copyright 2018-present NEM
@@ -22,7 +23,7 @@ describe('Public key resolver', () => {
     it('should return public key', async () => {
         const publicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const options = { publicKey } as any;
-        expect((await new PublicKeyResolver().resolve(options)).publicKey).to.be.equal(publicKey);
+        expect((await new PublicKeyResolver().resolve(options, NetworkType.MIJIN_TEST)).publicKey).to.be.equal(publicKey);
     });
 });
 
@@ -30,8 +31,8 @@ describe('Multisig account public key resolver', () => {
     it('should return public key', async () => {
         const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const options = { multisigAccountPublicKey } as any;
-        expect((await new PublicKeyResolver().resolve(options, undefined, 'test', 'multisigAccountPublicKey')).publicKey).to.be.equal(
-            multisigAccountPublicKey,
-        );
+        expect(
+            (await new PublicKeyResolver().resolve(options, NetworkType.MIJIN_TEST, 'test', 'multisigAccountPublicKey')).publicKey,
+        ).to.be.equal(multisigAccountPublicKey);
     });
 });

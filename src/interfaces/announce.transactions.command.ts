@@ -43,14 +43,14 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
      * @returns {(Promise<MultisigAccountInfo | null>)}
      */
     protected async getMultisigSigner(options: AnnounceTransactionsOptions): Promise<MultisigAccount | null> {
-        const announceMode = await new TransactionAnnounceModeResolver().resolve(options);
+        const profile = this.getProfile(options);
+        const announceMode = await new TransactionAnnounceModeResolver(profile.networkType).resolve(options);
 
         if (announceMode === TransactionAnnounceMode.normal) {
             return null;
         }
 
         // Get the profile's multisig accounts info
-        const profile = this.getProfile(options);
         const childMultisigAccountsInfo = await new MultisigService(profile).getChildrenMultisigAccountInfo();
 
         if (!childMultisigAccountsInfo) {
