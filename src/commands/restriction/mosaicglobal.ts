@@ -18,13 +18,9 @@
 import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
-import { filter, map, take, toArray } from 'rxjs/operators';
-import {
-    MosaicGlobalRestriction,
-    MosaicGlobalRestrictionItem,
-    MosaicRestrictionType,
-    RestrictionMosaicPaginationStreamer,
-} from 'symbol-sdk';
+import { from } from 'rxjs';
+import { filter, map, mergeMap, toArray } from 'rxjs/operators';
+import { MosaicGlobalRestriction, MosaicGlobalRestrictionItem, MosaicRestrictionType } from 'symbol-sdk';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { MosaicIdResolver } from '../../resolvers/mosaic.resolver';
@@ -84,10 +80,12 @@ export default class extends ProfileCommand {
         this.spinner.start();
         const restrictionHttp = profile.repositoryFactory.createRestrictionMosaicRepository();
 
-        const streamer = RestrictionMosaicPaginationStreamer.MosaicRestrictions(restrictionHttp);
         // Should we load all?
-        const observable = streamer.search({ mosaicId }).pipe(
-            take(20),
+        const criteria = { mosaicId };
+        const observable = restrictionHttp.searchMosaicRestrictions(criteria).pipe(
+            mergeMap((page) => {
+                return from(page.data);
+            }),
             filter((m) => m instanceof MosaicGlobalRestriction),
             map((m) => m as MosaicGlobalRestriction),
             toArray(),
