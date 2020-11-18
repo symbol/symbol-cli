@@ -18,7 +18,6 @@
 
 import { command, metadata } from 'clime';
 import { Crypto } from 'symbol-sdk';
-
 import { AccountCredentialsTable } from '../../interfaces/create.profile.command';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';

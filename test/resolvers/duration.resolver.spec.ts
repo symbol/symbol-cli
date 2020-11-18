@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { DurationResolver } from '../../src/resolvers/duration.resolver';
 
 describe('Duration resolver', () => {

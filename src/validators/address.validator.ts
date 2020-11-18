@@ -16,7 +16,6 @@
  *
  */
 import { Address } from 'symbol-sdk';
-
 import { AccountService } from '../services/account.service';
 import { Validator } from './validator';
 

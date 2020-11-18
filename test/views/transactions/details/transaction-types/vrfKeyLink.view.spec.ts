@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { LinkAction } from 'symbol-sdk';
-
 import { VrfKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedVrfKeyLink1 } from '../../../../mocks/transactions/vrfKeyLink.mock';
 

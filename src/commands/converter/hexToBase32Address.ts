@@ -17,7 +17,6 @@
  */
 import { Command, command, metadata, option } from 'clime';
 import { Address } from 'symbol-sdk';
-
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { HexAddressResolver } from '../../resolvers/hexAddress.resolver';
 

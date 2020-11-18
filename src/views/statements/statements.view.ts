@@ -17,7 +17,6 @@
  */
 
 import { Statement } from 'symbol-sdk';
-
 import { FormatterService } from '../../services/formatter.service';
 import { TableBuilder } from '../table.builder';
 import { CellRecord } from '../transactions/details/transaction.view';

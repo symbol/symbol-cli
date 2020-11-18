@@ -34,7 +34,6 @@
 
 import { expect } from 'chai';
 import { LockHashAlgorithm } from 'symbol-sdk';
-
 import { ProofValidator } from '../../src/validators/proof.validator';
 
 describe('Proof validator', () => {

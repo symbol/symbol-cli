@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { LinkAction, MosaicSupplyChangeAction } from 'symbol-sdk';
-
 import { ActionType } from '../models/action.enum';
 import { OptionsChoiceResolver } from '../options-resolver';
 import { ActionValidator, LinkActionValidator, MosaicSupplyChangeActionValidator } from '../validators/action.validator';

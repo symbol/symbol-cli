@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionTypeValidator } from '../../src/validators/transactionType.validator';
 
 describe('Transaction type validator', () => {

@@ -18,13 +18,13 @@
 import { command, metadata } from 'clime';
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
 import { Account } from 'symbol-sdk';
-
 import { AccountCredentialsTable, CreateProfileCommand } from '../../interfaces/create.profile.command';
 import { CreateProfileOptions } from '../../interfaces/create.profile.options';
 import { ImportType } from '../../models/importType.enum';
 import { Profile } from '../../models/profile.model';
 import { ProfileCreationBase } from '../../models/profileCreation.types';
 import { DefaultResolver } from '../../resolvers/default.resolver';
+import { EpochAdjustmentResolver } from '../../resolvers/epochAdjustment.resolver';
 import { GenerationHashResolver } from '../../resolvers/generationHash.resolver';
 import { ImportTypeResolver } from '../../resolvers/importType.resolver';
 import { NetworkResolver } from '../../resolvers/network.resolver';
@@ -54,6 +54,7 @@ export default class extends CreateProfileCommand {
 
         this.spinner.start();
         const generationHash = await new GenerationHashResolver().resolve(options);
+        const epochAdjustment = await new EpochAdjustmentResolver().resolve(options);
         const networkCurrency = await new NetworkCurrencyResolver().resolve(options);
         this.spinner.stop();
 
@@ -61,6 +62,7 @@ export default class extends CreateProfileCommand {
 
         const baseArguments: ProfileCreationBase = {
             generationHash,
+            epochAdjustment,
             isDefault,
             name,
             networkCurrency,

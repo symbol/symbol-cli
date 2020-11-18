@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { StringResolver } from '../../src/resolvers/string.resolver';
 
 describe('Value resolver', () => {

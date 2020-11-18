@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { NamespaceId, NamespaceRegistrationType, UInt64 } from 'symbol-sdk';
-
 import { CommandOptions } from '../commands/transaction/namespace';
 import { OptionsConfirmResolver, OptionsResolver } from '../options-resolver';
 import { NamespaceIdValidator } from '../validators/namespaceId.validator';

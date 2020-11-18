@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { PasswordResolver } from '../../src/resolvers/password.resolver';
 
 describe('Password resolver', () => {

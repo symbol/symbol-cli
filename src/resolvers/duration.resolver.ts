@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { UInt64 } from 'symbol-sdk';
-
 import { OptionsResolver } from '../options-resolver';
 import { IntegerStringValidator } from '../validators/integer.validator';
 import { Resolver } from './resolver';

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { BinaryValidator } from '../../src/validators/binary.validator';
 
 describe('binary validator', () => {

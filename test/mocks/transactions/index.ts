@@ -16,22 +16,23 @@
  *
  */
 
-export * from './accountMetadata.mock';
 export * from './accountAddressRestriction.mock';
+export * from './accountKeyLink.mock';
+export * from './accountMetadata.mock';
 export * from './accountMosaicRestriction.mock';
 export * from './accountOperationRestriction.mock';
 export * from './addressAlias.mock';
 export * from './aggregateBonded.mock';
 export * from './aggregateComplete.mock';
-export * from './accountKeyLink.mock';
+export * from './deadline.mock';
 export * from './lockFunds.mock';
-export * from './multisigAccountModification.mock';
 export * from './mosaicAddressRestriction.mock';
 export * from './mosaicAlias.mock';
 export * from './mosaicDefinition.mock';
 export * from './mosaicGlobalRestriction.mock';
 export * from './mosaicMetadata.mock';
 export * from './mosaicSupplyChange.mock';
+export * from './multisigAccountModification.mock';
 export * from './namespaceMetadata.mock';
 export * from './namespaceRegistration.mock';
 export * from './nodeKeyLink.mock';

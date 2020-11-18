@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { IntegerStringValidator, IntegerValidator } from '../../src/validators/integer.validator';
 
 describe('Integer validator', () => {

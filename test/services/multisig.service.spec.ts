@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MultisigService } from '../../src/services/multisig.service';
 import { multisigGraphInfo1, multisigGraphInfoAccount1, multisigGraphInfoAccount5 } from '../mocks/multisigGraphInfo.mock';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';

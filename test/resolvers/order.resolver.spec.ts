@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { OrderResolver } from '../../src/resolvers/order.resolver';
 
 describe('Order resolver', () => {

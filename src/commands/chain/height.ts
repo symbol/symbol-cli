@@ -17,7 +17,6 @@
  */
 import { command, metadata } from 'clime';
 import { ChainInfo } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { FormatterService } from '../../services/formatter.service';

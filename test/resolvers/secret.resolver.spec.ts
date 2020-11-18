@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { SecretResolver } from '../../src/resolvers/secret.resolver';
 
 describe('Secret resolver', () => {

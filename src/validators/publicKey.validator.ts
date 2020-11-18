@@ -17,7 +17,6 @@
  */
 
 import { NetworkType, PublicAccount } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**
@@ -25,13 +24,17 @@ import { Validator } from './validator';
  */
 export class PublicKeyValidator implements Validator<string> {
     /**
+     * @param networkType the configured network type.
+     */
+    constructor(private readonly networkType: NetworkType) {}
+    /**
      * Validates a public key format.
      * @param {string} value - Public key.
      * @returns {true | string}
      */
     validate(value: string): boolean | string {
         try {
-            PublicAccount.createFromPublicKey(value, NetworkType.MIJIN_TEST);
+            PublicAccount.createFromPublicKey(value, this.networkType);
         } catch {
             return 'Public key must be a 64 characters hexadecimal string';
         }

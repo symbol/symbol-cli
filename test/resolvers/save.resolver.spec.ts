@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { SaveResolver } from '../../src/resolvers/save.resolver';
 
 describe('Save resolver', () => {
@@ -28,6 +27,7 @@ describe('Save resolver', () => {
             network: '',
             profile: '',
             password: '',
+            epochAdjustment: 123,
             default: false,
             generationHash: '1',
             namespaceId: '',

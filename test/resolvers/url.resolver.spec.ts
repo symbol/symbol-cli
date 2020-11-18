@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { URLResolver } from '../../src/resolvers/url.resolver';
 
 describe('Url resolver', () => {

@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { MultisigAccountModificationView } from '../../../../../src/views/transactions/details/transaction-types';
 import { account1, account2, account3 } from '../../../../mocks/accounts.mock';
 import { unsignedMultisigAccountModification1 } from '../../../../mocks/transactions/multisigAccountModification.mock';

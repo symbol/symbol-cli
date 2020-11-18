@@ -17,7 +17,6 @@
  */
 
 import { NamespaceRegistrationTransaction, NamespaceRegistrationType } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class NamespaceRegistrationView {

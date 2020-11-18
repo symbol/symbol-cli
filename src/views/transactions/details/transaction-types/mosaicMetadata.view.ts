@@ -17,7 +17,6 @@
  */
 
 import { Address, MosaicMetadataTransaction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class MosaicMetadataView {

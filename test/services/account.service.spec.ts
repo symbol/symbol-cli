@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { Address, NamespaceId } from 'symbol-sdk';
-
 import { AccountService } from '../../src/services/account.service';
 
 describe('Account service', () => {

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { BlockOrderByValidator } from '../../src/validators/blockOrderBy.validator';
 
 describe('Block order by validator', () => {

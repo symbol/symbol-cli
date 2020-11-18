@@ -18,7 +18,6 @@
 
 import { command, metadata, option } from 'clime';
 import { Deadline, MultisigAccountModificationTransaction } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ActionType } from '../../models/action.enum';
@@ -96,7 +95,7 @@ export default class extends AnnounceTransactionsCommand {
         const multisigSigner = await this.getMultisigSigner(options);
 
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             minApprovalDelta,
             minRemovalDelta,
             action === ActionType.Add ? cosignatories : [],

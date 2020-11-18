@@ -17,7 +17,6 @@
  */
 import { Command, command, metadata, option } from 'clime';
 import { Convert, RawAddress } from 'symbol-sdk';
-
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
 

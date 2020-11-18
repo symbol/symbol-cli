@@ -17,7 +17,6 @@
  */
 
 import { LinkAction, NodeKeyLinkTransaction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class NodeKeyLinkView {

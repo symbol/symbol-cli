@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { LinkAction } from 'symbol-sdk';
-
 import { AccountKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
 import { account1 } from '../../../../mocks/accounts.mock';
 import { unsignedAccountKeyLink1 } from '../../../../mocks/transactions/accountKeyLink.mock';

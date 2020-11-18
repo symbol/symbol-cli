@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { HashLockView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedLockFunds1 } from '../../../../mocks/transactions/lockFunds.mock';
 

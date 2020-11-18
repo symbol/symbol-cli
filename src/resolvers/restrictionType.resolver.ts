@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { MosaicRestrictionType } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { RestrictionMosaicTypeValidator } from '../validators/restrictionType.validator';
 import { Resolver } from './resolver';

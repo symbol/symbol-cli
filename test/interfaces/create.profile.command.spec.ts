@@ -15,13 +15,12 @@
  * limitations under the License.
  *
  */
-import * as fs from 'fs';
-
 import { expect } from 'chai';
+import * as fs from 'fs';
 import { Account, NetworkType, Password } from 'symbol-sdk';
-
 import { AccountCredentialsTable, CreateProfileCommand } from '../../src/interfaces/create.profile.command';
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
+import { epochAdjustment } from '../../src/models/profile.model';
 import { ProfileRepository } from '../../src/respositories/profile.repository';
 import { mockHdProfile1, mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
 
@@ -72,6 +71,7 @@ describe('Create Profile Command', () => {
             generationHash: '',
             isDefault: false,
             name,
+            epochAdjustment: epochAdjustment,
             networkCurrency,
             networkType: NetworkType.MAIN_NET,
             password: new Password('password'),
@@ -89,6 +89,7 @@ describe('Create Profile Command', () => {
             generationHash: '',
             isDefault: true,
             name,
+            epochAdjustment,
             networkCurrency,
             networkType: NetworkType.MAIN_NET,
             password: new Password('password'),
@@ -107,6 +108,7 @@ describe('Create Profile Command', () => {
             generationHash: '',
             isDefault: true,
             name,
+            epochAdjustment,
             networkCurrency,
             networkType: NetworkType.MAIN_NET,
             password: new Password('password'),
@@ -127,6 +129,7 @@ describe('Create Profile Command', () => {
                 generationHash: '',
                 isDefault: true,
                 name,
+                epochAdjustment,
                 networkCurrency,
                 networkType: NetworkType.MAIN_NET,
                 password: new Password('password'),
@@ -140,6 +143,7 @@ describe('Create Profile Command', () => {
                 generationHash: '',
                 isDefault: true,
                 name,
+                epochAdjustment,
                 networkCurrency,
                 networkType: NetworkType.MAIN_NET,
                 password: new Password('password'),

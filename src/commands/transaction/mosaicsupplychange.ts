@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { Deadline, MosaicSupplyChangeTransaction } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { SupplyActionResolver } from '../../resolvers/action.resolver';
@@ -66,7 +65,14 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
         const multisigSigner = await this.getMultisigSigner(options);
 
-        const transaction = MosaicSupplyChangeTransaction.create(Deadline.create(), mosaicId, action, amount, profile.networkType, maxFee);
+        const transaction = MosaicSupplyChangeTransaction.create(
+            Deadline.create(profile.epochAdjustment),
+            mosaicId,
+            action,
+            amount,
+            profile.networkType,
+            maxFee,
+        );
 
         const signatureOptions: TransactionSignatureOptions = {
             account,

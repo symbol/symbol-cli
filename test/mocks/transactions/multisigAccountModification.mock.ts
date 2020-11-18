@@ -16,12 +16,12 @@
  *
  */
 
-import { Deadline, MultisigAccountModificationTransaction, NetworkType } from 'symbol-sdk';
-
+import { MultisigAccountModificationTransaction, NetworkType } from 'symbol-sdk';
 import { account1, account2, account3 } from '../accounts.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedMultisigAccountModification1 = MultisigAccountModificationTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     2,
     1,
     [account1.address, account2.address],

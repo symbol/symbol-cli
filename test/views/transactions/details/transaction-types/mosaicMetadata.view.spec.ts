@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { Convert } from 'symbol-sdk';
-
 import { MosaicMetadataView } from '../../../../../src/views/transactions/details/transaction-types';
 import { account1 } from '../../../../mocks/accounts.mock';
 import { mosaicId1 } from '../../../../mocks/mosaics.mock';

@@ -16,7 +16,6 @@
  *
  */
 import { NetworkType } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

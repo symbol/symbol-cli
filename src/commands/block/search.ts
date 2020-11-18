@@ -16,8 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { BlockSearchCriteria } from 'symbol-sdk/dist/src/infrastructure/searchCriteria/BlockSearchCriteria';
-
+import { BlockSearchCriteria, NetworkType } from 'symbol-sdk';
 import { SearchCommand } from '../../interfaces/search.command';
 import { SearchOptions } from '../../interfaces/search.options';
 import { AddressResolver } from '../../resolvers/address.resolver';
@@ -46,13 +45,13 @@ export class BlockSearchOptions extends SearchOptions {
     })
     orderBy: string;
 
-    async buildSearchCriteria(): Promise<BlockSearchCriteria> {
+    async buildSearchCriteria(networkType: NetworkType): Promise<BlockSearchCriteria> {
         const criteria: BlockSearchCriteria = {
             ...(await this.buildBaseSearchCriteria()),
             orderBy: await new BlockOrderByResolver().resolve(this),
         };
         if (this.signerPublicKey) {
-            criteria.signerPublicKey = (await new PublicKeyResolver().resolve(this, undefined, undefined, 'signerPublicKey')).publicKey;
+            criteria.signerPublicKey = (await new PublicKeyResolver().resolve(this, networkType, undefined, 'signerPublicKey')).publicKey;
         }
         if (this.beneficiaryAddress) {
             criteria.beneficiaryAddress = (await new AddressResolver().resolve(this, undefined, undefined, 'beneficiaryAddress')).plain();
@@ -75,7 +74,7 @@ export default class extends SearchCommand {
 
         this.spinner.start();
         const blockHttp = profile.repositoryFactory.createBlockRepository();
-        blockHttp.search(await options.buildSearchCriteria()).subscribe(
+        blockHttp.search(await options.buildSearchCriteria(profile.networkType)).subscribe(
             (page) => {
                 this.spinner.stop();
 

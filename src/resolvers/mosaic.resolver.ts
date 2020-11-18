@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { Mosaic, MosaicFlags, MosaicId, NamespaceId } from 'symbol-sdk';
-
 import { OptionsConfirmResolver, OptionsResolver } from '../options-resolver';
 import { MosaicService } from '../services/mosaic.service';
 import { MosaicsValidator } from '../validators/mosaic.validator';

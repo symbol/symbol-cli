@@ -17,7 +17,6 @@
 
 import { command, metadata, option } from 'clime';
 import { Deadline, SecretProofTransaction } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { UnresolvedAddressResolver } from '../../resolvers/address.resolver';
@@ -80,7 +79,7 @@ export default class extends AnnounceTransactionsCommand {
         const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = SecretProofTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             hashAlgorithm,
             secret,
             recipientAddress,

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MessageResolver } from '../../src/resolvers/message.resolver';
 
 describe('Message resolver', () => {

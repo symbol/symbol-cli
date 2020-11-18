@@ -18,7 +18,6 @@
 
 import { Cell } from 'cli-table3';
 import { AggregateTransaction, TransactionType } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 import { transactionDetailViewFactory } from '../transactionDetailView.factory';
 

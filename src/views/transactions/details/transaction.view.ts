@@ -18,7 +18,7 @@
 
 import { Cell, HorizontalTable } from 'cli-table3';
 import { SignedTransaction, Transaction } from 'symbol-sdk';
-
+import { Profile } from '../../../models/profile.model';
 import { TableBuilder } from '../../table.builder';
 import { ITransactionHeaderView, TransactionHeaderView } from './transaction.header.view';
 import { ITransactionViewSignature, TransactionSignatureView } from './transaction.signature.view';
@@ -46,10 +46,11 @@ export class TransactionView {
     /**
      * Creates an instance of TransactionView.
      * @param {Transaction} transaction
-     * @param {SignedTransaction} [signedTransaction]
+     * @param {SignedTransaction} [signedTransaction?]
+     * @param {Profile} profile
      */
-    constructor(transaction: Transaction, signedTransaction?: SignedTransaction) {
-        this.header = TransactionHeaderView.get(transaction);
+    constructor(transaction: Transaction, signedTransaction: SignedTransaction | undefined, profile: Profile | undefined) {
+        this.header = TransactionHeaderView.get(transaction, profile);
         this.details = transactionDetailViewFactory(transaction);
         this.signature = signedTransaction && TransactionSignatureView.get(signedTransaction);
     }

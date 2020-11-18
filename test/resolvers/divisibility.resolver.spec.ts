@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { DivisibilityResolver } from '../../src/resolvers/divisibility.resolver';
 
 describe('Divisibility resolver', () => {

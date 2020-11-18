@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { SearchOptions } from '../../src/interfaces/search.options';
 
 describe('search options', () => {

@@ -18,7 +18,7 @@
 
 import { Cell } from 'cli-table3';
 import { NetworkType, Transaction, TransactionType } from 'symbol-sdk';
-
+import { Profile } from '../../../models/profile.model';
 import { CellRecord } from './transaction.view';
 
 export interface ITransactionHeaderView extends CellRecord {
@@ -36,17 +36,19 @@ export class TransactionHeaderView {
     /**
      * @static
      * @param {Transaction} transaction
+     * @param {Profile} profile
      * @returns {ITransactionHeaderView}
      */
-    static get(transaction: Transaction): ITransactionHeaderView {
-        return new TransactionHeaderView(transaction).render();
+    static get(transaction: Transaction, profile: Profile | undefined): ITransactionHeaderView {
+        return new TransactionHeaderView(transaction, profile).render();
     }
 
     /**
      * Creates an instance of TransactionHeaderView.
      * @param {Transaction} tx
+     * @param {Profile} profile
      */
-    private constructor(private readonly tx: Transaction) {}
+    private constructor(private readonly tx: Transaction, private readonly profile: Profile | undefined) {}
 
     /**
      * @private
@@ -87,6 +89,11 @@ export class TransactionHeaderView {
      */
     protected get formattedDeadline(): string {
         const { deadline } = this.tx;
-        return `${deadline.value.toLocalDate()} ${deadline.value.toLocalTime()}`;
+        if (this.profile) {
+            const localDateTime = deadline.toLocalDateTime(this.profile.epochAdjustment);
+            return `${localDateTime.toLocalDate()} ${localDateTime.toLocalTime()}`;
+        } else {
+            return deadline.adjustedValue + '';
+        }
     }
 }

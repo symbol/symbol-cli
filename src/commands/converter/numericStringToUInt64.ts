@@ -16,7 +16,6 @@
  *
  */
 import { Command, command, metadata, option } from 'clime';
-
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AmountResolver } from '../../resolvers/amount.resolver';
 

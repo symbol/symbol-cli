@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { Mosaic, NamespaceId, UInt64 } from 'symbol-sdk';
-
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
 import { block1Transactions } from '../mocks/transactions/block1Transactions.mock';
 

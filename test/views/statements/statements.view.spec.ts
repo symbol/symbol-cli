@@ -17,7 +17,6 @@
  */
 
 import { assert } from 'chai';
-
 import { StatementsView } from '../../../src/views/statements/statements.view';
 import { statement } from '../../mocks/statements.mock';
 

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MosaicIdAliasValidator, MosaicIdValidator } from '../../src/validators/mosaicId.validator';
 
 describe('Mosaic id validator', () => {

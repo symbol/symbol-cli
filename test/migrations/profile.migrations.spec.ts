@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { ProfileMigrations } from '../../src/migrations/profile.migrations';
 import { profileDTO2v2, profileDTO2v3, profileDTOv1, profileDTOv2 } from '../mocks/profiles/profileDTO.mock';
 

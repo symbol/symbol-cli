@@ -21,7 +21,6 @@ import { HorizontalTable } from 'cli-table3';
 import { Command, ExpectedError } from 'clime';
 import ora from 'ora';
 import { Account, Crypto, Password } from 'symbol-sdk';
-
 import config from '../config/app.conf';
 import { HdProfile } from '../models/hdProfile.model';
 import { Profile } from '../models/profile.model';

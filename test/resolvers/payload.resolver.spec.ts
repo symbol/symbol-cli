@@ -17,14 +17,14 @@
  */
 
 import { expect } from 'chai';
-import { Account, Deadline, EmptyMessage, NetworkType, TransferTransaction } from 'symbol-sdk';
-
+import { Account, EmptyMessage, NetworkType, TransferTransaction } from 'symbol-sdk';
 import { PayloadResolver } from '../../src/resolvers/payload.resolver';
+import { createDeadline } from '../mocks/transactions';
 
 describe('Payload resolver', () => {
     it('should return transaction from payload', async () => {
         const transaction = TransferTransaction.create(
-            Deadline.create(),
+            createDeadline(),
             Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
             [],
             EmptyMessage,
@@ -37,7 +37,7 @@ describe('Payload resolver', () => {
 
     it('should change key', async () => {
         const transaction = TransferTransaction.create(
-            Deadline.create(),
+            createDeadline(),
             Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
             [],
             EmptyMessage,

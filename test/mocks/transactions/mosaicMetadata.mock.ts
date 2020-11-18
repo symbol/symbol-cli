@@ -16,13 +16,13 @@
  *
  */
 
-import { Convert, Deadline, MosaicMetadataTransaction, NetworkType, UInt64 } from 'symbol-sdk';
-
+import { Convert, MosaicMetadataTransaction, NetworkType, UInt64 } from 'symbol-sdk';
 import { account1 } from '../accounts.mock';
 import { mosaicId1 } from '../mosaics.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedMosaicMetadata1 = MosaicMetadataTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     account1.address,
     UInt64.fromUint(1000),
     mosaicId1,

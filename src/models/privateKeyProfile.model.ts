@@ -17,9 +17,8 @@
  */
 
 import { SimpleWallet } from 'symbol-sdk';
-
 import { NetworkCurrency } from './networkCurrency.model';
-import { CURRENT_PROFILE_VERSION, Profile, ProfileType } from './profile.model';
+import { CURRENT_PROFILE_VERSION, epochAdjustment, Profile, ProfileType } from './profile.model';
 import { PrivateKeyProfileCreation } from './profileCreation.types';
 import { ProfileDTOBase } from './profileDTO.types';
 
@@ -35,6 +34,7 @@ export class PrivateKeyProfile extends Profile {
             SimpleWallet.createFromDTO(DTO.simpleWallet),
             DTO.url,
             DTO.networkGenerationHash,
+            DTO.epochAdjustment || epochAdjustment,
             NetworkCurrency.createFromDTO(DTO.networkCurrency),
             DTO.version,
             DTO.type as ProfileType,
@@ -55,6 +55,7 @@ export class PrivateKeyProfile extends Profile {
             simpleWallet,
             args.url,
             args.generationHash,
+            args.epochAdjustment,
             args.networkCurrency,
             CURRENT_PROFILE_VERSION,
             'PrivateKey',
@@ -67,6 +68,7 @@ export class PrivateKeyProfile extends Profile {
      * @param {SimpleWallet} simpleWallet
      * @param {string} url
      * @param {string} networkGenerationHash
+     * @param {number} epochAdjustment
      * @param {NetworkCurrency} networkCurrency
      * @param {number} version
      * @param {ProfileType} type
@@ -76,12 +78,13 @@ export class PrivateKeyProfile extends Profile {
         public readonly simpleWallet: SimpleWallet,
         public readonly url: string,
         public readonly networkGenerationHash: string,
+        public readonly epochAdjustment: number,
         public readonly networkCurrency: NetworkCurrency,
         public readonly version: number,
         public readonly type: ProfileType,
         public readonly isDefault: '0' | '1',
     ) {
-        super(simpleWallet, url, networkGenerationHash, networkCurrency, version, type, isDefault);
+        super(simpleWallet, url, networkGenerationHash, epochAdjustment, networkCurrency, version, type, isDefault);
 
         this.table = this.getBaseTable();
     }
@@ -94,6 +97,7 @@ export class PrivateKeyProfile extends Profile {
         return {
             simpleWallet: this.simpleWallet.toDTO(),
             url: this.url,
+            epochAdjustment: this.epochAdjustment,
             networkGenerationHash: this.networkGenerationHash,
             networkCurrency: this.networkCurrency.toDTO(),
             version: this.version,

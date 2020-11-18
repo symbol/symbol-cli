@@ -17,7 +17,6 @@
  */
 
 import { Address, NamespaceMetadataTransaction } from 'symbol-sdk';
-
 import { NamespacesView } from '../../../namespaces.view';
 import { CellRecord } from '../transaction.view';
 

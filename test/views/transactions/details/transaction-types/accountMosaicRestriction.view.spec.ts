@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { AccountMosaicRestrictionView } from '../../../../../src/views/transactions/details/transaction-types';
 import { mosaicId1, mosaicId2 } from '../../../../mocks/mosaics.mock';
 import { unsignedAccountMosaicRestriction1 } from '../../../../mocks/transactions/accountMosaicRestriction.mock';

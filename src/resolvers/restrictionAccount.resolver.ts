@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import {
     RestrictionAccountAddressFlagValidator,

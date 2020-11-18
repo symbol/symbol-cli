@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { ImportType } from '../../src/models/importType.enum';
 import { ImportTypeResolver } from '../../src/resolvers/importType.resolver';
 

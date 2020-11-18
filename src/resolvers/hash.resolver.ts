@@ -16,7 +16,6 @@
  *
  */
 import { Options } from 'clime';
-
 import { OptionsResolver } from '../options-resolver';
 import { HashValidator } from '../validators/hash.validator';
 import { Resolver } from './resolver';

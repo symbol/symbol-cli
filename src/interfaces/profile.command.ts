@@ -18,7 +18,6 @@
 
 import { Command, ExpectedError } from 'clime';
 import ora from 'ora';
-
 import config from '../config/app.conf';
 import { Profile } from '../models/profile.model';
 import { ProfileRepository } from '../respositories/profile.repository';

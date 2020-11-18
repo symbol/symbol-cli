@@ -17,7 +17,6 @@
  */
 import { option } from 'clime';
 import { SearchCriteria } from 'symbol-sdk';
-
 import { OffsetResolver } from '../resolvers/offset.resolver';
 import { OrderResolver } from '../resolvers/order.resolver';
 import { PageNumberResolver } from '../resolvers/pageNumber.resolver';

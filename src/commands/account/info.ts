@@ -21,7 +21,6 @@ import { command, metadata, option } from 'clime';
 import { forkJoin, of } from 'rxjs';
 import { catchError, mergeMap, toArray } from 'rxjs/operators';
 import { AccountInfo, Address, MosaicAmountView, MosaicService, MultisigAccountInfo } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { AddressResolver } from '../../resolvers/address.resolver';

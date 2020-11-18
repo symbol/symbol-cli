@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { NetworkValidator } from '../../src/validators/network.validator';
 
 describe('Network type validator', () => {

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { PrivateKeyValidator } from '../../src/validators/privateKey.validator';
 
 describe('Private key validator', () => {

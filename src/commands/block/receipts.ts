@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata, option } from 'clime';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { HeightResolver } from '../../resolvers/height.resolver';

@@ -16,12 +16,12 @@
  *
  */
 
-import { AccountRestrictionTransaction, AddressRestrictionFlag, Deadline, NetworkType } from 'symbol-sdk';
-
+import { AccountRestrictionTransaction, AddressRestrictionFlag, NetworkType } from 'symbol-sdk';
 import { account1, account2, account3 } from '../accounts.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction.createAddressRestrictionModificationTransaction(
-    Deadline.create(),
+    createDeadline(),
     AddressRestrictionFlag.AllowIncomingAddress,
     [account1.address, account2.address],
     [account3.address],

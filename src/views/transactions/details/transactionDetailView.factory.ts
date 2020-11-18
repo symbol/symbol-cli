@@ -17,7 +17,6 @@
  */
 
 import { Transaction, TransactionType } from 'symbol-sdk';
-
 import {
     AccountAddressRestrictionView,
     AccountKeyLinkView,

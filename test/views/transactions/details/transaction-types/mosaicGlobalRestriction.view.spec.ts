@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { MosaicGlobalRestrictionView } from '../../../../../src/views/transactions/details/transaction-types';
 import { mosaicId1, mosaicId2 } from '../../../../mocks/mosaics.mock';
 import { unsignedMosaicGlobalRestriction1 } from '../../../../mocks/transactions/mosaicGlobalRestriction.mock';

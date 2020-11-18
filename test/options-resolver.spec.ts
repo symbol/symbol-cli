@@ -19,7 +19,6 @@
 import { expect } from 'chai';
 import * as proxyquire from 'proxyquire';
 import * as sinon from 'sinon';
-
 import { ActionType } from '../src/models/action.enum';
 import { OptionsChoiceResolver, OptionsConfirmResolver, OptionsResolver } from '../src/options-resolver';
 import { ActionValidator } from '../src/validators/action.validator';

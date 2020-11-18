@@ -17,8 +17,7 @@
  */
 
 import { expect } from 'chai';
-import { TransactionGroup, TransactionType, UInt64 } from 'symbol-sdk';
-
+import { NetworkType, TransactionGroup, TransactionType, UInt64 } from 'symbol-sdk';
 import { TransactionSearchOptions } from '../../../src/commands/transaction/search';
 import { account1 } from '../../mocks/accounts.mock';
 
@@ -34,7 +33,7 @@ describe('search options', () => {
         searchOptions.signerPublicKey = account1.publicKey;
         searchOptions.height = '1';
         searchOptions.type = 'TRANSFER';
-        const searchCriteria = await searchOptions.buildSearchCriteria();
+        const searchCriteria = await searchOptions.buildSearchCriteria(NetworkType.MIJIN_TEST);
         expect(searchCriteria.group).to.be.equal(TransactionGroup.Confirmed);
         expect(searchCriteria.address?.plain()).to.be.equal(account1.address.plain());
         expect(searchCriteria.recipientAddress?.plain()).to.be.equal(account1.address.plain());

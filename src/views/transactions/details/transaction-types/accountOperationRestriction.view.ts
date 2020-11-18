@@ -16,7 +16,6 @@
  *
  */
 import { AccountOperationRestrictionTransaction, OperationRestrictionFlag, TransactionType } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class AccountOperationRestrictionView {

@@ -16,13 +16,13 @@
  *
  */
 
-import { AggregateTransaction, Deadline, NetworkType } from 'symbol-sdk';
-
+import { AggregateTransaction, NetworkType } from 'symbol-sdk';
 import { account1 } from '../accounts.mock';
 import { unsignedTransfer1, unsignedTransfer2 } from '../transactions/transfer.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedAggregateBonded1 = AggregateTransaction.createBonded(
-    Deadline.create(),
+    createDeadline(),
     [unsignedTransfer1.toAggregate(account1.publicAccount), unsignedTransfer2.toAggregate(account1.publicAccount)],
     NetworkType.MIJIN_TEST,
     [],

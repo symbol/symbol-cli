@@ -16,7 +16,7 @@
  *
  */
 
-import { Options, option } from 'clime';
+import { option, Options } from 'clime';
 
 /**
  * Profile options.

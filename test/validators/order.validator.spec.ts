@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { OrderValidator } from '../../src/validators/order.validator';
 
 describe('Order validator', () => {

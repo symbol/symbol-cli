@@ -16,6 +16,7 @@
  *
  */
 
-import { Deadline, LinkAction, NetworkType, VrfKeyLinkTransaction } from 'symbol-sdk';
+import { LinkAction, NetworkType, VrfKeyLinkTransaction } from 'symbol-sdk';
+import { createDeadline } from './deadline.mock';
 
-export const unsignedVrfKeyLink1 = VrfKeyLinkTransaction.create(Deadline.create(), '0'.repeat(64), LinkAction.Link, NetworkType.MIJIN_TEST);
+export const unsignedVrfKeyLink1 = VrfKeyLinkTransaction.create(createDeadline(), '0'.repeat(64), LinkAction.Link, NetworkType.MIJIN_TEST);

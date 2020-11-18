@@ -17,7 +17,6 @@
  */
 
 import { LinkAction, VrfKeyLinkTransaction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class VrfKeyLinkView {

@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { NamespaceId } from 'symbol-sdk';
-
 import { MosaicFlagsResolver, MosaicIdAliasResolver, MosaicIdResolver, MosaicsResolver } from '../../src/resolvers/mosaic.resolver';
 
 describe('Mosaic id resolver', () => {

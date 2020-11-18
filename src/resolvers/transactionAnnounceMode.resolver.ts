@@ -15,6 +15,7 @@
  * limitations under the License.
  *
  */
+import { NetworkType } from 'symbol-sdk';
 import { AnnounceTransactionsOptions } from '../interfaces/announce.transactions.options';
 import { OptionsChoiceResolver } from '../options-resolver';
 import { PublicKeyValidator } from '../validators/publicKey.validator';
@@ -31,13 +32,18 @@ export enum TransactionAnnounceMode {
  */
 export class TransactionAnnounceModeResolver implements Resolver {
     /**
+     * @param networkType this network type.
+     */
+    constructor(private readonly networkType: NetworkType) {}
+
+    /**
      * Resolves an import type provided by the user.
      * @param {CreateProfileOptions} options - Command options.
      * @returns {Promise<TransactionAnnounceMode>}
      */
     async resolve(options: AnnounceTransactionsOptions): Promise<TransactionAnnounceMode> {
         // Enter multisig mode if a valid signer public key was provided as an option
-        if (new PublicKeyValidator().validate(options.signer) === true) {
+        if (new PublicKeyValidator(this.networkType).validate(options.signer) === true) {
             return TransactionAnnounceMode.multisig;
         }
 

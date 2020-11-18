@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { KeyValidator } from '../../src/validators/key.validator';
 
 describe('Key validator', () => {

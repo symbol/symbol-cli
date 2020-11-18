@@ -19,7 +19,6 @@ import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata } from 'clime';
 import { ServerInfo } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { FormatterService } from '../../services/formatter.service';

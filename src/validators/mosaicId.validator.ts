@@ -16,7 +16,6 @@
  *
  */
 import { MosaicId, NamespaceId } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

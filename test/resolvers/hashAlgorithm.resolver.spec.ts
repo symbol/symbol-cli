@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { LockHashAlgorithm } from 'symbol-sdk';
-
 import { HashAlgorithmResolver } from '../../src/resolvers/hashAlgorithm.resolver';
 
 describe('Hash algorithm resolver', () => {
