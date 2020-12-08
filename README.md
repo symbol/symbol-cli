@@ -7,7 +7,7 @@
 
 Command Line Interface (CLI) to interact with Symbol.
 
-**NOTE:** Symbol-CLI is designed to help developers to architect solutions and interact with Symbol networks quickly from the command line prompt. To hold MAIN NET assets, refer to the [Symbol Desktop Wallet](https://github.com/nemfoundation/symbol-desktop-wallet) project.
+**NOTE:** Symbol-CLI is designed to help developers test solutions and interact with Symbol networks quickly from the command line prompt. To hold MAIN NET assets, refer to the [Symbol Desktop Wallet](https://github.com/nemfoundation/symbol-desktop-wallet) project.
 
 ## Important Notes
 
@@ -26,10 +26,9 @@ Find the complete release notes [here](CHANGELOG.md).
 
 ## Installation
 
+The Symbol CLI is distributed using the node package manager ``npm``.
 
-The Symbol CLI is distributed using the node package manager npm.
-
-```
+```bash
 npm install -g symbol-cli
 ```
 
@@ -44,12 +43,12 @@ To get the full list of available commands, check the [CLI reference][ref].
 
 - [Symbol Documentation][docs]
 - [Symbol CLI Reference][ref]
-- Join the community [slack group (#sig-client)][slack] 
+- Join the community [slack group (#sig-client)][slack]
 - If you found a bug, [open a new issue][issues]
 
 ## Contributing
 
-Contributions are welcome and appreciated. 
+Contributions are welcome and appreciated.
 Check [CONTRIBUTING](CONTRIBUTING.md) for information on how to contribute.
 
 ## License
@@ -62,4 +61,4 @@ Licensed under the [Apache License 2.0](LICENSE)
 [docs]: http://nemtech.github.io/getting-started/setup-workstation.html
 [ref]: https://nemtech.github.io/cli.html
 [issues]: https://github.com/nemtech/symbol-cli/issues
-[slack]: https://join.slack.com/t/nem2/shared_invite/zt-hwsoo1s5-G8XO50LaY0m7ZKTRXAczcA 
+[slack]: https://join.slack.com/t/nem2/shared_invite/zt-j0xtyrr8-dJ9p0~Lua4lJx9ZoLbq7mg
