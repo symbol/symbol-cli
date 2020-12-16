@@ -68,6 +68,7 @@ multisigAccounts.set(
     multisigAccountGraphInfoDTO.multisigEntries.map(
         (multisigAccountInfoDTO) =>
             new MultisigAccountInfo(
+                1,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,
@@ -81,6 +82,7 @@ multisigAccounts.set(
     multisigAccountGraphInfoDTO2.multisigEntries.map(
         (multisigAccountInfoDTO) =>
             new MultisigAccountInfo(
+                1,
                 multisigAccountInfoDTO.multisig.accountAddress,
                 multisigAccountInfoDTO.multisig.minApproval,
                 multisigAccountInfoDTO.multisig.minRemoval,

@@ -21,9 +21,10 @@ import { createDeadline } from './deadline.mock';
 
 export const unsignedVotingKeyLink1 = VotingKeyLinkTransaction.create(
     createDeadline(),
-    '0'.repeat(96),
+    '0'.repeat(64),
     1,
     2,
     LinkAction.Link,
+    1,
     NetworkType.MIJIN_TEST,
 );
