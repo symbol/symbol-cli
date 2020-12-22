@@ -18,7 +18,6 @@
 import { command, metadata } from 'clime';
 import { merge } from 'rxjs';
 import { AggregateTransaction, NewBlock, Transaction, TransactionStatusError } from 'symbol-sdk';
-
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { FormatterService } from '../../services/formatter.service';
@@ -54,10 +53,10 @@ export default class extends MonitorAddressCommand {
                             response.transactionInfo.height.compact() === 0
                         ) {
                             console.log(FormatterService.title('New aggregate bonded transaction added:'));
-                            new TransactionView(response).print();
+                            new TransactionView(response, undefined, profile).print();
                         } else if (response instanceof Transaction) {
                             console.log(FormatterService.title('New transaction confirmed:'));
-                            new TransactionView(response).print();
+                            new TransactionView(response, undefined, profile).print();
                         } else if (response instanceof NewBlock) {
                             console.log(FormatterService.title('New block:'), response.height.toString());
                         } else if (response instanceof TransactionStatusError) {

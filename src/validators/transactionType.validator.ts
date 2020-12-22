@@ -17,7 +17,6 @@
  */
 
 import { TransactionType } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

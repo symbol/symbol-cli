@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { HexAddressResolver } from '../../src/resolvers/hexAddress.resolver';
 
 describe('Hex address resolver', () => {

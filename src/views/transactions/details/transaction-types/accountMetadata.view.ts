@@ -17,7 +17,6 @@
  */
 
 import { AccountMetadataTransaction, Address } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class AccountMetadataView {

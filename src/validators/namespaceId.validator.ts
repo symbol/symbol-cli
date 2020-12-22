@@ -16,7 +16,6 @@
  *
  */
 import { NamespaceId, UInt64 } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

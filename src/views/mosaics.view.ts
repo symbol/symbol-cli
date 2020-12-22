@@ -17,7 +17,6 @@
  */
 
 import { Mosaic, MosaicId, NamespaceId } from 'symbol-sdk';
-
 import { NamespacesView } from './namespaces.view';
 import { CellRecord } from './transactions/details/transaction.view';
 

@@ -17,10 +17,9 @@
  */
 
 import { Crypto, SimpleWallet } from 'symbol-sdk';
-
 import { DerivationService } from '../services/derivation.service';
 import { NetworkCurrency } from './networkCurrency.model';
-import { CURRENT_PROFILE_VERSION, Profile, ProfileType } from './profile.model';
+import { CURRENT_PROFILE_VERSION, epochAdjustment, Profile, ProfileType } from './profile.model';
 import { HdProfileCreation } from './profileCreation.types';
 import { HdProfileDTO } from './profileDTO.types';
 
@@ -42,6 +41,7 @@ export class HdProfile extends Profile {
             SimpleWallet.createFromDTO(DTO.simpleWallet),
             DTO.url,
             DTO.networkGenerationHash,
+            DTO.epochAdjustment || epochAdjustment,
             NetworkCurrency.createFromDTO(DTO.networkCurrency),
             DTO.version,
             DTO.type as ProfileType,
@@ -65,6 +65,7 @@ export class HdProfile extends Profile {
             simpleWallet,
             args.url,
             args.generationHash,
+            args.epochAdjustment || epochAdjustment,
             args.networkCurrency,
             CURRENT_PROFILE_VERSION,
             'HD',
@@ -79,6 +80,7 @@ export class HdProfile extends Profile {
      * @param {SimpleWallet} simpleWallet
      * @param {string} url
      * @param {string} networkGenerationHash
+     * @param {number} epochAdjustment
      * @param {NetworkCurrency} networkCurrency
      * @param {number} version
      * @param {ProfileType} type
@@ -90,6 +92,7 @@ export class HdProfile extends Profile {
         public readonly simpleWallet: SimpleWallet,
         public readonly url: string,
         public readonly networkGenerationHash: string,
+        public readonly epochAdjustment: number,
         public readonly networkCurrency: NetworkCurrency,
         public readonly version: number,
         public readonly type: ProfileType,
@@ -97,7 +100,7 @@ export class HdProfile extends Profile {
         public readonly encryptedPassphrase: string,
         public readonly path: string,
     ) {
-        super(simpleWallet, url, networkGenerationHash, networkCurrency, version, type, isDefault);
+        super(simpleWallet, url, networkGenerationHash, epochAdjustment, networkCurrency, version, type, isDefault);
 
         this.table = this.getBaseTable();
         this.table.push(['Path', `Path n. ${this.pathNumber + 1} (${this.path})`]);
@@ -120,6 +123,7 @@ export class HdProfile extends Profile {
             simpleWallet: this.simpleWallet.toDTO(),
             url: this.url,
             networkGenerationHash: this.networkGenerationHash,
+            epochAdjustment: this.epochAdjustment,
             networkCurrency: this.networkCurrency.toDTO(),
             version: this.version,
             default: this.isDefault,

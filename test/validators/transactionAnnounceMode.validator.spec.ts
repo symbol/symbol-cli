@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionAnnounceModeValidator } from '../../src/validators/transactionAnnounceMode.validator';
 
 describe('Transaction announce mode validator', () => {

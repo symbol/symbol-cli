@@ -16,13 +16,13 @@
  *
  */
 
-import { Deadline, MosaicAddressRestrictionTransaction, NetworkType, UInt64 } from 'symbol-sdk';
-
+import { MosaicAddressRestrictionTransaction, NetworkType, UInt64 } from 'symbol-sdk';
 import { account1 } from '../accounts.mock';
 import { namespaceId1 } from '../namespaces.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedMosaicAddressRestriction1 = MosaicAddressRestrictionTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     namespaceId1,
     UInt64.fromUint(1),
     account1.address,

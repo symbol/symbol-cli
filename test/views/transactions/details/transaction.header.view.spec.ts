@@ -16,14 +16,14 @@
  *
  */
 import { expect } from 'chai';
-
 import { TransactionHeaderView } from '../../../../src/views/transactions/details/transaction.header.view';
+import { mockPrivateKeyProfile1 } from '../../../mocks/profiles/profile.mock';
 import { block1Transactions } from '../../../mocks/transactions/block1Transactions.mock';
 import { unsignedTransfer1 } from '../../../mocks/transactions/transfer.mock';
 
 describe('Transaction header view', () => {
     it('should return a view of an unsigned transaction', () => {
-        const headerView = TransactionHeaderView.get(unsignedTransfer1);
+        const headerView = TransactionHeaderView.get(unsignedTransfer1, mockPrivateKeyProfile1);
         expect(headerView['Title']).deep.equal({
             content: 'TRANSFER',
             colSpan: 2,
@@ -40,7 +40,7 @@ describe('Transaction header view', () => {
 
     it('should return a view of a signed transaction', () => {
         const [signedNamespaceRegistration] = block1Transactions;
-        const headerView = TransactionHeaderView.get(signedNamespaceRegistration);
+        const headerView = TransactionHeaderView.get(signedNamespaceRegistration, mockPrivateKeyProfile1);
         expect(headerView['Title']).deep.equal({
             content: 'NAMESPACE_REGISTRATION',
             colSpan: 2,

@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { AggregateTransaction, CosignatureSignedTransaction, CosignatureTransaction, Transaction, TransactionGroup } from 'symbol-sdk';
-
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { Profile } from '../../models/profile.model';
@@ -58,7 +57,7 @@ export default class extends ProfileCommand {
         transactionHttp.getTransaction(hash, TransactionGroup.Partial).subscribe(
             async (transaction: Transaction) => {
                 console.log(FormatterService.title('Transaction to cosign:'));
-                new TransactionView(transaction).print();
+                new TransactionView(transaction, undefined, this.profile).print();
                 const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction as AggregateTransaction, hash);
                 if (signedCosignature) {
                     this.announceAggregateBondedCosignature(signedCosignature);

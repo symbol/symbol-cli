@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { ProfileNameResolver } from '../../src/resolvers/profile.resolver';
 
 describe('Profile name resolver', () => {

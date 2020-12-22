@@ -16,15 +16,15 @@
  *
  */
 
-import { Account, Deadline, NetworkType, PlainMessage, TransferTransaction, UInt64 } from 'symbol-sdk';
-
+import { Account, NetworkType, PlainMessage, TransferTransaction, UInt64 } from 'symbol-sdk';
 import { mosaic1, mosaic2 } from '../mosaics.mock';
 import { namespaceId2 } from '../namespaces.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedTransfer1 = new TransferTransaction(
     NetworkType.MAIN_NET,
     1,
-    Deadline.create(),
+    createDeadline(),
     UInt64.fromUint(1000),
     Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
     [mosaic1],
@@ -34,7 +34,7 @@ export const unsignedTransfer1 = new TransferTransaction(
 export const unsignedTransfer2 = new TransferTransaction(
     NetworkType.MAIN_NET,
     1,
-    Deadline.create(),
+    createDeadline(),
     UInt64.fromUint(1000),
     namespaceId2,
     [mosaic1, mosaic2],

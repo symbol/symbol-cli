@@ -16,12 +16,12 @@
  *
  */
 
-import { AccountKeyLinkTransaction, Deadline, LinkAction, NetworkType } from 'symbol-sdk';
-
+import { AccountKeyLinkTransaction, LinkAction, NetworkType } from 'symbol-sdk';
 import { account1 } from '../accounts.mock';
+import { createDeadline } from './deadline.mock';
 
 export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
-    Deadline.create(),
+    createDeadline(),
     account1.publicKey,
     LinkAction.Link,
     NetworkType.MIJIN_TEST,

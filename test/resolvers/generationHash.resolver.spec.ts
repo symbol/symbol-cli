@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { GenerationHashResolver } from '../../src/resolvers/generationHash.resolver';
 
 describe('Generation hash resolver', () => {

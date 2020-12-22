@@ -17,7 +17,6 @@
  */
 
 import { MosaicDefinitionTransaction } from 'symbol-sdk';
-
 import { CellRecord } from '../transaction.view';
 
 export class MosaicDefinitionView {

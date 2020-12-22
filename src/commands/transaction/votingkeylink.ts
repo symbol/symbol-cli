@@ -16,15 +16,14 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Deadline, VotingKeyLinkTransaction } from 'symbol-sdk';
-
+import { Deadline, NetworkType, VotingKeyLinkTransaction } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
-import { BLSPublicKeyResolver } from '../../resolvers/bls.resolver';
 import { FinalizationPointResolver } from '../../resolvers/finalizationPoint.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -64,7 +63,14 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        const linkedPublicKey = await new BLSPublicKeyResolver().resolve(options);
+        const linkedPublicKey = (
+            await new PublicKeyResolver().resolve(
+                options,
+                profile.networkType,
+                'Enter the public key of the voting key account: ',
+                'linkedPublicKey',
+            )
+        ).publicKey;
         const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
         const multisigSigner = await this.getMultisigSigner(options);
@@ -73,12 +79,14 @@ export default class extends AnnounceTransactionsCommand {
         const endPoint = await new FinalizationPointResolver().resolve(options, 'Enter the end point:', 'endPoint');
 
         const transaction = VotingKeyLinkTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             linkedPublicKey,
             startPoint.compact(),
             endPoint.compact(),
             action,
             profile.networkType,
+            // REMOVE Version 2 when testnet is reset with main code.
+            profile.networkType == NetworkType.TEST_NET ? 2 : 1,
             maxFee,
         );
 

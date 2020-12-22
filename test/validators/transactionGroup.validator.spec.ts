@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionGroupValidator } from '../../src/validators/transactionGroup.validator';
 
 describe('Transaction group validator', () => {

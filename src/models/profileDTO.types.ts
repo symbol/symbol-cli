@@ -16,7 +16,6 @@
  *
  */
 import { ISimpleWalletDTO } from 'symbol-sdk';
-
 import { NetworkCurrencyDTO } from './networkCurrency.model';
 
 /**
@@ -28,6 +27,7 @@ export interface ProfileDTOBase {
     simpleWallet: ISimpleWalletDTO;
     url: string;
     networkGenerationHash: string;
+    epochAdjustment: number | undefined;
     networkCurrency: NetworkCurrencyDTO;
     version: number;
     default: string;

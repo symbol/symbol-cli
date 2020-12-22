@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { LinkAction, MosaicSupplyChangeAction } from 'symbol-sdk';
-
 import { ActionType } from '../../src/models/action.enum';
 import { ActionResolver, LinkActionResolver, SupplyActionResolver } from '../../src/resolvers/action.resolver';
 

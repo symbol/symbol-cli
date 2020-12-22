@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { Account, Address, NamespaceId, NetworkType } from 'symbol-sdk';
-
 import { AddressResolver, CosignatoryUnresolvedAddressesResolver, UnresolvedAddressResolver } from '../../src/resolvers/address.resolver';
 
 describe('Address resolver', () => {

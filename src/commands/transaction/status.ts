@@ -19,9 +19,9 @@ import * as Table from 'cli-table3';
 import { HorizontalTable } from 'cli-table3';
 import { command, metadata, option } from 'clime';
 import { TransactionStatus } from 'symbol-sdk';
-
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { ProfileOptions } from '../../interfaces/profile.options';
+import { Profile } from '../../models/profile.model';
 import { HashResolver } from '../../resolvers/hash.resolver';
 import { FormatterService } from '../../services/formatter.service';
 
@@ -35,7 +35,7 @@ export class CommandOptions extends ProfileOptions {
 
 export class TransactionStatusTable {
     private readonly table: HorizontalTable;
-    constructor(public readonly status: TransactionStatus) {
+    constructor(public readonly status: TransactionStatus, profile: Profile) {
         this.table = new Table({
             style: { head: ['cyan'] },
             head: ['Property', 'Value'],
@@ -45,7 +45,8 @@ export class TransactionStatusTable {
             this.table.push(['Status Code', status.code]);
         }
         if (status.deadline) {
-            this.table.push(['Deadline', status.deadline.value.toString()]);
+            const localDateTime = status.deadline.toLocalDateTime(profile.epochAdjustment);
+            this.table.push(['Deadline', `${localDateTime.toLocalDate()} ${localDateTime.toLocalTime()}`]);
         }
         if (status.height) {
             this.table.push(['Height', status.height.toString()]);
@@ -78,7 +79,7 @@ export default class extends ProfileCommand {
         transactionStatusHttp.getTransactionStatus(hash).subscribe(
             (status) => {
                 this.spinner.stop();
-                console.log(new TransactionStatusTable(status).toString());
+                console.log(new TransactionStatusTable(status, profile).toString());
             },
             (err) => {
                 this.spinner.stop();

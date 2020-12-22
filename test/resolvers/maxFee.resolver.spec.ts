@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MaxFeeResolver } from '../../src/resolvers/maxFee.resolver';
 
 describe('Max fee resolver', () => {

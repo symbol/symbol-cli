@@ -16,7 +16,6 @@
  *
  */
 import { LockHashAlgorithm } from 'symbol-sdk';
-
 import { SecretProofCommandOptions } from '../commands/transaction/secretproof';
 import { OptionsResolver } from '../options-resolver';
 import { ProofValidator } from '../validators/proof.validator';

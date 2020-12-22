@@ -17,7 +17,6 @@
  */
 
 import { Order } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

@@ -16,7 +16,6 @@
  *
  */
 import { Command, command, metadata, option } from 'clime';
-
 import { ProfileOptions } from '../../interfaces/profile.options';
 import { PayloadResolver } from '../../resolvers/payload.resolver';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
@@ -40,6 +39,6 @@ export default class extends Command {
     @metadata
     async execute(options: CommandOptions) {
         const transaction = await new PayloadResolver().resolve(options);
-        new TransactionView(transaction).print();
+        new TransactionView(transaction, undefined, undefined).print();
     }
 }

@@ -16,7 +16,6 @@
  *
  */
 import { Validator } from 'clime';
-
 import { TransactionAnnounceMode } from '../resolvers/transactionAnnounceMode.resolver';
 
 /**

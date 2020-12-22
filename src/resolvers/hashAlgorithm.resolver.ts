@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { LockHashAlgorithm } from 'symbol-sdk';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { HashAlgorithmValidator } from '../validators/hashAlgorithm.validator';
 import { Resolver } from './resolver';

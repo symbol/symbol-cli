@@ -26,7 +26,6 @@ import {
     ReceiptType,
     TransactionStatement,
 } from 'symbol-sdk';
-
 import { RecipientsView } from '../recipients.view';
 import { CellRecord } from '../transactions/details/transaction.view';
 import { AbstractStatementView } from './abstractStatementView.view';

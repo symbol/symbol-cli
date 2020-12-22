@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { HashResolver } from '../../src/resolvers/hash.resolver';
 
 describe('Hash resolver', () => {

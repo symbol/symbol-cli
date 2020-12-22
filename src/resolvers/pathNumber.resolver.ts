@@ -17,7 +17,6 @@
  */
 
 import { Options } from 'clime';
-
 import { OptionsChoiceResolver } from '../options-resolver';
 import { Resolver } from './resolver';
 

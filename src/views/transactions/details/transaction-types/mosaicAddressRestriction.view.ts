@@ -17,7 +17,6 @@
  */
 
 import { MosaicAddressRestrictionTransaction } from 'symbol-sdk';
-
 import { RecipientsView } from '../../../recipients.view';
 import { CellRecord } from '../transaction.view';
 

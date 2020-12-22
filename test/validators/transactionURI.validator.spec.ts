@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionURIValidator } from '../../src/validators/transactionURI.validator';
 
 describe('TransactionURI validator', () => {

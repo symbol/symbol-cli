@@ -16,7 +16,6 @@
  *
  */
 import { option } from 'clime';
-
 import { ProfileOptions } from './profile.options';
 
 /**
@@ -37,7 +36,7 @@ export class CreateProfileOptions extends ProfileOptions {
 
     @option({
         flag: 'n',
-        description: '(Optional) Network Type. (MAIN_NET, TEST_NET, MIJIN, MIJIN_TEST)',
+        description: '(Optional) Network Type. (MAIN_NET, TEST_NET, PRIVATE, PRIVATE_TEST, MIJIN, MIJIN_TEST)',
     })
     network: string;
 
@@ -71,4 +70,11 @@ export class CreateProfileOptions extends ProfileOptions {
         description: '(Optional) Divisibility of the network mosaic. (eg.: 6) Required to create the profile offline.',
     })
     divisibility: number;
+
+    @option({
+        flag: 'e',
+        description:
+            '(Optional) The epoch adjustment network configuration in seconds used to created the transaction`s deadline. (eg.: 1573430400) Required to create the profile offline.',
+    })
+    epochAdjustment: number;
 }

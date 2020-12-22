@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { PrivateKeyResolver } from '../../src/resolvers/privateKey.resolver';
 
 describe('Private key resolver', () => {

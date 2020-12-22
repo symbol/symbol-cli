@@ -17,7 +17,6 @@
  */
 import { ExpectedError } from 'clime';
 import { NodeHttp } from 'symbol-sdk';
-
 import { CreateProfileOptions } from '../interfaces/create.profile.options';
 import { Resolver } from './resolver';
 

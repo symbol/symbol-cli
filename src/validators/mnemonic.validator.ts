@@ -16,7 +16,6 @@
  *
  */
 import { MnemonicPassPhrase } from 'symbol-hd-wallets';
-
 import { Validator } from './validator';
 
 /**

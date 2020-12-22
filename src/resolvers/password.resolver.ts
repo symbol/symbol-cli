@@ -17,7 +17,6 @@
  */
 import { Options } from 'clime';
 import { Password } from 'symbol-sdk';
-
 import { OptionsResolver } from '../options-resolver';
 import { PasswordValidator } from '../validators/password.validator';
 import { Resolver } from './resolver';

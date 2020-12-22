@@ -18,7 +18,6 @@
 import { Options } from 'clime';
 import { Transaction, TransactionMapping } from 'symbol-sdk';
 import { TransactionURI } from 'symbol-uri-scheme';
-
 import { Profile } from '../models/profile.model';
 import { OptionsResolver } from '../options-resolver';
 import { TransactionURIValidator } from '../validators/transactionURI.validator';

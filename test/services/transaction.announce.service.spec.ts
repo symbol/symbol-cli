@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { TransactionAnnounceService } from '../../src/services/transaction.announce.service';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
 

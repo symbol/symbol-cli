@@ -16,11 +16,10 @@
  *
  */
 
-import { HorizontalTable } from 'cli-table3';
 import * as Table from 'cli-table3';
+import { HorizontalTable } from 'cli-table3';
 import { ExpectedError } from 'clime';
 import { Account, Address, NetworkType, Password, RepositoryFactoryHttp, SimpleWallet } from 'symbol-sdk';
-
 import { NetworkCurrency } from './networkCurrency.model';
 import { ProfileDTO } from './profileDTO.types';
 
@@ -35,6 +34,8 @@ export type ProfileRecord = Record<string, ProfileDTO>;
  * Profile types.
  */
 export type ProfileType = 'PrivateKey' | 'HD';
+
+export const epochAdjustment = 1573430400;
 
 /**
  * Base implementation of the Profile models
@@ -55,6 +56,8 @@ export abstract class Profile {
      * @param {SimpleWallet} simpleWallet
      * @param {string} url
      * @param {string} networkGenerationHash
+     * @param {number} epochAdjustment
+     * @param {number} the configured epoch adjustment.
      * @param {NetworkCurrency} networkCurrency
      * @param {number} version
      * @param {ProfileType} type
@@ -64,6 +67,7 @@ export abstract class Profile {
         public readonly simpleWallet: SimpleWallet,
         public readonly url: string,
         public readonly networkGenerationHash: string,
+        public readonly epochAdjustment: number,
         public readonly networkCurrency: NetworkCurrency,
         public readonly version: number,
         public readonly type: ProfileType,

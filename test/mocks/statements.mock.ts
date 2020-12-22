@@ -33,7 +33,6 @@ import {
     UInt64,
     UnresolvedAddress,
 } from 'symbol-sdk';
-
 import { account1, account2 } from './accounts.mock';
 import { mosaicId1, mosaicId2, mosaicId3 } from './mosaics.mock';
 import { namespaceId1 } from './namespaces.mock';

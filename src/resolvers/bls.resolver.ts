@@ -17,7 +17,6 @@
  */
 
 import { Options } from 'clime';
-
 import { OptionsResolver } from '../options-resolver';
 import { BLSPublicKeyValidator } from '../validators/bls.validator';
 import { Resolver } from './resolver';

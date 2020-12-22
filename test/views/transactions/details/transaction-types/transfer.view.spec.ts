@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { Address } from 'symbol-sdk';
-
 import { TransferView } from '../../../../../src/views/transactions/details/transaction-types/transfer.view';
 import { unsignedTransfer1, unsignedTransfer2 } from '../../../../mocks/transactions/transfer.mock';
 

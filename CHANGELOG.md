@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.1] - 22-Dec-2020
+
+### Changed
+
+- ``nodekeylink`` is a valid ``transaction`` type now.
+- Updated package dependencies.
+- Updated voting key transaction v2 for Testnet.
+
 ## [0.22.0] - 06-Oct-2020
 
 **Milestone**: 0.10.x

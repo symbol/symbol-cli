@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { NamespaceRegistrationView } from '../../../../../src/views/transactions/details/transaction-types';
 import { namespaceId1 } from '../../../../mocks/namespaces.mock';
 import {

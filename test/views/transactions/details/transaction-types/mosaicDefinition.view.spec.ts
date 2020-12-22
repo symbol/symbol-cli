@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { MosaicDefinitionView } from '../../../../../src/views/transactions/details/transaction-types';
 import { mosaicId1 } from '../../../../mocks/mosaics.mock';
 import { unsignedMosaicDefinition1 } from '../../../../mocks/transactions/mosaicDefinition.mock';

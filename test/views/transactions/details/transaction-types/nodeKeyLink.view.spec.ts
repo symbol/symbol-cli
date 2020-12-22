@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { LinkAction } from 'symbol-sdk';
-
 import { NodeKeyLinkView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedNodeKeyLink1 } from '../../../../mocks/transactions/nodeKeyLink.mock';
 

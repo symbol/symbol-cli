@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { ActionValidator, LinkActionValidator, MosaicSupplyChangeActionValidator } from '../../src/validators/action.validator';
 
 describe('Action validator', () => {

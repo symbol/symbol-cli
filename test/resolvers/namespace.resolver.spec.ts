@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { NamespaceId, NamespaceRegistrationType } from 'symbol-sdk';
-
 import { NamespaceIdResolver, NamespaceNameResolver, NamespaceTypeResolver } from '../../src/resolvers/namespace.resolver';
 
 describe('Namespace name resolver', () => {

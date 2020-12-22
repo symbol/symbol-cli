@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { PageNumberResolver } from '../../src/resolvers/pageNumber.resolver';
 
 describe('Page number resolver', () => {

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { HexAddressValidator } from '../../src/validators/hexAddress.validator';
 
 describe('Hex address validator', () => {

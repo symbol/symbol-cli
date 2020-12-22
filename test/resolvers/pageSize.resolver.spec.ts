@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { PageSizeResolver } from '../../src/resolvers/pageSize.resolver';
 
 describe('Page number resolver', () => {

@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { AmountResolver } from '../../src/resolvers/amount.resolver';
 
 describe('Amount resolver', () => {

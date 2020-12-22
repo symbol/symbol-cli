@@ -17,7 +17,6 @@
  */
 import { command, metadata, option } from 'clime';
 import { Deadline, PersistentHarvestingDelegationMessage, TransferTransaction } from 'symbol-sdk';
-
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
@@ -85,7 +84,7 @@ export default class extends AnnounceTransactionsCommand {
         const multisigSigner = await this.getMultisigSigner(options);
 
         const transaction = TransferTransaction.create(
-            Deadline.create(),
+            Deadline.create(profile.epochAdjustment),
             recipientPublicAccount.address,
             [],
             message,

@@ -17,7 +17,6 @@
  */
 import { expect } from 'chai';
 import { TransactionType } from 'symbol-sdk';
-
 import { AccountOperationRestrictionView } from '../../../../../src/views/transactions/details/transaction-types';
 import {
     operation1,

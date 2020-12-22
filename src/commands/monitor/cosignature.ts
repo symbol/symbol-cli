@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { FormatterService } from '../../services/formatter.service';

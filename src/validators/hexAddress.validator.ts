@@ -16,7 +16,6 @@
  *
  */
 import { Address } from 'symbol-sdk';
-
 import { Validator } from './validator';
 
 /**

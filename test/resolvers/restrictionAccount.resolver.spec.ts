@@ -18,7 +18,6 @@
 
 import { expect } from 'chai';
 import { AddressRestrictionFlag, MosaicRestrictionFlag, OperationRestrictionFlag } from 'symbol-sdk';
-
 import {
     RestrictionAccountAddressFlagsResolver,
     RestrictionAccountMosaicFlagsResolver,

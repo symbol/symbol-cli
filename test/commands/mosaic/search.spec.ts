@@ -17,7 +17,6 @@
  */
 
 import { expect } from 'chai';
-
 import { MosaicSearchOptions } from '../../../src/commands/mosaic/search';
 import { account1 } from '../../mocks/accounts.mock';
 

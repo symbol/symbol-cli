@@ -17,7 +17,6 @@
  */
 
 import { LinkAction, MosaicSupplyChangeAction } from 'symbol-sdk';
-
 import { ActionType } from '../models/action.enum';
 import { Validator } from './validator';
 

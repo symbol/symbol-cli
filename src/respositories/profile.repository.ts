@@ -16,7 +16,6 @@
  *
  */
 import * as fs from 'fs';
-
 import { ProfileMigrations } from '../migrations/profile.migrations';
 import { HdProfile } from '../models/hdProfile.model';
 import { PrivateKeyProfile } from '../models/privateKeyProfile.model';

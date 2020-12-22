@@ -16,7 +16,6 @@
  *
  */
 import { command, metadata } from 'clime';
-
 import { MonitorAddressCommand, MonitorAddressOptions } from '../../interfaces/monitor.transaction.command';
 import { AddressResolver } from '../../resolvers/address.resolver';
 import { FormatterService } from '../../services/formatter.service';
@@ -40,6 +39,7 @@ export default class extends MonitorAddressCommand {
             () => {
                 listener.status(address).subscribe(
                     (transactionStatusError) => {
+                        const deadlineLocalDateTime = transactionStatusError.deadline.toLocalDateTime(profile.epochAdjustment);
                         const text =
                             '\nHash: ' +
                             transactionStatusError.hash +
@@ -48,9 +48,9 @@ export default class extends MonitorAddressCommand {
                             transactionStatusError.code +
                             '\n' +
                             'Deadline: ' +
-                            transactionStatusError.deadline.value.toLocalDate().toString() +
+                            deadlineLocalDateTime.toLocalDate().toString() +
                             ' ' +
-                            transactionStatusError.deadline.value.toLocalTime().toString();
+                            deadlineLocalDateTime.toLocalTime().toString();
                         console.log(text);
                     },
                     (err) => {

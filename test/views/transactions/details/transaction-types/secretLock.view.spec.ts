@@ -16,7 +16,6 @@
  *
  */
 import { expect } from 'chai';
-
 import { SecretLockView } from '../../../../../src/views/transactions/details/transaction-types';
 import { unsignedSecretLock1 } from '../../../../mocks/transactions/secretLock.mock';
 

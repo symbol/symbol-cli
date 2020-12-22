@@ -19,11 +19,10 @@
 import { expect } from 'chai';
 import { Account, NetworkType, Password, SimpleWallet } from 'symbol-sdk';
 import { instance, mock, when } from 'ts-mockito';
-
 import { HdProfile } from '../../src/models/hdProfile.model';
 import { NetworkCurrency } from '../../src/models/networkCurrency.model';
 import { PrivateKeyProfile } from '../../src/models/privateKeyProfile.model';
-import { Profile } from '../../src/models/profile.model';
+import { epochAdjustment, Profile } from '../../src/models/profile.model';
 import { ProfileRepository } from '../../src/respositories/profile.repository';
 import { ProfileService } from '../../src/services/profile.service';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
@@ -86,6 +85,7 @@ describe('Configure service', () => {
         const mockProfileRepository = mock(ProfileRepository);
         const profile = new ProfileService(mockProfileRepository).createNewProfile({
             generationHash: 'default',
+            epochAdjustment: epochAdjustment,
             isDefault: false,
             name: 'default',
             networkCurrency,
@@ -102,6 +102,7 @@ describe('Configure service', () => {
         const mockProfileRepository = mock(ProfileRepository);
         const profile = new ProfileService(instance(mockProfileRepository)).createNewProfile({
             generationHash: 'default',
+            epochAdjustment: epochAdjustment,
             isDefault: false,
             name: 'default',
             networkCurrency,
