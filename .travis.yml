@@ -21,11 +21,11 @@ before_script:
   - npm run build
   - npm link
   - catapult-docs-cli cli-usage --config .clidocs > docs/$VERSION.md
-script:
-  - npm run test:cov
-  - npm run coveralls-report
 jobs:
   include:
+    - stage: test
+      name: test
+      script: npm run test:cov && npm run coveralls-report
     - stage: test
       name: lint
       script: npm run lint
