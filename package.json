@@ -33,6 +33,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "axios": "^0.19.2",
+        "bip32": "^1.0.2",
         "chalk": "^2.3.0",
         "cli-table3": "^0.5.1",
         "clime": "^0.5.9",
@@ -47,6 +48,7 @@
         "utf8": "^3.0.0"
     },
     "devDependencies": {
+        "@types/bip32": "^1.0.2",
         "@types/chai": "^4.0.4",
         "@types/mocha": "^8.2.0",
         "@types/node": "^9.6.55",
