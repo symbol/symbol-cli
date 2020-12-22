@@ -33,6 +33,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "axios": "^0.19.2",
+        "bip32": "^1.0.2",
         "chalk": "^2.3.0",
         "cli-table3": "^0.5.1",
         "clime": "^0.5.9",
@@ -40,13 +41,14 @@
         "path": "^0.12.7",
         "prompts": "^2.1.0",
         "rxjs": "^6.6.3",
-        "symbol-hd-wallets": "0.14.0-alpha-202010231206",
+        "symbol-hd-wallets": "0.14.0",
         "symbol-sdk": "0.22.2",
-        "symbol-uri-scheme": "0.5.2-alpha-202010291746",
+        "symbol-uri-scheme": "0.6.0",
         "update-notifier": "^4.1.0",
         "utf8": "^3.0.0"
     },
     "devDependencies": {
+        "@types/bip32": "^1.0.2",
         "@types/chai": "^4.0.4",
         "@types/mocha": "^8.2.0",
         "@types/node": "^9.6.55",
