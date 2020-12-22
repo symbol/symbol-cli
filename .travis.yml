@@ -25,7 +25,7 @@ jobs:
   include:
     - stage: test
       name: test
-      script: npm run test:cov && coveralls-report
+      script: npm run test:cov && npm run coveralls-report
     - stage: test
       name: lint
       script: npm run lint
