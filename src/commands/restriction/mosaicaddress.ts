@@ -85,7 +85,7 @@ export default class extends ProfileCommand {
         // Should we load all?
         const criteria = { mosaicId, targetAddress: address };
 
-        const observable = restrictionHttp.searchMosaicRestrictions(criteria).pipe(
+        const observable = restrictionHttp.search(criteria).pipe(
             mergeMap((page) => {
                 return from(page.data);
             }),
