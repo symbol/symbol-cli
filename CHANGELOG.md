@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.22.2] - 12-Jan-2021
+
+### Changed
+
+- Updated Axios dependency.
+
 ## [0.22.1] - 22-Dec-2020
 
 ### Changed
