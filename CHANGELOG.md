@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
-## [0.22.4] - 15-Jan-2021
+## [0.23.0] - 15-Jan-2021
 
-:warning: 0.22.4 breaks compatibility with the ``profiles`` (Testnet change) saved using previous versions of the software
-Before installing ``symbol-cli@0.22.4``, backup and delete the file ``~ \.symbolrc.json``
+:warning: 0.23.0 breaks compatibility with the ``profiles`` (Testnet change) saved using previous versions of the software.
+Before installing ``symbol-cli@0.23.0``, backup and delete the file ``~ \.symbolrc.json``
 
 ### Changed
 
