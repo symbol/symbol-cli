@@ -6,6 +6,10 @@ The changelog format is based on [Keep a Changelog](https://keepachangelog.com/e
 
 ## [0.23.1] - 19-Jan-2021
 
+### Changed
+
+- Updated project dependencies.
+
 ### Fixed
 
 - ``votingkeylink`` version for the new Testnet.
