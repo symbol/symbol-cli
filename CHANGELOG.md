@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.23.1] - 19-Jan-2021
+
+### Fixed
+
+- ``votingkeylink`` version for the new Testnet.
+
 ## [0.23.0] - 15-Jan-2021
 
 :warning: 0.23.0 breaks compatibility with the ``profiles`` (Testnet change) saved using previous versions of the software.

@@ -16,7 +16,7 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Deadline, NetworkType, VotingKeyLinkTransaction } from 'symbol-sdk';
+import { Deadline, VotingKeyLinkTransaction } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
@@ -85,8 +85,7 @@ export default class extends AnnounceTransactionsCommand {
             endPoint.compact(),
             action,
             profile.networkType,
-            // REMOVE Version 2 when testnet is reset with main code.
-            profile.networkType == NetworkType.TEST_NET ? 2 : 1,
+            1,
             maxFee,
         );
 
