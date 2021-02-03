@@ -58,8 +58,8 @@ export class HdProfile extends Profile {
      * @returns
      */
     public static create(args: HdProfileCreation) {
-        const path = DerivationService.getPathFromPathNumber(args.pathNumber);
-        const privateKey = DerivationService.getPrivateKeyFromMnemonic(args.mnemonic, args.pathNumber);
+        const path = DerivationService.getPathFromPathNumber(args.pathNumber, args.networkType);
+        const privateKey = DerivationService.getPrivateKeyFromMnemonic(args.mnemonic, args.pathNumber, args.networkType);
         const simpleWallet = SimpleWallet.createFromPrivateKey(args.name, args.password, privateKey, args.networkType);
         return new HdProfile(
             simpleWallet,

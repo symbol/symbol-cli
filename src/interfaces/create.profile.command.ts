@@ -55,7 +55,10 @@ export class AccountCredentialsTable {
             this.table.push([
                 'Path',
                 // Address paths are 0-based but shown as 1-based to the users
-                `Seed wallet n. ${args.pathNumber + 1} (${DerivationService.getPathFromPathNumber(args.pathNumber)})`,
+                `Seed wallet n. ${args.pathNumber + 1} (${DerivationService.getPathFromPathNumber(
+                    args.pathNumber,
+                    args.account.networkType,
+                )})`,
             ]);
         }
     }
