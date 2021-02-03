@@ -67,7 +67,7 @@ export default class extends CreateProfileCommand {
             } else {
                 const pathNumber = await new PathNumberResolver().resolve(options);
                 const mnemonic = MnemonicPassPhrase.createRandom().plain;
-                const privateKey = DerivationService.getPrivateKeyFromMnemonic(mnemonic, pathNumber);
+                const privateKey = DerivationService.getPrivateKeyFromMnemonic(mnemonic, pathNumber, networkType);
                 console.log(
                     AccountCredentialsTable.createFromAccount(
                         Account.createFromPrivateKey(privateKey, networkType),
