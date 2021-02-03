@@ -17,6 +17,7 @@
  */
 
 import { ExtendedKey, MnemonicPassPhrase, Wallet } from 'symbol-hd-wallets';
+import { NetworkType } from 'symbol-sdk/dist/src/model/network/NetworkType';
 
 const MIN_PATH_NUMBER = 0;
 const MAX_PATH_NUMBER = 9;
@@ -26,9 +27,10 @@ export class DerivationService {
      * Returns a path given a path number
      * @static
      * @param {number} pathNumber
+     * @param {NetworkType} networkType
      * @returns {string}
      */
-    public static getPathFromPathNumber(pathNumber: number): string {
+    public static getPathFromPathNumber(pathNumber: number, networkType: NetworkType): string {
         const index = parseInt(`${pathNumber}`, 10);
 
         if (index < MIN_PATH_NUMBER || index > MAX_PATH_NUMBER) {
@@ -39,7 +41,7 @@ export class DerivationService {
             throw new Error(`The given path index is invalid (${pathNumber})`);
         }
 
-        return `m/44'/4343'/${pathNumber}'/0'/0'`;
+        return `m/44'/${DerivationService.getPathCoinType(networkType)}'/${pathNumber}'/0'/0'`;
     }
 
     /**
@@ -57,12 +59,22 @@ export class DerivationService {
      * @static
      * @param {string} mnemonic
      * @param {number} pathNumber
+     * @param {NetworkType} networkType
      * @returns {string}
      */
-    public static getPrivateKeyFromMnemonic(mnemonic: string, pathNumber: number): string {
-        const path = this.getPathFromPathNumber(pathNumber);
+    public static getPrivateKeyFromMnemonic(mnemonic: string, pathNumber: number, networkType: NetworkType): string {
+        const path = this.getPathFromPathNumber(pathNumber, networkType);
         const seed = new MnemonicPassPhrase(mnemonic).toSeed().toString('hex');
         const extendedKey = ExtendedKey.createFromSeed(seed);
         return new Wallet(extendedKey).getChildAccountPrivateKey(path);
+    }
+
+    /**
+     * Get coin type in HD path by network type
+     * @param networkType Symbol network type
+     * @returns {string}
+     */
+    public static getPathCoinType(networkType: NetworkType) {
+        return networkType === NetworkType.MAIN_NET ? `4343` : `1`;
     }
 }
