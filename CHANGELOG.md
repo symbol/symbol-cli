@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.24.0] - 04-Feb-2021
+
+### Changed
+
+- Split coint type index in HD path by network type. MAIN_NET: `4343`; TESE_NET:`1`.
+
 ## [0.23.1] - 19-Jan-2021
 
 ### Changed
