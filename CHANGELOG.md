@@ -4,6 +4,12 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.24.1] - 15-Feb-2021
+
+### Changed
+
+- Updated Symbol-SDK to 0.23.2.
+
 ## [0.24.0] - 04-Feb-2021
 
 ### Changed
