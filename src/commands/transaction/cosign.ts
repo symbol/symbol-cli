@@ -16,21 +16,42 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { AggregateTransaction, CosignatureSignedTransaction, CosignatureTransaction, Transaction, TransactionGroup } from 'symbol-sdk';
+import {
+    AggregateTransaction,
+    CosignatureSignedTransaction,
+    CosignatureTransaction,
+    Transaction,
+    TransactionGroup,
+    TransactionMapping,
+} from 'symbol-sdk';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ProfileCommand } from '../../interfaces/profile.command';
 import { Profile } from '../../models/profile.model';
+import { OptionsResolver } from '../../options-resolver';
 import { HashResolver } from '../../resolvers/hash.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
+import { TransactionInputType, TransactionInputTypeResolver } from '../../resolvers/transactionInputType.resolver';
 import { FormatterService } from '../../services/formatter.service';
 import { TransactionView } from '../../views/transactions/details/transaction.view';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
+        flag: 'i',
+        description: 'Transaction input type, hash or payload.',
+    })
+    transactionInputType: string;
+
+    @option({
         flag: 'h',
         description: 'Aggregate bonded transaction hash to be signed.',
     })
     hash: string;
+
+    @option({
+        flag: 'p',
+        description: 'Aggregate transaction payload to be signed.',
+    })
+    payload: string;
 }
 
 @command({
@@ -48,26 +69,59 @@ export default class extends ProfileCommand {
     async execute(options: CommandOptions) {
         this.options = options;
         this.profile = this.getProfile(this.options);
-        const repositoryFactory = this.profile.repositoryFactory;
-        const transactionHttp = repositoryFactory.createTransactionRepository();
-        const hash = await new HashResolver().resolve(options, 'Enter the aggregate bonded transaction hash to cosign: ');
+        const txInputType = await new TransactionInputTypeResolver().resolve(options);
+        if (txInputType === TransactionInputType.HASH) {
+            const repositoryFactory = this.profile.repositoryFactory;
+            const transactionHttp = repositoryFactory.createTransactionRepository();
+            const hash = await new HashResolver().resolve(options, 'Enter the aggregate bonded transaction hash to cosign: ');
 
-        this.spinner.start();
+            this.spinner.start();
 
-        transactionHttp.getTransaction(hash, TransactionGroup.Partial).subscribe(
-            async (transaction: Transaction) => {
-                console.log(FormatterService.title('Transaction to cosign:'));
-                new TransactionView(transaction, undefined, this.profile).print();
-                const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction as AggregateTransaction, hash);
-                if (signedCosignature) {
-                    this.announceAggregateBondedCosignature(signedCosignature);
-                }
-            },
-            (err) => {
-                this.spinner.stop();
-                console.log(FormatterService.error(err));
-            },
-        );
+            transactionHttp.getTransaction(hash, TransactionGroup.Partial).subscribe(
+                async (transaction: Transaction) => {
+                    console.log(FormatterService.title('Transaction to cosign:'));
+                    new TransactionView(transaction, undefined, this.profile).print();
+                    const signedCosignature = await this.getSignedAggregateBondedCosignature(transaction as AggregateTransaction, hash);
+                    if (signedCosignature) {
+                        this.announceAggregateBondedCosignature(signedCosignature);
+                    }
+                },
+                (err) => {
+                    this.spinner.stop();
+                    console.log(FormatterService.error(err));
+                },
+            );
+        } else {
+            // tx payload selected
+            const txPayload = await OptionsResolver(options, 'payload', () => undefined, 'Enter a transaction payload:', 'text', undefined);
+            const transaction = TransactionMapping.createFromPayload(txPayload);
+            console.log(FormatterService.success('Transaction to cosign:'));
+            new TransactionView(transaction, undefined, this.profile).print();
+            const cosignedTransaction = await this.getSignedAggregatePayloadCosignature(txPayload);
+            if (cosignedTransaction) {
+                console.log('Co-signed transaction:' + JSON.stringify(cosignedTransaction));
+            }
+        }
+    }
+
+    /**
+     * Attempts to cosign an aggregated transaction with transaction payload (off chain)
+     * @private
+     * @param {string} payload of the transaction to be cosigned
+     * @returns {(CosignatureSignedTransaction | null)}
+     */
+    private async getSignedAggregatePayloadCosignature(payload: string): Promise<CosignatureSignedTransaction | null> {
+        try {
+            const password = await new PasswordResolver().resolve(this.options);
+            const account = this.profile.decrypt(password);
+            return CosignatureTransaction.signTransactionPayload(account, payload, this.profile.networkGenerationHash);
+        } catch (err) {
+            this.spinner.stop();
+            console.log(
+                FormatterService.error('The profile ' + this.profile.name + ' cannot cosign the transaction with payload ' + payload),
+            );
+            return null;
+        }
     }
 
     /**

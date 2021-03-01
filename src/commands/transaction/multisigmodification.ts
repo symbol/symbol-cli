@@ -17,12 +17,13 @@
  */
 
 import { command, metadata, option } from 'clime';
-import { Deadline, MultisigAccountModificationTransaction } from 'symbol-sdk';
+import { Deadline, MultisigAccountModificationTransaction, TransactionType } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { ActionType } from '../../models/action.enum';
 import { ActionResolver } from '../../resolvers/action.resolver';
 import { CosignatoryUnresolvedAddressesResolver } from '../../resolvers/address.resolver';
+import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { DeltaResolver } from '../../resolvers/delta.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
@@ -62,6 +63,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Multisig account public key.',
     })
     multisigAccountPublicKey: string;
+
+    @option({
+        flag: 't',
+        description: 'Aggregate Type (complete|bonded)',
+    })
+    aggregateType: string;
 }
 
 @command({
@@ -92,8 +99,8 @@ export default class extends AnnounceTransactionsCommand {
             'minRemovalDelta',
         );
         const maxFee = await new MaxFeeResolver().resolve(options);
+        const aggregateType = await new AggregateTypeResolver().resolve(options);
         const multisigSigner = await this.getMultisigSigner(options);
-
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
             Deadline.create(profile.epochAdjustment),
             minApprovalDelta,
@@ -108,7 +115,8 @@ export default class extends AnnounceTransactionsCommand {
             transactions: [multisigAccountModificationTransaction],
             maxFee,
             multisigSigner,
-            isAggregateBonded: true,
+            isAggregate: true,
+            isAggregateBonded: aggregateType === TransactionType.AGGREGATE_BONDED,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);
