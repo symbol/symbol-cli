@@ -19,6 +19,7 @@
 import { Options } from 'clime';
 import { TransactionType } from 'symbol-sdk';
 import { OptionsChoiceResolver } from '../options-resolver';
+import { AggregateTypeValidator } from '../validators/aggregateType.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -44,7 +45,7 @@ export class AggregateTypeResolver implements Resolver {
             altText ? altText : 'Choose an aggregate type:',
             choices,
             'select',
-            undefined, // TODO new AggregateTypeValidator  new TransactionTypeValidator(),
+            new AggregateTypeValidator(),
         ));
         return value;
     }
