@@ -24,6 +24,7 @@ import { ActionType } from '../../models/action.enum';
 import { ActionResolver } from '../../resolvers/action.resolver';
 import { CosignatoryUnresolvedAddressesResolver } from '../../resolvers/address.resolver';
 import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
+import { DeadlineResolver } from '../../resolvers/deadline.resolver';
 import { DeltaResolver } from '../../resolvers/delta.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
@@ -69,6 +70,12 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         description: 'Aggregate Type (complete|bonded)',
     })
     aggregateType: string;
+
+    @option({
+        flag: 'd',
+        description: 'Deadline ms(without Nemesis epoch adjustment)',
+    })
+    deadline: string;
 }
 
 @command({
@@ -101,8 +108,9 @@ export default class extends AnnounceTransactionsCommand {
         const maxFee = await new MaxFeeResolver().resolve(options);
         const aggregateType = await new AggregateTypeResolver().resolve(options);
         const multisigSigner = await this.getMultisigSigner(options);
+        const deadline = options.deadline ? await new DeadlineResolver().resolve(options) : Deadline.create(profile.epochAdjustment);
         const multisigAccountModificationTransaction = MultisigAccountModificationTransaction.create(
-            Deadline.create(profile.epochAdjustment),
+            deadline,
             minApprovalDelta,
             minRemovalDelta,
             action === ActionType.Add ? cosignatories : [],
@@ -117,6 +125,7 @@ export default class extends AnnounceTransactionsCommand {
             multisigSigner,
             isAggregate: true,
             isAggregateBonded: aggregateType === TransactionType.AGGREGATE_BONDED,
+            aggregateDeadline: deadline,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);
