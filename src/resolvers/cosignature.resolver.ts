@@ -36,7 +36,7 @@ export class CosignatureResolver implements Resolver {
             options,
             altKey ? altKey : 'cosignatures',
             () => undefined,
-            altText ? altText : 'Enter a cosignature json array(press enter to skip):',
+            altText ? altText : 'Enter the cosignature json array (press enter to skip):',
             'text',
             undefined, // TODO validation
         );

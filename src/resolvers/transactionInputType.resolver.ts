@@ -44,7 +44,7 @@ export class TransactionInputTypeResolver implements Resolver {
         return await OptionsChoiceResolver(
             options,
             altKey ? altKey : 'transactionInputType',
-            altText ? altText : 'Choose an transaction input type:',
+            altText ? altText : 'Choose a transaction input type:',
             choices,
             'select',
             undefined, // TODO new TransactionInputTypeValidator

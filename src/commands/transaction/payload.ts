@@ -64,7 +64,7 @@ export default class extends AnnounceTransactionsCommand {
         this.options = options;
         this.profile = this.getProfile(this.options);
 
-        const txPayload = await OptionsResolver(options, 'payload', () => undefined, 'Enter a transaction payload:', 'text', undefined);
+        const txPayload = await OptionsResolver(options, 'payload', () => undefined, 'Enter the transaction payload:', 'text', undefined);
         const transaction = TransactionMapping.createFromPayload(txPayload) as AggregateTransaction;
         console.log(FormatterService.success('Transaction loaded:'));
         new TransactionView(transaction, undefined, this.profile).print();

@@ -67,13 +67,13 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 't',
-        description: 'Aggregate Type (complete|bonded)',
+        description: 'Aggregate Type (complete or bonded)',
     })
     aggregateType: string;
 
     @option({
         flag: 'd',
-        description: 'Deadline ms(without Nemesis epoch adjustment)',
+        description: 'Deadline (milliseconds, without Nemesis epoch adjustment)',
     })
     deadline: string;
 }

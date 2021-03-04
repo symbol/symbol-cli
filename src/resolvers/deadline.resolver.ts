@@ -37,7 +37,7 @@ export class DeadlineResolver implements Resolver {
             options,
             altKey ? altKey : 'deadline',
             () => undefined,
-            altText ? altText : 'Enter deadline ms(without Nemesis epoch adjustment):',
+            altText ? altText : 'Enter deadline (in milliseconds, without Nemesis epoch adjustment):',
             'text',
             new DeadlineValidator(),
         );

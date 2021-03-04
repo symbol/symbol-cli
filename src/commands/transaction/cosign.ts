@@ -73,7 +73,7 @@ export default class extends ProfileCommand {
         if (txInputType === TransactionInputType.HASH) {
             const repositoryFactory = this.profile.repositoryFactory;
             const transactionHttp = repositoryFactory.createTransactionRepository();
-            const hash = await new HashResolver().resolve(options, 'Enter the aggregate bonded transaction hash to cosign: ');
+            const hash = await new HashResolver().resolve(options, 'Enter the hash of the aggregate bonded transaction to cosign: ');
 
             this.spinner.start();
 
@@ -93,7 +93,7 @@ export default class extends ProfileCommand {
             );
         } else {
             // tx payload selected
-            const txPayload = await OptionsResolver(options, 'payload', () => undefined, 'Enter a transaction payload:', 'text', undefined);
+            const txPayload = await OptionsResolver(options, 'payload', () => undefined, 'Enter the transaction payload:', 'text', undefined);
             const transaction = TransactionMapping.createFromPayload(txPayload);
             console.log(FormatterService.success('Transaction to cosign:'));
             new TransactionView(transaction, undefined, this.profile).print();
