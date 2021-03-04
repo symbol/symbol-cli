@@ -37,7 +37,7 @@ import { TransactionView } from '../../views/transactions/details/transaction.vi
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'i',
-        description: 'Transaction input type, hash or payload.',
+        description: 'Transaction input type (hash or payload).',
     })
     transactionInputType: string;
 
