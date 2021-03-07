@@ -17,7 +17,7 @@
  */
 
 import { expect } from 'chai';
-import { MultisigAccountInfo, TransactionType, UInt64 } from 'symbol-sdk';
+import { Deadline, MultisigAccountInfo, TransactionType, UInt64 } from 'symbol-sdk';
 import { AnnounceMode, TransactionSignatureService } from '../../src/services/transaction.signature.service';
 import { account1, account2 } from '../mocks/accounts.mock';
 import { mockPrivateKeyProfile1 } from '../mocks/profiles/profile.mock';
@@ -92,6 +92,20 @@ describe('Transaction signature service', () => {
         expect(transactionSignatureService['signCompleteTransactions'](signatureOptionsComplete.account).length).to.be.equal(1);
     });
 
+    it('should get announce mode complete w/ aggregate deadline', async () => {
+        const transactionSignatureService = TransactionSignatureService.create(mockPrivateKeyProfile1, default_options);
+        const signatureOptionsCompleteWithAggregateDeadline = {
+            ...signatureOptionsComplete,
+            aggregateDeadline: Deadline.createFromDTO('1'),
+        };
+        const signatures = transactionSignatureService.signTransactions(signatureOptionsCompleteWithAggregateDeadline);
+        expect(transactionSignatureService.announceMode).to.be.equal(AnnounceMode.complete);
+        expect((await signatures).length).to.be.equal(1);
+        expect(
+            transactionSignatureService['signCompleteTransactions'](signatureOptionsCompleteWithAggregateDeadline.account).length,
+        ).to.be.equal(1);
+    });
+
     it('should get announce mode partial', async () => {
         const transactionSignatureService = TransactionSignatureService.create(mockPrivateKeyProfile1, default_options);
         const signatures = transactionSignatureService.signTransactions(signatureOptionsBonded);
@@ -100,9 +114,31 @@ describe('Transaction signature service', () => {
         expect((await transactionSignatureService['signPartialTransactions'](signatureOptionsBonded.account)).length).to.be.equal(2);
     });
 
+    it('should get announce mode partial w/ aggregate deadline', async () => {
+        const transactionSignatureService = TransactionSignatureService.create(mockPrivateKeyProfile1, default_options);
+        const signatureOptionsBondedWithAggregateDeadline = { ...signatureOptionsBonded, aggregateDeadline: Deadline.createFromDTO('1') };
+        const signatures = transactionSignatureService.signTransactions(signatureOptionsBondedWithAggregateDeadline);
+        expect(transactionSignatureService.announceMode).to.be.equal(AnnounceMode.partial);
+        expect((await signatures).length).to.be.equal(2);
+        expect(
+            (await transactionSignatureService['signPartialTransactions'](signatureOptionsBondedWithAggregateDeadline.account)).length,
+        ).to.be.equal(2);
+    });
+
     it('should get announce mode partial mutisig', async () => {
         const transactionSignatureService = TransactionSignatureService.create(mockPrivateKeyProfile1, default_options);
         const signatures = transactionSignatureService.signTransactions(signatureOptionsMultisig);
+        expect(transactionSignatureService.announceMode).to.be.equal(AnnounceMode.partial);
+        expect((await signatures).length).to.be.equal(2);
+    });
+
+    it('should get announce mode partial mutisig w/ aggregate deadline', async () => {
+        const transactionSignatureService = TransactionSignatureService.create(mockPrivateKeyProfile1, default_options);
+        const signatureOptionsMultisigWithAggregateDeadline = {
+            ...signatureOptionsMultisig,
+            aggregateDeadline: Deadline.createFromDTO('1'),
+        };
+        const signatures = transactionSignatureService.signTransactions(signatureOptionsMultisigWithAggregateDeadline);
         expect(transactionSignatureService.announceMode).to.be.equal(AnnounceMode.partial);
         expect((await signatures).length).to.be.equal(2);
     });

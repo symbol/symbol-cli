@@ -73,6 +73,12 @@ export interface TransactionSignatureOptions {
      * @type {boolean}
      */
     isAggregateBonded?: boolean;
+
+    /**
+     *
+     * @type {Deadline}
+     */
+    aggregateDeadline?: Deadline;
 }
 
 export class TransactionSignatureService {
@@ -83,6 +89,7 @@ export class TransactionSignatureService {
     multisigSigner?: MultisigAccount | null;
     isAggregate? = false;
     isAggregateBonded? = false;
+    aggregateDeadline?: Deadline;
 
     /**
      * Gets announcement mode
@@ -123,7 +130,7 @@ export class TransactionSignatureService {
      * @returns {Promise<SignedTransaction[]>}
      */
     public async signTransactions(args: TransactionSignatureOptions): Promise<SignedTransaction[]> {
-        const { account, transactions, multisigSigner, maxFee, isAggregate, isAggregateBonded } = args;
+        const { account, transactions, multisigSigner, maxFee, isAggregate, isAggregateBonded, aggregateDeadline } = args;
 
         this.maxFee = maxFee;
         this.transactions = transactions;
@@ -131,6 +138,7 @@ export class TransactionSignatureService {
         this.isAggregate = isAggregate;
         this.isAggregateBonded = isAggregateBonded;
         this.signerPublicAccount = multisigSigner ? multisigSigner.publicAccount : account.publicAccount;
+        this.aggregateDeadline = aggregateDeadline;
 
         if (this.announceMode === AnnounceMode.complete) {
             return this.signCompleteTransactions(account);
@@ -152,7 +160,7 @@ export class TransactionSignatureService {
      */
     private async signPartialTransactions(account: Account): Promise<SignedTransaction[]> {
         const aggregateTransaction = AggregateTransaction.createBonded(
-            Deadline.create(this.profile.epochAdjustment),
+            this.aggregateDeadline ? this.aggregateDeadline : Deadline.create(this.profile.epochAdjustment),
             this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
             this.profile.networkType,
             [],
@@ -176,7 +184,7 @@ export class TransactionSignatureService {
      */
     private signCompleteTransactions(account: Account): SignedTransaction[] {
         const aggregateTransaction = AggregateTransaction.createComplete(
-            Deadline.create(this.profile.epochAdjustment),
+            this.aggregateDeadline ? this.aggregateDeadline : Deadline.create(this.profile.epochAdjustment),
             this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
             this.profile.networkType,
             [],
@@ -196,7 +204,7 @@ export class TransactionSignatureService {
         );
 
         return HashLockTransaction.create(
-            Deadline.create(this.profile.epochAdjustment),
+            this.aggregateDeadline ? this.aggregateDeadline : Deadline.create(this.profile.epochAdjustment),
             this.profile.networkCurrency.createRelative(this.options.lockAmount),
             UInt64.fromNumericString(this.options.lockDuration),
             aggregateTx,
