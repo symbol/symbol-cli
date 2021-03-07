@@ -93,7 +93,14 @@ export default class extends ProfileCommand {
             );
         } else {
             // tx payload selected
-            const txPayload = await OptionsResolver(options, 'payload', () => undefined, 'Enter the transaction payload:', 'text', undefined);
+            const txPayload = await OptionsResolver(
+                options,
+                'payload',
+                () => undefined,
+                'Enter the transaction payload:',
+                'text',
+                undefined,
+            );
             const transaction = TransactionMapping.createFromPayload(txPayload);
             console.log(FormatterService.success('Transaction to cosign:'));
             new TransactionView(transaction, undefined, this.profile).print();
