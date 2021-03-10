@@ -16,7 +16,9 @@
  *
  */
 
-import { Address, NamespaceId, UnresolvedAddress } from 'symbol-sdk';
+import { Network } from 'symbol-hd-wallets';
+import { Account, Address, NamespaceId, NetworkType, UnresolvedAddress } from 'symbol-sdk';
+import { DerivationService } from './derivation.service';
 
 /**
  * Account service
@@ -37,5 +39,19 @@ export class AccountService {
             recipient = Address.createFromRawAddress(rawRecipient);
         }
         return recipient;
+    }
+
+    /**
+     * Generates the accounts from given mnemonic
+     * @param {string} mnemonic
+     * @param {NetworkType} networkType
+     * @param {Network} curve
+     * @param numOfAccounts
+     */
+    static generateAccountsFromMnemonic(mnemonic: string, networkType: NetworkType, curve: Network, numOfAccounts = 10): Account[] {
+        return [...Array(numOfAccounts).keys()].map((i) => {
+            const privateKey = DerivationService.getPrivateKeyFromMnemonicWithCurve(mnemonic, i, networkType, curve);
+            return Account.createFromPrivateKey(privateKey, networkType);
+        });
     }
 }

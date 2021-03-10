@@ -52,6 +52,7 @@ export interface PrivateKeyProfileCreation extends ProfileCreationBase {
 export interface HdProfileCreation extends ProfileCreationBase {
     mnemonic: string;
     pathNumber: number;
+    optin?: boolean;
 }
 
 /**

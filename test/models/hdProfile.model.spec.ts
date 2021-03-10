@@ -167,6 +167,44 @@ describe('HdProfile TestNet', () => {
         expect(profile).instanceOf(HdProfile);
     });
 
+    it('should create a profile from optin mnemonic', () => {
+        const generationHash = 'defaultGenerationHash';
+        const isDefault = true;
+        const name = 'default';
+        const networkType = NetworkType.TEST_NET;
+        const password = new Password('password');
+        const url = 'http://localhost:3000';
+        const mnemonic = 'test';
+        const expectedPath = "m/44'/1'/0'/0'/0'";
+        const pathNumber = 0;
+        const optin = true;
+
+        const profile = HdProfile.create({
+            generationHash,
+            isDefault,
+            name,
+            networkCurrency,
+            epochAdjustment,
+            networkType,
+            password,
+            url,
+            mnemonic,
+            pathNumber,
+            optin,
+        });
+
+        expect(profile.networkGenerationHash).to.equal(generationHash);
+        expect(profile.type).to.equal('HD');
+        expect(profile.isDefault).to.equal('1');
+        expect(profile.name).to.equal(name);
+        expect(profile.networkType).to.equal(networkType);
+        expect(profile.url).to.equal(url);
+        expect(profile.encryptedPassphrase).to.exist;
+        expect(profile.pathNumber).to.equal(pathNumber);
+        expect(profile.path).to.equal(expectedPath);
+        expect(profile).instanceOf(HdProfile);
+    });
+
     it('createFromDTO should instantiate an HD wallet properly', () => {
         const networkType = NetworkType.TEST_NET;
         const name = 'profile name';
