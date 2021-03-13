@@ -1,6 +1,6 @@
 {
     "name": "symbol-cli",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Command Line Interface (CLI) to interact with Symbol",
     "main": "index.js",
     "scripts": {
