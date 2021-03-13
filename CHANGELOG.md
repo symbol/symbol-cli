@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The changelog format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [1.0.0] - 13-Mar-2021
+
+### Changed
+
+- Release for Symbol mainnet.
+- Added Opt In mnemonic sopports.
+
 ## [0.24.1] - 15-Feb-2021
 
 ### Changed
