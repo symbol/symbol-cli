@@ -28,6 +28,7 @@ import { ImportTypeResolver } from '../../resolvers/importType.resolver';
 import { MnemonicResolver } from '../../resolvers/mnemonic.resolver';
 import { NetworkResolver } from '../../resolvers/network.resolver';
 import { NetworkCurrencyResolver } from '../../resolvers/networkCurrency.resolver';
+import { OptinPathNumber, OptinPathNumberResolver } from '../../resolvers/optinPathNumber.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { PathNumberResolver } from '../../resolvers/pathNumber.resolver';
 import { PrivateKeyResolver } from '../../resolvers/privateKey.resolver';
@@ -77,8 +78,14 @@ export default class extends CreateProfileCommand {
             profile = this.createProfile({ ...baseArguments, privateKey } as PrivateKeyProfileCreation);
         } else {
             const mnemonic = await new MnemonicResolver().resolve(options);
-            const pathNumber = await new PathNumberResolver().resolve(options);
-            profile = this.createProfile({ ...baseArguments, mnemonic, pathNumber } as HdProfileCreation);
+            let optinPathNumber: OptinPathNumber;
+
+            if (options.pathNumber) {
+                optinPathNumber = { pathNumber: await new PathNumberResolver().resolve(options), optin: options.optin };
+            } else {
+                optinPathNumber = await new OptinPathNumberResolver(mnemonic, networkType).resolve(options);
+            }
+            profile = this.createProfile({ ...baseArguments, mnemonic, ...optinPathNumber } as HdProfileCreation);
         }
 
         console.log(AccountCredentialsTable.createFromProfile(profile, password).toString());

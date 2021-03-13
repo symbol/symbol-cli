@@ -39,4 +39,11 @@ export class ImportProfileOptions extends CreateProfileOptions {
         description: '(Optional) HD wallet path number.',
     })
     pathNumber: number;
+
+    @option({
+        flag: 'O',
+        description: '(Optional) Whether it is an Opt-in account. (Default: false)',
+        toggle: true,
+    })
+    optin: boolean;
 }

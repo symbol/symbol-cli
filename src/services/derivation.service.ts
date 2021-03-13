@@ -16,8 +16,8 @@
  *
  */
 
-import { ExtendedKey, MnemonicPassPhrase, Wallet } from 'symbol-hd-wallets';
-import { NetworkType } from 'symbol-sdk/dist/src/model/network/NetworkType';
+import { ExtendedKey, MnemonicPassPhrase, Network, Wallet } from 'symbol-hd-wallets';
+import { NetworkType } from 'symbol-sdk';
 
 const MIN_PATH_NUMBER = 0;
 const MAX_PATH_NUMBER = 9;
@@ -55,7 +55,7 @@ export class DerivationService {
     }
 
     /**
-     * Returs a private key from a mnemonic and a path index
+     * Returs a private key from a mnemonic
      * @static
      * @param {string} mnemonic
      * @param {number} pathNumber
@@ -63,9 +63,39 @@ export class DerivationService {
      * @returns {string}
      */
     public static getPrivateKeyFromMnemonic(mnemonic: string, pathNumber: number, networkType: NetworkType): string {
+        return this.getPrivateKeyFromMnemonicWithCurve(mnemonic, pathNumber, networkType, Network.SYMBOL);
+    }
+
+    /**
+     * Returs a private key from a mnemonic(optin)
+     * @static
+     * @param {string} mnemonic
+     * @param {number} pathNumber
+     * @param {NetworkType} networkType
+     * @returns {string}
+     */
+    public static getPrivateKeyFromOptinMnemonic(mnemonic: string, pathNumber: number, networkType: NetworkType): string {
+        return this.getPrivateKeyFromMnemonicWithCurve(mnemonic, pathNumber, networkType, Network.BITCOIN);
+    }
+
+    /**
+     * Returs a private key from a mnemonic for a specific curve
+     * @static
+     * @param {string} mnemonic
+     * @param {number} pathNumber
+     * @param {NetworkType} networkType
+     * @param {Network} curve
+     * @returns {string}
+     */
+    public static getPrivateKeyFromMnemonicWithCurve(
+        mnemonic: string,
+        pathNumber: number,
+        networkType: NetworkType,
+        curve: Network,
+    ): string {
         const path = this.getPathFromPathNumber(pathNumber, networkType);
         const seed = new MnemonicPassPhrase(mnemonic).toSeed().toString('hex');
-        const extendedKey = ExtendedKey.createFromSeed(seed);
+        const extendedKey = ExtendedKey.createFromSeed(seed, curve);
         return new Wallet(extendedKey).getChildAccountPrivateKey(path);
     }
 

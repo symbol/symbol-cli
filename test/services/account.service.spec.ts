@@ -17,7 +17,8 @@
  */
 
 import { expect } from 'chai';
-import { Address, NamespaceId } from 'symbol-sdk';
+import { Network } from 'symbol-hd-wallets';
+import { Address, NamespaceId, NetworkType } from 'symbol-sdk';
 import { AccountService } from '../../src/services/account.service';
 
 describe('Account service', () => {
@@ -33,5 +34,13 @@ describe('Account service', () => {
     it('should return an address', () => {
         const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRA';
         expect(AccountService.getUnresolvedAddress(rawRecipient)).to.be.instanceOf(Address);
+    });
+
+    it('should generate accounts from mnemonic', () => {
+        const mnemonic =
+            'uniform promote eyebrow frequent mother order evolve spell elite lady clarify accuse annual tenant rotate walnut wisdom render before million scrub scan crush sense';
+        const generatedAccounts = AccountService.generateAccountsFromMnemonic(mnemonic, NetworkType.TEST_NET, Network.SYMBOL);
+        expect(generatedAccounts.length).to.be.eq(10);
+        expect(generatedAccounts[0].privateKey).to.be.eq('44D827AB26A1BFEFB3491F6C37FB70258210F43947C4E9A52CAA7A1B27563E6B');
     });
 });
