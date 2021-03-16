@@ -19,9 +19,11 @@ import { command, metadata, option } from 'clime';
 import { TransactionType } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
+import { MultisigAccount } from '../../models/multisig.types';
 import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
+import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 import AccountKeyLinkCommand from './accountkeylink';
 import VotingKeyLinkCommand from './votingkeylink';
@@ -85,10 +87,13 @@ export default class extends AnnounceTransactionsCommand {
         console.log('Vrf Key Link Transaction:');
         const vrfKeyLinkTx = await new VrfKeyLinkCommand().createTransaction(maxFee, options, profile);
 
-        const multisigSigner = await this.getMultisigSigner(options);
 
         const aggregateType = await new AggregateTypeResolver().resolve(options);
         
+        console.log('Cosigner account:')
+        const publicAccount = await new PublicKeyResolver().resolve(options, profile.networkType);
+        const multisigSigner = ({publicAccount } as unknown) as MultisigAccount;
+
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [accountKeyLinkTx, votingKeyLinkTx, vrfKeyLinkTx],
