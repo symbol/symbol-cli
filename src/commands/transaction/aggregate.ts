@@ -16,20 +16,31 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Deadline, Transaction, UInt64, VotingKeyLinkTransaction } from 'symbol-sdk';
+import { TransactionType } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
-import { Profile } from '../../models/profile.model';
-import { LinkActionResolver } from '../../resolvers/action.resolver';
-import { FinalizationPointResolver } from '../../resolvers/finalizationPoint.resolver';
+import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
-import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
+import AccountKeyLinkCommand from './accountkeylink';
+import VotingKeyLinkCommand from './votingkeylink';
+import VrfKeyLinkCommand from './vrfkeylink';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
         flag: 'u',
+        description: 'Linked Account Public Key.',
+    })
+    linkedAccountPublicKey: string;
+
+    @option({
+        flag: 'a',
+        description: 'Alias action (Link, Unlink).',
+    })
+    action: string;
+
+    @option({
         description: 'BLS Linked Public Key.',
     })
     linkedPublicKey: string;
@@ -48,11 +59,11 @@ export class CommandOptions extends AnnounceTransactionsOptions {
         flag: 'a',
         description: 'Alias action (Link, Unlink).',
     })
-    action: string;
+    action2: string;
 }
 
 @command({
-    description: 'Link an account with a BLS public key. Required for node operators willing to vote finalized blocks.    ',
+    description: 'Delegate the account importance to a proxy account. Required for all accounts willing to activate delegated harvesting.',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -64,45 +75,30 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
+        
         const maxFee = await new MaxFeeResolver().resolve(options);
+
+        console.log('Acccount Key Link Transaction:');
+        const accountKeyLinkTx = await new AccountKeyLinkCommand().createTransaction(maxFee, options, profile);
+        console.log('Voting Key Link Transaction:');
+        const votingKeyLinkTx = await new VotingKeyLinkCommand().createTransaction(maxFee, options, profile);
+        console.log('Vrf Key Link Transaction:');
+        const vrfKeyLinkTx = await new VrfKeyLinkCommand().createTransaction(maxFee, options, profile);
+
         const multisigSigner = await this.getMultisigSigner(options);
 
-        const transaction = await this.createTransaction(maxFee, options, profile);
+        const aggregateType = await new AggregateTypeResolver().resolve(options);
+        
         const signatureOptions: TransactionSignatureOptions = {
             account,
-            transactions: [transaction],
+            transactions: [accountKeyLinkTx, votingKeyLinkTx, vrfKeyLinkTx],
             maxFee,
             multisigSigner,
+            isAggregate: true,
+            isAggregateBonded: aggregateType === TransactionType.AGGREGATE_BONDED,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);
         this.announceTransactions(options, signedTransactions);
-    }
-
-    public async createTransaction(maxFee: UInt64, options: CommandOptions, profile: Profile): Promise<Transaction> {
-        const linkedPublicKey = (
-            await new PublicKeyResolver().resolve(
-                options,
-                profile.networkType,
-                'Enter the public key of the voting key account: ',
-                'linkedPublicKey',
-            )
-        ).publicKey;
-        const action = await new LinkActionResolver().resolve(options);
-
-        const startPoint = await new FinalizationPointResolver().resolve(options, 'Enter the start point:', 'startPoint');
-        const endPoint = await new FinalizationPointResolver().resolve(options, 'Enter the end point:', 'endPoint');
-
-        return VotingKeyLinkTransaction.create(
-            Deadline.create(profile.epochAdjustment),
-            linkedPublicKey,
-            startPoint.compact(),
-            endPoint.compact(),
-            action,
-            profile.networkType,
-            1,
-            maxFee,
-        );
-
     }
 }
