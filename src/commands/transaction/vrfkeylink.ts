@@ -68,11 +68,11 @@ export default class extends AnnounceTransactionsCommand {
         this.announceTransactions(options, signedTransactions);
     }
 
-    public async createTransaction(maxFee: UInt64, options: CommandOptions, profile: Profile): Promise<Transaction> {
+    public async createTransaction(maxFee: UInt64, options: AnnounceTransactionsOptions, profile: Profile, publicKeyAltKey = 'linkedPublicKey', vrfLinkAltKey= 'action'): Promise<Transaction> {
         const linkedPublicKey = (
-            await new PublicKeyResolver().resolve(options, profile.networkType, 'Enter the public key to link: ', 'linkedPublicKey')
+            await new PublicKeyResolver().resolve(options, profile.networkType, 'Enter the public key to link: ', publicKeyAltKey)
         ).publicKey;
-        const action = await new LinkActionResolver().resolve(options);
+        const action = await new LinkActionResolver().resolve(options, 'Select an action:', vrfLinkAltKey);
 
         return VrfKeyLinkTransaction.create(
             Deadline.create(profile.epochAdjustment),

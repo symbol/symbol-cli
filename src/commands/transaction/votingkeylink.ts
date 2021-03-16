@@ -79,19 +79,19 @@ export default class extends AnnounceTransactionsCommand {
         this.announceTransactions(options, signedTransactions);
     }
 
-    public async createTransaction(maxFee: UInt64, options: CommandOptions, profile: Profile): Promise<Transaction> {
+    public async createTransaction(maxFee: UInt64, options: AnnounceTransactionsOptions, profile: Profile, publicKeyAltKey = 'linkedPublicKey', votingKeyLinkAltKey= 'action', startPointAltKey = 'startPoint', endPointAltKey = 'endPoint'): Promise<Transaction> {
         const linkedPublicKey = (
             await new PublicKeyResolver().resolve(
                 options,
                 profile.networkType,
                 'Enter the public key of the voting key account: ',
-                'linkedPublicKey',
+                publicKeyAltKey,
             )
         ).publicKey;
-        const action = await new LinkActionResolver().resolve(options);
+        const action = await new LinkActionResolver().resolve(options, 'Select an action:', votingKeyLinkAltKey);
 
-        const startPoint = await new FinalizationPointResolver().resolve(options, 'Enter the start point:', 'startPoint');
-        const endPoint = await new FinalizationPointResolver().resolve(options, 'Enter the end point:', 'endPoint');
+        const startPoint = await new FinalizationPointResolver().resolve(options, 'Enter the start point:', startPointAltKey);
+        const endPoint = await new FinalizationPointResolver().resolve(options, 'Enter the end point:', endPointAltKey);
 
         return VotingKeyLinkTransaction.create(
             Deadline.create(profile.epochAdjustment),
