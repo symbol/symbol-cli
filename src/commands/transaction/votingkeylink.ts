@@ -79,7 +79,15 @@ export default class extends AnnounceTransactionsCommand {
         this.announceTransactions(options, signedTransactions);
     }
 
-    public async createTransaction(maxFee: UInt64, options: AnnounceTransactionsOptions, profile: Profile, publicKeyAltKey = 'linkedPublicKey', votingKeyLinkAltKey= 'action', startPointAltKey = 'startPoint', endPointAltKey = 'endPoint'): Promise<Transaction> {
+    public async createTransaction(
+        maxFee: UInt64,
+        options: AnnounceTransactionsOptions,
+        profile: Profile,
+        publicKeyAltKey = 'linkedPublicKey',
+        votingKeyLinkAltKey = 'action',
+        startPointAltKey = 'startPoint',
+        endPointAltKey = 'endPoint',
+    ): Promise<Transaction> {
         const linkedPublicKey = (
             await new PublicKeyResolver().resolve(
                 options,
@@ -103,6 +111,5 @@ export default class extends AnnounceTransactionsCommand {
             1,
             maxFee,
         );
-
     }
 }

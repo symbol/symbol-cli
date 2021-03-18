@@ -79,6 +79,12 @@ export interface TransactionSignatureOptions {
      * @type {Deadline}
      */
     aggregateDeadline?: Deadline;
+
+    /**
+     *
+     * @type {(PublicAccount | undefined)[]}
+     */
+    transactionSigners?: (PublicAccount | undefined)[];
 }
 
 export class TransactionSignatureService {
@@ -90,6 +96,7 @@ export class TransactionSignatureService {
     isAggregate? = false;
     isAggregateBonded? = false;
     aggregateDeadline?: Deadline;
+    transactionSigners?: (PublicAccount | undefined)[];
 
     /**
      * Gets announcement mode
@@ -130,7 +137,16 @@ export class TransactionSignatureService {
      * @returns {Promise<SignedTransaction[]>}
      */
     public async signTransactions(args: TransactionSignatureOptions): Promise<SignedTransaction[]> {
-        const { account, transactions, multisigSigner, maxFee, isAggregate, isAggregateBonded, aggregateDeadline } = args;
+        const {
+            account,
+            transactions,
+            multisigSigner,
+            maxFee,
+            isAggregate,
+            isAggregateBonded,
+            aggregateDeadline,
+            transactionSigners,
+        } = args;
 
         this.maxFee = maxFee;
         this.transactions = transactions;
@@ -139,6 +155,7 @@ export class TransactionSignatureService {
         this.isAggregateBonded = isAggregateBonded;
         this.signerPublicAccount = multisigSigner ? multisigSigner.publicAccount : account.publicAccount;
         this.aggregateDeadline = aggregateDeadline;
+        this.transactionSigners = transactionSigners;
 
         if (this.announceMode === AnnounceMode.complete) {
             return this.signCompleteTransactions(account);
@@ -159,9 +176,15 @@ export class TransactionSignatureService {
      * @returns {Promise<SignedTransaction[]>}
      */
     private async signPartialTransactions(account: Account): Promise<SignedTransaction[]> {
+        const getTxSigner = (inx: number) => {
+            if (this.transactionSigners) {
+                return this.transactionSigners[inx] ? this.transactionSigners[inx]! : this.signerPublicAccount;
+            }
+            return this.signerPublicAccount;
+        };
         const aggregateTransaction = AggregateTransaction.createBonded(
             this.aggregateDeadline ? this.aggregateDeadline : Deadline.create(this.profile.epochAdjustment),
-            this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
+            this.transactions.map((t, inx) => t.toAggregate(getTxSigner(inx))),
             this.profile.networkType,
             [],
             this.maxFee,

@@ -16,12 +16,13 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { Deadline, PlainMessage, TransactionType, TransferTransaction } from 'symbol-sdk';
+import { Deadline, PlainMessage, PublicAccount, TransactionType, TransferTransaction } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
 import { MultisigAccount } from '../../models/multisig.types';
 import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
+import { MosaicsResolver } from '../../resolvers/mosaic.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
 import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { AccountService } from '../../services/account.service';
@@ -29,7 +30,6 @@ import { TransactionSignatureOptions } from '../../services/transaction.signatur
 import AccountKeyLinkCommand from './accountkeylink';
 import VotingKeyLinkCommand from './votingkeylink';
 import VrfKeyLinkCommand from './vrfkeylink';
-import { MosaicsResolver } from '../../resolvers/mosaic.resolver';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
     @option({
@@ -100,7 +100,8 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 }
 
 @command({
-    description: 'Aggregates all key link transactions(Remote Account, Voting, Vrf) and optionally enrol transaction needed to set up a node.',
+    description:
+        'Aggregates all key link transactions(Remote Account, Voting, Vrf) and optionally enrol transaction needed to set up a node.',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
@@ -112,35 +113,73 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        
+
         const maxFee = await new MaxFeeResolver().resolve(options);
 
         console.log('Acccount Key Link Transaction:');
-        const accountKeyLinkTx = await new AccountKeyLinkCommand().createTransaction(maxFee, options, profile, 'remotePublicKey', 'remoteLinkAction');
+        const accountKeyLinkTx = await new AccountKeyLinkCommand().createTransaction(
+            maxFee,
+            options,
+            profile,
+            'remotePublicKey',
+            'remoteLinkAction',
+        );
         console.log('Voting Key Link Transaction:');
-        const votingKeyLinkTx = await new VotingKeyLinkCommand().createTransaction(maxFee, options, profile, 'votingPublicKey', 'votingLinkAction', 'votingStartPoint', 'votingEndPoint');
+        const votingKeyLinkTx = await new VotingKeyLinkCommand().createTransaction(
+            maxFee,
+            options,
+            profile,
+            'votingPublicKey',
+            'votingLinkAction',
+            'votingStartPoint',
+            'votingEndPoint',
+        );
         console.log('Vrf Key Link Transaction:');
         const vrfKeyLinkTx = await new VrfKeyLinkCommand().createTransaction(maxFee, options, profile, 'vrfPublicKey', 'vrfLinkAction');
 
         const aggregateType = await new AggregateTypeResolver().resolve(options);
-        
-        const publicAccount = await new PublicKeyResolver().resolve(options, profile.networkType, 'Cosigner account public key:', 'mainAccountPublicKey');
+
+        const publicAccount = await new PublicKeyResolver().resolve(
+            options,
+            profile.networkType,
+            'Cosigner account public key:',
+            'mainAccountPublicKey',
+        );
         const multisigSigner = ({ publicAccount } as unknown) as MultisigAccount;
         const transactions = [accountKeyLinkTx, votingKeyLinkTx, vrfKeyLinkTx];
-        if(options.enrolTransportPublicKey && options.enrolAgentUrl) {
-            const enrolRecipientAdress = AccountService.getUnresolvedAddress(options.enrolRecipientAdress ? options.enrolRecipientAdress : 'TDL73SDUMPDK7EOF7H3O4F5WB5WHG2SX7XUSFZQ');
+        const transactionSigners: (PublicAccount | undefined)[] = [undefined, undefined, undefined];
+        const zeroValueMosaics = await new MosaicsResolver().resolve({ mosaics: '@symbol.xym::0' });
+        if (options.enrolTransportPublicKey && options.enrolAgentUrl) {
+            const enrolRecipientAdress = AccountService.getUnresolvedAddress(
+                options.enrolRecipientAdress ? options.enrolRecipientAdress : 'TDL73SDUMPDK7EOF7H3O4F5WB5WHG2SX7XUSFZQ',
+            );
             const message = PlainMessage.create(`enrol ${options.enrolTransportPublicKey} ${options.enrolAgentUrl}`);
-            const mosaics = await new MosaicsResolver().resolve({mosaics: '@symbol.xym::0'});
 
-            transactions.push(TransferTransaction.create(
+            transactions.push(
+                TransferTransaction.create(
+                    Deadline.create(profile.epochAdjustment),
+                    enrolRecipientAdress,
+                    zeroValueMosaics,
+                    message,
+                    profile.networkType,
+                    maxFee,
+                ),
+            );
+            transactionSigners.push(undefined);
+        }
+
+        // for an aggregate-bonded tx to be valid, an inner transaction(announcing account as a signer) needs to be added
+        transactions.push(
+            TransferTransaction.create(
                 Deadline.create(profile.epochAdjustment),
-                enrolRecipientAdress,
-                mosaics,
-                message,
+                publicAccount.address,
+                zeroValueMosaics,
+                PlainMessage.create(''),
                 profile.networkType,
                 maxFee,
-            ));
-        }
+            ),
+        );
+        transactionSigners.push(account.publicAccount);
 
         const signatureOptions: TransactionSignatureOptions = {
             account,
@@ -149,6 +188,7 @@ export default class extends AnnounceTransactionsCommand {
             multisigSigner,
             isAggregate: true,
             isAggregateBonded: aggregateType === TransactionType.AGGREGATE_BONDED,
+            transactionSigners,
         };
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);
