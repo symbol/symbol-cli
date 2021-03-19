@@ -63,18 +63,18 @@ export class CommandOptions extends AnnounceTransactionsOptions {
     votingLinkAction: string;
 
     @option({
-        description: 'Linked Vrf Account Public Key.',
+        description: 'Linked VRF Account Public Key.',
     })
     vrfPublicKey: string;
 
     @option({
-        description: 'Vrf Key Link action (Link, Unlink).',
+        description: 'VRF Key Link action (Link, Unlink).',
     })
     vrfLinkAction: string;
 
     @option({
         flag: 't',
-        description: 'Aggregate Type (complete or bonded)',
+        description: 'Aggregate Type (AGGREGATE_BONDED or AGGREGATE_COMPLETE)',
     })
     aggregateType: string;
 
@@ -101,7 +101,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
 @command({
     description:
-        'Aggregates all key link transactions(Remote Account, Voting, Vrf) and optionally enrol transaction needed to set up a node.',
+        'Wraps all key link transactions(Remote Account, Voting, VRF) and optionally a SuperNode enrol transaction with an aggregate bonded transaction to be cosigned by another account. This is useful to setup a node from one account but keep the main account (the one with the funds) isolated.',
 })
 export default class extends AnnounceTransactionsCommand {
     constructor() {
