@@ -103,7 +103,7 @@ export class TransactionSignatureService {
      * @returns {AnnounceMode}
      */
     get announceMode(): AnnounceMode {
-        if (this.isAggregateBonded || (this.multisigSigner && this.multisigSigner.info.minApproval > 1)) {
+        if (this.isAggregateBonded || (this.multisigSigner && this.multisigSigner.info && this.multisigSigner.info.minApproval > 1)) {
             return AnnounceMode.partial;
         } else if (this.isAggregate || this.multisigSigner) {
             return AnnounceMode.complete;

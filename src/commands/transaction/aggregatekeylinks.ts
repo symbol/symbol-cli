@@ -24,7 +24,7 @@ import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicsResolver } from '../../resolvers/mosaic.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
-import { PublicKeyResolver } from '../../resolvers/publicKey.resolver';
+import { OptionalPublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { AccountService } from '../../services/account.service';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 import AccountKeyLinkCommand from './accountkeylink';
@@ -139,12 +139,15 @@ export default class extends AnnounceTransactionsCommand {
 
         const aggregateType = await new AggregateTypeResolver().resolve(options);
 
-        const publicAccount = await new PublicKeyResolver().resolve(
+        let publicAccount = await new OptionalPublicKeyResolver().resolve(
             options,
             profile.networkType,
-            'Cosigner account public key:',
+            'Who is going to sign these transactions? Enter public key (Leave blank to use current account):',
             'mainAccountPublicKey',
         );
+        if (!publicAccount) {
+            publicAccount = account.publicAccount;
+        }
         const multisigSigner = ({ publicAccount } as unknown) as MultisigAccount;
         const transactions = [accountKeyLinkTx, votingKeyLinkTx, vrfKeyLinkTx];
         const transactionSigners: (PublicAccount | undefined)[] = [undefined, undefined, undefined];
