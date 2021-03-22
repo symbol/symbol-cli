@@ -19,7 +19,7 @@
 import { Options } from 'clime';
 import { NetworkType, PublicAccount } from 'symbol-sdk';
 import { OptionsResolver } from '../options-resolver';
-import { PublicKeyValidator } from '../validators/publicKey.validator';
+import { OptionalPublicKeyValidator, PublicKeyValidator } from '../validators/publicKey.validator';
 import { Resolver } from './resolver';
 
 /**
@@ -43,6 +43,31 @@ export class PublicKeyResolver implements Resolver {
             'text',
             new PublicKeyValidator(networkType),
         );
+        return PublicAccount.createFromPublicKey(resolution, networkType);
+    }
+}
+
+export class OptionalPublicKeyResolver implements Resolver {
+    /**
+     * Resolves a public key provided by the user.
+     * @param {Options} options - Command options.
+     * @param {NetworkType} networkType - The network type.
+     * @param {string} altText - Alternative text.
+     * @param {string} altKey - Alternative key.
+     * @returns {Promise<PublicAccount>}
+     */
+    async resolve(options: Options, networkType: NetworkType, altText?: string, altKey?: string): Promise<PublicAccount | null> {
+        const resolution = await OptionsResolver(
+            options,
+            altKey ? altKey : 'publicKey',
+            () => undefined,
+            altText ? altText : 'Enter the account public key:',
+            'text',
+            new OptionalPublicKeyValidator(networkType),
+        );
+        if (!resolution) {
+            return null;
+        }
         return PublicAccount.createFromPublicKey(resolution, networkType);
     }
 }

@@ -16,9 +16,10 @@
  *
  */
 import { command, metadata, option } from 'clime';
-import { AccountKeyLinkTransaction, Deadline } from 'symbol-sdk';
+import { AccountKeyLinkTransaction, Deadline, Transaction, UInt64 } from 'symbol-sdk';
 import { AnnounceTransactionsCommand } from '../../interfaces/announce.transactions.command';
 import { AnnounceTransactionsOptions } from '../../interfaces/announce.transactions.options';
+import { Profile } from '../../models/profile.model';
 import { LinkActionResolver } from '../../resolvers/action.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { PasswordResolver } from '../../resolvers/password.resolver';
@@ -52,26 +53,10 @@ export default class extends AnnounceTransactionsCommand {
         const profile = this.getProfile(options);
         const password = await new PasswordResolver().resolve(options);
         const account = profile.decrypt(password);
-        const linkedPublicKey = (
-            await new PublicKeyResolver().resolve(
-                options,
-                profile.networkType,
-                'Enter the public key of the remote account: ',
-                'linkedPublicKey',
-            )
-        ).publicKey;
-        const action = await new LinkActionResolver().resolve(options);
         const maxFee = await new MaxFeeResolver().resolve(options);
         const multisigSigner = await this.getMultisigSigner(options);
 
-        const transaction = AccountKeyLinkTransaction.create(
-            Deadline.create(profile.epochAdjustment),
-            linkedPublicKey,
-            action,
-            profile.networkType,
-            maxFee,
-        );
-
+        const transaction = await this.createTransaction(maxFee, options, profile);
         const signatureOptions: TransactionSignatureOptions = {
             account,
             transactions: [transaction],
@@ -81,5 +66,31 @@ export default class extends AnnounceTransactionsCommand {
 
         const signedTransactions = await this.signTransactions(signatureOptions, options);
         this.announceTransactions(options, signedTransactions);
+    }
+
+    public async createTransaction(
+        maxFee: UInt64,
+        options: AnnounceTransactionsOptions,
+        profile: Profile,
+        publicKeyAltKey = 'linkedPublicKey',
+        accountKeyLinkAltKey = 'action',
+    ): Promise<Transaction> {
+        const linkedPublicKey = (
+            await new PublicKeyResolver().resolve(
+                options,
+                profile.networkType,
+                'Enter the public key of the remote account: ',
+                publicKeyAltKey,
+            )
+        ).publicKey;
+        const action = await new LinkActionResolver().resolve(options, 'Select an action:', accountKeyLinkAltKey);
+
+        return AccountKeyLinkTransaction.create(
+            Deadline.create(profile.epochAdjustment),
+            linkedPublicKey,
+            action,
+            profile.networkType,
+            maxFee,
+        );
     }
 }
