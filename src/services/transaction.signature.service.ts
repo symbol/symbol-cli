@@ -206,9 +206,15 @@ export class TransactionSignatureService {
      * @returns {SignedTransaction[]}
      */
     private signCompleteTransactions(account: Account): SignedTransaction[] {
+        const getTxSigner = (inx: number) => {
+            if (this.transactionSigners) {
+                return this.transactionSigners[inx] ? this.transactionSigners[inx]! : this.signerPublicAccount;
+            }
+            return this.signerPublicAccount;
+        };
         const aggregateTransaction = AggregateTransaction.createComplete(
             this.aggregateDeadline ? this.aggregateDeadline : Deadline.create(this.profile.epochAdjustment),
-            this.transactions.map((t) => t.toAggregate(this.signerPublicAccount)),
+            this.transactions.map((t, inx) => t.toAggregate(getTxSigner(inx))),
             this.profile.networkType,
             [],
             this.maxFee,
