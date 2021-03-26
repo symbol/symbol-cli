@@ -36,7 +36,7 @@ export class CosignatureResolver implements Resolver {
             options,
             altKey ? altKey : 'cosignatures',
             () => undefined,
-            altText ? altText : 'Enter the cosignature json array(wrapped by square brackets) - press enter to skip:',
+            altText ? altText : 'Cosignature JSON array in square brackets (Enter to skip):',
             'text',
             undefined, // TODO validation
         );
@@ -57,7 +57,7 @@ export class CosignatureResolver implements Resolver {
             );
             return cosignatures;
         } catch (err) {
-            console.log('Unexpected format! Please make sure the input is wrapped by square brackets []');
+            console.log('Unexpected format! Please make sure the input is a valid JSON array. It must be wrapped in square brackets [].');
             process.exit();
         }
     }
