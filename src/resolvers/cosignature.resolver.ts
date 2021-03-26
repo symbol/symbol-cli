@@ -36,24 +36,29 @@ export class CosignatureResolver implements Resolver {
             options,
             altKey ? altKey : 'cosignatures',
             () => undefined,
-            altText ? altText : 'Enter the cosignature json array (press enter to skip):',
+            altText ? altText : 'Cosignature JSON array in square brackets (Enter to skip):',
             'text',
             undefined, // TODO validation
         );
         if (!resolution) {
             return null;
         }
-        const cosignaturesParsed = JSON.parse(resolution) as CosignatureSignedTransaction[];
-        const cosignatures = cosignaturesParsed.map(
-            (p) =>
-                new CosignatureSignedTransaction(
-                    p.parentHash,
-                    p.signature,
-                    p.signerPublicKey,
-                    new UInt64([p.version.higher, p.version.lower]),
-                ),
-        );
 
-        return cosignatures;
+        try {
+            const cosignaturesParsed = JSON.parse(resolution) as CosignatureSignedTransaction[];
+            const cosignatures = cosignaturesParsed.map(
+                (p) =>
+                    new CosignatureSignedTransaction(
+                        p.parentHash,
+                        p.signature,
+                        p.signerPublicKey,
+                        new UInt64([p.version.higher, p.version.lower]),
+                    ),
+            );
+            return cosignatures;
+        } catch (err) {
+            console.log('Unexpected format! Please make sure the input is a valid JSON array. It must be wrapped in square brackets [].');
+            process.exit();
+        }
     }
 }
