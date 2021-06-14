@@ -44,7 +44,7 @@ export const OptionsChoiceResolver = async <T = any>(
                 return process.exit();
             }
         }
-        let value = choices.find((item) => item.title === title)?.value;
+        const value = choices.find((item) => item.title === title)?.value;
         if (value === undefined) {
             value == choices.find((item) => `${item.value}` === title)?.value;
         }
