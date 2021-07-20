@@ -98,7 +98,7 @@ export abstract class AnnounceTransactionsCommand extends ProfileCommand {
     ): Promise<SignedTransaction[]> {
         try {
             const profile = this.getProfile(options);
-            return TransactionSignatureService.create(profile, options).signTransactions(signatureOptions);
+            return await TransactionSignatureService.create(profile, options).signTransactions(signatureOptions);
         } finally {
             await signatureOptions.account.close();
         }
