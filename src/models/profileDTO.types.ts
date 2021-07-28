@@ -40,6 +40,7 @@ export interface ILedgerWalletDTO extends ICliWalletDTO {
     path: string;
     publicKey: string;
     optin: boolean;
+    simulator: boolean;
 }
 
 /**

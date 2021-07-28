@@ -66,6 +66,7 @@ export interface LedgerProfileCreation extends ProfileCreationBase {
     publicKey: string;
     path: string;
     optin: boolean;
+    simulator: boolean;
 }
 /**
  * Type for profile creation arguments
