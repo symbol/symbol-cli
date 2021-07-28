@@ -97,7 +97,7 @@ export class LedgerService {
 
         console.log(`Symbol App version is ${printVersion(appVersion)}`);
         if (!ledger.isVersionSupported(appVersion, expectedAppVersion)) {
-            if (ledger) ledger.close();
+            ledger.close();
             throw new ExpectedError(
                 `The current Symbol Application ${printVersion(appVersion)} is not supported. Expected version is at least ${printVersion(
                     expectedAppVersion,
