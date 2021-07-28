@@ -18,9 +18,9 @@
 
 import { Options } from 'clime';
 import { Ora } from 'ora';
-import { LedgerDerivationPath } from 'symbol-ledger-typescript/lib';
+import { LedgerDerivationPath } from 'symbol-ledger-typescript';
 import { NetworkType } from 'symbol-sdk';
-import { OptionsChoiceResolver } from '../options-resolver';
+import { OptionsChoiceResolver, OptionsConfirmResolver } from '../options-resolver';
 import { LedgerService } from '../services/ledger.service';
 import { Resolver } from './resolver';
 
@@ -33,9 +33,16 @@ export class LedgerResolver implements Resolver {
      * Resolves a mnemonic passphrase provided by the user.
      * @returns {Promise<string>}
      */
-    async resolve(options: Options): Promise<{ path: string; optin: boolean; publicKey: string }> {
+    async resolve(options: Options): Promise<{ path: string; optin: boolean; publicKey: string; simulator: boolean }> {
+        const simulator = await OptionsConfirmResolver(
+            options,
+            'simulator',
+            'Do you want to connect to the Ledger Speculus simulator?',
+            'confirm',
+            false,
+        );
         this.spinner.start('Connecting to Ledger');
-        const accounts = await new LedgerService().resolveLedgerAccountInformation(this.networkType, this.optin);
+        const accounts = await new LedgerService(simulator).resolveLedgerAccountInformation(this.networkType, this.optin);
         this.spinner.stop();
         const choices = accounts.map((key, index) => ({
             // Index is shown as 1-based to match with other wallets UX
@@ -49,6 +56,7 @@ export class LedgerResolver implements Resolver {
             path: LedgerDerivationPath.getPath(this.networkType as number, accountIndex),
             publicKey: accounts[accountIndex].publicKey,
             optin: this.optin,
+            simulator,
         };
     }
 }

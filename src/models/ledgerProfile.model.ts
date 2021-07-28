@@ -34,6 +34,7 @@ export class LedgerWallet implements CliWallet {
         public readonly publicKey: string,
         public readonly path: string,
         public readonly optin: boolean,
+        public readonly simulator: boolean,
     ) {
         this.networkType = address.networkType;
     }
@@ -44,7 +45,14 @@ export class LedgerWallet implements CliWallet {
      * @returns an instance of LedgerWallet
      */
     static createFromDTO(dto: ILedgerWalletDTO): LedgerWallet {
-        return new LedgerWallet(dto.name, Address.createFromRawAddress(dto.address.address), dto.publicKey, dto.path, dto.optin);
+        return new LedgerWallet(
+            dto.name,
+            Address.createFromRawAddress(dto.address.address),
+            dto.publicKey,
+            dto.path,
+            dto.optin,
+            dto.simulator,
+        );
     }
 
     /**
@@ -95,6 +103,7 @@ export class LedgerProfile extends Profile<LedgerWallet> {
             args.publicKey,
             args.path,
             args.optin,
+            args.simulator,
         );
         return new LedgerProfile(
             simpleWallet,
@@ -147,9 +156,14 @@ export class LedgerProfile extends Profile<LedgerWallet> {
         table.push(['Public Key', this.simpleWallet.publicKey]);
         table.push(['Path', this.simpleWallet.path]);
         table.push(['OptIn', this.simpleWallet.optin]);
+        table.push(['Simulator', this.simpleWallet.simulator]);
         return table;
     }
     public async getSigningAccount(): Promise<SigningAccount> {
-        return new LedgerService().resolveLedgerAccount(this.networkType, this.simpleWallet.path, this.simpleWallet.optin);
+        return new LedgerService(this.simpleWallet.simulator).resolveLedgerAccount(
+            this.networkType,
+            this.simpleWallet.path,
+            this.simpleWallet.optin,
+        );
     }
 }

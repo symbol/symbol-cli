@@ -34,6 +34,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@ledgerhq/hw-transport-node-hid": "^5.51.1",
+        "@ledgerhq/hw-transport-node-speculos": "^5.51.1",
         "axios": "^0.21.1",
         "bip32": "^1.0.2",
         "chalk": "^2.3.0",

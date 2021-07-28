@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
+// @ts-ignore
+import SpeculosTransport from '@ledgerhq/hw-transport-node-speculos'; // NO TS types yet from Ledger
 import { ExpectedError } from 'clime';
 import { AppVersion, LedgerDerivationPath, SymbolLedger } from 'symbol-ledger-typescript';
 import { NetworkType } from 'symbol-sdk';
 import { LedgerAccount, SigningAccountInfo } from './signing.service';
-
 /**
  * A service that knows how to connect and retrieve Ledger accounts from a ledger device.
  */
 export class LedgerService {
+    constructor(private readonly simulator: boolean) {}
     /**
      * Returns the accounts 0-9 form the device.
      * @param networkType the network type
@@ -77,7 +79,9 @@ export class LedgerService {
         try {
             console.log();
             console.log('Looking for a Ledger device...');
-            const transport = await TransportNodeHid.create(10000, 10000);
+            const transport = this.simulator
+                ? await SpeculosTransport.open({ apduPort: 9999 })
+                : await TransportNodeHid.create(10000, 10000);
             ledger = new SymbolLedger(transport, 'XYM');
             appVersion = await ledger.getAppVersion();
         } catch (e) {
@@ -93,7 +97,7 @@ export class LedgerService {
 
         console.log(`Symbol App version is ${printVersion(appVersion)}`);
         if (!ledger.isVersionSupported(appVersion, expectedAppVersion)) {
-            if (ledger) ledger.close();
+            ledger.close();
             throw new ExpectedError(
                 `The current Symbol Application ${printVersion(appVersion)} is not supported. Expected version is at least ${printVersion(
                     expectedAppVersion,
