@@ -21,13 +21,13 @@ import { HexAddressResolver } from '../../src/resolvers/hexAddress.resolver';
 
 describe('Hex address resolver', () => {
     it('should return hex address', async () => {
-        const address = '903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09';
+        const address = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
         const options = { address } as any;
         expect(await new HexAddressResolver().resolve(options)).to.be.equal(address);
     });
 
     it('should change key', async () => {
-        const key = '903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09';
+        const key = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
         const options = { key } as any;
         expect(await new HexAddressResolver().resolve(options, 'altText', 'key')).to.be.equal(key);
     });

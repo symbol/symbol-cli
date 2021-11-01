@@ -22,9 +22,9 @@ import { AddressValidator, UnresolvedAddressesValidator, UnresolvedAddressValida
 
 describe('Address validator', () => {
     it('default case', () => {
-        const uppercaseAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf';
-        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF';
+        const uppercaseAddress = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
+        const lowercaseAddress = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
+        const dashedAddress = 'TATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA37JG-O5Q';
         expect(new AddressValidator().validate(uppercaseAddress)).to.be.equal(true);
         expect(new AddressValidator().validate(lowercaseAddress)).to.be.equal(true);
         expect(new AddressValidator().validate(dashedAddress)).to.be.equal(true);
@@ -38,9 +38,9 @@ describe('Address validator', () => {
 
 describe('Address alias validator', () => {
     it('default case', () => {
-        const uppercaseAddress = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
-        const lowercaseAddress = 'sb3kubhatfcpv7uzqlwaq2eur6sihbsbeoedddf';
-        const dashedAddress = 'SB3KUB-HATFCP-V7UZQL-WAQ2EU-R6SIHB-SBEOED-DDF';
+        const uppercaseAddress = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
+        const lowercaseAddress = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
+        const dashedAddress = 'TATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA37JG-O5Q';
         expect(new UnresolvedAddressValidator().validate(uppercaseAddress)).to.be.equal(true);
         expect(new UnresolvedAddressValidator().validate(lowercaseAddress)).to.be.equal(true);
         expect(new UnresolvedAddressValidator().validate(dashedAddress)).to.be.equal(true);
@@ -64,7 +64,7 @@ describe('Address alias validator', () => {
 
 describe('Unresolved addresses validator', () => {
     it('should be possible to validate multiple addresses at the same time', () => {
-        const address1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain();
+        const address1 = Account.generateNewAccount(NetworkType.TEST_NET).address.plain();
         const address2 = '@symbol';
         const cosignatoryAddresses = address1 + ',' + address2;
 
@@ -72,7 +72,7 @@ describe('Unresolved addresses validator', () => {
     });
 
     it('should throw error if one address is invalid', () => {
-        const address1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain();
+        const address1 = Account.generateNewAccount(NetworkType.TEST_NET).address.plain();
         const address2 = 'test';
         const cosignatoryAddresses = address1 + ',' + address2;
         expect(typeof new UnresolvedAddressValidator().validate(cosignatoryAddresses)).to.be.equal('string');

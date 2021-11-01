@@ -25,6 +25,6 @@ export const unsignedMosaicSupplyChange1 = MosaicSupplyChangeTransaction.create(
     mosaicId1,
     MosaicSupplyChangeAction.Increase,
     UInt64.fromUint(10),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     new UInt64([1, 0]),
 );

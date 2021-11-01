@@ -60,7 +60,7 @@ describe('ProfileRepository', () => {
     });
 
     it('should save new account', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         const profile = new ProfileService(profileRepository).createNewProfile({
             generationHash: 'default',
@@ -78,7 +78,7 @@ describe('ProfileRepository', () => {
     });
 
     it('should not save two accounts with the same name', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profileRepository = new ProfileRepository(repositoryFileUrl);
 
         const createProfile = () =>
@@ -98,7 +98,7 @@ describe('ProfileRepository', () => {
     });
 
     it('should find an account', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         const account = Account.generateNewAccount(networkType);
 
@@ -128,7 +128,7 @@ describe('ProfileRepository', () => {
     });
 
     it('should find an HD profile', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profileRepository = new ProfileRepository(repositoryFileUrl);
 
         const profile = new ProfileService(profileRepository).createNewProfile({
@@ -155,7 +155,7 @@ describe('ProfileRepository', () => {
     });
 
     it('should get all profiles', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         new ProfileService(profileRepository).createNewProfile({
             generationHash: 'default',
@@ -196,7 +196,7 @@ describe('ProfileRepository', () => {
     });
 
     it('should set and get default profile', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profileRepository = new ProfileRepository(repositoryFileUrl);
         new ProfileService(profileRepository).createNewProfile({
             generationHash: 'generationHash',

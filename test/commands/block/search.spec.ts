@@ -30,7 +30,7 @@ describe('search options', () => {
         searchOptions.beneficiaryAddress = account1.address.plain();
         searchOptions.signerPublicKey = account1.publicKey;
         searchOptions.orderBy = 'Id';
-        const searchCriteria = await searchOptions.buildSearchCriteria(NetworkType.MIJIN_TEST);
+        const searchCriteria = await searchOptions.buildSearchCriteria(NetworkType.TEST_NET);
         expect(searchCriteria.beneficiaryAddress).to.be.equal(account1.address.plain());
         expect(searchCriteria.signerPublicKey).to.be.equal(account1.publicKey);
         expect(searchCriteria.orderBy).to.be.equal('id');

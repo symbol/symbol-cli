@@ -24,7 +24,7 @@ export const unsignedNamespaceRegistration1 = NamespaceRegistrationTransaction.c
     createDeadline(),
     'root-test-namespace',
     UInt64.fromUint(1000),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     new UInt64([1, 0]),
 );
 
@@ -32,5 +32,5 @@ export const unsignedSubNamespaceRegistration1 = NamespaceRegistrationTransactio
     createDeadline(),
     'sub-test-namespace',
     namespaceId1,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

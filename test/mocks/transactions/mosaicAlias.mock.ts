@@ -26,5 +26,5 @@ export const unsignedMosaicAlias1 = MosaicAliasTransaction.create(
     AliasAction.Link,
     namespaceId1,
     mosaicId1,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

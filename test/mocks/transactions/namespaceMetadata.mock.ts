@@ -28,5 +28,5 @@ export const unsignedNamespaceMetadata1 = NamespaceMetadataTransaction.create(
     namespaceId1,
     1,
     Convert.uint8ToUtf8(new Uint8Array(10)),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

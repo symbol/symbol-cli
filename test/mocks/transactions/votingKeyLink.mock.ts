@@ -26,5 +26,5 @@ export const unsignedVotingKeyLink1 = VotingKeyLinkTransaction.create(
     2,
     LinkAction.Link,
     1,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );
