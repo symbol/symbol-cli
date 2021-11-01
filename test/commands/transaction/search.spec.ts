@@ -33,7 +33,7 @@ describe('search options', () => {
         searchOptions.signerPublicKey = account1.publicKey;
         searchOptions.height = '1';
         searchOptions.type = 'TRANSFER';
-        const searchCriteria = await searchOptions.buildSearchCriteria(NetworkType.MIJIN_TEST);
+        const searchCriteria = await searchOptions.buildSearchCriteria(NetworkType.TEST_NET);
         expect(searchCriteria.group).to.be.equal(TransactionGroup.Confirmed);
         expect(searchCriteria.address?.plain()).to.be.equal(account1.address.plain());
         expect(searchCriteria.recipientAddress?.plain()).to.be.equal(account1.address.plain());

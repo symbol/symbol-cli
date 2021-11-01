@@ -24,6 +24,6 @@ import { createDeadline } from './deadline.mock';
 export const unsignedAggregateComplete1 = AggregateTransaction.createComplete(
     createDeadline(),
     [unsignedTransfer1.toAggregate(account1.publicAccount), unsignedTransfer2.toAggregate(account1.publicAccount)],
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     [],
 );

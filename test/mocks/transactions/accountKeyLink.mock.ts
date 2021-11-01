@@ -24,5 +24,5 @@ export const unsignedAccountKeyLink1 = AccountKeyLinkTransaction.create(
     createDeadline(),
     account1.publicKey,
     LinkAction.Link,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

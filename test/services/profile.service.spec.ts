@@ -53,7 +53,7 @@ describe('Configure service', () => {
             expect(createdProfile.simpleWallet).to.be.equal(profile.simpleWallet);
             expect(createdProfile.url).to.be.equal(profile.url);
             expect(createdProfile.name).to.be.equal('default');
-            expect(createdProfile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+            expect(createdProfile.networkType).to.be.equal(NetworkType.TEST_NET);
             expect(createdProfile.networkGenerationHash).to.be.equal(profile.networkGenerationHash);
         }
     });
@@ -69,7 +69,7 @@ describe('Configure service', () => {
     });
 
     it('should get current profile', () => {
-        const simpleWallet = SimpleWallet.create('test', new Password('password'), NetworkType.MIJIN_TEST);
+        const simpleWallet = SimpleWallet.create('test', new Password('password'), NetworkType.TEST_NET);
         const profile = mockPrivateKeyProfile1;
         const mockProfileRepository = mock(ProfileRepository);
         when(mockProfileRepository.find('test')).thenReturn(profile);

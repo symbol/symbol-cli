@@ -31,5 +31,5 @@ export const unsignedSecretLock1 = SecretLockTransaction.create(
     LockHashAlgorithm.Op_Sha3_256,
     sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
     namespaceId2,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

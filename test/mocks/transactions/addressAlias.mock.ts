@@ -26,6 +26,6 @@ export const unsignedAddressAlias1 = AddressAliasTransaction.create(
     AliasAction.Link,
     namespaceId1,
     account1.address,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     new UInt64([1, 0]),
 );

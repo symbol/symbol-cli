@@ -27,5 +27,5 @@ export const unsignedMosaicDefinition1 = MosaicDefinitionTransaction.create(
     MosaicFlags.create(true, true, true),
     3,
     UInt64.fromUint(1000),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

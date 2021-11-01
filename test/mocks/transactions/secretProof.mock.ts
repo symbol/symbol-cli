@@ -29,6 +29,6 @@ export const unsignedSecretProof1 = SecretProofTransaction.create(
     sha3_256.create().update(Convert.hexToUint8(proof)).hex(),
     account1.address,
     proof,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     new UInt64([1, 0]),
 );

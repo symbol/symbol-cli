@@ -29,5 +29,5 @@ export const unsignedLockFunds1 = HashLockTransaction.create(
     mosaic2,
     UInt64.fromUint(10),
     signedTransaction,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

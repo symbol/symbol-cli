@@ -25,5 +25,5 @@ export const unsignedAccountAddressRestriction1 = AccountRestrictionTransaction.
     AddressRestrictionFlag.AllowIncomingAddress,
     [account1.address, account2.address],
     [account3.address],
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

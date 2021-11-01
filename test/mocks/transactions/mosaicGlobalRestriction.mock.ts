@@ -28,6 +28,6 @@ export const unsignedMosaicGlobalRestriction1 = MosaicGlobalRestrictionTransacti
     MosaicRestrictionType.EQ,
     UInt64.fromUint(8),
     MosaicRestrictionType.GE,
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     mosaicId2,
 );

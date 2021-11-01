@@ -21,7 +21,7 @@ import { HexAddressValidator } from '../../src/validators/hexAddress.validator';
 
 describe('Hex address validator', () => {
     it('default case', () => {
-        const value = '903691134BBFB3CC63FA43AE4815B0B6D100DB194351AF09';
+        const value = '9826D27E1D0A26CA4E316F901E23E55C8711DB20DFD26776';
         expect(new HexAddressValidator().validate(value)).to.be.equal(true);
     });
 

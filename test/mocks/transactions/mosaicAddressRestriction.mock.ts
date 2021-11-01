@@ -27,6 +27,6 @@ export const unsignedMosaicAddressRestriction1 = MosaicAddressRestrictionTransac
     UInt64.fromUint(1),
     account1.address,
     UInt64.fromUint(8),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     UInt64.fromUint(9),
 );

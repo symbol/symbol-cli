@@ -30,10 +30,10 @@ export const mockPrivateKeyProfile1 = PrivateKeyProfile.create({
     name: 'default',
     epochAdjustment,
     networkCurrency,
-    networkType: NetworkType.MIJIN_TEST,
+    networkType: NetworkType.TEST_NET,
     password: new Password('password'),
     url: 'http://localhost:1234',
-    privateKey: Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey,
+    privateKey: Account.generateNewAccount(NetworkType.TEST_NET).privateKey,
 });
 
 export const mockHdProfile1 = HdProfile.create({
@@ -42,7 +42,7 @@ export const mockHdProfile1 = HdProfile.create({
     name: 'default',
     epochAdjustment,
     networkCurrency,
-    networkType: NetworkType.MIJIN_TEST,
+    networkType: NetworkType.TEST_NET,
     password: new Password('password'),
     url: 'http://localhost:1234',
     // eslint-disable-next-line max-len

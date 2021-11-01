@@ -26,5 +26,5 @@ export const unsignedAccountMosaicRestriction1 = AccountRestrictionTransaction.c
     MosaicRestrictionFlag.AllowMosaic,
     [mosaicId1],
     [mosaicId2, namespaceId1],
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

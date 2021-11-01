@@ -33,16 +33,16 @@ describe('PrivateKeyProfile', () => {
             name: 'default',
             epochAdjustment: epochAdjustment,
             networkCurrency,
-            networkType: NetworkType.MIJIN_TEST,
+            networkType: NetworkType.TEST_NET,
             password: new Password('password'),
             url: 'http://localhost:1234',
-            privateKey: Account.generateNewAccount(NetworkType.MIJIN_TEST).privateKey,
+            privateKey: Account.generateNewAccount(NetworkType.TEST_NET).privateKey,
         });
 
         expect(profile.name).to.be.equal('default');
         expect(profile.networkGenerationHash).to.be.equal('generationHash');
         expect(profile.url).to.be.equal('http://localhost:1234');
-        expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+        expect(profile.networkType).to.be.equal(NetworkType.TEST_NET);
         expect(profile.type).to.be.equal('PrivateKey');
         expect(profile).to.be.instanceOf(PrivateKeyProfile);
     });
@@ -51,10 +51,10 @@ describe('PrivateKeyProfile', () => {
         const profile = PrivateKeyProfile.createFromDTO({
             simpleWallet: {
                 name: 'default',
-                network: NetworkType.MIJIN_TEST,
+                network: NetworkType.TEST_NET,
                 address: {
-                    address: Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain(),
-                    networkType: NetworkType.MIJIN_TEST,
+                    address: Account.generateNewAccount(NetworkType.TEST_NET).address.plain(),
+                    networkType: NetworkType.TEST_NET,
                 },
                 creationDate: 'test',
                 schema: 'test',
@@ -74,13 +74,13 @@ describe('PrivateKeyProfile', () => {
         expect(profile.name).to.be.equal('default');
         expect(profile.networkGenerationHash).to.be.equal('generationHash');
         expect(profile.url).to.be.equal('url');
-        expect(profile.networkType).to.be.equal(NetworkType.MIJIN_TEST);
+        expect(profile.networkType).to.be.equal(NetworkType.TEST_NET);
         expect(profile).to.be.instanceOf(PrivateKeyProfile);
     });
 
     it('should validate if password opens wallet', () => {
         const password = new Password('password');
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profile = PrivateKeyProfile.create({
             generationHash: 'default',
             isDefault: false,
@@ -100,7 +100,7 @@ describe('PrivateKeyProfile', () => {
 
     it('should decrypt profile', async () => {
         const password = new Password('password');
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const account = Account.generateNewAccount(networkType);
 
         const profile = PrivateKeyProfile.create({
@@ -121,7 +121,7 @@ describe('PrivateKeyProfile', () => {
     });
 
     it('should throw error if trying to decrypt profile with an invalid password', () => {
-        const networkType = NetworkType.MIJIN_TEST;
+        const networkType = NetworkType.TEST_NET;
         const profile = PrivateKeyProfile.create({
             generationHash: 'default',
             isDefault: false,

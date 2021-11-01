@@ -18,11 +18,11 @@
 
 import { Account, MultisigAccountGraphInfo, MultisigAccountInfo, NetworkType } from 'symbol-sdk';
 
-export const multisigGraphInfoAccount1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address;
-export const multisigGraphInfoAccount2 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address;
-export const multisigGraphInfoAccount3 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address;
-export const multisigGraphInfoAccount4 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address;
-export const multisigGraphInfoAccount5 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address;
+export const multisigGraphInfoAccount1 = Account.generateNewAccount(NetworkType.TEST_NET).address;
+export const multisigGraphInfoAccount2 = Account.generateNewAccount(NetworkType.TEST_NET).address;
+export const multisigGraphInfoAccount3 = Account.generateNewAccount(NetworkType.TEST_NET).address;
+export const multisigGraphInfoAccount4 = Account.generateNewAccount(NetworkType.TEST_NET).address;
+export const multisigGraphInfoAccount5 = Account.generateNewAccount(NetworkType.TEST_NET).address;
 
 export const multisigGraphInfoAccounts = [
     multisigGraphInfoAccount1,
