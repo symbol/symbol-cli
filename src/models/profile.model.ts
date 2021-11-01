@@ -138,11 +138,11 @@ export abstract class Profile<T extends CliWallet = CliWallet> {
     }
 
     /**
-     * Loads a signing accounts, this could be a hardwar device.
+     * Loads a signing accounts, this could be a hardware device.
      * @param passwordResolver, it allows to resolve the password if it's necessary.
      * @returns {Account}
      */
-    public abstract async getSigningAccount(passwordResolver: () => Promise<Password>): Promise<SigningAccount>;
+    public abstract getSigningAccount(passwordResolver: () => Promise<Password>): Promise<SigningAccount>;
 
     /**
      * Returns a profile DTO
