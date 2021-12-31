@@ -119,7 +119,7 @@ export default class extends ProfileCommand {
             const hash = Transaction.createTransactionHash(payload, Array.from(Convert.hexToUint8(this.profile.networkGenerationHash)));
             const signature = await account.cosignTransaction(transaction, hash);
             return new CosignatureSignedTransaction(hash, signature, account.publicKey);
-        } catch (err) {
+        } catch (err: any) {
             this.spinner.stop();
             console.log(
                 FormatterService.error(
@@ -149,7 +149,7 @@ export default class extends ProfileCommand {
         try {
             const signature = await account.cosignTransaction(transaction, hash);
             return new CosignatureSignedTransaction(hash, signature, account.publicKey);
-        } catch (err) {
+        } catch (err: any) {
             console.log(
                 FormatterService.error(
                     `The profile ${this.profile.name} cannot cosign the transaction with hash ${hash}. Error: ${err.message || 'Unknown'}`,
