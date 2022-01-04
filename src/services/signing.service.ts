@@ -94,7 +94,7 @@ export class LedgerAccount implements SigningAccount {
         public readonly publicKey: string,
         public readonly isOptinSymbolWallet: boolean,
     ) {
-        const symbolNetworkType = (networkType as number) as NetworkType;
+        const symbolNetworkType = networkType as number as NetworkType;
         this.address = Address.createFromPublicKey(publicKey, symbolNetworkType);
         this.publicAccount = PublicAccount.createFromPublicKey(publicKey, symbolNetworkType);
     }

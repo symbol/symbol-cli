@@ -129,16 +129,8 @@ export class TransactionSignatureService {
      * @returns {Promise<SignedTransaction[]>}
      */
     public async signTransactions(args: TransactionSignatureOptions): Promise<SignedTransaction[]> {
-        const {
-            account,
-            transactions,
-            multisigSigner,
-            maxFee,
-            isAggregate,
-            isAggregateBonded,
-            aggregateDeadline,
-            transactionSigners,
-        } = args;
+        const { account, transactions, multisigSigner, maxFee, isAggregate, isAggregateBonded, aggregateDeadline, transactionSigners } =
+            args;
 
         this.maxFee = maxFee;
         this.transactions = transactions;

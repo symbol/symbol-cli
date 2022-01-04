@@ -144,7 +144,7 @@ export default class extends AnnounceTransactionsCommand {
         if (!publicAccount) {
             publicAccount = account.publicAccount;
         }
-        const multisigSigner = ({ publicAccount } as unknown) as MultisigAccount;
+        const multisigSigner = { publicAccount } as unknown as MultisigAccount;
         const transactions = [accountKeyLinkTx, votingKeyLinkTx, vrfKeyLinkTx];
         const transactionSigners: (PublicAccount | undefined)[] = [undefined, undefined, undefined];
         const zeroValueMosaics = await new MosaicsResolver().resolve({ mosaics: '@symbol.xym::0' });
