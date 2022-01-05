@@ -19,7 +19,7 @@
 import { HorizontalTable } from 'cli-table3';
 import { ExpectedError } from 'clime';
 import { Account, Password, PublicAccount, SimpleWallet } from 'symbol-sdk';
-import { SigningAccount } from '../services/signing.service';
+import { PrivateKeyAccount, SigningAccount } from '../services/signing.service';
 import { NetworkCurrency } from './networkCurrency.model';
 import { CURRENT_PROFILE_VERSION, epochAdjustment, Profile, ProfileType } from './profile.model';
 import { PrivateKeyProfileCreation } from './profileCreation.types';
@@ -125,6 +125,6 @@ export class PrivateKeyProfile extends Profile<SimpleWallet> {
     }
 
     public async getSigningAccount(passwordResolver: () => Promise<Password>): Promise<SigningAccount> {
-        throw this.decrypt(await passwordResolver());
+        return new PrivateKeyAccount(this.decrypt(await passwordResolver()));
     }
 }
