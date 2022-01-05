@@ -32,22 +32,4 @@ describe('Network type resolver', () => {
         const options = { network } as any;
         expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.TEST_NET);
     });
-
-    it('should return MIJIN', async () => {
-        const network = 'MIJIN';
-        const options = { network } as any;
-        expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.MIJIN);
-    });
-
-    it('should return MIJIN_TEST', async () => {
-        const network = 'MIJIN_TEST';
-        const options = { network } as any;
-        expect(await new NetworkResolver().resolve(options)).to.be.equal(NetworkType.MIJIN_TEST);
-    });
-
-    it('should change key', async () => {
-        const key = 'MIJIN_TEST';
-        const options = { key } as any;
-        expect(await new NetworkResolver().resolve(options, 'altText', 'key')).to.be.equal(NetworkType.MIJIN_TEST);
-    });
 });

@@ -23,7 +23,6 @@ import { MultisigAccount } from '../../models/multisig.types';
 import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
 import { MosaicsResolver } from '../../resolvers/mosaic.resolver';
-import { PasswordResolver } from '../../resolvers/password.resolver';
 import { OptionalPublicKeyResolver } from '../../resolvers/publicKey.resolver';
 import { AccountService } from '../../services/account.service';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
@@ -111,12 +110,9 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const password = await new PasswordResolver().resolve(options);
-        const account = profile.decrypt(password);
-
+        const account = await this.getSigningAccount(profile, options);
         const maxFee = await new MaxFeeResolver().resolve(options);
-
-        console.log('Acccount Key Link Transaction:');
+        console.log('Account Key Link Transaction:');
         const accountKeyLinkTx = await new AccountKeyLinkCommand().createTransaction(
             maxFee,
             options,
@@ -148,7 +144,7 @@ export default class extends AnnounceTransactionsCommand {
         if (!publicAccount) {
             publicAccount = account.publicAccount;
         }
-        const multisigSigner = ({ publicAccount } as unknown) as MultisigAccount;
+        const multisigSigner = { publicAccount } as unknown as MultisigAccount;
         const transactions = [accountKeyLinkTx, votingKeyLinkTx, vrfKeyLinkTx];
         const transactionSigners: (PublicAccount | undefined)[] = [undefined, undefined, undefined];
         const zeroValueMosaics = await new MosaicsResolver().resolve({ mosaics: '@symbol.xym::0' });

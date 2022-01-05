@@ -27,7 +27,6 @@ import { AggregateTypeResolver } from '../../resolvers/aggregateType.resolver';
 import { DeadlineResolver } from '../../resolvers/deadline.resolver';
 import { DeltaResolver } from '../../resolvers/delta.resolver';
 import { MaxFeeResolver } from '../../resolvers/maxFee.resolver';
-import { PasswordResolver } from '../../resolvers/password.resolver';
 import { TransactionSignatureOptions } from '../../services/transaction.signature.service';
 
 export class CommandOptions extends AnnounceTransactionsOptions {
@@ -73,7 +72,7 @@ export class CommandOptions extends AnnounceTransactionsOptions {
 
     @option({
         flag: 'd',
-        description: 'Deadline (milliseconds, without Nemesis epoch adjustment)',
+        description: 'Deadline (milliseconds since Nemesis block)',
     })
     deadline: string;
 }
@@ -89,8 +88,7 @@ export default class extends AnnounceTransactionsCommand {
     @metadata
     async execute(options: CommandOptions) {
         const profile = this.getProfile(options);
-        const password = await new PasswordResolver().resolve(options);
-        const account = profile.decrypt(password);
+        const account = await this.getSigningAccount(profile, options);
         const action = await new ActionResolver().resolve(options);
         const cosignatories = await new CosignatoryUnresolvedAddressesResolver().resolve(options, profile);
         const minApprovalDelta = await new DeltaResolver().resolve(

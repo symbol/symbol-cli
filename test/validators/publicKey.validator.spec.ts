@@ -23,17 +23,17 @@ describe('Public key validator', () => {
     it('default case', () => {
         const upperCasePublicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C347';
         const lowercasePublicKey = '58a86b00deed2cac9ab62b96ba02b37e079772738dd3b3c6df400de796d7c347';
-        expect(new PublicKeyValidator(NetworkType.MIJIN_TEST).validate(upperCasePublicKey)).to.be.equal(true);
-        expect(new PublicKeyValidator(NetworkType.MIJIN_TEST).validate(lowercasePublicKey)).to.be.equal(true);
+        expect(new PublicKeyValidator(NetworkType.TEST_NET).validate(upperCasePublicKey)).to.be.equal(true);
+        expect(new PublicKeyValidator(NetworkType.TEST_NET).validate(lowercasePublicKey)).to.be.equal(true);
     });
 
     it('should throw error if public key length is not 64', () => {
         const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079772738DD3B3C6DF400DE796D7C34';
-        expect(typeof new PublicKeyValidator(NetworkType.MIJIN_TEST).validate(publicKey)).to.be.equal('string');
+        expect(typeof new PublicKeyValidator(NetworkType.TEST_NET).validate(publicKey)).to.be.equal('string');
     });
 
     it('should throw error if public key has a special char', () => {
         const publicKey = '58A86B00DEED2CAC9AB62B96BA02B37E079!72738DD3B3C6DF400DE796D7C34';
-        expect(typeof new PublicKeyValidator(NetworkType.MIJIN_TEST).validate(publicKey)).to.be.equal('string');
+        expect(typeof new PublicKeyValidator(NetworkType.TEST_NET).validate(publicKey)).to.be.equal('string');
     });
 });

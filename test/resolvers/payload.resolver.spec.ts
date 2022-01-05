@@ -25,23 +25,24 @@ describe('Payload resolver', () => {
     it('should return transaction from payload', async () => {
         const transaction = TransferTransaction.create(
             createDeadline(),
-            Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
+            Account.generateNewAccount(NetworkType.TEST_NET).address,
             [],
             EmptyMessage,
-            NetworkType.MIJIN_TEST,
+            NetworkType.TEST_NET,
         );
         const payload = transaction.serialize();
         const options = { payload } as any;
+        console.log(payload);
         expect(await new PayloadResolver().resolve(options)).to.be.deep.equal(transaction);
     });
 
     it('should change key', async () => {
         const transaction = TransferTransaction.create(
             createDeadline(),
-            Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
+            Account.generateNewAccount(NetworkType.TEST_NET).address,
             [],
             EmptyMessage,
-            NetworkType.MIJIN_TEST,
+            NetworkType.TEST_NET,
         );
         const key = transaction.serialize();
         const options = { key } as any;

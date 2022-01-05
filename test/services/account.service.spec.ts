@@ -32,7 +32,7 @@ describe('Account service', () => {
     });
 
     it('should return an address', () => {
-        const rawRecipient = 'SDSMQK-MKCAE3-LHGKTD-NE7NYJ-OYEFDK-LAWAKW-KRA';
+        const rawRecipient = 'TATNE7-Q5BITM-UTRRN6-IB4I7F-LSDRDW-ZA37JG-O5Q';
         expect(AccountService.getUnresolvedAddress(rawRecipient)).to.be.instanceOf(Address);
     });
 

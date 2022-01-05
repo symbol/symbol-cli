@@ -23,7 +23,7 @@ describe('Public key resolver', () => {
     it('should return public key', async () => {
         const publicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const options = { publicKey } as any;
-        expect((await new PublicKeyResolver().resolve(options, NetworkType.MIJIN_TEST)).publicKey).to.be.equal(publicKey);
+        expect((await new PublicKeyResolver().resolve(options, NetworkType.TEST_NET)).publicKey).to.be.equal(publicKey);
     });
 });
 
@@ -32,7 +32,7 @@ describe('Multisig account public key resolver', () => {
         const multisigAccountPublicKey = '0000000000000000000000000000000000000000000000000000000000000000';
         const options = { multisigAccountPublicKey } as any;
         expect(
-            (await new PublicKeyResolver().resolve(options, NetworkType.MIJIN_TEST, 'test', 'multisigAccountPublicKey')).publicKey,
+            (await new PublicKeyResolver().resolve(options, NetworkType.TEST_NET, 'test', 'multisigAccountPublicKey')).publicKey,
         ).to.be.equal(multisigAccountPublicKey);
     });
 });

@@ -28,5 +28,5 @@ export const unsignedAccountOperationRestriction1 = AccountRestrictionTransactio
     OperationRestrictionFlag.AllowOutgoingTransactionType,
     [operation1, operation2],
     [operation3],
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
 );

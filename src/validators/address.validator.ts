@@ -32,7 +32,7 @@ export class AddressValidator implements Validator<string> {
         try {
             Address.createFromRawAddress(value);
         } catch (err) {
-            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB';
+            return 'Enter a valid address. Example: TBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB';
         }
         return true;
     }
@@ -51,7 +51,7 @@ export class UnresolvedAddressValidator implements Validator<string> {
         try {
             AccountService.getUnresolvedAddress(value);
         } catch {
-            return 'Enter a valid address. Example: SBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB';
+            return 'Enter a valid address. Example: TBI774-YMFDZI-FPEPC5-4EKRC2-5DKDZJ-H2QVRW-4HB';
         }
         return true;
     }

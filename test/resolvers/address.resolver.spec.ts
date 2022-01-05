@@ -22,13 +22,13 @@ import { AddressResolver, CosignatoryUnresolvedAddressesResolver, UnresolvedAddr
 
 describe('Address resolver', () => {
     it('should return address', async () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const address = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
         const options = { address } as any;
         expect((await new AddressResolver().resolve(options)).plain()).to.be.equal(address);
     });
 
     it('should change key', async () => {
-        const key = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const key = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
         const options = { key } as any;
         expect((await new AddressResolver().resolve(options, undefined, 'altText', 'key')).plain()).to.be.equal(key);
     });
@@ -42,7 +42,7 @@ describe('Recipient address alias resolver', () => {
     });
 
     it('should return address', async () => {
-        const address = 'SB3KUBHATFCPV7UZQLWAQ2EUR6SIHBSBEOEDDDF';
+        const address = 'TATNE7Q5BITMUTRRN6IB4I7FLSDRDWZA37JGO5Q';
         const options = { address } as any;
         const resolvedAddress = await new UnresolvedAddressResolver().resolve(options);
         expect(resolvedAddress).instanceof(Address);
@@ -58,7 +58,7 @@ describe('Recipient address alias resolver', () => {
 
 describe('Cosignatory address resolver', () => {
     it('should return address', async () => {
-        const address1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain();
+        const address1 = Account.generateNewAccount(NetworkType.TEST_NET).address.plain();
         const address2 = '@symbol';
         const cosignatoryAddresses = address1 + ',' + address2;
         const options = { cosignatoryAddresses } as any;
@@ -68,7 +68,7 @@ describe('Cosignatory address resolver', () => {
     });
 
     it('should change key', async () => {
-        const address1 = Account.generateNewAccount(NetworkType.MIJIN_TEST).address.plain();
+        const address1 = Account.generateNewAccount(NetworkType.TEST_NET).address.plain();
         const address2 = '@symbol';
         const key = address1 + ',' + address2;
         const options = { key } as any;

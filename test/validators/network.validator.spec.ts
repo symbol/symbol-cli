@@ -21,7 +21,7 @@ import { NetworkValidator } from '../../src/validators/network.validator';
 
 describe('Network type validator', () => {
     it('default case', () => {
-        const networkType = 'MIJIN_TEST';
+        const networkType = 'TEST_NET';
         expect(new NetworkValidator().validate(networkType)).to.be.equal(true);
     });
 

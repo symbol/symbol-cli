@@ -28,6 +28,6 @@ export const unsignedMosaicMetadata1 = MosaicMetadataTransaction.create(
     mosaicId1,
     1,
     Convert.uint8ToUtf8(new Uint8Array(10)),
-    NetworkType.MIJIN_TEST,
+    NetworkType.TEST_NET,
     new UInt64([1, 0]),
 );

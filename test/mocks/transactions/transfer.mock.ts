@@ -26,7 +26,7 @@ export const unsignedTransfer1 = new TransferTransaction(
     1,
     createDeadline(),
     UInt64.fromUint(1000),
-    Account.generateNewAccount(NetworkType.MIJIN_TEST).address,
+    Account.generateNewAccount(NetworkType.TEST_NET).address,
     [mosaic1],
     PlainMessage.create('This is a mock message!'),
 );

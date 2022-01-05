@@ -36,10 +36,6 @@ export class NetworkResolver implements Resolver {
         const choices = [
             { title: 'MAIN_NET', value: NetworkType.MAIN_NET },
             { title: 'TEST_NET', value: NetworkType.TEST_NET },
-            { title: 'PRIVATE', value: NetworkType.PRIVATE },
-            { title: 'PRIVATE_TEST', value: NetworkType.PRIVATE_TEST },
-            { title: 'MIJIN', value: NetworkType.MIJIN },
-            { title: 'MIJIN_TEST', value: NetworkType.MIJIN_TEST },
         ];
         const value = +(await OptionsChoiceResolver(
             options,
